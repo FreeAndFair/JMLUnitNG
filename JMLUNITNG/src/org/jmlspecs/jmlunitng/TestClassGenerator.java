@@ -3,6 +3,7 @@ package org.jmlspecs.jmlunitng;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
+import org.multijava.mjc.JClassDeclarationType;
 import org.multijava.mjc.JClassOrGFImportType;
 import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JPackageImportType;
@@ -125,6 +126,7 @@ public class TestClassGenerator implements Constants{
 	{
 		//Initialize the parameters.
 	}
+	/** Print the Constructor for the class _JML_Test */
 	protected void printConstructor() {
 		writer.newLine();     
 		writer.print("public "+ testClassName + "() {" );
@@ -133,11 +135,58 @@ public class TestClassGenerator implements Constants{
 		writer.newLine();
 		writer.print("}");
 	 }
+	/** Print the main method to run the tests */
 	protected void printMain() {
-		//Calls run method from TestRunner class.
+		writer.newLine();
+		writer.print("/** Run the tests. */");
+		writer.newLine();
+        writer.print("public static void main(java.lang.String[] args) {");
+        writer.newLine();
+        writer.print("org.jmlspecs.jmlunit.JMLTestRunner.run(suite());");
+        writer.newLine();
+        writer.print("}");
 	}
 	protected void printSuite() {
 		
+	}
+	private void printTestIsRACCompiled(JTypeDeclarationType cdecl){
+		
+		String cname = cdecl.ident();
+        String whatKind_space;
+        if (cdecl instanceof JClassDeclarationType) {
+            whatKind_space = "class ";
+        } else {
+            whatKind_space = "interface ";
+        }
+        writer.newLine(); 
+        writer.print("/** Test to see if the code for ");
+        writer.print(whatKind_space);
+        writer.print(cname);
+        writer.print(" * has been compiled with runtime assertion checking" +
+                " (i.e., by jmlc).");
+        writer.print(" * Code that is not compiled with jmlc would not make" +
+                " an effective test,");
+        writer.print(" * since no assertion checking would be done." +
+                " */");
+        
+        writer.print("public void test$IsRACCompiled() {");
+        writer.newLine();
+
+        writer.print(PKG_JUNIT + "Assert.assertTrue(\"code for ");
+        writer.print(whatKind_space);
+        writer.print(cname);
+        writer.print("\"");
+        writer.newLine();
+        writer.newLine();
+        writer.print("+ \" was not compiled with jmlc\"");
+        writer.print("+ \" so no assertions will be checked!\",");
+        writer.newLine();
+        writer.print(PKG_JMLRAC + "JMLChecker.isRACCompiled(" + cname + ".class)");
+        writer.print(");");
+        writer.newLine();
+
+        writer.newLine();
+        writer.print("}");
 	}
 	private boolean preconditionPass(){
 		return true;
