@@ -8,7 +8,7 @@ public class Writer {
 	/** Constructs a Writer object for java code */
 	public Writer() throws FileNotFoundException
 	{
-		file = "";
+		file = "C:\\rinkesh.java";
 		p = new PrintWriter(file);
 	}
 	
@@ -19,6 +19,12 @@ public class Writer {
 		
 		p.print(s);
 		p.flush();
+	}
+	/**
+	 * Print a newline.
+	 */
+	public void newLine(){
+		p.print("\n");
 	}
 	 // ----------------------------------------------------------------------
     // PRIVATE DATA MEMBERS
