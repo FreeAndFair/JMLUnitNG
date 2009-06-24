@@ -2,13 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/rinkesh/JML/TestNG/testng-5.9/testng-5.9-jdk15.jar"/>
-	<classpathentry kind="lib" path="C:/rinkesh/JML/TestNG/testng-5.9/testng-5.9-jdk14.jar"/>
-	<classpathentry kind="lib" path="C:/rinkesh/JML/multijava/mjc-1_3_2.jar"/>
-	<classpathentry kind="lib" path="C:/rinkesh/JML/JML/bin/jmlruntime.jar"/>
-	<classpathentry kind="lib" path="C:/rinkesh/JML/JML/bin/jmljunitruntime.jar"/>
-	<classpathentry kind="lib" path="C:/rinkesh/JML/JML/bin/jmlmodels.jar"/>
-	<classpathentry kind="lib" path="C:/rinkesh/JML/JML/bin/jmlmodelsnonrac.jar"/>
-	<classpathentry kind="lib" path="C:/rinkesh/JML/JML/bin/jml-release.jar"/>
+	<classpathentry kind="lib" path="jml-release.jar"/>
+	<classpathentry kind="lib" path="jmljunitruntime.jar"/>
+	<classpathentry kind="lib" path="jmlmodels.jar"/>
+	<classpathentry kind="lib" path="jmlmodelsnonrac.jar"/>
+	<classpathentry kind="lib" path="jmlruntime.jar"/>
+	<classpathentry kind="lib" path="mjc-1_3_2.jar"/>
+	<classpathentry kind="lib" path="testng-5.9-jdk14.jar"/>
+	<classpathentry kind="lib" path="testng-5.9-jdk15.jar"/>
+	<classpathentry kind="lib" path="src/mjc-1_3_2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
