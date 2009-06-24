@@ -146,9 +146,31 @@ public class TestClassGenerator implements Constants{
         writer.newLine();
         writer.print("}");
 	}
+	
+	/** Print suite() method. */
 	protected void printSuite() {
-		
+	     	writer.newLine();
+	        writer.print("/** Return the test suite for this test class.  This will have");
+	        writer.print("* added to it at least test$IsRACCompiled(), and any test methods");
+	        writer.print("* written explicitly by the user in the superclass.  It will also");
+	        writer.print("* have added test suites for each testing each method and");
+	        writer.print("* constructor.");
+	        writer.print("*/");
+	        writer.print("//@ ensures \\result != null;");
+	        writer.print("public static "+ PKG_JUNIT + "Test suite() {");
+	        writer.newLine();
+	        writer.print(testClassName + " testobj");
+	        writer.print("= new " + testClassName + "(\"" + testClassName + "\");");
+	        writer.print(PKG_JUNIT + "TestSuite testsuite = testobj.overallTestSuite();");
+	        writer.print("// Add instances of Test found by the reflection mechanism.");
+	        writer.print("testsuite.addTestSuite(" + testClassName + ".class);");
+	        writer.print("testobj.addTestSuiteForEachMethod(testsuite);");
+	        writer.print("return testsuite;");
+	        writer.newLine();
+	        writer.print("}");
 	}
+	
+	/** Print test for checking if the class is compiled using jmlc or not. */
 	private void printTestIsRACCompiled(JTypeDeclarationType cdecl){
 		
 		String cname = cdecl.ident();
@@ -188,6 +210,27 @@ public class TestClassGenerator implements Constants{
         writer.newLine();
         writer.print("}");
 	}
+	
+    /** Prints the <kbd>addTestSuiteForEachMethod</kbd> method, and
+     * the methods directly called by it and supporting nested classes. */
+    private void printAddTestSuiteForEachMethod() {
+        writer.newLine();
+        writer.print("/** Create the tests that are to be run for testing the class");
+        writer.print(" * " + typeDeclaration.ident() + ".  The framework will then run them.");
+        writer.print(" * @param overallTestSuite$ The suite accumulating all of the tests");
+        writer.print(" * for this driver class.");
+        writer.print(" */");
+        writer.print("//@ requires overallTestSuite$ != null;");
+        writer.print("public void addTestSuiteForEachMethod");
+        writer.print("(" + PKG_JUNIT + "TestSuite overallTestSuite$)");
+        writer.print("{");
+        writer.newLine();
+		/*
+		 * Add Code to generate one method per one method in the actual class to be tested. 
+		 */
+        
+        }
+    
 	private boolean preconditionPass(){
 		return true;
 		//returns false if the precondition violation exception occurs. Need to throw PreconditionViolationSkipException. 
