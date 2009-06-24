@@ -126,7 +126,12 @@ public class TestClassGenerator implements Constants{
 		//Initialize the parameters.
 	}
 	protected void printConstructor() {
-		 //prints constructor.
+		writer.newLine();     
+		writer.print("public "+ testClassName + "() {" );
+		writer.newLine();
+		writer.print("super();");
+		writer.newLine();
+		writer.print("}");
 	 }
 	protected void printMain() {
 		//Calls run method from TestRunner class.
