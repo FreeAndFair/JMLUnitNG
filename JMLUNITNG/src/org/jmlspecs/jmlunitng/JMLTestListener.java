@@ -8,7 +8,7 @@ import junit.framework.Test;
  * test results (in which an entry precondition was false).
  *
  * @author Rinkesh Nagmoti
- * @version $Revision: 1.2 $
+ * @version 
  */
 public interface JMLTestListener extends TestListener {
     

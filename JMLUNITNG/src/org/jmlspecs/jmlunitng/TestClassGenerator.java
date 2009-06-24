@@ -1,10 +1,22 @@
 package org.jmlspecs.jmlunitng;
 
+import java.io.FileNotFoundException;
+import java.util.Date;
+
+/**
+ * A class which generates the test oracle class for the class to be tested.
+ * 
+ * @author Rinkesh Nagmoti
+ * @version 
+ */
 public class TestClassGenerator implements Constants{
 
-	public TestClassGenerator()
+    // ----------------------------------------------------------------------
+    // CONSTRUCTOR
+    // ----------------------------------------------------------------------
+	public TestClassGenerator() throws FileNotFoundException
 	{
-		//Constructor
+		writer = new Writer();
 	}
 	public void perform()
 	{
@@ -14,9 +26,12 @@ public class TestClassGenerator implements Constants{
 	{
 		// Generated the test oracle. Calls all other methods to generate oracle.
 	}
+	
+	/** Prints the file header to the Test File */
 	protected void printFileHeader() {
-		 //Writes file header.
+		  writer.print("This file is created by JMLUNITNG on"+ new Date()+".");
 	 }
+	
 	protected void printImportStatements()
 	 {
 		//Prints import statements 
@@ -50,4 +65,10 @@ public class TestClassGenerator implements Constants{
 	 * There are many other private and protected methods which I will need to create. One class need to be created for storing 
 	 * parameters used by these methods.
 	 */
+	
+    // ----------------------------------------------------------------------
+    // DATA MEMBERS
+    // ----------------------------------------------------------------------
+	
+	private Writer writer;
 }
