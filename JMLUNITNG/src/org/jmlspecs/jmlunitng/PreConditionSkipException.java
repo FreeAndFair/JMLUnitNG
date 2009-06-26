@@ -1,19 +1,21 @@
 package org.jmlspecs.jmlunitng;
 
 import org.testng.SkipException;
+
 /**
- * An Exception for precondition violation
- *
+ * An Exception for precondition violation.
  * @author Rinkesh Nagmoti
- * @version 
+ * @version 1.0
  */
 
 public class PreConditionSkipException extends SkipException {
 
-	
-	public PreConditionSkipException(String skipMessage) {
-		super(skipMessage);
-		
+/**Constructs the PreconditionSkipException Object.
+ * @param skipMessage String != null
+ */
+public PreConditionSkipException(String skipMessage) {
+	super(skipMessage);
+
 	}
 
 }
