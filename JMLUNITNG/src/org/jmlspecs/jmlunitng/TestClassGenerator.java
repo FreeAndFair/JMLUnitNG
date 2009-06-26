@@ -92,14 +92,14 @@ public class TestClassGenerator implements Constants{
 	{
 		String name = typeDeclaration.ident();
         writer.print("/** Automatically-generated test driver"
-                + " for JML and JUnit based");
+                + " for JML and TestNG based");
         writer.print(" * testing of " + name
                 + ". The superclass of this class should be edited");
         writer.print(" * to supply test data."
                 + " However it's best not to edit this class");
         writer.print(" * directly; instead use the command");
         writer.print(" * <pre>");
-        writer.print(" *  jmlunit " + name + ".java");
+        writer.print(" *  jmlunitng " + name + ".java");
         writer.print(" * </pre>");
         writer.print(" * to regenerate this class whenever "
                 + name + ".java changes.");

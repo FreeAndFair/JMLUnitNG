@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 public class Writer {
  
 	/** Constructs a Writer object for java code */
-	public Writer() throws FileNotFoundException
+	public Writer(String fileName) throws FileNotFoundException
 	{
 		file = "C:\\rinkesh.java";
 		p = new PrintWriter(file);

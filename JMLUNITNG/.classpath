@@ -7,9 +7,8 @@
 	<classpathentry kind="lib" path="jmlmodels.jar"/>
 	<classpathentry kind="lib" path="jmlmodelsnonrac.jar"/>
 	<classpathentry kind="lib" path="jmlruntime.jar"/>
-	<classpathentry kind="lib" path="mjc-1_3_2.jar"/>
 	<classpathentry kind="lib" path="testng-5.9-jdk14.jar"/>
 	<classpathentry kind="lib" path="testng-5.9-jdk15.jar"/>
-	<classpathentry kind="lib" path="src/mjc-1_3_2.jar"/>
+	<classpathentry kind="lib" path="mjc-1_3_2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
