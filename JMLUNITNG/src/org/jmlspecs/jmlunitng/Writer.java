@@ -24,8 +24,9 @@ public class Writer {
 	/**
 	 * Print a newline.
 	 */
-	protected final void newLine() {
-		p.print("\n");
+	protected final void newLine(int numberOfNewLines) {
+		for(int i=0;i<numberOfNewLines;i++)
+		    p.print("\n");
 	}
 	/**
 	 * Indent a tab.
