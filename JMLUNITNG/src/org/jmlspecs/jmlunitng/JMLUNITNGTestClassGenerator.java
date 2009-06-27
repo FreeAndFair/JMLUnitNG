@@ -2,6 +2,7 @@ package org.jmlspecs.jmlunitng;
 
 import java.io.FileNotFoundException;
 import java.util.Date;
+import java.util.List;
 
 import org.multijava.mjc.JCompilationUnitType;
 import org.multijava.mjc.JPackageImportType;
@@ -30,11 +31,13 @@ public class JMLUNITNGTestClassGenerator implements Constants{
 	}
 	
 /** Calls other methods to generate the Test Class.*/
-	public void createTest(){
+	public void createTest(JTypeDeclarationType decl, JCompilationUnitType cUnitType){
 	/*
 	 * Generate the test here.
 	 */
-
+		printHeaderImportandJavadoc(decl, cUnitType);
+		printConstructor();
+		
 	}
 
 /** Prints Class header import statements and class Javadoc comment.*/	
@@ -65,10 +68,18 @@ public class JMLUNITNGTestClassGenerator implements Constants{
 		writer.print("public "+className+DOT_JAVA+" () {");
 		writer.print("}");
 	}
+	
+	/** Creates and prints the methods generated for Testing the methods.*/
+	private void createTestMethods(JTypeDeclarationType decl, JCompilationUnitType cUnitType) {
+		methods = decl.getAllMethods();
+		
+	}
 	public static void main(String[] args){
 		JMLUNITNGTestClassGenerator j = new JMLUNITNGTestClassGenerator("C:\\rinkesh.java");
-		j.createTest();
+		//j.createTest();
 	}
+	
+	
 	//-----------------
 	// DATA MEMBERS
 	//-----------------
@@ -92,4 +103,9 @@ public class JMLUNITNGTestClassGenerator implements Constants{
 	 * This array represents the list of imported packages.
 	 */
 	private JPackageImportType[] pkgs;
+	
+	/**
+	 * This is the list of all the methods the class to be tested contains.
+	 */
+	private List methods;
 }
