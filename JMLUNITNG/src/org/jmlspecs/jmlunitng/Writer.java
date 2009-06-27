@@ -18,7 +18,7 @@ public class Writer {
 	 *  @param s String which will be printed in the file.
 	 */
 	protected final void print(String s) {
-		p.print(s);
+		p.print(s+"\n"); 
 		p.flush();
 	}
 	/**
