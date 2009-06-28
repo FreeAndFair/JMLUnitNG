@@ -71,8 +71,8 @@ public class JMLUNITNGTestClassGenerator implements Constants{
 	
 	/** Creates and prints the methods generated for Testing the methods.*/
 	private void createTestMethods(JTypeDeclarationType decl, JCompilationUnitType cUnitType) {
-		methods = decl.getAllMethods();
-		
+		Methods mL = new Methods(decl.methods(), decl.getCClass().getAllInheritedMethods());
+		List methodsList = mL.getCombinedMethodsList();
 	}
 	public static void main(String[] args){
 		JMLUNITNGTestClassGenerator j = new JMLUNITNGTestClassGenerator("C:\\rinkesh.java");
