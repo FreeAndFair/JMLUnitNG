@@ -58,7 +58,7 @@ public class JMLUNITNGTestClassGenerator implements Constants{
 		writer.print(" *  for class "+ className);
 		writer.print(" */");
 		
-		writer.print("public class "+className +DOT_JAVA+ " {");
+		writer.print("public class "+className +" {");
 		
 	}
 	 
