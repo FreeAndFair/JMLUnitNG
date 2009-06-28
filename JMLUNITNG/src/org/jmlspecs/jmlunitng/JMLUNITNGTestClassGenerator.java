@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 
+import org.multijava.mjc.CMethod;
 import org.multijava.mjc.JCompilationUnitType;
 import org.multijava.mjc.JPackageImportType;
 import org.multijava.mjc.JTypeDeclarationType;
@@ -32,11 +33,10 @@ public class JMLUNITNGTestClassGenerator implements Constants{
 	
 /** Calls other methods to generate the Test Class.*/
 	public void createTest(JTypeDeclarationType decl, JCompilationUnitType cUnitType){
-	/*
-	 * Generate the test here.
-	 */
+	
 		printHeaderImportandJavadoc(decl, cUnitType);
 		printConstructor();
+		createTestMethods(decl, cUnitType);
 		
 	}
 
@@ -73,6 +73,33 @@ public class JMLUNITNGTestClassGenerator implements Constants{
 	private void createTestMethods(JTypeDeclarationType decl, JCompilationUnitType cUnitType) {
 		Methods mL = new Methods(decl.methods(), decl.getCClass().getAllInheritedMethods());
 		List methodsList = mL.getCombinedMethodsList();
+		
+		for(int i =0; i<methodsList.size();i++) {
+		    MethodToBeTested method = (MethodToBeTested) methodsList.get(i);
+		    printMethodJavaDoc(method);
+		    String name = generateMethodName(method);
+		    writer.print("public void "+name +"() {");
+		    writer.print("}");
+		    
+		}
+	}
+	
+	/** Generates the unique names for methods.*/
+	private String generateMethodName(MethodToBeTested method) {
+		StringBuilder name = new StringBuilder();
+		name.append("test");
+		Parameter[] pams = method.getParaters();
+		for (int i=0; i<pams.length; i++)
+			name.append("_"+pams[i]);
+		return name.toString();
+		
+	}
+	
+	/** Prints Javadoc comment for method.*/
+	private void printMethodJavaDoc(MethodToBeTested method) {
+		writer.print("/** This method is a test for method "+method.getName()+"from the ");
+		writer.print(" * Classs to  be tested.");
+		writer.print("*/");
 	}
 	public static void main(String[] args){
 		JMLUNITNGTestClassGenerator j = new JMLUNITNGTestClassGenerator("C:\\rinkesh.java");
