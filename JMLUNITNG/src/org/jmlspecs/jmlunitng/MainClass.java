@@ -15,13 +15,14 @@ import org.multijava.mjc.MjcMessages;
 import org.multijava.mjc.MjcOptions;
 import org.multijava.mjc.MjcParser;
 import org.multijava.mjc.ParsingController;
-import org.antlr.*;
+import antlr.*;
 import org.multijava.util.FormattedException;
 import org.multijava.util.compiler.CompilerMessages;
 
 
 /**
- * This class creates the test classes after receiving command from command line.
+ * This class creates the test classes after receiving command
+ * from command line.
  * @author Rinkesh Nagmoti.
  * Some of the code is taken from MultiJava open source project.
  */
@@ -41,7 +42,8 @@ public class MainClass extends Main {
 		testClass.createTest(decl[0], jType);
 
 	}
-
+	
+// Copied from multijava Main class to check the functionality of Test class generator.
 	 protected JCompilationUnitType parseFile(File file) {
          Reader buffer;
 
@@ -111,17 +113,21 @@ public class MainClass extends Main {
              duration = new Long( System.currentTimeMillis() - lastTime );
              try {
                  buffer.close();
-             } catch( IOException e ) {
+             } catch(IOException e) {
                  reportTrouble( e );
              }
          }
 
-         if( verboseMode() ) {
+         if(verboseMode()) {
              inform( CompilerMessages.FILE_PARSED, file.getPath(), 
                      duration );
          }
 
          return unit;
      }
+	 //------------
+	 //DATA MEMBERS
+	 //------------
+	 
     private MjcOptions options;
 }
