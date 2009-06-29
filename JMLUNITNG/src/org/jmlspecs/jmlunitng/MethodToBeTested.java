@@ -10,7 +10,7 @@ import org.multijava.mjc.CType;
  * @version 1.0
  */
 public class MethodToBeTested {
-	
+
 	/** Constructs the Object to of MethodToBeTested.*/
 	public MethodToBeTested(CMethod method) { 
 		returnType = method.returnType();
@@ -23,7 +23,7 @@ public class MethodToBeTested {
                                        "arg" + (i+1));
          }
 	}
-    
+
 	/** Returns the return type of the method.*/
 	public CType getReturnType() {
 		return returnType;
@@ -48,6 +48,6 @@ public class MethodToBeTested {
     private long modifier;
    /** Represents the name of the Method.*/
     private String methodName;
-   /** The method's parameters */
+   /** The method's parameters.*/
     private Parameter[] parameters;
 }

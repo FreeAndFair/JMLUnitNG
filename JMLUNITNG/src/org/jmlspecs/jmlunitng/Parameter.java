@@ -10,9 +10,9 @@ public class Parameter {
     }
 
     /** The ctype of this parameter */
-    CType ctype;
+    protected CType ctype;
     /** The string name of this type */
-    String type;
+    protected String type;
     /** The variable's name */
-    String ident;
+    protected String ident;
 }

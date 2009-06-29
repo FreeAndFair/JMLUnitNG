@@ -14,13 +14,13 @@ public class Methods {
     	this.methods = methods;
     	this.inheritedMethods = inheritedMethods;
     }
-    
+
     /** Returns the combined list of methods to be tested.*/
     public List getCombinedMethodsList() {
     	List tempList = null;
     	tempList.addAll(methods);
     	tempList.addAll(inheritedMethods);
-    	
+
     	return tempList;
     }
     //----------------
