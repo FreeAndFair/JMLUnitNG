@@ -7,10 +7,10 @@ package org.jmlspecs.jmlunitng;
  * @author Rinkesh Nagmoti
  * @version 1.0
  */
-public class JMLUNITNGTestDataClassGenerator {
+public class TestDataClassGenerator {
 
 	/** Constructs JMLUNITNGTestDataClassGenerator Object.*/
-	public JMLUNITNGTestDataClassGenerator(String fileName) {
+	public TestDataClassGenerator(String fileName) {
        
 	}
 	

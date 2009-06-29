@@ -9,12 +9,12 @@ import org.testng.SkipException;
  * @version 1.0
  */
 
-public class PCSkipException extends SkipException {
+public class PreconditionSkipException extends SkipException {
 
 /**Constructs the PreconditionSkipException Object.
  * @param skipMessage String != null
  */
-public PCSkipException(String skipMessage) {
+public PreconditionSkipException(String skipMessage) {
 	super(skipMessage);
 
 	}
