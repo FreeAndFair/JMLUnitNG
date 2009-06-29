@@ -38,7 +38,7 @@ public class MainClass extends Main {
 		JCompilationUnitType jType = m.parseFile(parsedArguments);
 		JTypeDeclarationType[] decl = jType.typeDeclarations();
 		String file = "C:\test.java";
-		JMLUNITNGTestClassGenerator testClass = new JMLUNITNGTestClassGenerator(file);
+		TestClassGenerator testClass = new TestClassGenerator(file);
 		testClass.createTest(decl[0], jType);
 
 	}

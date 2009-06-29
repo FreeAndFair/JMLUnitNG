@@ -7,7 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="jmlmodels.jar"/>
 	<classpathentry exported="true" kind="lib" path="jmlmodelsnonrac.jar"/>
 	<classpathentry exported="true" kind="lib" path="jmlruntime.jar"/>
-	<classpathentry exported="true" kind="lib" path="testng-5.9-jdk14.jar"/>
 	<classpathentry exported="true" kind="lib" path="testng-5.9-jdk15.jar"/>
 	<classpathentry kind="lib" path="mjc-1_3_2.jar"/>
 	<classpathentry kind="output" path="bin"/>
