@@ -10,12 +10,13 @@ import junit.framework.Test;
  * @author Rinkesh Nagmoti
  * @version 1.0
  */
-public interface JMLTestListener extends TestListener {
+public interface JMLTestListener extends TestListener
+{
 
     /**
      * A meaningless test (in which an entry precondition was false)
      * was executed.
-     * @param test an Object of Class Test.
+     * @param the_test an Object of Class Test.
      */
-    void addMeaningless(Test test);
+  void addMeaningless(Test the_test);
 }

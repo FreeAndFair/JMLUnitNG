@@ -7,40 +7,45 @@ package org.jmlspecs.jmlunitng;
  * @author Rinkesh Nagmoti
  * @version 1.0
  */
-public class TestDataClassGenerator {
+public class TestDataClassGenerator
+{
 
-	/** Constructs JMLUNITNGTestDataClassGenerator Object.*/
-	public TestDataClassGenerator(String fileName) {
+  /** Constructs JMLUNITNGTestDataClassGenerator Object.
+   * @param the_fileName
+   */
+  public TestDataClassGenerator(final String the_fileName)
+  {
        
-	}
-	
-	/** 
-	 * Generate the Test Data methods.
-	 */
-	public void createTestDataClass() {
-		
-	}
-	
-	/** Prints the class header, import statements and Javadoc comments
-	 * for the class.*/
-	private void printClassHeaderImportandJavadoc() {
-		
-	}
-	/** Prints the Class name.*/
-	private void printClassName() {
-		
-	}
-	/** Prints the constructor for the class.*/
-	private void printConstructor() {
-		
-	}
-	/**  Prints the data provider methods.*/
-	private void printDataProvider() {
-		
-	}
+  }
 
-//-----------------
-//DATA MEMBERS
-//-----------------
-	
+  /** 
+   * Generate the Test Data methods.
+   */
+  public void createTestDataClass()
+  {
+   // create class.
+  }
+  /** Prints the class header, import statements and Javadoc comments
+   * for the class.
+   */
+  private void printClassHeaderImportandJavadoc()
+  {
+   
+  }
+  /** Prints the Class name.*/
+  private void printClassName()
+  {
+ 
+  }
+  /** Prints the constructor for the class.*/
+  private void printConstructor()
+  {
+
+  }
+  /**  Prints the data provider methods.*/
+  private void printDataProvider()
+  {
+
+  }
+
 }

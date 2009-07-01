@@ -11,43 +11,59 @@ import org.multijava.mjc.CType;
  */
 public class MethodToBeTested {
 
-	/** Constructs the Object to of MethodToBeTested.*/
-	public MethodToBeTested(CMethod method) { 
-		returnType = method.returnType();
-		modifier = method.modifiers();
-		methodName= method.getIdent();
-		CSpecializedType[] ts = method.parameters();
-        parameters = new Parameter[ts.length];
-         for (int i = 0; i < ts.length; i++) {
-             parameters[i] = new Parameter(ts[i].staticType(),
-                                       "arg" + (i+1));
-         }
-	}
+  
+  /** Represents the return type of the method.*/
+  final  CType my_returnType;
+  /** Represents the method's modifiers.*/
+  final  long my_modifier;
+  /** Represents the name of the Method.*/
+  final  String my_methodName;
+  /** The method's parameters.*/
+  final  Parameter[] my_parameters;
+  
+  /** Constructs the Object to of MethodToBeTested.
+   * @param the_mehod
+   */
+  public MethodToBeTested(final CMethod the_method)
+  { 
+    my_returnType = the_method.returnType();
+    my_modifier = the_method.modifiers();
+    my_methodName = the_method.getIdent();
+    final CSpecializedType[] ts = the_method.parameters();
+    my_parameters = new Parameter[ts.length];
+    for (int i = 0; i < ts.length; i++)
+    {
+      my_parameters[i] = new Parameter(ts[i].staticType(), "arg" + (i + 1));
+    }
+  }
 
-	/** Returns the return type of the method.*/
-	public CType getReturnType() {
-		return returnType;
-	}
-	/** Returns the modifier for the method.*/
-	public long getModifier() {
-		return modifier;
-	}
-	/** Return the name of the method.*/
-	public String getName() {
-		return methodName;
-	}
-	public Parameter[] getParaters() {
-		return parameters;
-	}
-	//-------------
-	//DATA MEMBERS
-	//-------------
-   /** Represents the return type of the method.*/
-    private CType returnType;
-   /** Represents the method's modifiers.*/
-    private long modifier;
-   /** Represents the name of the Method.*/
-    private String methodName;
-   /** The method's parameters.*/
-    private Parameter[] parameters;
+  /** Returns the return type of the method.
+   * @return CType
+   * */
+  public CType getReturnType()
+  {
+    return my_returnType;
+  }
+  /** Returns the modifier for the method.
+   * @return long
+   */
+  public long getModifier()
+  {
+    return my_modifier;
+  }
+  /** Return the name of the method.
+   * @return String 
+   */
+  public String getName()
+  {
+    return my_methodName; 
+  }
+  /** Return the list of Parameters.
+   * @return Parameter[]
+   */
+  public Parameter[] getParaters()
+  {
+    return my_parameters;
+  }
+ 
 }

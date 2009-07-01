@@ -9,14 +9,15 @@ import org.testng.SkipException;
  * @version 1.0
  */
 
-public class PreconditionSkipException extends SkipException {
+public class PreconditionSkipException extends SkipException
+{
 
 /**Constructs the PreconditionSkipException Object.
- * @param skipMessage String != null
+ * @param the_skipMessage String != null
  */
-public PreconditionSkipException(String skipMessage) {
-	super(skipMessage);
-
-	}
+  public PreconditionSkipException(final String the_skipMessage)
+  {
+    super(the_skipMessage);
+  }
 
 }

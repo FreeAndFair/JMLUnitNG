@@ -1,9 +1,16 @@
 package org.jmlspecs.jmlunitng;
+/**
+ * Class to run the test.
+ * @author Rinkesh Nagmoti
+ * @version 1.0 
+ */
+public class JMLTestRunner
+{
+ 
 
-public class JMLTestRunner {
-
-	/** Runs the Test.*/
-	public static void run() {
-
-	}
+  /** Runs the Test.*/
+  public void run()
+  {
+   // Do running.
+  }
 }

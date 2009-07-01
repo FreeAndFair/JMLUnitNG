@@ -1,5 +1,6 @@
 package org.jmlspecs.jmlunitng;
-
-public class TestRunner {
+/** Runs the test.*/
+public class TestRunner
+{
 
 }

@@ -15,7 +15,6 @@ import org.multijava.mjc.MjcMessages;
 import org.multijava.mjc.MjcOptions;
 import org.multijava.mjc.MjcParser;
 import org.multijava.mjc.ParsingController;
-import antlr.*;
 import org.multijava.util.FormattedException;
 import org.multijava.util.compiler.CompilerMessages;
 
@@ -23,32 +22,39 @@ import org.multijava.util.compiler.CompilerMessages;
 /**
  * This class creates the test classes after receiving command
  * from command line.
- * @author Rinkesh Nagmoti.
+ * @author Rinkesh Nagmoti. 
+ * @version 1.0
  * Some of the code is taken from MultiJava open source project.
  */
-public class MainClass extends Main {
+public class MainClass extends Main
+{
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+  /**
+   * This method is the entry point for the tool.
+   * @param the_args 
+   */
+  public static void main(final String[]/*@ not null @*/ the_args)
+  {
 
-		MainClass m = new MainClass();
-		File parsedArguments = new File(args[0]);
-		JCompilationUnitType jType = m.parseFile(parsedArguments);
-		JTypeDeclarationType[] decl = jType.typeDeclarations();
-		String file = "C:\test.java";
-		TestClassGenerator testClass = new TestClassGenerator(file);
-		testClass.createTest(decl[0], jType);
+    final MainClass my_Main = new MainClass();
+    final File parsedArguments = new File(the_args[0]);
+    final JCompilationUnitType jType = my_Main.parseFile(parsedArguments);
+    final JTypeDeclarationType[] decl = jType.typeDeclarations();
+    final String file = "C:\test.java";
+    final TestClassGenerator my_testClass = new TestClassGenerator(file);
+    my_testClass.createTest(decl[0], jType);
 
-	}
-	
-// Copied from multijava Main class to check the functionality of Test class generator.
-	 protected JCompilationUnitType parseFile(File file) {
-         Reader buffer;
+  }
 
+/** Copied from multijava Main class to check the functionality of Test class generator.
+ * @param the_file
+ * @return JCompilationUnitType
+ */
+  protected JCompilationUnitType parseFile(final File the_file)
+  {
+    Reader buffer;
          try {
-             buffer = new BufferedReader(new FileReader( file ));
+             buffer = new BufferedReader(new FileReader( the_file ));
          } catch (IOException e) {
              reportTrouble(e);
              return null;
@@ -68,7 +74,7 @@ public class MainClass extends Main {
 
 	    setAllowUniverses( options.universesx() ); // WMD
 
-         parsingController = new ParsingController( buffer, file );
+         parsingController = new ParsingController( buffer, the_file );
          mjLexer = new MjcLexer( parsingController,
                                  options.source().equals("1.4"),
                                  options.multijava(),
@@ -98,7 +104,7 @@ public class MainClass extends Main {
              unit.cachePassParameters( MainClass.this, destination );
          } catch( ParsingController.ConfigurationException e ) {
              reportTrouble(new FormattedException( MjcMessages.PARSER_INITIALIZATION_PROBLEM,
-                     file.getName(), e.getMessage() ));
+                     the_file.getName(), e.getMessage() ));
              noteError();
              unit = null;
          } catch( antlr.ANTLRException e ) {
@@ -110,7 +116,7 @@ public class MainClass extends Main {
              e.printStackTrace();
              unit = null;
          } finally {
-             duration = new Long( System.currentTimeMillis() - lastTime );
+      duration = Long.valueOf(System.currentTimeMillis() - lastTime);
              try {
                  buffer.close();
              } catch(IOException e) {
@@ -119,7 +125,7 @@ public class MainClass extends Main {
          }
 
          if(verboseMode()) {
-             inform( CompilerMessages.FILE_PARSED, file.getPath(), 
+             inform( CompilerMessages.FILE_PARSED, the_file.getPath(), 
                      duration );
          }
 

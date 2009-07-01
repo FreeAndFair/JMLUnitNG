@@ -1,5 +1,6 @@
 package org.jmlspecs.jmlunitng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,27 +8,36 @@ import java.util.List;
  * @author Rinkesh Nagmoti
  *@version 1.0
  */
-public class Methods {
+public class Methods
+{
+  /** List of all methods to be tested.*/
+  final List my_methods;
+    /** List of all inherited methods to be tested.*/
+  final List my_inhtMethods;
+  
+  /** Constructs the Methods Object.
+   * @param the_methods,
+   * @param the_inhtMethods
+   * */
+  public Methods(final List the_methods, final List the_inhtMethods)
+  {
+    this.my_methods = the_methods;
+    this.my_inhtMethods = the_inhtMethods;
+  }
 
-	/** Constructs the Methods Object.*/
-    public Methods(List methods, List inheritedMethods) {
-    	this.methods = methods;
-    	this.inheritedMethods = inheritedMethods;
-    }
+  /** Returns the combined list of methods to be tested.
+   * @return ArrayList
+   */
+  public List getCombinedMethodsList()
+  {
+    final List tempList = null;
+    tempList.addAll(my_methods);
+    tempList.addAll(my_inhtMethods);
 
-    /** Returns the combined list of methods to be tested.*/
-    public List getCombinedMethodsList() {
-    	List tempList = null;
-    	tempList.addAll(methods);
-    	tempList.addAll(inheritedMethods);
-
-    	return tempList;
-    }
+    return tempList;
+  }
     //----------------
     //DATA MEMBERS
     //----------------
-    /** List of all methods to be tested.*/
-    protected List methods;
-    /** List of all inherted methods to be tested.*/
-    protected List inheritedMethods;
+
 }
