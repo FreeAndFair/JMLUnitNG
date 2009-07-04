@@ -24,8 +24,9 @@ public class MethodToBeTested {
   /** Constructs the Object to of MethodToBeTested.
    * @param the_mehod
    */
-  public MethodToBeTested(final CMethod the_method)
+  public MethodToBeTested(final Object the_mth)
   { 
+    CMethod the_method = (CMethod)the_mth;
     my_returnType = the_method.returnType();
     my_modifier = the_method.modifiers();
     my_methodName = the_method.getIdent();
