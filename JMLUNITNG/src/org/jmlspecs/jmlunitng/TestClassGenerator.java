@@ -2,6 +2,7 @@
 package org.jmlspecs.jmlunitng;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class TestClassGenerator implements Constants
   protected Writer writer;
 
   /** String representing the file name and location for Test Class. */
-  final String my_file;
+  protected final String my_file;
 
   /**
    * JTypeDeclarationType object which holds information about the class for
@@ -45,7 +46,7 @@ public class TestClassGenerator implements Constants
   /**
    * This is the list of all the methods the class to be tested contains.
    */
-  final List my_methods;
+  protected List<Object> my_methods;
   
   /** 
    * Constructs the TestClassGenerator Object.
@@ -56,6 +57,7 @@ public class TestClassGenerator implements Constants
   {
     this.my_file = the_file;
     this.my_methods = null;
+    my_methods = new ArrayList();
     try
     {
       writer = new Writer(the_file);
@@ -125,18 +127,21 @@ public class TestClassGenerator implements Constants
   private void createTestMethods(final JTypeDeclarationType the_decl,
                                  final JCompilationUnitType the_cUnitType)
   {
-    final Methods mL = new Methods(the_decl.methods(),
-                                   the_decl.getCClass().getAllInheritedMethods());
-    final List methodsList = mL.getCombinedMethodsList();
-
-    for (int i = 0; i < methodsList.size(); i++)
+    if (!the_decl.getAllMethods().isEmpty())
     {
-      final MethodToBeTested method = (MethodToBeTested) methodsList.get(i);
+      my_methods.addAll(the_decl.methods());
+    }
+//   if(the_decl.getCClass().getAllInheritedMethods().isEmpty() == false)
+//     my_methods.addAll(the_decl.getCClass().getAllInheritedMethods());
+          
+    for (int i = 0; i < my_methods.size(); i++)
+    {
+      final MethodToBeTested method = new MethodToBeTested( my_methods.get(i));
       printMethodJavaDoc(method);
       final String name = generateMethodName(method);
       writer.print("public void " + name + "() {");
       writer.print("}");
-
+   
     }
   }
 
