@@ -10,11 +10,14 @@ import java.util.List;
 
 import javax.print.attribute.standard.Destination;
 
+import org.jmlspecs.jmlunit.JntOptions;
 import org.multijava.mjc.CMethod;
+import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JCompilationUnitType;
 import org.multijava.mjc.JTypeDeclarationType;
 import org.multijava.mjc.JavadocLexer;
 import org.multijava.mjc.Main;
+import org.multijava.mjc.MjcCommonOptions;
 import org.multijava.mjc.MjcLexer;
 import org.multijava.mjc.MjcMessages;
 import org.multijava.mjc.MjcOptions;
@@ -40,7 +43,10 @@ import antlr.TokenStreamException;
  */
 public class MainClass extends Main
 {
-  private  MjcOptions options;
+  /**
+   * MjcComminOptions instance to parse the given file.
+   */
+  private  MjcCommonOptions options;
   
  
   /**
@@ -51,28 +57,22 @@ public class MainClass extends Main
   {
     
     final MainClass my_Main = new MainClass();
-    JCompilationUnitType jType = null;
+    JCompilationUnit jType;
     final File parsedArguments = new File(the_args[0]);
-    try{
-      my_Main.options = new MjcOptions(); 
+    try
+    {
+      my_Main.options = new JntOptions("jmlunitng"); 
       MJClassParser parser = new MJClassParser(parsedArguments, my_Main.options);
-      jType = parser.parse();
+      jType = (JCompilationUnit) parser.parse();
+      
+      final JTypeDeclarationType[] decl = jType.typeDeclarations();
+      
+     
+      
     }
     catch (Exception e)
     {
       e.printStackTrace();
     }
-    URI uri = new URI();
-    
-    
-    final JTypeDeclarationType[] decl = jType.typeDeclarations();
-   
- 
-    final String file = "C:\test.java";
-    
-    final TestClassGenerator my_testClass = new TestClassGenerator(file);
-    my_testClass.createTest(decl[0], jType);
-
   }
-
 }
