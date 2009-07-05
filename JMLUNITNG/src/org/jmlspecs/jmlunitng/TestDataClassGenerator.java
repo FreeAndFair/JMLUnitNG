@@ -45,7 +45,7 @@ public class TestDataClassGenerator implements Constants
    * This array represents the list of imported packages.
    */
   protected JPackageImportType[] pkgs;
-
+    
   /** Constructs JMLUNITNGTestDataClassGenerator Object.
    * @param the_fileName
    * @throws FileNotFoundException 
@@ -63,6 +63,7 @@ public class TestDataClassGenerator implements Constants
                                   final JCompilationUnit the_cUnitType, final Iterator the_Iter)
   {
    printHeaderImportandJavadoc(the_decl, the_cUnitType);
+   printDataMembers();
    printConstructor();
    printDataProvider(the_Iter);
    printClassEnd();
@@ -123,6 +124,7 @@ public class TestDataClassGenerator implements Constants
         {
           printDataTypeMethod(parameters[i], name);
         }
+        printCombinedIteratorMethod(parameters, name);
       }
       else if (obj instanceof JMethodDeclaration)
       {
@@ -134,7 +136,7 @@ public class TestDataClassGenerator implements Constants
         {
           printDataTypeMethod(parameters[i], name);
         }
-        
+        printCombinedIteratorMethod(parameters, name);
       }
   
     }
@@ -161,13 +163,18 @@ public class TestDataClassGenerator implements Constants
    */
   private void printCombinedIteratorMethod(final JFormalParameter[] the_parameters, final String the_name)
   {
+    
     writer.print("/** This method returns the combined Iterator of all data types.*/");
     writer.print("public Iterator<Object[]> params_" + the_name +"()");
     writer.print("{");
+    writer.print("allParamIterator = new Iterator[" + the_parameters.length + "];");
     for (int i = 0; i < the_parameters.length; i++)
     {
-      
+      writer.print(" allParamIterator[" + i + "] = " + the_parameters[i].typeToString() +
+                  "_" + the_name + "_" + the_parameters[i].ident()); 
     }
+    writer.print("CombinedIterator combIter = new CombinedIterator(allParamIterator)");
+    writer.print("return combIter");
     writer.print("}");
   }
   /**
@@ -181,6 +188,17 @@ public class TestDataClassGenerator implements Constants
       name.append("_" + parameters[i].typeToString());
     }
     return name.toString();
+  }
+  
+  /**
+   * This method prints the data members of the class.
+   */
+  private void printDataMembers()
+  {
+    writer.print("/**");
+    writer.print("* This is the Iterator array of Iterators for all parameters.");
+    writer.print("*/");
+    writer.print("protected Iterator[] allParamIterator;");
   }
  /**
   * This method prints the end of class bracket "{".
