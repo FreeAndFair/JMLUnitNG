@@ -123,7 +123,7 @@ public class TestClassGenerator implements Constants
   private void printConstructor()
   {
     writer.print("/** Constructs the class object.*/");
-    writer.print("public " + className + DOT_JAVA + " () {");
+    writer.print("public " + className + " () {");
     writer.print("}");
   }
 

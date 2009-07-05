@@ -2,6 +2,7 @@ package org.jmlspecs.jmlunitng;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
 import org.jmlspecs.jmlunit.JntOptions;
 import org.multijava.mjc.JCompilationUnit;
@@ -27,8 +28,9 @@ public class MainClass
   /**
    * This method is the entry point for the tool.
    * @param the_args 
+   * @throws FileNotFoundException 
    */
-  public static void main(final String[]/*@ not null @*/ the_args)
+  public static void main(final String[]/*@ not null @*/ the_args) throws FileNotFoundException
   {
     
     final MainClass my_Main = new MainClass();
@@ -52,6 +54,8 @@ public class MainClass
     TestClassGenerator testgen = new TestClassGenerator("c:\\test.java");
     testgen.createTest(decl[0], jType, my_Main.getMethodIterator(decl[0]));
 
+    TestDataClassGenerator testDataGen = new TestDataClassGenerator("c:\\testData.java");
+    testDataGen.createTestDataClass(decl[0], jType, my_Main.getMethodIterator(decl[0]));
   }
   
   /**
