@@ -11,6 +11,7 @@ import org.multijava.mjc.CMethod;
 import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JCompilationUnitType;
 import org.multijava.mjc.JConstructorDeclaration;
+import org.multijava.mjc.JFormalParameter;
 import org.multijava.mjc.JMethodDeclaration;
 import org.multijava.mjc.JPackageImportType;
 import org.multijava.mjc.JTypeDeclarationType;
@@ -141,25 +142,22 @@ public class TestClassGenerator implements Constants
       Object obj = the_method_Iterator.next();
       if (obj instanceof JConstructorDeclaration)
       {
-        JConstructorDeclaration construct = (JConstructorDeclaration) obj;
-       
-        CMethod method = construct.getMethod();
-      
+        printMethodJavaDoc(obj);
+        final String name = generateMethodName(obj);
+        writer.print("public void " + name + "() {");
+        writer.print("}");   
       }
       else if (obj instanceof JMethodDeclaration)
       {
-        JMethodDeclaration jMethod = (JMethodDeclaration) obj;
-      
-        CMethod method = jMethod.getMethod();
-       
+        printMethodJavaDoc(obj);
+        final String name = generateMethodName(obj);
+        writer.print("public void " + name + "() {");
+        writer.print("}");   
       }
 //      final MethodToBeTested method = new MethodToBeTested(the_method_Iterator.next());
 //     
-//      printMethodJavaDoc(method);
-//      final String name = generateMethodName(method);
-//      writer.print("public void " + name + "() {");
-//      writer.print("}");
-//   
+     
+   
     }
   }
 
@@ -167,27 +165,60 @@ public class TestClassGenerator implements Constants
    * @param the_method
    * @return String
    */
-  private String generateMethodName(final MethodToBeTested the_method)
+  private String generateMethodName(final Object the_method)
   {
     final StringBuilder name = new StringBuilder();
     name.append("test");
-    final Parameter[] pams = the_method.getParaters();
-    for (int i = 0; i < pams.length; i++)
+    
+    if(the_method instanceof JConstructorDeclaration)
     {
-      name.append("_" + pams[i]);
+      JConstructorDeclaration construct = (JConstructorDeclaration) the_method; 
+      name.append("_" + construct.ident());
+      final JFormalParameter[] pams = construct.parameters();
+      for (int i = 0; i < pams.length; i++)
+      {
+        name.append("_" + pams[i].ident());
+      }
+      return name.toString();
+      
     }
-    return name.toString();
-
+    else if (the_method instanceof JMethodDeclaration)
+    {
+      JMethodDeclaration method = (JMethodDeclaration) the_method;
+      name.append("_" + method.ident());
+      final JFormalParameter[] pams = method.parameters();
+      for (int i = 0; i < pams.length; i++)
+      {
+        name.append("_" + pams[i].ident());
+      }
+      return name.toString();
+    }
+    else 
+    {
+      return null;
+    }
   }
 
   /** Prints Javadoc comment for method.
    * @param the_method
    */
-  private void printMethodJavaDoc(final MethodToBeTested the_method)
+  private void printMethodJavaDoc(final Object the_method)
   {
-    writer.print("/** This method is a test for method " + the_method.getName() + "from the ");
-    writer.print(" * Classs to  be tested.");
-    writer.print("*/");
+    if (the_method instanceof JConstructorDeclaration )
+    {
+      JConstructorDeclaration jConstruct = (JConstructorDeclaration) the_method;
+      writer.print("/** This method is a test for Constructor " +
+                   jConstruct.ident() + "from the ");
+      writer.print(" * Classs to  be tested.");
+      writer.print("*/");
+    }
+    else if (the_method instanceof JMethodDeclaration)
+    {
+      JMethodDeclaration method = (JMethodDeclaration) the_method;
+      writer.print("/** This method is a test for Constructor " + method.ident() + "from the ");
+      writer.print(" * Classs to  be tested.");
+      writer.print("*/");
+    }
   }
 
 }
