@@ -177,7 +177,7 @@ public class TestClassGenerator implements Constants
       final JFormalParameter[] pams = construct.parameters();
       for (int i = 0; i < pams.length; i++)
       {
-        name.append("_" + pams[i].ident());
+        name.append("_" + pams[i].typeToString());
       }
       return name.toString();
       
@@ -189,7 +189,7 @@ public class TestClassGenerator implements Constants
       final JFormalParameter[] pams = method.parameters();
       for (int i = 0; i < pams.length; i++)
       {
-        name.append("_" + pams[i].ident());
+        name.append("_" + pams[i].typeToString());
       }
       return name.toString();
     }
