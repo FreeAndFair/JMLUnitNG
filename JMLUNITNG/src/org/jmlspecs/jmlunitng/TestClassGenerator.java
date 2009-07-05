@@ -151,10 +151,6 @@ public class TestClassGenerator implements Constants
         writer.print("public void " + name + "() {");
         writer.print("}");   
       }
-//      final MethodToBeTested method = new MethodToBeTested(the_method_Iterator.next());
-//     
-     
-   
     }
   }
 
