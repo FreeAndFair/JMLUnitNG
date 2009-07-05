@@ -21,7 +21,7 @@ public class Writer
    */
   public Writer(final String the_fileName) throws FileNotFoundException
   {
-    file = "C:\\rinkesh.java";
+    file = the_fileName;
     p = new PrintWriter(file);
   }
 
