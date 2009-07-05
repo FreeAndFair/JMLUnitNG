@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+
+import java.util.Iterator;
 import java.util.List;
 
 import javax.print.attribute.standard.Destination;
@@ -57,22 +59,35 @@ public class MainClass extends Main
   {
     
     final MainClass my_Main = new MainClass();
-    JCompilationUnit jType;
+    JCompilationUnit jType = null;
+    MJClassParser parser;
     final File parsedArguments = new File(the_args[0]);
     try
     {
       my_Main.options = new JntOptions("jmlunitng"); 
-      MJClassParser parser = new MJClassParser(parsedArguments, my_Main.options);
+      parser = new MJClassParser(parsedArguments, my_Main.options);
       jType = (JCompilationUnit) parser.parse();
-      
-      final JTypeDeclarationType[] decl = jType.typeDeclarations();
-      
-     
-      
+          
     }
     catch (Exception e)
     {
       e.printStackTrace();
     }
+   
+    final JTypeDeclarationType[] decl = jType.typeDeclarations();
+    
+    TestClassGenerator testgen = new TestClassGenerator("c:\\test.java");
+    testgen.createTest(decl[0], jType, my_Main.getMethodIterator(decl[0]));
+
+  }
+  
+  /**
+   * Returns the Method iterator.
+   * @return Iterator.
+   */
+  protected Iterator getMethodIterator(JTypeDeclarationType the_decl)
+  {
+    return the_decl.methods().iterator();
   }
 }
+

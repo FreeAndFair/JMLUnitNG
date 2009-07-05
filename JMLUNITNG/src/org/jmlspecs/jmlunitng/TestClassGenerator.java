@@ -4,11 +4,17 @@ package org.jmlspecs.jmlunitng;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import org.multijava.mjc.CMethod;
+import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JCompilationUnitType;
+import org.multijava.mjc.JConstructorDeclaration;
+import org.multijava.mjc.JMethodDeclaration;
 import org.multijava.mjc.JPackageImportType;
 import org.multijava.mjc.JTypeDeclarationType;
+
 
 /**
  * Generates the JMLUNITNG_Test class by JMLUNITNG framework. The generated
@@ -46,7 +52,7 @@ public class TestClassGenerator implements Constants
   /**
    * This is the list of all the methods the class to be tested contains.
    */
-  protected List<Object> my_methods;
+ // protected List<Object> my_methods;
   
   /** 
    * Constructs the TestClassGenerator Object.
@@ -56,8 +62,8 @@ public class TestClassGenerator implements Constants
   public TestClassGenerator(final /*@ non_null @*/ String the_file)
   {
     this.my_file = the_file;
-    this.my_methods = null;
-    my_methods = new ArrayList();
+ //   this.my_methods = null;
+   // my_methods = new ArrayList();
     try
     {
       writer = new Writer(the_file);
@@ -73,12 +79,12 @@ public class TestClassGenerator implements Constants
    * @param the_cUnitType
    */
   public void createTest(final JTypeDeclarationType the_decl, 
-                         final JCompilationUnitType the_cUnitType)
+                         final JCompilationUnit the_cUnitType, final Iterator the_Iter)
   {
 
     printHeaderImportandJavadoc(the_decl, the_cUnitType);
     printConstructor();
-    createTestMethods(the_decl, the_cUnitType);
+    createTestMethods(the_Iter);
 
   }
 
@@ -124,24 +130,36 @@ public class TestClassGenerator implements Constants
    * @param the_decl
    * @param the_cUnitType
    */
-  private void createTestMethods(final JTypeDeclarationType the_decl,
-                                 final JCompilationUnitType the_cUnitType)
+  private void createTestMethods(final Iterator the_method_Iterator)
   {
-    if (!the_decl.getAllMethods().isEmpty())
-    {
-      my_methods.addAll(the_decl.methods());
-    }
+   
 //   if(the_decl.getCClass().getAllInheritedMethods().isEmpty() == false)
 //     my_methods.addAll(the_decl.getCClass().getAllInheritedMethods());
           
-    for (int i = 0; i < my_methods.size(); i++)
+    while(the_method_Iterator.hasNext())
     {
-      final MethodToBeTested method = new MethodToBeTested( my_methods.get(i));
-      printMethodJavaDoc(method);
-      final String name = generateMethodName(method);
-      writer.print("public void " + name + "() {");
-      writer.print("}");
-   
+      Object obj = the_method_Iterator.next();
+      if (obj instanceof JConstructorDeclaration)
+      {
+        JConstructorDeclaration construct = (JConstructorDeclaration) obj;
+       
+        CMethod method = construct.getMethod();
+      
+      }
+      else if (obj instanceof JMethodDeclaration)
+      {
+        JMethodDeclaration jMethod = (JMethodDeclaration) obj;
+      
+        CMethod method = jMethod.getMethod();
+       
+      }
+//      final MethodToBeTested method = new MethodToBeTested(the_method_Iterator.next());
+//     
+//      printMethodJavaDoc(method);
+//      final String name = generateMethodName(method);
+//      writer.print("public void " + name + "() {");
+//      writer.print("}");
+//   
     }
   }
 
