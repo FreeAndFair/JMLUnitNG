@@ -134,10 +134,7 @@ public class TestClassGenerator implements Constants
   private void createTestMethods(final Iterator the_method_Iterator)
   {
    
-//   if(the_decl.getCClass().getAllInheritedMethods().isEmpty() == false)
-//     my_methods.addAll(the_decl.getCClass().getAllInheritedMethods());
-          
-    while(the_method_Iterator.hasNext())
+    while (the_method_Iterator.hasNext())
     {
       Object obj = the_method_Iterator.next();
       if (obj instanceof JConstructorDeclaration)

@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JCompilationUnitType;
 import org.multijava.mjc.JConstructorDeclaration;
+import org.multijava.mjc.JFormalParameter;
 import org.multijava.mjc.JMethodDeclaration;
 import org.multijava.mjc.JPackageImportType;
 import org.multijava.mjc.JTypeDeclarationType;
@@ -110,33 +111,80 @@ public class TestDataClassGenerator implements Constants
     while (the_method_Iterator.hasNext())
     {
       Object obj = the_method_Iterator.next();
-      
+      JFormalParameter[] parameters;
+      String name;
       if (obj instanceof JConstructorDeclaration)
       {
         JConstructorDeclaration construct = (JConstructorDeclaration) obj;
-        writer.print("/** This is the Data Provider method for method " +
-                     construct.ident() + ".");
-        writer.print("*/");
-        writer.print("/*@ DataProvider @*/");
-        writer.print("public void Test_Data_" +  construct.ident() + "()");
-        writer.print("{");
-        writer.print("}");
+        parameters = construct.parameters();
+        name = construct.ident() + "_" + getCombinedName(parameters);
+        
+        for (int i = 0; i < parameters.length; i++)
+        {
+          printDataTypeMethod(parameters[i], name);
+        }
       }
       else if (obj instanceof JMethodDeclaration)
       {
         JMethodDeclaration method = (JMethodDeclaration) obj;
-        writer.print("/** This is the Data Provider method for method " +
-                     method.ident() + ".");
-        writer.print("*/");
-        writer.print("/*@ DataProvider @*/");
-        writer.print("public void Test_Data_" +  method.ident() + "()");
-        writer.print("{");
-        writer.print("}");
+        parameters = method.parameters();
+        name = method.ident() + "_" + getCombinedName(parameters);
+        
+        for (int i = 0; i < parameters.length; i++)
+        {
+          printDataTypeMethod(parameters[i], name);
+        }
+        
       }
   
     }
   }
- 
+  /**
+   * This method print the individual method for each data type
+   * in the method which returns the Iterator of the data type.
+   */
+  private void printDataTypeMethod(final JFormalParameter the_parameter, final String the_name)
+  {
+    writer.print("/** This method returns the Iterator for individual data type.*/");
+    writer.print("public Iterator<" + the_parameter.typeToString() + ">" +
+                 the_parameter.typeToString() + "_" + the_name + "_" + the_parameter.ident() +
+                 "()");
+    writer.print("{");
+    writer.print("Iterator<" + the_parameter.typeToString() + ">" + the_parameter.typeToString() +
+                 "_Iterator = new Iterator<" + the_parameter.typeToString() + ">" + "();");
+    writer.print("return  " + the_parameter.typeToString() + "_Iterator");
+    writer.print("}");
+  }
+  
+  /**
+   * This method prints the combined iterator for the all data types. 
+   */
+  private void printCombinedIteratorMethod(final JFormalParameter[] the_parameters, final String the_name)
+  {
+    writer.print("/** This method returns the combined Iterator of all data types.*/");
+    writer.print("public Iterator<Object[]> params_" + the_name +"()");
+    writer.print("{");
+    for (int i = 0; i < the_parameters.length; i++)
+    {
+      
+    }
+    writer.print("}");
+  }
+  /**
+   * This method generates the name for all parameters together.
+   */
+  private String getCombinedName(JFormalParameter[] parameters)
+  {
+    StringBuilder name = new StringBuilder();
+    for (int i = 0; i < parameters.length; i++)
+    {
+      name.append("_" + parameters[i].typeToString());
+    }
+    return name.toString();
+  }
+ /**
+  * This method prints the end of class bracket "{".
+  */
   private void printClassEnd()
   {
     writer.print("}");
