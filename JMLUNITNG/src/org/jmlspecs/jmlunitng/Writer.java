@@ -42,13 +42,18 @@ public class Writer
     {
       p.print("\n");
     }
+    p.flush();
   }
   /**
-   * Indent a tab.
+   * Indent a space.
    */
-  protected final void tab()
+  protected final void indent(final int the_numberOfIndent)
   {
-    p.print("   ");
+    for (int i = 0; i < the_numberOfIndent; i++)
+    {
+      p.print(" ");
+    }
+    p.flush();
   }
 
 
