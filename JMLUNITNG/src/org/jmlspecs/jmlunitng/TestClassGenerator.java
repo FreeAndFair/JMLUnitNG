@@ -81,9 +81,11 @@ public class TestClassGenerator implements Constants
   public void createTest(final JTypeDeclarationType the_decl, 
                          final JCompilationUnit the_cUnitType, final Iterator the_Iter)
   {
-
+     
     printHeaderImportandJavadoc(the_decl, the_cUnitType);
+    printDataMembers();
     printConstructor();
+    printMainMethod();
     createTestMethods(the_Iter);
 
   }
@@ -162,7 +164,7 @@ public class TestClassGenerator implements Constants
         writer.print("{");
         writer.indent(4);
         writer.print("}");
-        writer.newLine(1); 
+        writer.newLine(2); 
       }
     }
   }
@@ -246,5 +248,26 @@ public class TestClassGenerator implements Constants
       writer.print("  @*/");
     }
   }
-
+  /**
+   * Print the main method for generated test class.
+   */
+  private void printMainMethod()
+  {
+    writer.indent(2);
+    writer.print("public static void main(String[] args)");
+    writer.indent(2);
+    writer.print("{");
+    writer.indent(4);
+    writer.print("junit.textui.TestRunner.run(test);");
+    writer.indent(2);
+    writer.print("}");
+    writer.newLine(2);
+  }
+  /**
+   * Print the Data members for the generated Test class.
+   */
+  private void printDataMembers()
+  {
+    
+  }
 }
