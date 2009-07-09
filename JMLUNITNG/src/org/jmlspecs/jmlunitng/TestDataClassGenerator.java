@@ -12,6 +12,7 @@ import org.multijava.mjc.JConstructorDeclaration;
 import org.multijava.mjc.JFormalParameter;
 import org.multijava.mjc.JMethodDeclaration;
 import org.multijava.mjc.JPackageImportType;
+import org.multijava.mjc.JTypeDeclaration;
 import org.multijava.mjc.JTypeDeclarationType;
 
 /**
@@ -29,6 +30,10 @@ public class TestDataClassGenerator implements Constants
    * Represents the class name for the Test class to be generated.
    */
   protected String className;
+  /**
+   * Represents the name of the class for which the test will be generated.
+   */
+  protected String classNm;
 
   /** Writer class object to print the Test Class. */
   protected Writer writer;
@@ -63,8 +68,9 @@ public class TestDataClassGenerator implements Constants
    * Generate the Test Data methods.
    */
   public void createTestDataClass(final JTypeDeclarationType the_decl,
-                                  final JCompilationUnit the_cUnitType, final Iterator the_Iter)
+  final JCompilationUnit the_cUnitType, final Iterator the_Iter)
   {
+    classNm = the_decl.ident();
     printHeaderImportandJavadoc(the_decl, the_cUnitType);
     printDataMembers();
     printConstructor();
@@ -111,7 +117,7 @@ public class TestDataClassGenerator implements Constants
   }
 
   /** Prints the data provider methods. */
-  private void printDataProvider(Iterator the_method_Iterator)
+  private void printDataProvider(final Iterator the_method_Iterator)
   {
     while (the_method_Iterator.hasNext())
     {
@@ -129,6 +135,7 @@ public class TestDataClassGenerator implements Constants
           printDataTypeMethod(parameters[i], name);
         }
         printCombinedIteratorMethod(parameters, name);
+        printObjectIterator(parameters);
       }
       else if (obj instanceof JMethodDeclaration)
       {
@@ -178,11 +185,12 @@ public class TestDataClassGenerator implements Constants
 
   /**
    * This method prints the combined iterator for the all data types.
+   * 
    * @param the_parameters
    * @param the_name
    */
-  private void printCombinedIteratorMethod
-  (final JFormalParameter[] the_parameters, final String the_name)
+  private void printCombinedIteratorMethod(final JFormalParameter[] the_parameters,
+                                           final String the_name)
   {
 
     writer.print("/** This method returns the combined Iterator of all data types.*/");
@@ -201,7 +209,9 @@ public class TestDataClassGenerator implements Constants
 
   /**
    * This method generates the name for all parameters together.
+   * 
    * @param parameters
+   * @return String
    */
   private String getCombinedName(JFormalParameter[] parameters)
   {
@@ -211,6 +221,29 @@ public class TestDataClassGenerator implements Constants
       name.append("_" + parameters[i].typeToString());
     }
     return name.toString();
+  }
+
+  /**
+   * This method prints the method to return the iterator of objects for given
+   * class.
+   */
+  private void printObjectIterator(final JFormalParameter[] the_parameters)
+  {
+    writer.print("/**This method returns the iterator of objects for test.*/");
+    writer.print(" protected org.jmlspecs.jmlunit.strategies.IndefiniteIterator objects()");
+    writer.print("{");
+    writer.print(" private org.jmlspecs.jmlunit.strategies.StrategyType " + classNm +
+                 "_Strategy =");
+    writer.print("new org.jmlspecs.jmlunit.strategies.NewObjectAbstractStrategy()");
+    writer.print("{");
+    writer.print(" protected Object make() { return new " + classNm + "(");
+    for (int i = 0; i < the_parameters.length; i++)
+    {
+      writer.print(the_parameters[i] + ", ");
+    }
+    writer.print(");");
+    writer.print("}");
+    writer.print("}");
   }
 
   /**
