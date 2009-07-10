@@ -34,6 +34,13 @@ public class Writer
     p.flush();
   }
   /**
+   * Prints without a newline character.
+   */
+  protected final void printOnLine(final String the_line)
+  {
+    p.print(the_line);
+  }
+  /**
    * Print a newline.
    */
   protected final void newLine(final int the_numberOfNewLines)
