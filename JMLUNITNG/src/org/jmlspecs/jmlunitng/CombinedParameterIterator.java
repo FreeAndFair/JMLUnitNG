@@ -10,7 +10,7 @@ import org.multijava.mjc.JFormalParameter;
  * @author Rinkesh Nagmoti
  * @version 1.0
  */
-public class CombinedIterator implements Iterator
+public class CombinedParameterIterator implements Iterator
 {
   /**
   * This array of iterator represents the Array of Iterators for all parameters
@@ -23,7 +23,7 @@ public class CombinedIterator implements Iterator
    * @param the_parameters
    * @param the_name
    */
-  public CombinedIterator (final Iterator[] the_paramIterator)
+  public CombinedParameterIterator (final Iterator[] the_paramIterator)
   {
     my_paramIterator  = new Iterator[the_paramIterator.length];
     for(int i = 0; i < the_paramIterator.length; i++)

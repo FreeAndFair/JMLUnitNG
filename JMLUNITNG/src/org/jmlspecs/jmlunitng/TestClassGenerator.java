@@ -113,7 +113,7 @@ public class TestClassGenerator implements Constants
     writer.print(" * testing framework");
     writer.print(" * for class " + className);
     writer.print(" */");
-    writer.print("public class " + className);
+    writer.print("public class " + className );
     writer.print("{");
   }
 
@@ -144,27 +144,91 @@ public class TestClassGenerator implements Constants
       
       if (obj instanceof JConstructorDeclaration)
       {
-        printMethodJavaDoc(obj);
+        JConstructorDeclaration construct = (JConstructorDeclaration)obj;
         final String name = generateMethodName(obj);
+        printMethodJavaDoc(obj, name);
+        
         writer.indent(4);
-        writer.print("public void " + name + "()");
+        writer.printOnLine("public void " + name + "("+className+" obj");
+        for(int i = 0; i < construct.parameters().length; i++)
+          writer.printOnLine(", " + construct.parameters()[i].typeToString() + 
+                             " " + construct.parameters()[i].ident());
+        writer.printOnLine(")");
+        writer.printOnLine("\n");
         writer.indent(4);
         writer.print("{");
+        writer.indent(6);
+        writer.print("try");
+        writer.indent(8);
+        writer.print("{");
+        writer.indent(10);
+        writer.printOnLine("obj." + construct.ident() + " (");
+        for (int i = 0; i < construct.parameters().length; i++)
+        {
+          writer.printOnLine(construct.parameters()[i].ident());
+          if (i != construct.parameters().length-1)
+          {
+            writer.printOnLine(", ");
+          }
+        } 
+        writer.printOnLine(");");
+        writer.printOnLine("\n");
+        writer.indent(8);
+        writer.print("}");
+        writer.indent(6);
+        writer.print("catch (PreconditionSkipException the_exp)");
+        writer.indent(8);
+        writer.print("{");
+        writer.indent(10);
+        writer.print("System.out.println(the_exp.printStackTrace());");
+        writer.indent(8);
+        writer.print("}");
         writer.indent(4);
         writer.print("}");
         writer.newLine(1);
       }
       else if (obj instanceof JMethodDeclaration)
       {
-        printMethodJavaDoc(obj);
         final String name = generateMethodName(obj);
+        printMethodJavaDoc(obj, name);
+        JMethodDeclaration method = (JMethodDeclaration)obj;
         writer.indent(4);
-        writer.print("public void " + name + "()");
+        writer.printOnLine("public void " + name + "("+className+" obj");
+        for(int i = 0; i < method.parameters().length; i++)
+          writer.printOnLine(", " + method.parameters()[i].typeToString() + 
+                             " " + method.parameters()[i].ident());
+        writer.printOnLine(")");
+        writer.printOnLine("\n");
         writer.indent(4);
         writer.print("{");
+        writer.indent(6);
+        writer.print("try");
+        writer.indent(8);
+        writer.print("{");
+        writer.indent(10);
+        writer.printOnLine("obj." + method.ident() + " (");
+        for (int i = 0; i < method.parameters().length; i++)
+        {
+          writer.printOnLine(method.parameters()[i].ident());
+          if (i != method.parameters().length-1)
+          {
+            writer.printOnLine(", ");
+          }
+        } 
+        writer.printOnLine(");");
+        writer.indent(8);
+        writer.print("}");
+        writer.indent(6);
+        writer.print("catch (PreconditionSkipException the_exp)");
+        writer.indent(8);
+        writer.print("{");
+        writer.indent(10);
+        writer.print("System.out.println(the_exp.printStackTrace());");
+        writer.indent(8);
+        writer.print("}");
         writer.indent(4);
         writer.print("}");
-        writer.newLine(2); 
+        writer.newLine(1);
       }
     }
   }
@@ -210,7 +274,7 @@ public class TestClassGenerator implements Constants
   /** Prints Javadoc comment for method.
    * @param the_method
    */
-  private void printMethodJavaDoc(final Object the_method)
+  private void printMethodJavaDoc(final Object the_method, final String the_name)
   {
    
     if (the_method instanceof JConstructorDeclaration )
@@ -224,11 +288,8 @@ public class TestClassGenerator implements Constants
       writer.indent(2);
       writer.print(" */");
       writer.indent(2);
-      writer.print("/*@Test");
-      writer.indent(2);
-      writer.print("  @DataProvider = params" + className);
-      writer.indent(2);
-      writer.print("  @*/");
+      writer.print("@Test( \"dataProvider = " + the_name+"\")");
+
     }
     else if (the_method instanceof JMethodDeclaration)
     {
@@ -241,11 +302,7 @@ public class TestClassGenerator implements Constants
       writer.indent(2);
       writer.print(" */");
       writer.indent(2);
-      writer.print("/*@Test");
-      writer.indent(2);
-      writer.print("  @DataProvider = params" + className);
-      writer.indent(2);
-      writer.print("  @*/");
+      writer.print("@Test( \"dataProvider = " + the_name+"\")");
     }
   }
   /**
@@ -257,8 +314,7 @@ public class TestClassGenerator implements Constants
     writer.print("public static void main(String[] args)");
     writer.indent(2);
     writer.print("{");
-    writer.indent(4);
-    writer.print("junit.textui.TestRunner.run(test);");
+   
     writer.indent(2);
     writer.print("}");
     writer.newLine(2);

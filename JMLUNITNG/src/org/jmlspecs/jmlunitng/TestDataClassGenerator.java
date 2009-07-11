@@ -105,7 +105,7 @@ public class TestDataClassGenerator implements Constants
     writer.print(" *  testing framework");
     writer.print(" *  for class " + the_decl.ident());
     writer.print(" */");
-    writer.print("public class " + className);
+    writer.print("public class " + className + "extends junit.framework.TestCase");
     writer.print("{");
 
   }
@@ -144,6 +144,7 @@ public class TestDataClassGenerator implements Constants
         }
         printCombinedIteratorMethod(parameters, name);
         printObjectIterator(parameters);
+        printObjectCombinedIterator(name);
       }
       else if (obj instanceof JMethodDeclaration)
       {
@@ -156,6 +157,7 @@ public class TestDataClassGenerator implements Constants
           printDataTypeMethod(parameters[i], name);
         }
         printCombinedIteratorMethod(parameters, name);
+        printObjectCombinedIterator(name);
       }
 
     }
@@ -289,6 +291,27 @@ public class TestDataClassGenerator implements Constants
     writer.newLine(2);
   }
 
+ /**
+  * This method prints the actual data provider method which 
+  * returns the array Object[][].  
+  */
+  private void printObjectCombinedIterator(final String the_name)
+  {
+    writer.indent(2);
+    writer.print("/** This method is the Data Provider for Test in Test Class.");
+    writer.indent(2);
+    writer.print("@DataProvider(name = tests_"+the_name);
+    writer.indent(2);
+    writer.print("public Object[][] tests_"+the_name + "()");
+    writer.indent(2);
+    writer.print("{");
+    writer.indent(4);
+    writer.print("org.jmlspecs.jmlunit.strategies.IndefiniteIterator objectIt =  objects();");
+    writer.print("//This method needs to be completed yet.");
+    writer.indent(2);
+    writer.print("}");
+    writer.newLine(2);
+  }
   /**
    * This method prints the data members of the class.
    */
