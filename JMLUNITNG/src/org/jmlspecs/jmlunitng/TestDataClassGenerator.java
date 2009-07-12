@@ -218,7 +218,7 @@ public class TestDataClassGenerator implements Constants
     writer.indent(2);
     writer.print("/** This method returns the combined Iterator of all data types.*/");
     writer.indent(2);
-    writer.print("public Iterator<Object[]> params_" + the_name + "()");
+    writer.print("public CombinedParameterIterator params_" + the_name + "()");
     writer.indent(2);
     writer.print("{");
     writer.indent(2);
@@ -230,9 +230,9 @@ public class TestDataClassGenerator implements Constants
                    the_name + "_" + the_parameters[i].ident()+";");
     }
     writer.indent(2);
-    writer.print("CombinedIterator combIter = new CombinedIterator(allParamIterator);");
+    writer.print("cmbinedIt = new CombinedIterator(allParamIterator);");
     writer.indent(2);
-    writer.print("return combIter;");
+    writer.print("return cmbinedIt;");
     writer.indent(2);
     writer.print("}");
     writer.newLine(2);
@@ -294,20 +294,27 @@ public class TestDataClassGenerator implements Constants
  /**
   * This method prints the actual data provider method which 
   * returns the array Object[][].  
+  * @param the_name This is the String of class name.
   */
   private void printObjectCombinedIterator(final String the_name)
   {
     writer.indent(2);
     writer.print("/** This method is the Data Provider for Test in Test Class.");
     writer.indent(2);
-    writer.print("@DataProvider(name = tests_"+the_name);
+    writer.print("@DataProvider(name = tests_" + the_name+")");
     writer.indent(2);
-    writer.print("public Object[][] tests_"+the_name + "()");
+    writer.print("public Iterator<Object[]> tests_" + the_name + "()");
     writer.indent(2);
     writer.print("{");
     writer.indent(4);
     writer.print("org.jmlspecs.jmlunit.strategies.IndefiniteIterator objectIt =  objects();");
-    writer.print("//This method needs to be completed yet.");
+    writer.indent(4);
+    writer.print("CombinedParameterIterator combIt = prams_" + the_name + "();");
+    writer.indent(4);
+    writer.print("CombinedObjectParameterIterator combObjParaIt = new" +
+                 " CombinedObjectParameterIterator(combIt, objectIT);");
+    writer.indent(4);
+    writer.print("return combObjParaIt;");
     writer.indent(2);
     writer.print("}");
     writer.newLine(2);
@@ -325,6 +332,16 @@ public class TestDataClassGenerator implements Constants
     writer.print(" */");
     writer.indent(2);
     writer.print("protected Iterator[] allParamIterator;");
+    writer.newLine(1);
+    writer.indent(2);
+    writer.print("/**");
+    writer.indent(2);
+    writer.print(" * This is the CombinedParameterIterator array" +
+                 " of Iterators for all parameters.");
+    writer.indent(2);
+    writer.print(" */");
+    writer.indent(2);
+    writer.print("protected CombinedParamterIterator combinedIt;");
     writer.newLine(1);
   }
 
