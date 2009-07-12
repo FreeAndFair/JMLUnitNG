@@ -68,7 +68,7 @@ public class TestDataClassGenerator implements Constants
    * Generate the Test Data methods.
    */
   public void createTestDataClass(final JTypeDeclarationType the_decl,
-  final JCompilationUnit the_cUnitType, final Iterator the_Iter)
+                                  final JCompilationUnit the_cUnitType, final Iterator the_Iter)
   {
     classNm = the_decl.ident();
     printHeaderImportandJavadoc(the_decl, the_cUnitType);
@@ -241,7 +241,7 @@ public class TestDataClassGenerator implements Constants
     {
       writer.indent(4);
       writer.print("allParamIterator[" + i + "] = " + the_parameters[i].typeToString() + "_" +
-                   the_name + "_" + the_parameters[i].ident()+";");
+                   the_name + "_" + the_parameters[i].ident() + ";");
     }
     writer.indent(4);
     writer.print("cmbinedIt = new CombinedIterator(allParamIterator);");
@@ -294,11 +294,11 @@ public class TestDataClassGenerator implements Constants
     writer.indent(10);
     writer.printOnLine("return new " + classNm + "(");
     for (int i = 0; i < the_parameters.length; i++)
-    { 
-   
+    {
+
       writer.printOnLine(the_parameters[i] + ", ");
     }
-   
+
     writer.printOnLine(");");
     writer.printOnLine("\n");
     writer.indent(8);
@@ -310,17 +310,18 @@ public class TestDataClassGenerator implements Constants
     writer.newLine(2);
   }
 
- /**
-  * This method prints the actual data provider method which 
-  * returns the array Object[][].  
-  * @param the_name This is the String of class name.
-  */
+  /**
+   * This method prints the actual data provider method which returns the array
+   * Object[][].
+   * 
+   * @param the_name This is the String of class name.
+   */
   private void printObjectCombinedIterator(final String the_name)
   {
     writer.indent(2);
     writer.print("/** This method is the Data Provider for Test in Test Class.");
     writer.indent(2);
-    writer.print("@DataProvider(name = tests_" + the_name+")");
+    writer.print("@DataProvider(name = tests_" + the_name + ")");
     writer.indent(2);
     writer.print("public Iterator<Object[]> tests_" + the_name + "()");
     writer.indent(2);
@@ -330,14 +331,15 @@ public class TestDataClassGenerator implements Constants
     writer.indent(4);
     writer.print("CombinedParameterIterator combIt = prams_" + the_name + "();");
     writer.indent(4);
-    writer.print("CombinedObjectParameterIterator combObjParaIt = new" +
-                 " CombinedObjectParameterIterator(combIt, objectIT);");
+    writer.print("CombinedObjectParameterIterator combObjParaIt = new"
+                 + " CombinedObjectParameterIterator(combIt, objectIT);");
     writer.indent(4);
     writer.print("return combObjParaIt;");
     writer.indent(2);
     writer.print("}");
     writer.newLine(2);
   }
+
   /**
    * This method prints the data members of the class.
    */
@@ -355,8 +357,8 @@ public class TestDataClassGenerator implements Constants
     writer.indent(2);
     writer.print("/**");
     writer.indent(2);
-    writer.print(" * This is the CombinedParameterIterator i.e. array" +
-                 " of Iterators for all parameters.");
+    writer.print(" * This is the CombinedParameterIterator i.e. array"
+                 + " of Iterators for all parameters.");
     writer.indent(2);
     writer.print(" */");
     writer.indent(2);

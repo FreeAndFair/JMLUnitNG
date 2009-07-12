@@ -1,21 +1,26 @@
+
 package org.jmlspecs.jmlunitng;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-/** Constructs a Writer Object.
+/**
+ * Constructs a Writer Object.
+ * 
  * @author Rinkesh Nagmoti
  * @version 1.0
  * */
 public class Writer
 {
-  
 
-  /**PrintWriter object to write string to the file.*/
+  /** PrintWriter object to write string to the file. */
   private PrintWriter p;
-  /**String to mention the file name for the class.*/
+  /** String to mention the file name for the class. */
   private String file;
-  /** Constructs a Writer object for java code.
+
+  /**
+   * Constructs a Writer object for java code.
+   * 
    * @param fileName
    *@throws FileNotFoundException;
    */
@@ -25,14 +30,17 @@ public class Writer
     p = new PrintWriter(file);
   }
 
-  /** Prints the string to the file.
-   *  @param s String which will be printed in the file.
+  /**
+   * Prints the string to the file.
+   * 
+   * @param s String which will be printed in the file.
    */
   protected final void print(final String the_line)
   {
     p.print(the_line + "\n");
     p.flush();
   }
+
   /**
    * Prints without a newline character.
    */
@@ -40,6 +48,7 @@ public class Writer
   {
     p.print(the_line);
   }
+
   /**
    * Print a newline.
    */
@@ -51,6 +60,7 @@ public class Writer
     }
     p.flush();
   }
+
   /**
    * Indent a space.
    */
@@ -62,6 +72,5 @@ public class Writer
     }
     p.flush();
   }
-
 
 }

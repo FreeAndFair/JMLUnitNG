@@ -1,22 +1,27 @@
+
 package org.jmlspecs.jmlunitng;
 
 import org.multijava.mjc.CType;
+
 /**
  * Stores the information about the parameter.
+ * 
  * @author Rinkesh Nagmoti
  * @version 1.0
  * 
  */
 public class Parameter
 {
-  /** The CType of this parameter.*/
+  /** The CType of this parameter. */
   final CType my_ctype;
-  /** The string name of this type.*/
+  /** The string name of this type. */
   final String my_type;
-  /** The variable's name.*/
+  /** The variable's name. */
   final String my_ident;
+
   /**
    * Constructs the parameter object.
+   * 
    * @param the_type
    * @param the_ident
    */
@@ -26,6 +31,5 @@ public class Parameter
     this.my_type = the_type.toString();
     this.my_ident = the_ident;
   }
-
 
 }
