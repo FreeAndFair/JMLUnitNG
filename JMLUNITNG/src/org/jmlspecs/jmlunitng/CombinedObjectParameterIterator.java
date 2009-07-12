@@ -17,7 +17,7 @@ public class CombinedObjectParameterIterator
    *  This is the combined parameter iterator.
    */
   
-  protected Iterator<Object[]> paramIter;
+  protected CombinedParameterIterator paramIter;
   /**
    * This is the object iterator.
    */
@@ -34,11 +34,11 @@ public class CombinedObjectParameterIterator
   /**
    *  This is the Iterator for reassignment.
    */
-  private Iterator<Object[]> paramReassign;
+  private CombinedParameterIterator paramReassign;
   /**
    * Constructs the object of CombinedObjectParameterIterator.
    */
-  public CombinedObjectParameterIterator(final Iterator<Object[]> the_paraIter,
+  public CombinedObjectParameterIterator(final CombinedParameterIterator the_paraIter,
                                          final Iterator<Object> the_objIter)
   {
     paramIter = the_paraIter;
