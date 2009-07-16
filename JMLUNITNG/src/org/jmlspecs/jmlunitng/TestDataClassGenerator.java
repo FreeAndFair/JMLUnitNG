@@ -226,7 +226,7 @@ public class TestDataClassGenerator implements Constants
                                            final String the_name)
   {
     writer.indent(2);
-    writer.print("/** */");
+    writer.print("/**");
     writer.indent(2);
     writer.print(" * This method returns the combined Iterator of all data types.");
     writer.indent(2);
@@ -319,7 +319,11 @@ public class TestDataClassGenerator implements Constants
   private void printObjectCombinedIterator(final String the_name)
   {
     writer.indent(2);
-    writer.print("/** This method is the Data Provider for Test in Test Class.");
+    writer.print("/**");
+    writer.indent(2);
+    writer.print(" * This method is the Data Provider for Test in Test Class.");
+    writer.indent(2);
+    writer.print(" */");
     writer.indent(2);
     writer.print("@DataProvider(name = tests_" + the_name + ")");
     writer.indent(2);
