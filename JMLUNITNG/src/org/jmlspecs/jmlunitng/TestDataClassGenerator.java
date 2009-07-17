@@ -218,27 +218,28 @@ public class TestDataClassGenerator implements Constants
 
       if (the_parameter.typeToString().equals("String[]"))
       {
-        writer.print(" ArrayList<String> " + the_parameter.ident() + "_" + "String" +
-                     "_Strategy =" + " new ArrayList<String>();");
+        writer.print(" java.util.ArrayList<String> " + the_parameter.ident() + "_" + "String" +
+                     "_Strategy =" + " new java.util.ArrayList<String>();");
       }
       if (the_parameter.typeToString().equals("String"))
       {
-        writer.print(" ArrayList<String> " + the_parameter.ident() + "_" + "String" +
-                     "_Strategy =" + " new ArrayList<String>();");
+        writer.print(" java.util.ArrayList<String> " + the_parameter.ident() + "_" + "String" +
+                     "_Strategy =" + " new java.util.ArrayList<String>();");
       }
+      writer.indent(4);
+      writer.print(the_parameter.ident() + "_" + "String" +
+                   "_Strategy.add(\"k\");");
       writer.indent(2);
-      writer.print("data.add(\"k\");");
-      writer.indent(2);
-      writer.print("/* Add more Data elements here.");
+      writer.print("/* Add more Data elements here.*/");
       writer.indent(2);
       writer.print("return " + the_parameter.ident() + "_" + "String" +
                    "_Strategy.iterator();");
     }
     else
     {
-      writer.print(" private org.jmlspecs.jmlunit.strategies." + parameter + "StrategyType " +
+      writer.print("org.jmlspecs.jmlunit.strategies." + parameter + "StrategyType " +
                    the_parameter.ident() + "_" + the_parameter.typeToString() + "_Strategy =" +
-                   " new org.jmlspecs.jmlunit.strategies." + the_parameter.typeToString() +
+                   " new org.jmlspecs.jmlunit.strategies." + parameter +
                    "Strategy()");
 
       writer.indent(4);
@@ -346,14 +347,14 @@ public class TestDataClassGenerator implements Constants
     writer.indent(2);
     writer.print("{");
     writer.indent(4);
-    writer.print(" private org.jmlspecs.jmlunit.strategies.StrategyType " + classNm +
+    writer.print(" org.jmlspecs.jmlunit.strategies.StrategyType " + classNm +
                  "_Strategy =");
     writer.indent(4);
     writer.print("new org.jmlspecs.jmlunit.strategies.NewObjectAbstractStrategy()");
     writer.indent(6);
     writer.print("{");
     writer.indent(7);
-    writer.print(" protected Object make()");
+    writer.print(" protected Object make(int a)");
     writer.indent(8);
     writer.print("{");
     writer.indent(10);
@@ -368,6 +369,8 @@ public class TestDataClassGenerator implements Constants
     writer.printOnLine("\n");
     writer.indent(8);
     writer.print("}");
+    writer.indent(8);
+    writer.print("};");
     writer.indent(8);
     writer.print("return " + classNm + "_Strategy.iterator();");
     writer.indent(6);
