@@ -273,8 +273,8 @@ public class TestClassGenerator implements Constants
       for (int i = 0; i < pams.length; i++)
       {
         if (pams[i].typeToString().equals("String[]"))
-        { 
-          name.append("_" + "StringArray");  
+        {
+          name.append("_" + "StringArray");
         }
         else
         {
@@ -327,11 +327,11 @@ public class TestClassGenerator implements Constants
       writer.print(" * class to  be tested.");
       writer.indent(2);
       writer.print(" * @param the_obj The object to be passed.");
-      for(int i = 0; i < jConstruct.parameters().length; i++)
+      for (int i = 0; i < jConstruct.parameters().length; i++)
       {
         writer.indent(2);
-        writer.print(" * @param the_" + jConstruct.parameters()[i].ident() +
-                     " The " + jConstruct.parameters()[i].typeToString() + " to be passed.");
+        writer.print(" * @param the_" + jConstruct.parameters()[i].ident() + " The " +
+                     jConstruct.parameters()[i].typeToString() + " to be passed.");
       }
       writer.indent(2);
       writer.print(" */");
@@ -352,8 +352,8 @@ public class TestClassGenerator implements Constants
       for (int i = 0; i < method.parameters().length; i++)
       {
         writer.indent(2);
-        writer.print(" * @param the_" + method.parameters()[i].ident() +
-                     " The " + method.parameters()[i].typeToString() + " to be passed.");
+        writer.print(" * @param the_" + method.parameters()[i].ident() + " The " +
+                     method.parameters()[i].typeToString() + " to be passed.");
       }
       writer.indent(2);
       writer.print(" */");

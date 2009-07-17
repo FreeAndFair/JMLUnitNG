@@ -190,33 +190,74 @@ public class TestDataClassGenerator implements Constants
     writer.print(" */");
     writer.indent(2);
     String parameter = the_parameter.typeToString();
-    parameter.replace(parameter.charAt(0), Character.toUpperCase(parameter.charAt(0)));
-    writer.print("public org.jmlspecs.jmlunit.strategies." + parameter +
-                 "Iterator " + the_parameter.typeToString() + "_" + the_name + "_" +
-                 the_parameter.ident() + "()");
+    char c = Character.toUpperCase(parameter.charAt(0));
+    parameter = parameter.replace(parameter.charAt(0), c);
+    if (the_parameter.typeToString().equals("String[]"))
+    {
+
+      writer.print("public Iterator<String>" + "StringArray" + "_" + the_name + "_" +
+                   the_parameter.ident() + "()");
+    }
+    else if (the_parameter.typeToString().equals("String"))
+    {
+      writer.print("public Iterator<String>" + "String" + "_" + the_name + "_" +
+                   the_parameter.ident() + "()");
+    }
+    else
+    {
+      writer.print("public org.jmlspecs.jmlunit.strategies." + parameter + "Iterator " +
+                   the_parameter.typeToString() + "_" + the_name + "_" +
+                   the_parameter.ident() + "()");
+    }
     writer.indent(2);
     writer.print("{");
     writer.indent(2);
-    writer.print(" private org.jmlspecs.jmlunit.strategies." + parameter +
-                 "StrategyType " + the_parameter.ident() + "_" + the_parameter.typeToString() +
-                 "_Strategy =" + " new org.jmlspecs.jmlunit.strategies." +
-                 the_parameter.typeToString() + "Strategy()");
-    writer.indent(4);
-    writer.print("{");
-    writer.indent(6);
-    writer.print("protected " + the_parameter.typeToString() + "[] " + "addData()");
-    writer.indent(8);
-    writer.print("{");
-    writer.indent(10);
-    writer.print("return new " + the_parameter.typeToString() + "[] " +
-                 "{/*You can add data elements here.*/};");
-    writer.indent(8);
-    writer.print("}");
-    writer.indent(4);
-    writer.print("};");
-    writer.indent(2);
-    writer.print("return  " + the_parameter.ident() + "_" + the_parameter.typeToString() +
-                 "_Strategy." + the_parameter.typeToString() + "Iterator();");
+    if (the_parameter.typeToString().equals("String[]") ||
+        the_parameter.typeToString().equals("String"))
+    {
+
+      if (the_parameter.typeToString().equals("String[]"))
+      {
+        writer.print(" ArrayList<String> " + the_parameter.ident() + "_" + "String" +
+                     "_Strategy =" + " new ArrayList<String>();");
+      }
+      if (the_parameter.typeToString().equals("String"))
+      {
+        writer.print(" ArrayList<String> " + the_parameter.ident() + "_" + "String" +
+                     "_Strategy =" + " new ArrayList<String>();");
+      }
+      writer.indent(2);
+      writer.print("data.add(\"k\");");
+      writer.indent(2);
+      writer.print("/* Add more Data elements here.");
+      writer.indent(2);
+      writer.print("return " + the_parameter.ident() + "_" + "String" +
+                   "_Strategy.iterator();");
+    }
+    else
+    {
+      writer.print(" private org.jmlspecs.jmlunit.strategies." + parameter + "StrategyType " +
+                   the_parameter.ident() + "_" + the_parameter.typeToString() + "_Strategy =" +
+                   " new org.jmlspecs.jmlunit.strategies." + the_parameter.typeToString() +
+                   "Strategy()");
+
+      writer.indent(4);
+      writer.print("{");
+      writer.indent(6);
+      writer.print("protected " + the_parameter.typeToString() + "[] " + "addData()");
+      writer.indent(8);
+      writer.print("{");
+      writer.indent(10);
+      writer.print("return new " + the_parameter.typeToString() + "[] " +
+                   "{/*You can add data elements here.*/};");
+      writer.indent(8);
+      writer.print("}");
+      writer.indent(4);
+      writer.print("};");
+      writer.indent(2);
+      writer.print("return  " + the_parameter.ident() + "_" + the_parameter.typeToString() +
+                   "_Strategy." + the_parameter.typeToString() + "Iterator();");
+    }
     writer.indent(2);
     writer.print("}");
     writer.newLine(1);
@@ -248,12 +289,20 @@ public class TestDataClassGenerator implements Constants
     for (int i = 0; i < the_parameters.length; i++)
     {
       writer.indent(4);
-      writer.print("allParamIterator[" + i + "] = (Iterator)" + 
-                   the_parameters[i].typeToString() + "_" +
-                   the_name + "_" + the_parameters[i].ident() + "();");
+      if (the_parameters[i].typeToString().equals("String[]"))
+      {
+        writer.print("allParamIterator[" + i + "] = (Iterator)" + "StringArray" + "_" +
+                     the_name + "_" + the_parameters[i].ident() + "();");
+      }
+      else
+      {
+        writer.print("allParamIterator[" + i + "] = (Iterator)" +
+                     the_parameters[i].typeToString() + "_" + the_name + "_" +
+                     the_parameters[i].ident() + "();");
+      }
     }
     writer.indent(4);
-    writer.print("combinedIt = new CombinedIterator(allParamIterator);");
+    writer.print("combinedIt = new CombinedParameterIterator(allParamIterator);");
     writer.indent(4);
     writer.print("return combinedIt;");
     writer.indent(2);
@@ -276,7 +325,7 @@ public class TestDataClassGenerator implements Constants
       {
         name.append("_" + "StringArray");
       }
-      else 
+      else
       {
         name.append("_" + parameters[i].typeToString());
       }
@@ -309,11 +358,11 @@ public class TestDataClassGenerator implements Constants
     writer.print("{");
     writer.indent(10);
     writer.printOnLine("return new " + classNm + "(0, 0");
-//    for (int i = 0; i < the_parameters.length; i++)
-//    {
-//
-//      writer.printOnLine(the_parameters[i] + ", ");
-//    }
+    // for (int i = 0; i < the_parameters.length; i++)
+    // {
+    //
+    // writer.printOnLine(the_parameters[i] + ", ");
+    // }
 
     writer.printOnLine(");");
     writer.printOnLine("\n");
@@ -341,7 +390,7 @@ public class TestDataClassGenerator implements Constants
     writer.indent(2);
     writer.print(" */");
     writer.indent(2);
-    writer.print("@DataProvider(name = tests_\"" + the_name + "\")");
+    writer.print("@DataProvider(name = \"tests_" + the_name + "\")");
     writer.indent(2);
     writer.print("public Iterator<Object[]> tests_" + the_name + "()");
     writer.indent(2);
@@ -349,12 +398,12 @@ public class TestDataClassGenerator implements Constants
     writer.indent(4);
     writer.print("org.jmlspecs.jmlunit.strategies.IndefiniteIterator objectIt =  objects();");
     writer.indent(4);
-    writer.print("CombinedParameterIterator combIt = prams_" + the_name + "();");
+    writer.print("CombinedParameterIterator combIt = params_" + the_name + "();");
     writer.indent(4);
-    writer.print("CombinedObjectParameterIterator combObjParaIt = new" +
-                 " CombinedObjectParameterIterator(combIt, objectIt);");
+    writer.print("CombinedObjectParameterIterator combObjParaIt = new"
+                 + " CombinedObjectParameterIterator(combIt, (Iterator)objectIt);");
     writer.indent(4);
-    writer.print("return combObjParaIt;");
+    writer.print("return (Iterator<Object[]>)combObjParaIt;");
     writer.indent(2);
     writer.print("}");
     writer.newLine(2);
@@ -382,7 +431,7 @@ public class TestDataClassGenerator implements Constants
     writer.indent(2);
     writer.print(" */");
     writer.indent(2);
-    writer.print("protected CombinedParamterIterator combinedIt;");
+    writer.print("protected CombinedParameterIterator combinedIt;");
     writer.newLine(1);
   }
 
