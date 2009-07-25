@@ -1,7 +1,10 @@
 
 package org.jmlspecs.jmlunitng;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.jmlspecs.jmlunit.strategies.IndefiniteIterator;
 
 import com.sun.corba.se.spi.ior.ObjectId;
 
@@ -12,14 +15,14 @@ import com.sun.corba.se.spi.ior.ObjectId;
  * @author Rinkesh Nagmoti.
  * @version 1.0
  */
-public class CombinedObjectParameterIterator
+public class CombinedObjectParameterIterator implements Iterator
 {
 
   /**
    * This is the combined parameter iterator.
    */
 
-  protected CombinedParameterIterator paramIter;
+  protected Iterator<Object[]> paramIter;
   /**
    * This is the object iterator.
    */
@@ -36,17 +39,39 @@ public class CombinedObjectParameterIterator
   /**
    * This is the Iterator for reassignment.
    */
-  private CombinedParameterIterator paramReassign;
+  private ArrayList<Object[]> paramReassign;
 
+  
   /**
    * Constructs the object of CombinedObjectParameterIterator.
    */
   public CombinedObjectParameterIterator(final CombinedParameterIterator the_paraIter,
                                          final Iterator<Object> the_objIter)
   {
-    paramIter = the_paraIter;
+    
+    paramReassign = new ArrayList<Object[]>();
+    int cnt =0;
+    while(the_paraIter.hasNext())
+    {
+      Object[] tempArray = the_paraIter.next();
+      Object[] newArray = new Object[tempArray.length];
+      for(int i = 0; i < tempArray.length; i++)
+      {
+        newArray[i] = tempArray[i];
+      }
+      
+      paramReassign.add(newArray);
+     
+      cnt++;
+    }
+ 
+       
+    
+ 
+    paramIter = paramReassign.iterator();
+   
     objIter = the_objIter;
-    paramReassign = the_paraIter;
+   // paramReassign = the_paraIter;
   }
 
   /**
@@ -78,56 +103,66 @@ public class CombinedObjectParameterIterator
       if (currentObj == null)
       {
         currentObj = objIter.next();
+        
         currentParams = paramIter.next();
         Object[] newArray = new Object[currentParams.length + 1];
-        for (int i = 1; i < paramIter.next().length + 1; i++)
+        for (int i = 1; i < currentParams.length + 1; i++)
         {
-          newArray[i] = currentParams[i];
+          newArray[i] = currentParams[i - 1];
         }
         newArray[0] = currentObj;
-
+       
         return newArray;
       }
-
-      if (!paramIter.hasNext())
+      else
       {
-        if (objIter.hasNext())
+        if (paramIter.hasNext())
         {
-          currentObj = objIter.next();
-          paramIter = paramReassign;
           currentParams = paramIter.next();
+         
           Object[] newArray = new Object[currentParams.length + 1];
-          for (int i = 1; i < paramIter.next().length + 1; i++)
+          for (int i = 1; i < currentParams.length + 1; i++)
           {
-            newArray[i] = currentParams[i];
+            newArray[i] = currentParams[i-1];
           }
           newArray[0] = currentObj;
-
+         
           return newArray;
         }
         else
         {
-          return null;
+          if (objIter.hasNext())
+          {
+            currentObj = objIter.next();
+            
+            paramIter = paramReassign.iterator();
+           
+            currentParams = paramIter.next();
+            Object[] newArray = new Object[currentParams.length + 1];
+            for (int i = 1; i < currentParams.length + 1; i++)
+            {
+              newArray[i] = currentParams[i-1];
+            }
+            newArray[0] = currentObj;
+           
+            return newArray;
+          }
+          else
+          {
+          
+            return null;
+          }
         }
       }
-      else
-      {
-        currentParams = paramIter.next();
-        Object[] newArray = new Object[currentParams.length + 1];
-        for (int i = 1; i < paramIter.next().length + 1; i++)
-        {
-          newArray[i] = currentParams[i];
-        }
-        newArray[0] = currentObj;
-
-        return newArray;
-      }
-
     }
+    
     else
     {
+    
       return null;
     }
+   
+
   }
 
   /**
@@ -141,10 +176,7 @@ public class CombinedObjectParameterIterator
       {
         paramIter.remove();
       }
-      else
-      {
-        objIter.remove();
-      }
+      
     }
     else
     {

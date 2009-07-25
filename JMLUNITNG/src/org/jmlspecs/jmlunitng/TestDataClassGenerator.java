@@ -514,9 +514,9 @@ public class TestDataClassGenerator implements Constants
     writer.indent(2);
     writer.print(" */");
     writer.indent(2);
-    writer.print("@DataProvider(name = \"tests_" + name + "\")");
+    writer.print("@DataProvider(name = \"test_" + name + "\")");
     writer.indent(2);
-    writer.print("public Iterator<Object[]> tests_" + name + "()");
+    writer.print("public Iterator<Object[]> test_" + name + "()");
     writer.indent(2);
     writer.print("{");
     writer.indent(4);
