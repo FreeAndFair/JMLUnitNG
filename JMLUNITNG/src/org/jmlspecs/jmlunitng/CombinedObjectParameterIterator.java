@@ -103,7 +103,7 @@ public class CombinedObjectParameterIterator implements Iterator
       if (currentObj == null)
       {
         currentObj = objIter.next();
-        
+       
         currentParams = paramIter.next();
         Object[] newArray = new Object[currentParams.length + 1];
         for (int i = 1; i < currentParams.length + 1; i++)
