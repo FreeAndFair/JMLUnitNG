@@ -49,6 +49,7 @@ public class CombinedObjectParameterIterator implements Iterator
                                          final Iterator<Object> the_objIter)
   {
     
+   
     paramReassign = new ArrayList<Object[]>();
     int cnt =0;
     while(the_paraIter.hasNext())
@@ -58,6 +59,7 @@ public class CombinedObjectParameterIterator implements Iterator
       for(int i = 0; i < tempArray.length; i++)
       {
         newArray[i] = tempArray[i];
+        
       }
       
       paramReassign.add(newArray);
@@ -67,7 +69,7 @@ public class CombinedObjectParameterIterator implements Iterator
  
        
     
- 
+    
     paramIter = paramReassign.iterator();
    
     objIter = the_objIter;

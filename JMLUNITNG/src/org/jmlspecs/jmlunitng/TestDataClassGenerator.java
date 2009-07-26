@@ -388,7 +388,7 @@ public class TestDataClassGenerator implements Constants
     writer.indent(6);
     writer.print("int objectCount = 0;");
     writer.indent(6);
-    writer.print("int numberOfObjects = 0;");
+    writer.print("int numberOfObjects = 2;//change this number for more objects.");
     writer.indent(6);
     writer.print("while (objectCount < numberOfObjects)");
     writer.indent(6);
