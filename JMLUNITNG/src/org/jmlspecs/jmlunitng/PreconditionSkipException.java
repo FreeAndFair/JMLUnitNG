@@ -14,13 +14,18 @@ public class PreconditionSkipException extends SkipException
 {
 
   /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+
+  /**
    * Constructs the PreconditionSkipException Object.
    * 
-   * @param the_skipMessage String != null
+   * @param the_skip_message String != null
    */
-  public PreconditionSkipException(final String the_skipMessage)
+  public PreconditionSkipException(final String the_skip_message)
   {
-    super(the_skipMessage);
+    super(the_skip_message);
   }
 
 }

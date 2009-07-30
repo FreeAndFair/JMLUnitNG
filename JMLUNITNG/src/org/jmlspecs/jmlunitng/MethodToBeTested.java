@@ -15,30 +15,30 @@ public class MethodToBeTested
 {
 
   /** Represents the return type of the method. */
-  final CType my_returnType;
+  private final transient CType my_returnType;
   /** Represents the method's modifiers. */
-  final long my_modifier;
+  private final transient long my_modifier;
   /** Represents the name of the Method. */
-  final String my_methodName;
+  private final transient String my_methodName;
   /** The method's parameters. */
-  final Parameter[] my_parameters;
+  private final transient Parameter[] my_parameters;
 
   /**
    * Constructs the Object to of MethodToBeTested.
    * 
-   * @param the_mehod
+   * @param the_mth The Object to be passed as parameter.
    */
   public MethodToBeTested(final Object the_mth)
   {
-    CMethod the_method = (CMethod) the_mth;
+    final CMethod the_method = (CMethod) the_mth;
     my_returnType = the_method.returnType();
     my_modifier = the_method.modifiers();
     my_methodName = the_method.getIdent();
-    final CSpecializedType[] ts = the_method.parameters();
-    my_parameters = new Parameter[ts.length];
-    for (int i = 0; i < ts.length; i++)
+    final CSpecializedType[] cspType = the_method.parameters();
+    my_parameters = new Parameter[cspType.length];
+    for (int i = 0; i < cspType.length; i++)
     {
-      my_parameters[i] = new Parameter(ts[i].staticType(), "arg" + (i + 1));
+      my_parameters[i] = new Parameter(cspType[i].staticType(), "arg" + (i + 1));
     }
   }
 

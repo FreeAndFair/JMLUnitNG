@@ -34,6 +34,30 @@ public interface Constants extends org.multijava.mjc.Constants
   String PKG_JMLUNITNG = "org.jmlspecs.jmlunitng.";
   /** The name of the JML jmlunitng strategies package. */
   String PKG_STRATEGIES = "org.jmlspecs.jmlunitng.strategies.";
+  /**
+   * This is the constants for indentation.
+   */
+  int ONE = 1;
+  /**
+   * This is the constants for indentation.
+   */
+  int TWO = 2;
+  /**
+   * This is the constants for indentation.
+   */
+  int FOUR = 4;
+  /**
+   * This is the constants for indentation.
+   */
+  int SIX = 6;
+  /**
+   * This is the constants for indentation.
+   */
+  int EIGHT = 8;
+  /**
+   * This is the constants for indentation.
+   */
+  int TEN = 10;
 
   /*
    * @ invariant PKG_JUNIT.length() > 0

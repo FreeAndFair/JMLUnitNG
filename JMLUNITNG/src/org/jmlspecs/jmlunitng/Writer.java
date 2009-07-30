@@ -14,63 +14,65 @@ public class Writer
 {
 
   /** PrintWriter object to write string to the file. */
-  private PrintWriter p;
-  /** String to mention the file name for the class. */
-  private String file;
+  private final transient PrintWriter my_print_writer;
+
 
   /**
    * Constructs a Writer object for java code.
    * 
-   * @param fileName
-   *@throws FileNotFoundException;
+   * @param the_file_name String name of the file.
+   *@throws FileNotFoundException Exception if unable to find specified file. 
    */
-  public Writer(final String the_fileName) throws FileNotFoundException
+  public Writer(final String the_file_name) throws FileNotFoundException
   {
-    file = the_fileName;
-    p = new PrintWriter(file);
+    final String my_file = the_file_name;
+    my_print_writer = new PrintWriter(my_file);
   }
 
   /**
    * Prints the string to the file.
    * 
-   * @param s String which will be printed in the file.
+   * @param the_line String which will be printed in the file.
    */
   protected final void print(final String the_line)
   {
-    p.print(the_line + "\n");
-    p.flush();
+    my_print_writer.print(the_line + "\n");
+    my_print_writer.flush();
   }
 
   /**
    * Prints without a newline character.
+   * @param the_line The line to be printed.
    */
   protected final void printOnLine(final String the_line)
   {
-    p.print(the_line);
+    my_print_writer.print(the_line);
   }
 
   /**
    * Print a newline.
+   * @param the_new_lines The number of new lines to be inserted.
    */
-  protected final void newLine(final int the_numberOfNewLines)
+  protected final void newLine(final int the_new_lines)
   {
-    for (int i = 0; i < the_numberOfNewLines; i++)
+    for (int i = 0; i < the_new_lines; i++)
     {
-      p.print("\n");
+      my_print_writer.print("\n");
     }
-    p.flush();
+    my_print_writer.flush();
   }
 
   /**
    * Indent a space.
+   * @param the_indent The number of spaces for indentation.
    */
-  protected final void indent(final int the_numberOfIndent)
+  protected final void indent(final int the_indent)
   {
-    for (int i = 0; i < the_numberOfIndent; i++)
+    for (int i = 0; i < the_indent; i++)
     {
-      p.print(" ");
+      my_print_writer.print(" ");
     }
-    p.flush();
+    my_print_writer.flush();
   }
 
 }

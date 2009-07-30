@@ -8,6 +8,11 @@ import org.jmlspecs.jmlunit.JntOptions;
 import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JTypeDeclarationType;
 import org.multijava.mjc.MjcCommonOptions;
+import org.multijava.mjc.ParsingController.ConfigurationException;
+import org.testng.log4testng.Logger;
+
+import antlr.RecognitionException;
+import antlr.TokenStreamException;
 
 /**
  * This class creates the test classes after receiving command from command
@@ -21,49 +26,69 @@ public class MainClass
   /**
    * MjcComminOptions instance to parse the given file.
    */
-  protected MjcCommonOptions options;
+  protected final transient MjcCommonOptions my_options;
 
+  /**
+   * Constructs the MainClass object.
+   */
+  public MainClass()
+  {
+    my_options = new JntOptions("jmlunitng");
+  }
+  
   /**
    * This method is the entry point for the tool.
    * 
-   * @param the_args
-   * @throws FileNotFoundException
+   * @param the_args This is the argument to be passed to main method.
+   * @throws FileNotFoundException  exception if unable to find the file.
    */
   public static void main(final String[]/* @ not null @ */the_args)
-      throws FileNotFoundException
+    throws FileNotFoundException
   {
-
+    final Logger my_logger = Logger.getLogger(org.jmlspecs.jmlunitng.MainClass.class);
     final MainClass my_Main = new MainClass();
-    JCompilationUnit jType = null;
+    JCompilationUnit j_type = null;
     MJClassParser parser;
     final File parsedArguments = new File(the_args[0]);
     try
     {
-      my_Main.options = new JntOptions("jmlunitng");
-      parser = new MJClassParser(parsedArguments, my_Main.options);
-      jType = (JCompilationUnit) parser.parse();
+      
+      parser = new MJClassParser(parsedArguments, my_Main.my_options);
+      j_type = (JCompilationUnit) parser.parse();
 
     }
-    catch (Exception e)
+    catch (final TokenStreamException e)
     {
-      e.printStackTrace();
+      my_logger.error("TokenStreamException " + e.getMessage());
+      
+    } 
+    catch (final RecognitionException e)
+    {
+      my_logger.error("RecognitionException " + e.getMessage());
+    } 
+    catch (final ConfigurationException e)
+    {
+      my_logger.error("ConfigurationException " + e.getMessage());
     }
+   
 
-    final JTypeDeclarationType[] decl = jType.typeDeclarations();
+    final JTypeDeclarationType[] decl = j_type.typeDeclarations();
 
-    TestClassGenerator testgen = new TestClassGenerator("c:\\Addition_JMLUNITNG_Test.java");
-    testgen.createTest(decl[0], jType, my_Main.getMethodIterator(decl[0]));
+    final TestClassGenerator testgen = new 
+    TestClassGenerator("c:\\Addition_JMLUNITNG_Test.java", decl[0], j_type);
+    testgen.createTest(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
 
-    TestDataClassGenerator testDataGen = new TestDataClassGenerator("c:\\Addition_JMLUNITNG_Test_Data.java");
-    testDataGen.createTestDataClass(decl[0], jType, my_Main.getMethodIterator(decl[0]));
+    final TestDataClassGenerator testDataGen = new 
+    TestDataClassGenerator("c:\\Addition_JMLUNITNG_Test_Data.java", decl[0], j_type);
+    testDataGen.createTestDataClass(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
   }
 
   /**
    * Returns the Method iterator.
-   * 
+   * @param the_decl This is JTypeDeclarationType object to be passed as argument.
    * @return Iterator.
    */
-  protected Iterator getMethodIterator(JTypeDeclarationType the_decl)
+  protected Iterator getMethodIterator(final JTypeDeclarationType the_decl)
   {
     return the_decl.methods().iterator();
   }

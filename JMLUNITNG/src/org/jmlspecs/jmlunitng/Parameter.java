@@ -13,17 +13,17 @@ import org.multijava.mjc.CType;
 public class Parameter
 {
   /** The CType of this parameter. */
-  final CType my_ctype;
+  private final transient CType my_ctype;
   /** The string name of this type. */
-  final String my_type;
+  private final transient String my_type;
   /** The variable's name. */
-  final String my_ident;
+  private final transient String my_ident;
 
   /**
    * Constructs the parameter object.
    * 
-   * @param the_type
-   * @param the_ident
+   * @param the_type The CType object.
+   * @param the_ident The String for identity.
    */
   public Parameter(final CType the_type, final String the_ident)
   {
