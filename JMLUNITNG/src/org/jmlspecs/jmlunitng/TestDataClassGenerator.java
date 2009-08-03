@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
+
 import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JCompilationUnitType;
 import org.multijava.mjc.JConstructorDeclaration;
@@ -108,8 +110,6 @@ public class TestDataClassGenerator implements Constants
     my_writer.print("import org.jmlspecs.jmlunit.strategies.*;");
     my_writer.print("import org.testng.*;");
     my_writer.print("import java.util.Iterator;");
-    my_writer.print("import org.jmlspecs.jmlunitng.CombinedObjectParameterIterator;");
-    my_writer.print("import org.jmlspecs.jmlunitng.CombinedParameterIterator;");
     my_writer.print("import org.testng.annotations.*;");
     my_writer.print("import java.util.*;");
     my_writer.newLine(TWO);
@@ -164,9 +164,9 @@ public class TestDataClassGenerator implements Constants
       {
         printDataTypeMethod(parameters[i], name);
       }
-      printCombinedIteratorMethod(parameters, name);
+     // printCombinedIteratorMethod(parameters, name);
       printObjectIterator(the_decl);
-      printObjectCombinedIterator(name);
+      //printObjectCombinedIterator(name);
     }
     else if (obj instanceof JMethodDeclaration)
     {
@@ -178,9 +178,9 @@ public class TestDataClassGenerator implements Constants
       {
         printDataTypeMethod(parameters[i], name);
       }
-      printCombinedIteratorMethod(parameters, name);
+    //  printCombinedIteratorMethod(parameters, name);
       printObjectIterator(the_decl);
-      printObjectCombinedIterator(name);
+      //printObjectCombinedIterator(name);
     }
   
   }
@@ -234,55 +234,55 @@ public class TestDataClassGenerator implements Constants
 
       if (the_parameter.typeToString().equals("String[]"))
       {
-        my_writer.print("org.jmlspecs.jmlunit.strategies.StringStrategy " + 
+        my_writer.print("final org.jmlspecs.jmlunit.strategies.StringStrategy " + 
                         the_parameter.ident() + "_" + "string" +
                      "_Strategy =" + " new org.jmlspecs.jmlunit.strategies.StringStrategy()");
       }
       else if (the_parameter.typeToString().equals("String"))
       {
-        my_writer.print("org.jmlspecs.jmlunit.strategies.StringStrategy " + 
+        my_writer.print("final org.jmlspecs.jmlunit.strategies.StringStrategy " + 
                         the_parameter.ident() + "_" + "string" +
                      "_Strategy =" + " new org.jmlspecs.jmlunit.strategies.StringStrategy()");
       }
-      my_writer.indent(SIX);
-      my_writer.print("{");
-      my_writer.indent(EIGHT);
-      my_writer.print("protected String[] addData()");
       my_writer.indent(EIGHT);
       my_writer.print("{");
       my_writer.indent(TEN);
+      my_writer.print("protected String[] addData()");
+      my_writer.indent(TEN);
+      my_writer.print("{");
+      my_writer.indent(TEN + 2);
       my_writer.print("return new String[] " +
         "{/*Add strings separated by coma here for testing.*/};");
+      my_writer.indent(TEN);
+      my_writer.print("};");
       my_writer.indent(EIGHT);
       my_writer.print("};");
-      my_writer.indent(SIX);
-      my_writer.print("};");
       
-      my_writer.indent(FOUR);
+      my_writer.indent(SIX);
       my_writer.print("return " + the_parameter.ident() + "_" + "string" +
                    "_Strategy.iterator();");
     }
     else
     {
-      my_writer.print("org.jmlspecs.jmlunit.strategies." + parameter + "StrategyType " +
+      my_writer.print("final org.jmlspecs.jmlunit.strategies." + parameter + "StrategyType " +
                    the_parameter.ident() + "_" + the_parameter.typeToString() + "_Strategy =");
       my_writer.indent(EIGHT);
       my_writer.print("new org.jmlspecs.jmlunit.strategies." + parameter +
                    "Strategy()");
-      my_writer.indent(SIX);
-      my_writer.print("{");
       my_writer.indent(EIGHT);
+      my_writer.print("{");
+      my_writer.indent(TEN);
       my_writer.print("protected " + the_parameter.typeToString() + "[] " + "addData()");
-      my_writer.indent(EIGHT);
+      my_writer.indent(TEN);
       my_writer.print("{");
-      my_writer.indent(SIX);
+      my_writer.indent(EIGHT);
       my_writer.print("return new " + the_parameter.typeToString() + "[] " +
                    "{/*You can add data elements here.*/};");
-      my_writer.indent(EIGHT);
+      my_writer.indent(TEN);
       my_writer.print("}");
-      my_writer.indent(SIX);
+      my_writer.indent(EIGHT);
       my_writer.print("};");
-      my_writer.indent(FOUR);
+      my_writer.indent(SIX);
       my_writer.print("return  " + the_parameter.ident() + "_" + the_parameter.typeToString() +
                    "_Strategy.iterator();");
     }
@@ -291,52 +291,52 @@ public class TestDataClassGenerator implements Constants
     my_writer.newLine(ONE);
   }
 
-  /**
-   * This method prints the combined iterator for the all data types.
-   * 
-   * @param the_parameters Array of JFormalParameter objects. 
-   * @param the_name Combined name of parameters.
-   */
-  private void printCombinedIteratorMethod(final JFormalParameter[] the_parameters,
-                                           final String the_name)
-  {
-    my_writer.indent(FOUR);
-    my_writer.print("/**");
-    my_writer.indent(FOUR);
-    my_writer.print(" * This method returns the combined Iterator of all data types.");
-    my_writer.indent(FOUR);
-    my_writer.print(" * @return CombinedParameterIterator");
-    my_writer.indent(FOUR);
-    my_writer.print(" */");
-    my_writer.indent(FOUR);
-    my_writer.print("public CombinedParameterIterator params_" + the_name + "()");
-    my_writer.indent(FOUR);
-    my_writer.print("{");
-    my_writer.indent(SIX);
-    my_writer.print("allParamIterator = new ArrayList<IndefiniteIterator>();");
-    for (int i = 0; i < the_parameters.length; i++)
-    {
-      my_writer.indent(SIX);
-      if (the_parameters[i].typeToString().equals("String[]"))
-      {
-        my_writer.print("allParamIterator.add(StringArray" + "_" +
-                     the_name + "_" + the_parameters[i].ident() + "());");
-      }
-      else
-      {
-        my_writer.print("allParamIterator.add(" +
-                     the_parameters[i].typeToString() + "_" + the_name + "_" +
-                     the_parameters[i].ident() + "());");
-      }
-    }
-    my_writer.indent(SIX);
-    my_writer.print("combinedIt = new CombinedParameterIterator(allParamIterator);");
-    my_writer.indent(SIX);
-    my_writer.print("return combinedIt;");
-    my_writer.indent(FOUR);
-    my_writer.print("}");
-    my_writer.newLine(TWO);
-  }
+//  /**
+//   * This method prints the combined iterator for the all data types.
+//   * 
+//   * @param the_parameters Array of JFormalParameter objects. 
+//   * @param the_name Combined name of parameters.
+//   */
+//  private void printCombinedIteratorMethod(final JFormalParameter[] the_parameters,
+//                                           final String the_name)
+//  {
+//    my_writer.indent(FOUR);
+//    my_writer.print("/**");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" * This method returns the combined Iterator of all data types.");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" * @return CombinedParameterIterator");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" */");
+//    my_writer.indent(FOUR);
+//    my_writer.print("public CombinedParameterIterator params_" + the_name + "()");
+//    my_writer.indent(FOUR);
+//    my_writer.print("{");
+//    my_writer.indent(SIX);
+//    my_writer.print("allParamIterator = new ArrayList<IndefiniteIterator>();");
+//    for (int i = 0; i < the_parameters.length; i++)
+//    {
+//      my_writer.indent(SIX);
+//      if (the_parameters[i].typeToString().equals("String[]"))
+//      {
+//        my_writer.print("allParamIterator.add(StringArray" + "_" +
+//                     the_name + "_" + the_parameters[i].ident() + "());");
+//      }
+//      else
+//      {
+//        my_writer.print("allParamIterator.add(" +
+//                     the_parameters[i].typeToString() + "_" + the_name + "_" +
+//                     the_parameters[i].ident() + "());");
+//      }
+//    }
+//    my_writer.indent(SIX);
+//    my_writer.print("combinedIt = new CombinedParameterIterator(allParamIterator);");
+//    my_writer.indent(SIX);
+//    my_writer.print("return combinedIt;");
+//    my_writer.indent(FOUR);
+//    my_writer.print("}");
+//    my_writer.newLine(TWO);
+//  }
 
   /**
    * This method generates the name for all parameters together.
@@ -368,9 +368,9 @@ public class TestDataClassGenerator implements Constants
    */
   private void printObjectIterator(final JTypeDeclarationType the_decl)
   {
-    ArrayList<JTypeDeclarationType> allMethods = the_decl.methods();
+    final List<JTypeDeclarationType> allMethods = the_decl.methods();
     
-    ArrayList<JFormalParameter> parameters = new ArrayList<JFormalParameter>();
+    final List<JFormalParameter> parameters = new ArrayList<JFormalParameter>();
     for (int cnt = 0; cnt < allMethods.size(); cnt++)
     {
       if (allMethods.get(cnt) instanceof JConstructorDeclaration)
@@ -398,17 +398,17 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(FOUR);
     my_writer.print("{");
     my_writer.indent(SIX);
-    my_writer.print("ArrayList<Object> objs = new ArrayList<Object>();");
+    my_writer.print("my_objs = new ArrayList<Object>();");
     my_writer.indent(SIX);
-    my_writer.print("int objectCount = 0;");
+    my_writer.print("int object_count = 0;");
     my_writer.indent(SIX);
-    my_writer.print("int numberOfObjects = 2;//change this number for more objects.");
+    my_writer.print("final int numberOfObjects = 2; //change this number for more objects.");
     my_writer.indent(SIX);
-    my_writer.print("while (objectCount < numberOfObjects)");
+    my_writer.print("while (object_count < numberOfObjects)");
     my_writer.indent(SIX);
     my_writer.print("{");
     my_writer.indent(EIGHT);
-    my_writer.printOnLine("objs.add(new " + my_class_nm + "(");
+    my_writer.printOnLine("my_objs.add(new " + my_class_nm + "(");
     if (parameters.size() > 0)
     {
       for (int count = 0; count < parameters.size(); count++)
@@ -432,52 +432,52 @@ public class TestDataClassGenerator implements Constants
     my_writer.printOnLine("));");
     my_writer.printOnLine("\n");
     my_writer.indent(EIGHT);
-    my_writer.print("objectCount++;");
+    my_writer.print("object_count++;");
     my_writer.indent(SIX);
     my_writer.print("}");
   
 
     my_writer.indent(SIX);
-    my_writer.print("return objs.iterator();");
+    my_writer.print("return my_objs.iterator();");
     my_writer.indent(FOUR);
     my_writer.print("}");
     my_writer.newLine(ONE);
   }
 
-  /**
-   * This method prints the actual data provider method which returns the array
-   * Object[][].
-   * 
-   * @param the_name This is the String of class name.
-   */
-  private void printObjectCombinedIterator(final String the_name)
-  {
-    my_writer.indent(FOUR);
-    my_writer.print("/**");
-    my_writer.indent(FOUR);
-    my_writer.print(" * This method returns the Data Provider Iterator.");
-    my_writer.indent(FOUR);
-    my_writer.print(" * @return Iterator");
-    my_writer.indent(FOUR);
-    my_writer.print(" */");
-    my_writer.indent(FOUR);
-    my_writer.print("public Iterator<Object[]> getIter_" + the_name + "()");
-    my_writer.indent(FOUR);
-    my_writer.print("{");
-    my_writer.indent(SIX);
-    my_writer.print("Iterator<Object> objectIt =  objects();");
-    my_writer.indent(SIX);
-    my_writer.print("CombinedParameterIterator combIt = params_" + the_name + "();");
-    my_writer.indent(SIX);
-    my_writer.print("CombinedObjectParameterIterator combObjParaIt =");
-    my_writer.indent(EIGHT);
-    my_writer.print("new CombinedObjectParameterIterator(combIt, objectIt);");
-    my_writer.indent(SIX);
-    my_writer.print("return (Iterator<Object[]>)combObjParaIt;");
-    my_writer.indent(FOUR);
-    my_writer.print("}");
-    my_writer.newLine(TWO);
-  }
+//  /**
+//   * This method prints the actual data provider method which returns the array
+//   * Object[][].
+//   * 
+//   * @param the_name This is the String of class name.
+//   */
+//  private void printObjectCombinedIterator(final String the_name)
+//  {
+//    my_writer.indent(FOUR);
+//    my_writer.print("/**");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" * This method returns the Data Provider Iterator.");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" * @return Iterator");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" */");
+//    my_writer.indent(FOUR);
+//    my_writer.print("public Iterator<Object[]> getIter_" + the_name + "()");
+//    my_writer.indent(FOUR);
+//    my_writer.print("{");
+//    my_writer.indent(SIX);
+//    my_writer.print("Iterator<Object> objectIt =  objects();");
+//    my_writer.indent(SIX);
+//    my_writer.print("CombinedParameterIterator combIt = params_" + the_name + "();");
+//    my_writer.indent(SIX);
+//    my_writer.print("CombinedObjectParameterIterator combObjParaIt =");
+//    my_writer.indent(EIGHT);
+//    my_writer.print("new CombinedObjectParameterIterator(combIt, objectIt);");
+//    my_writer.indent(SIX);
+//    my_writer.print("return (Iterator<Object[]>)combObjParaIt;");
+//    my_writer.indent(FOUR);
+//    my_writer.print("}");
+//    my_writer.newLine(TWO);
+//  }
 
   /**
    * This method prints the CombinedIterator class
@@ -496,7 +496,9 @@ public class TestDataClassGenerator implements Constants
       if (obj instanceof JMethodDeclaration)
       {
         final JMethodDeclaration method = (JMethodDeclaration) obj;
-  
+        final JFormalParameter[] parameters = method.parameters();
+        final String name = method.ident() + getCombinedName(parameters);
+        
         printDataProvider(method);
         my_writer.newLine(TWO);
         my_writer.indent(TWO);
@@ -507,11 +509,12 @@ public class TestDataClassGenerator implements Constants
         my_writer.indent(TWO);
         my_writer.print(" */");
         my_writer.indent(TWO);
-        my_writer.print("private class CombinedIteratorFor" + method.ident());
+        my_writer.print("private static class CombinedIteratorFor" + method.ident() +
+                        " implements Iterator<Object[]>");
         my_writer.indent(TWO);
         my_writer.print("{");
         my_writer.newLine(ONE);
-        printDataMembers();
+        printDataMembers(parameters.length);
         my_writer.indent(FOUR);
         my_writer.print("/** This is the constructor for CombinedIteratorFor" + 
                      method.ident() + ".*/");
@@ -519,10 +522,45 @@ public class TestDataClassGenerator implements Constants
         my_writer.print("public CombinedIteratorFor" + method.ident() + "()");
         my_writer.indent(FOUR);
         my_writer.print("{");
+        
+        
+        my_writer.indent(SIX);
+        my_writer.print("my_currentObjs = new Object[" +
+                        (method.parameters().length + 1) + "];");
+        my_writer.indent(SIX);
+        my_writer.print("my_newObjs = objects();");
+        
+        for (int i = 0; i < parameters.length; i++)
+        {
+          my_writer.indent(SIX);
+          if (parameters[i].typeToString().equals("String[]"))
+          {
+
+            my_writer.print("my_iter[" + i + "] = " +
+                            "StringArray" + "_" + name + "_" +
+                         parameters[i].ident() + "();");
+          }
+          else if (parameters[i].typeToString().equals("String"))
+          {
+            my_writer.print("my_iter[" + i + "] = " + 
+                            "String" + "_" + name + "_" +
+                         parameters[i].ident() + "();");
+          }
+          else
+          {
+            my_writer.print("my_iter[" + i + "] = " +
+                         parameters[i].typeToString() + "_" + name + "_" +
+                         parameters[i].ident() + "();");
+          }
+        }
+        
         my_writer.indent(FOUR);
         my_writer.print("}");
         my_writer.newLine(TWO);
         printClassDataProvider(method, the_decl);
+        printHasNext();
+        printNext(method);
+        printRemove();
         my_writer.indent(TWO);
         my_writer.print("}");
         
@@ -532,27 +570,75 @@ public class TestDataClassGenerator implements Constants
   
   /**
    * This method prints the data members of the class.
+   * @param the_param_num The number of parameters for the method to be tested.
    */
-  private void printDataMembers()
+  private void printDataMembers(final int the_param_num)
   {
+//    my_writer.indent(FOUR);
+//    my_writer.print("/**");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" * This is the Iterator array of Iterators for all parameters.");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" */");
+//    my_writer.indent(FOUR);
+//    my_writer.print("protected ArrayList<IndefiniteIterator> allParamIterator;");
+//    my_writer.newLine(ONE);
+//    my_writer.indent(FOUR);
+//    my_writer.print("/**");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" * This is the CombinedParameterIterator i.e. array" + 
+//                    " of Iterators for all parameters.");
+//    my_writer.indent(FOUR);
+//    my_writer.print(" */");
+//    my_writer.indent(FOUR);
+//    my_writer.print("protected CombinedParameterIterator combinedIt;");
     my_writer.indent(FOUR);
     my_writer.print("/**");
     my_writer.indent(FOUR);
-    my_writer.print(" * This is the Iterator array of Iterators for all parameters.");
+    my_writer.print(" * This is the array of IndefiniteIterator objects for" +
+                      " all parameters.");
     my_writer.indent(FOUR);
     my_writer.print(" */");
     my_writer.indent(FOUR);
-    my_writer.print("protected ArrayList<IndefiniteIterator> allParamIterator;");
-    my_writer.newLine(ONE);
+    my_writer.print("protected org.jmlspecs.jmlunit.strategies.IndefiniteIterator[] " +
+         "my_iter = ");
+    my_writer.indent(SIX);
+    my_writer.print("new org.jmlspecs.jmlunit.strategies.IndefiniteIterator[" +
+                    the_param_num + "];");
     my_writer.indent(FOUR);
     my_writer.print("/**");
     my_writer.indent(FOUR);
-    my_writer.print(" * This is the CombinedParameterIterator i.e. array" + 
-                    " of Iterators for all parameters.");
+    my_writer.print(" * Iterator over the newly created objects");
+    my_writer.indent(FOUR);
+    my_writer.print(" * of the class to be tested.");
     my_writer.indent(FOUR);
     my_writer.print(" */");
     my_writer.indent(FOUR);
-    my_writer.print("protected CombinedParameterIterator combinedIt;");
+    my_writer.print("protected Iterator<Object> my_newObjs;");
+    my_writer.indent(FOUR);
+    my_writer.print("/**");
+    my_writer.indent(FOUR);
+    my_writer.print(" * True if it is the first element in iterator.");
+    my_writer.indent(FOUR);
+    my_writer.print(" */");
+    my_writer.indent(FOUR);
+    my_writer.print("protected boolean isFirstElement = true;");
+    my_writer.indent(FOUR);
+    my_writer.print("/**");
+    my_writer.indent(FOUR);
+    my_writer.print(" * Array of the objects to be returned by next method.");
+    my_writer.indent(FOUR);
+    my_writer.print(" */");
+    my_writer.indent(FOUR);
+    my_writer.print("protected Object[] my_currentObjs;");
+    my_writer.indent(FOUR);
+    my_writer.print("/**");
+    my_writer.indent(FOUR);
+    my_writer.print(" * Array list of objects for object  iterator.");
+    my_writer.indent(FOUR);
+    my_writer.print(" */");
+    my_writer.indent(FOUR);
+    my_writer.print("List<Object> my_objs;");
     my_writer.newLine(ONE);
   }
 
@@ -568,9 +654,9 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(TWO);
     my_writer.print("/**");
     my_writer.indent(TWO);
-    my_writer.print(" * This is the actual data provider method used by TestNG..");
+    my_writer.print(" * This is the actual data provider method used by TestNG.");
     my_writer.indent(TWO);
-    my_writer.print(" * @return Iterator<Object[]>");
+    my_writer.print(" * @return Iterator");
     my_writer.indent(TWO);
     my_writer.print(" */");
     my_writer.indent(TWO);
@@ -580,17 +666,239 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(TWO);
     my_writer.print("{");
     my_writer.indent(FOUR);
-    my_writer.printOnLine("CombinedIteratorFor" + the_method.ident());
-    my_writer.printOnLine(" combinedIt_" + the_method.ident());
-    my_writer.printOnLine(" = new CombinedIteratorFor" + the_method.ident() + "();");
-    my_writer.printOnLine("\n");
-    my_writer.indent(FOUR);
-    my_writer.printOnLine("return combinedIt_" + the_method.ident());
-    my_writer.printOnLine(".getIter_" + name + "();");
+    my_writer.printOnLine("return (Iterator<Object[]>) new CombinedIteratorFor" + 
+                          the_method.ident() + "();");
+    //my_writer.printOnLine(".getIter_" + name + "();");
     my_writer.printOnLine("\n");
     my_writer.indent(TWO);
     my_writer.print("}");
    
+  }
+  /**
+   * This method prints the next method in combined iterator class.
+   * @param the_method JMethodDeclaration object.
+   */
+  private void printNext(final JMethodDeclaration the_method)
+  {
+    final JFormalParameter[] parameters = the_method.parameters();
+    final String name = the_method.ident() + getCombinedName(parameters);
+    
+    my_writer.indent(FOUR);
+    my_writer.print("/**");
+    my_writer.indent(FOUR);
+    my_writer.print(" * This method returns the next Object[] in the iterator.");
+    my_writer.indent(FOUR);
+    my_writer.print(" * @return Object[]");
+    my_writer.indent(FOUR);
+    my_writer.print(" */");
+    my_writer.indent(FOUR);
+    my_writer.print("public Object[] next()");
+    my_writer.indent(FOUR);
+    my_writer.print("{");
+    
+        
+    my_writer.indent(SIX);
+    my_writer.print("if (isFirstElement)");
+    my_writer.indent(SIX);
+    my_writer.print("{");
+    
+    my_writer.indent(EIGHT);
+    my_writer.print("my_currentObjs[0] = my_newObjs.next();");
+    for (int i = 0; i < parameters.length; i++)
+    { 
+      my_writer.indent(EIGHT);
+      my_writer.print("my_currentObjs[" + (i + 1) + "] = my_iter[" + i + "].get();");
+      my_writer.indent(EIGHT);
+      my_writer.print("my_iter[" + i + "].advance();");
+    }
+    my_writer.indent(EIGHT);
+    my_writer.print("isFirstElement = false;");
+    my_writer.indent(EIGHT);
+    my_writer.print("return my_currentObjs;");
+    
+    my_writer.indent(SIX);
+    my_writer.print("}");
+    
+    my_writer.indent(SIX);
+    my_writer.print("else");
+    my_writer.indent(SIX);
+    my_writer.print("{");
+    
+    my_writer.indent(EIGHT);
+    my_writer.print("if (!my_iter[" + (parameters.length - 1) + "].atEnd())");
+    my_writer.indent(EIGHT);
+    my_writer.print("{");
+    
+    my_writer.indent(TEN);
+    my_writer.print("my_currentObjs[" + parameters.length + 
+                    "] = my_iter[" + (parameters.length - 1) + "].get();");
+    my_writer.indent(TEN);
+    my_writer.print("my_iter[" + (parameters.length - 1) + "].advance();");
+    my_writer.indent(EIGHT);
+    my_writer.print("}");
+    
+    for (int i = parameters.length - 2; i >= 0; i--)
+    {
+      my_writer.indent(EIGHT);
+      my_writer.print("else if (!my_iter[" + i + "].atEnd())");
+      my_writer.indent(EIGHT);
+      my_writer.print("{");
+      
+      my_writer.indent(TEN);
+      my_writer.print("my_currentObjs[" + (i + 1) + 
+                      "] = my_iter[" + i + "].get();");
+      my_writer.indent(TEN);
+      my_writer.print("my_iter[" + i + "].advance();");
+      for (int j = parameters.length - 1; j > i; j--)
+      {
+        my_writer.indent(TEN);
+        if (parameters[j].typeToString().equals("String[]"))
+        {
+
+          my_writer.print("my_iter[" + j + "] = " +
+                          "StringArray" + "_" + name + "_" +
+                       parameters[j].ident() + "();");
+        }
+        else if (parameters[j].typeToString().equals("String"))
+        {
+          my_writer.print("my_iter[" + j + "] = " + 
+                          "String" + "_" + name + "_" +
+                       parameters[j].ident() + "();");
+        }
+        else
+        {
+          my_writer.print("my_iter[" + j + "] = " +
+                       parameters[j].typeToString() + "_" + name + "_" +
+                       parameters[j].ident() + "();");
+        }
+        my_writer.indent(TEN);
+        my_writer.print("my_currentObjs[ " + (j + 1) + "] = my_iter[" + j + "].get();");
+        my_writer.indent(TEN);
+        my_writer.print("my_iter[" + j + "].advance();");
+      }
+      my_writer.indent(EIGHT);
+      my_writer.print("}");
+    }
+    
+    my_writer.indent(EIGHT);
+    my_writer.print("else");
+    my_writer.indent(EIGHT);
+    my_writer.print("{");
+    my_writer.indent(TEN);
+    my_writer.print("my_currentObjs[0] = my_newObjs.next();");
+    
+    for (int j = parameters.length - 1; j >= 0; j--)
+    {
+      my_writer.indent(TEN);
+      if (parameters[j].typeToString().equals("String[]"))
+      {
+
+        my_writer.print("my_iter[" + j + "] = " +
+                        "StringArray" + "_" + name + "_" +
+                     parameters[j].ident() + "();");
+      }
+      else if (parameters[j].typeToString().equals("String"))
+      {
+        my_writer.print("my_iter[" + j + "] = " + 
+                        "String" + "_" + name + "_" +
+                     parameters[j].ident() + "();");
+      }
+      else
+      {
+        my_writer.print("my_iter[" + j + "] = " +
+                     parameters[j].typeToString() + "_" + name + "_" +
+                     parameters[j].ident() + "();");
+      }
+      my_writer.indent(TEN);
+      my_writer.print("my_currentObjs[ " + (j + 1) + "] = my_iter[" + j + "].get();");
+      my_writer.indent(TEN);
+      my_writer.print("my_iter[" + j + "].advance();");
+    }
+    my_writer.indent(EIGHT);
+    my_writer.print("}");
+    
+    my_writer.indent(EIGHT);
+    my_writer.print("return my_currentObjs;");
+    
+    my_writer.indent(SIX);
+    my_writer.print("}");
+    
+    my_writer.indent(FOUR);
+    my_writer.print("}");
+  }
+  /**
+   * This method prints the next method in combined iterator class.
+   */
+  private void printHasNext()
+  {
+    my_writer.indent(FOUR);
+    my_writer.print("/**");
+    my_writer.indent(FOUR);
+    my_writer.print(" * This method returns true if there exists" +
+      " next element in the Iterator.");
+    my_writer.indent(FOUR);
+    my_writer.print(" * @return boolean");
+    my_writer.indent(FOUR);
+    my_writer.print(" */");
+    
+    my_writer.indent(FOUR);
+    my_writer.print("public boolean hasNext()");
+    my_writer.indent(FOUR);
+    my_writer.print("{");
+    my_writer.indent(SIX);
+    
+    my_writer.print("if (my_newObjs.hasNext())");
+    my_writer.indent(SIX);
+    my_writer.print("{");
+    my_writer.indent(EIGHT);
+    my_writer.print("return true;");
+    my_writer.indent(SIX);
+    my_writer.print("}");
+    my_writer.indent(SIX);
+    
+    my_writer.print("else");
+    my_writer.indent(SIX);
+    my_writer.print("{");
+    my_writer.indent(EIGHT);
+    my_writer.print("for (int i = 0; i < my_iter.length; i++)");
+    my_writer.indent(EIGHT);
+    my_writer.print("{");
+    my_writer.indent(TEN);
+    my_writer.print("if (!my_iter[i].atEnd())");
+    my_writer.indent(TEN);
+    my_writer.print("{");
+    my_writer.indent(TEN + 2);
+    my_writer.print("return true;");    
+    my_writer.indent(TEN);
+    my_writer.print("}");
+    my_writer.indent(EIGHT);
+    my_writer.print("}");
+    my_writer.indent(EIGHT);
+    my_writer.print("return false;");
+    my_writer.indent(SIX);
+    my_writer.print("}");
+
+    my_writer.indent(FOUR);
+    my_writer.print("}");
+  }
+  /**
+   * This method prints the next method in combined iterator class.
+   */
+  private void printRemove()
+  {
+    my_writer.indent(FOUR);
+    my_writer.print("/**");
+    my_writer.indent(FOUR);
+    my_writer.print(" * This method returns the next Object[] in the iterator.");
+    my_writer.indent(FOUR);
+    my_writer.print(" */");
+    
+    my_writer.indent(FOUR);
+    my_writer.print("public void remove()");
+    my_writer.indent(FOUR);
+    my_writer.print("{");
+    my_writer.indent(FOUR);
+    my_writer.print("}");
   }
   /**
    * This method prints the end of class bracket "{".
