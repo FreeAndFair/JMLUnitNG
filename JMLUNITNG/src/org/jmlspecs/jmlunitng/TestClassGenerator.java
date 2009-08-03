@@ -63,7 +63,7 @@ public class TestClassGenerator implements Constants
   {
     this.my_pkgs = the_cunit_type.importedPackages();
     this.my_decl_type = the_decl;
-    this.my_class_name = the_decl.ident() + TEST_CLASS_NAME_POSTFIX;
+    this.my_class_name = the_decl.ident() + T_C_POSTFIX;
     this.my_file = the_file;
     my_writer = new Writer(the_file);
     
