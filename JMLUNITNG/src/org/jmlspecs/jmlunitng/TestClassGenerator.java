@@ -142,14 +142,14 @@ public class TestClassGenerator implements Constants
    * Creates and prints the methods generated for Testing the methods.
    * 
    * @param the_decl JTypeDeclarationType object.
-   * @param the_method_iterator Iterator object.
+   * @param the_method_iter Iterator object.
    */
-  private void createTestMethods(final Iterator the_method_iterator,
+  private void createTestMethods(final Iterator the_method_iter,
                                  final JTypeDeclarationType the_decl)
   {
-    while (the_method_iterator.hasNext())
+    while (the_method_iter.hasNext())
     {
-      final Object obj = the_method_iterator.next();
+      final Object obj = the_method_iter.next();
       if (obj instanceof JConstructorDeclaration)
       {
         final JConstructorDeclaration construct = (JConstructorDeclaration) obj;
@@ -257,53 +257,46 @@ public class TestClassGenerator implements Constants
   {
     final StringBuilder name = new StringBuilder();
     name.append("test");
-    if (the_method == null)
+    
+    if (the_method instanceof JConstructorDeclaration)
     {
-      return null;
-    }
-    else
-    {
+      final JConstructorDeclaration construct = (JConstructorDeclaration) the_method;
+      name.append("_" + construct.ident());
+      final JFormalParameter[] pams = construct.parameters();
+      for (int i = 0; i < pams.length; i++)
+      {
+        if (pams[i].typeToString().equals("String[]"))
+        {
+          name.append("_" + "StringArray");
+        }
+        else
+        {
+          name.append("_" + pams[i].typeToString());
+        }
+      }
+     
 
-      if (the_method instanceof JConstructorDeclaration)
+    }
+    else if (the_method instanceof JMethodDeclaration)
+    {
+      final JMethodDeclaration method = (JMethodDeclaration) the_method;
+      name.append("_" + method.ident());
+      final JFormalParameter[] pams = method.parameters();
+      for (int i = 0; i < pams.length; i++)
       {
-        final JConstructorDeclaration construct = (JConstructorDeclaration) the_method;
-        name.append("_" + construct.ident());
-        final JFormalParameter[] pams = construct.parameters();
-        for (int i = 0; i < pams.length; i++)
+        if (pams[i].typeToString().equals("String[]"))
         {
-          if (pams[i].typeToString().equals("String[]"))
-          {
-            name.append("_" + "StringArray");
-          }
-          else
-          {
-            name.append("_" + pams[i].typeToString());
-          }
+          name.append("_" + "StringArray");
         }
-       
-  
-      }
-      else if (the_method instanceof JMethodDeclaration)
-      {
-        final JMethodDeclaration method = (JMethodDeclaration) the_method;
-        name.append("_" + method.ident());
-        final JFormalParameter[] pams = method.parameters();
-        for (int i = 0; i < pams.length; i++)
+        else
         {
-          if (pams[i].typeToString().equals("String[]"))
-          {
-            name.append("_" + "StringArray");
-          }
-          else
-          {
-            name.append("_" + pams[i].typeToString());
-          }
+          name.append("_" + pams[i].typeToString());
         }
-        
       }
-      return name.toString();
       
     }
+    return name.toString();
+      
   }
 
   /**
