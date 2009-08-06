@@ -19,29 +19,6 @@ public class JMLTestResult extends TestResult
    // need to add code here.
   }
 
-//  public void addListener()
-//  {
-//
-//  }
-//
-//  public void addMeaningless()
-//  {
-//
-//  }
-//
-//  public void append()
-//  {
-//
-//  }
-//
-//  public java.lang.String meaninglessTestCaseInfo()
-//  {
-//    return null;
-//  }
-//
-//  public int meaninglessCount()
-//  {
-//    return 0;
-//  }
+
 
 }
