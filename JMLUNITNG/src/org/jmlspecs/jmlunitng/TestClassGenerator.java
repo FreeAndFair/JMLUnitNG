@@ -181,12 +181,12 @@ public class TestClassGenerator implements Constants
             my_writer.printOnLine(", ");
           }
         }
-        my_writer.printOnLine(")" + SM_COLN);
+        my_writer.printOnLine(BKT_END + SM_COLN);
         my_writer.printOnLine("\n");
         my_writer.indent(FOUR);
         my_writer.print(BLK_END);
         my_writer.indent(FOUR);
-        my_writer.print("catch (final PreconditionSkipException the_exp)");
+        my_writer.print("catch" + "(final PreconditionSkipException the_exp)");
         my_writer.indent(FOUR);
         my_writer.print(BLK_ST);
         my_writer.indent(SIX);
