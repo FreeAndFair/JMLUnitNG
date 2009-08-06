@@ -213,8 +213,8 @@ public class TestDataClassGenerator implements Constants
     if (the_parameter.typeToString().equals(STRARR))
     {
 
-      my_writer.print("public " + "org.jmlspecs.jmlunit.strategies.IndefiniteIterator " +
-                      "StringArray" + UND + the_name + UND +
+      my_writer.print("public " + "org.jmlspecs.jmlunit.strategies.IndefiniteIterator" +
+                      " StringArray" + UND + the_name + UND +
                    the_parameter.ident() + BKTS);
     }
     else if (the_parameter.typeToString().equals(STR))
@@ -239,14 +239,14 @@ public class TestDataClassGenerator implements Constants
       if (the_parameter.typeToString().equals(STRARR))
       {
         my_writer.print("final " + "org.jmlspecs.jmlunit.strategies.StringStrategy " + 
-                        the_parameter.ident() + UND + "string" +
-                     "_Strategy = new org.jmlspecs.jmlunit.strategies.StringStrategy()");
+                        the_parameter.ident() + UND +
+                     "string_Strategy = new org.jmlspecs.jmlunit.strategies.StringStrategy()");
       }
       else if (the_parameter.typeToString().equals(STR))
       {
         my_writer.print("final org.jmlspecs.jmlunit.strategies.StringStrategy " + 
-                        the_parameter.ident() + UND + "string" +
-                     "_Strategy " + "=  new org.jmlspecs.jmlunit.strategies.StringStrategy()");
+                        the_parameter.ident() + UND + "string_Strategy " + 
+                     "=  new org.jmlspecs.jmlunit.strategies.StringStrategy()");
       }
       my_writer.indent(EIGHT);
       my_writer.print(BLK_ST);

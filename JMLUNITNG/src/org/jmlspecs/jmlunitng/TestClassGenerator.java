@@ -156,7 +156,7 @@ public class TestClassGenerator implements Constants
         final String name = generateMethodName(obj);
         printMethodJavaDoc(obj, name);
         my_writer.indent(TWO);
-        my_writer.printOnLine("public void " + name + "(final " + 
+        my_writer.printOnLine("public " + "void " + name + "(final " + 
                               the_decl.ident() + " the_obj");
         for (int i = 0; i < construct.parameters().length; i++)
         {
@@ -164,7 +164,7 @@ public class TestClassGenerator implements Constants
                              PARAM_ST + construct.parameters()[i].ident());
         }
         my_writer.printOnLine(BKT_END);
-        my_writer.printOnLine("\n");
+        my_writer.printOnLine(" \n");
         my_writer.indent(TWO);
         my_writer.print(BLK_ST);
         my_writer.indent(FOUR);
