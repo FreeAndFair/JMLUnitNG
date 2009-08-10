@@ -91,6 +91,7 @@ public class TestDataClassGenerator implements Constants
     
     printHeaderImportandJavadoc(the_decl);
     printConstructor();
+    printUserInputData(the_decl);
     printCombinedIteratorClass(the_iter, the_decl);
     printClassEnd();
   }
@@ -255,8 +256,19 @@ public class TestDataClassGenerator implements Constants
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL5 + 2);
-      my_writer.print("return new String[] " +
-        "{/*Add strings separated by coma here for testing.*/};");
+      if (the_parameter.typeToString().equals(STRARR))
+      {
+
+        my_writer.print("return get_StringArray" + UND + the_name + UND +
+                        the_parameter.ident() + BKTS + ";");
+        
+      }
+      else if (the_parameter.typeToString().equals(STR))
+      {
+        my_writer.print("return get" + UND + STR + UND + the_name + UND +
+                        the_parameter.ident() + BKTS + ";");
+      }
+     
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_END + SM_COLN);
       my_writer.indent(LEVEL4);
@@ -276,17 +288,17 @@ public class TestDataClassGenerator implements Constants
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL5);
-      my_writer.print("protected " + the_parameter.typeToString() + "[]" + " addData()");
+      my_writer.print("protected " + the_parameter.typeToString() + "[] addData()");
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL4);
-      my_writer.print("return new " + the_parameter.typeToString() + "[] " +
-                   "{/*You can add data elements here.*/};");
+      my_writer.print("return get_" + the_parameter.typeToString() + UND + the_name + UND +
+                      the_parameter.ident() + BKTS + ";");
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_END);
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_END + SM_COLN);
-      my_writer.indent(LEVEL3);
+      my_writer.indent(LEVEL5 + 2);
       my_writer.print("return  " + the_parameter.ident() + UND + the_parameter.typeToString() +
                    "_Strategy.iterator();");
     }
@@ -513,7 +525,7 @@ public class TestDataClassGenerator implements Constants
         my_writer.indent(LEVEL1);
         my_writer.print(JDOC_END);
         my_writer.indent(LEVEL1);
-        my_writer.print("private static class CombinedIteratorFor" + method.ident() +
+        my_writer.print("private static class CombinedIteratorFor_" + method.ident() +
                         " implements Iterator<Object[]>");
         my_writer.indent(LEVEL1);
         my_writer.print(BLK_ST);
@@ -523,13 +535,13 @@ public class TestDataClassGenerator implements Constants
         my_writer.print(JDOC_ST + " This is the constructor for CombinedIteratorFor" + 
                      method.ident() + ".*/");
         my_writer.indent(LEVEL2);
-        my_writer.print("public CombinedIteratorFor" + method.ident() + BKTS);
+        my_writer.print("public CombinedIteratorFor_" + method.ident() + BKTS);
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_ST);
         
         
         my_writer.indent(LEVEL3);
-        my_writer.print("my_currentObjs = new Object" + SQ_BCK_ST +
+        my_writer.print("my_current_objects = new Object" + SQ_BCK_ST +
                         (method.parameters().length + 1) + SQ_BCK_END + ";");
         my_writer.indent(LEVEL3);
         my_writer.print("my_newObjs = objects();");
@@ -634,7 +646,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL2);
     my_writer.print(JDOC_END);
     my_writer.indent(LEVEL2);
-    my_writer.print("protected Object[] my_currentObjs;");
+    my_writer.print("protected Object[] my_current_objects;");
     my_writer.indent(LEVEL2);
     my_writer.print(JDOC_ST);
     my_writer.indent(LEVEL2);
@@ -670,7 +682,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL2);
-    my_writer.printOnLine("return (Iterator<Object[]>) new CombinedIteratorFor" + 
+    my_writer.printOnLine("return (Iterator<Object[]>) new CombinedIteratorFor_" + 
                           the_method.ident() + BKTS + SM_COLN);
     //my_writer.printOnLine(".getIter_" + name + "();");
     my_writer.printOnLine("\n");
@@ -707,11 +719,11 @@ public class TestDataClassGenerator implements Constants
     my_writer.print(BLK_ST);
     
     my_writer.indent(LEVEL4);
-    my_writer.print("my_currentObjs[0] = my_newObjs.next()" + SM_COLN);
+    my_writer.print("my_current_objects[0] = my_newObjs.next()" + SM_COLN);
     for (int i = 0; i < parameters.length; i++)
     { 
       my_writer.indent(LEVEL4);
-      my_writer.print("my_currentObjs" + SQ_BCK_ST + (i + 1) + SQ_BCK_END +
+      my_writer.print("my_current_objects" + SQ_BCK_ST + (i + 1) + SQ_BCK_END +
                       EQUAL + my_itname + SQ_BCK_ST + i + SQ_BCK_END + GET);
       my_writer.indent(LEVEL4);
       my_writer.print(my_itname + SQ_BCK_ST + i + SQ_BCK_END + ADV);
@@ -719,7 +731,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL4);
     my_writer.print("isFirstElement = false;");
     my_writer.indent(LEVEL4);
-    my_writer.print("return my_currentObjs" + SM_COLN);
+    my_writer.print("return my_current_objects" + SM_COLN);
     
     my_writer.indent(LEVEL3);
     my_writer.print(BLK_END);
@@ -736,7 +748,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.print(BLK_ST);
     
     my_writer.indent(LEVEL5);
-    my_writer.print("my_currentObjs" + SQ_BCK_ST + parameters.length + 
+    my_writer.print("my_current_objects" + SQ_BCK_ST + parameters.length + 
                     SQ_BCK_END + EQUAL + my_itname + SQ_BCK_ST + (parameters.length - 1) +
                     SQ_BCK_END + GET);
     my_writer.indent(LEVEL5);
@@ -753,7 +765,7 @@ public class TestDataClassGenerator implements Constants
       my_writer.print(BLK_ST);
       
       my_writer.indent(LEVEL5);
-      my_writer.print("my_currentObjs" + SQ_BCK_ST + (i + 1) + 
+      my_writer.print("my_current_objects" + SQ_BCK_ST + (i + 1) + 
                       SQ_BCK_END + EQUAL + my_itname + SQ_BCK_ST + i + SQ_BCK_END + GET);
       my_writer.indent(LEVEL5);
       my_writer.print(my_itname + SQ_BCK_ST + i + SQ_BCK_END + ADV);
@@ -793,7 +805,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL4);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL5);
-    my_writer.print("my_currentObjs[0] = my_newObjs.next();");
+    my_writer.print("my_current_objects[0] = my_newObjs.next();");
     
     for (int j = parameters.length - 1; j >= 0; j--)
     {
@@ -818,7 +830,7 @@ public class TestDataClassGenerator implements Constants
                      parameters[j].ident() + "();");
       }
       my_writer.indent(LEVEL5);
-      my_writer.print("my_currentObjs" + SQ_BCK_ST + (j + 1) + SQ_BCK_END + 
+      my_writer.print("my_current_objects" + SQ_BCK_ST + (j + 1) + SQ_BCK_END + 
                       EQUAL + my_itname + SQ_BCK_ST + j + SQ_BCK_END + GET);
       my_writer.indent(LEVEL5);
       my_writer.print(my_itname + SQ_BCK_ST + j + SQ_BCK_END + ADV);
@@ -827,7 +839,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.print(BLK_END);
     
     my_writer.indent(LEVEL4);
-    my_writer.print("return my_currentObjs;");
+    my_writer.print("return my_current_objects;");
     
     my_writer.indent(LEVEL3);
     my_writer.print(BLK_END);
@@ -915,5 +927,80 @@ public class TestDataClassGenerator implements Constants
   private void printClassEnd()
   {
     my_writer.print(BLK_END);
+  }
+  
+  /**
+   * This is the method to print the methods for user data input.
+   * @param the_decl JTypeDeclarationType object
+   */
+  private void printUserInputData(final JTypeDeclarationType the_decl)
+  {
+    final List<Object> methods = the_decl.methods();
+   
+    
+    for (int i = 0; i < methods.size(); i++)
+    {
+      if (methods.get(i) instanceof JMethodDeclaration)
+      {
+        final JMethodDeclaration method = (JMethodDeclaration) methods.get(i);
+        final JFormalParameter[] params = method.parameters();
+        final String name = method.ident() + getCombinedName(params);
+        for (int j = 0; j < params.length; j++)
+        {
+          my_writer.indent(LEVEL1);
+          my_writer.print(JDOC_ST);
+          my_writer.indent(LEVEL1);
+          my_writer.print(" * This is the user input data method for parameter " +
+                          params[j].ident() + " from method " + method.ident() + " ");
+          my_writer.indent(LEVEL1);
+          my_writer.print(" * @return " + params[j].typeToString());
+          my_writer.indent(LEVEL1);
+          my_writer.print(JDOC_END);
+          my_writer.indent(LEVEL1);
+          if (params[j].typeToString().equals(STRARR))
+          {
+
+            my_writer.print("private static " + STRARR + 
+                            " get_StringArray" + UND + name + UND +
+                            params[j].ident() + BKTS);
+            
+          }
+          else if (params[j].typeToString().equals(STR))
+          {
+            my_writer.print("private static " + STR + "[] get" + UND + STR + UND + name + UND +
+                            params[j].ident() + BKTS);
+          }
+          else
+          {
+            my_writer.print("private static " + params[j].typeToString() + "[]" +
+                            "get_" + params[j].typeToString() + UND + name + UND +
+                            params[j].ident() + BKTS);
+          }
+          my_writer.indent(LEVEL1);
+          my_writer.print(BLK_ST);
+          my_writer.indent(LEVEL2);
+          
+          if (params[j].typeToString().equals(STRARR))
+          {
+
+            my_writer.print("return new " + params[j].typeToString() +
+            " {/* Add data elements here. */};");
+            
+          }
+          else if (params[j].typeToString().equals(STR))
+          {
+            my_writer.print("return new " + params[j].typeToString() + "[] " +
+            "{/* Add data elements here. */};");
+          }
+          else
+          {
+            my_writer.print("return new " + params[j].typeToString() + "[] " +
+            "{/* Add data elements here. */};");
+          }
+          my_writer.indent(LEVEL1);
+          my_writer.print(BLK_END);
+        }
+      }
+    }
   }
 }
