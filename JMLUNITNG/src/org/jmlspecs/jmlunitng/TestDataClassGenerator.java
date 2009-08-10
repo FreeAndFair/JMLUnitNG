@@ -213,19 +213,19 @@ public class TestDataClassGenerator implements Constants
     if (the_parameter.typeToString().equals(STRARR))
     {
 
-      my_writer.print("public " + "org.jmlspecs.jmlunit.strategies.IndefiniteIterator" +
+      my_writer.print("private " + "org.jmlspecs.jmlunit.strategies.IndefiniteIterator" +
                       " StringArray" + UND + the_name + UND +
                    the_parameter.ident() + BKTS);
     }
     else if (the_parameter.typeToString().equals(STR))
     {
-      my_writer.print("public" + " org.jmlspecs.jmlunit.strategies.IndefiniteIterator " + 
+      my_writer.print("private" + " org.jmlspecs.jmlunit.strategies.IndefiniteIterator " + 
                       STR + UND + the_name + UND +
                    the_parameter.ident() + BKTS);
     }
     else
     {
-      my_writer.print("public org.jmlspecs.jmlunit.strategies.IndefiniteIterator " +
+      my_writer.print("private org.jmlspecs.jmlunit.strategies.IndefiniteIterator " +
                    the_parameter.typeToString() + UND + the_name + UND +
                    the_parameter.ident() + BKTS);
     }
@@ -398,7 +398,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(FOUR);
     my_writer.print("*/");
     my_writer.indent(FOUR);
-    my_writer.print("protected Iterator<Object> objects()");
+    my_writer.print("private Iterator<Object> objects()");
     my_writer.indent(FOUR);
     my_writer.print(BLK_ST);
     my_writer.indent(SIX);
@@ -780,7 +780,7 @@ public class TestDataClassGenerator implements Constants
                        parameters[j].ident() + BKTS + SM_COLN);
         }
         my_writer.indent(TEN);
-        my_writer.print("my_" + my_itname + SQ_BCK_ST + j + SQ_BCK_END + GET);
+        my_writer.print(my_itname + SQ_BCK_ST + j + SQ_BCK_END + GET);
         my_writer.indent(TEN);
         my_writer.print(my_itname + SQ_BCK_ST + j + SQ_BCK_END + ADV);
       }
