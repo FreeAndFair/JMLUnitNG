@@ -77,23 +77,23 @@ public interface Constants
   /**
    * This is the constants for indentation.
    */
-  int TWO = 2;
+  int LEVEL1 = 2;
   /**
    * This is the constants for indentation.
    */
-  int FOUR = 4;
+  int LEVEL2 = 4;
   /**
    * This is the constants for indentation.
    */
-  int SIX = 6;
+  int LEVEL3 = 6;
   /**
    * This is the constants for indentation.
    */
-  int EIGHT = 8;
+  int LEVEL4 = 8;
   /**
    * This is the constants for indentation.
    */
-  int TEN = 10;
+  int LEVEL5 = 10;
 
   /*
    * @ invariant PKG_JUNIT.length() > 0
