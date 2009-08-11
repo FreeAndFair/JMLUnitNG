@@ -186,11 +186,21 @@ public class TestClassGenerator implements Constants
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL2);
-        my_writer.print("catch" + "(final PreconditionSkipException the_exp)");
+        my_writer.print("catch " + 
+          "(final org.jmlspecs.jmlrac.runtime.JMLEntryPreconditionError the_exp)");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL3);
-        my_writer.print("the_exp.printStackTrace()" + SM_COLN);
+        my_writer.print("throw new PreconditionSkipException(the_exp.getMessage())" + SM_COLN);
+        my_writer.indent(LEVEL2);
+        my_writer.print(BLK_END);
+        my_writer.indent(LEVEL2);
+        my_writer.print("catch" + 
+          " (final org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError the_exp)");
+        my_writer.indent(LEVEL2);
+        my_writer.print(BLK_ST);
+        my_writer.indent(LEVEL3);
+        my_writer.print("throw new PreconditionSkipException(the_exp.getMessage());");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL1);
@@ -233,11 +243,21 @@ public class TestClassGenerator implements Constants
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL2);
-        my_writer.print("catch (final PreconditionSkipException the_exp)");
+        my_writer.print("catch " + 
+          "(final org.jmlspecs.jmlrac.runtime.JMLEntryPreconditionError the_exp)");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL3);
-        my_writer.print("the_exp.printStackTrace();");
+        my_writer.print("throw new PreconditionSkipException(the_exp.getMessage())" + SM_COLN);
+        my_writer.indent(LEVEL2);
+        my_writer.print(BLK_END);
+        my_writer.indent(LEVEL2);
+        my_writer.print("catch" + 
+          " (final org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError the_exp)");
+        my_writer.indent(LEVEL2);
+        my_writer.print(BLK_ST);
+        my_writer.indent(LEVEL3);
+        my_writer.print("throw new PreconditionSkipException(the_exp.getMessage());");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL1);
