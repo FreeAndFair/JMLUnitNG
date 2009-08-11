@@ -10,7 +10,7 @@ import java.io.PrintWriter;
  * @author Rinkesh Nagmoti
  * @version 1.0
  * */
-public class Writer
+public class Writer implements Constants
 {
 
   /** PrintWriter object to write string to the file. */
@@ -36,7 +36,7 @@ public class Writer
    */
   protected final void print(final String the_line)
   {
-    my_print_writer.print(the_line + "\n");
+    my_print_writer.print(the_line + NEWLINE);
     my_print_writer.flush();
   }
 
@@ -70,7 +70,7 @@ public class Writer
   {
     for (int i = 0; i < the_indent; i++)
     {
-      my_print_writer.print(" ");
+      my_print_writer.print(NEWLINE);
     }
     my_print_writer.flush();
   }

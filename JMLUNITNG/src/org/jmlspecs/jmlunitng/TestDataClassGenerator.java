@@ -25,7 +25,6 @@ import org.multijava.mjc.JTypeDeclarationType;
  */
 public class TestDataClassGenerator implements Constants
 {
-
   /**
    * Represents the class name for the Test class to be generated.
    */
@@ -57,8 +56,7 @@ public class TestDataClassGenerator implements Constants
    */
   private final transient String my_itname = "my_iter";
  
-  
-  /**
+    /**
    * Constructs JMLUNITNGTestDataClassGenerator Object.
    * 
    * @param the_file_name String file name.
@@ -85,7 +83,8 @@ public class TestDataClassGenerator implements Constants
    * @param the_iter Iterator object.
    */
   public void createTestDataClass(final JTypeDeclarationType the_decl,
-                        final JCompilationUnit the_cunit_type, final Iterator the_iter)
+                        final JCompilationUnit the_cunit_type,
+                        final Iterator<JTypeDeclarationType> the_iter)
   {
     
     
@@ -194,8 +193,8 @@ public class TestDataClassGenerator implements Constants
    * This method print the individual method for each data type in the method
    * which returns the Iterator of the data type.
    * 
-   * @param the_parameter
-   * @param the_name
+   * @param the_parameter JFormalParameter object.
+   * @param the_name String method name.
    */
   private void printDataTypeMethod(final JFormalParameter the_parameter, final String the_name)
   {
@@ -214,13 +213,13 @@ public class TestDataClassGenerator implements Constants
     if (the_parameter.typeToString().equals(STRARR))
     {
 
-      my_writer.print("private " + "org.jmlspecs.jmlunit.strategies.IndefiniteIterator" +
+      my_writer.print(PRIVATE + SPACE + "org.jmlspecs.jmlunit.strategies.IndefiniteIterator" +
                       " StringArray" + UND + the_name + UND +
                    the_parameter.ident() + BKTS);
     }
     else if (the_parameter.typeToString().equals(STR))
     {
-      my_writer.print("private" + " org.jmlspecs.jmlunit.strategies.IndefiniteIterator " + 
+      my_writer.print(PRIVATE + " org.jmlspecs.jmlunit.strategies.IndefiniteIterator " + 
                       STR + UND + the_name + UND +
                    the_parameter.ident() + BKTS);
     }
@@ -260,13 +259,13 @@ public class TestDataClassGenerator implements Constants
       {
 
         my_writer.print("return get_StringArray" + UND + the_name + UND +
-                        the_parameter.ident() + BKTS + ";");
+                        the_parameter.ident() + BKTS + SM_COLN);
         
       }
       else if (the_parameter.typeToString().equals(STR))
       {
         my_writer.print("return get" + UND + STR + UND + the_name + UND +
-                        the_parameter.ident() + BKTS + ";");
+                        the_parameter.ident() + BKTS + SM_COLN);
       }
      
       my_writer.indent(LEVEL5);
@@ -275,7 +274,7 @@ public class TestDataClassGenerator implements Constants
       my_writer.print(BLK_END + SM_COLN);
       
       my_writer.indent(LEVEL3);
-      my_writer.print("return " + the_parameter.ident() + UND + "string" +
+      my_writer.print("return" + SPACE + the_parameter.ident() + UND + "string" +
                    "_Strategy.iterator()" + SM_COLN);
     }
     else
@@ -293,7 +292,7 @@ public class TestDataClassGenerator implements Constants
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL4);
       my_writer.print("return get_" + the_parameter.typeToString() + UND + the_name + UND +
-                      the_parameter.ident() + BKTS + ";");
+                      the_parameter.ident() + BKTS + SM_COLN);
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_END);
       my_writer.indent(LEVEL4);
@@ -367,7 +366,7 @@ public class TestDataClassGenerator implements Constants
     {
       if (the_parameters[i].typeToString().equals(STRARR))
       {
-        name.append(UND + "StringArray");
+        name.append(UND + ST_ARR);
       }
       else
       {
@@ -501,7 +500,7 @@ public class TestDataClassGenerator implements Constants
    * @param the_iter Iterator object.
    * @param the_decl JTypeDeclarationType object.
    */
-  private void printCombinedIteratorClass(final Iterator the_iter, 
+  private void printCombinedIteratorClass(final Iterator<JTypeDeclarationType> the_iter, 
                                           final JTypeDeclarationType the_decl)
   {
   
@@ -542,7 +541,7 @@ public class TestDataClassGenerator implements Constants
         
         my_writer.indent(LEVEL3);
         my_writer.print("my_current_objects = new Object" + SQ_BCK_ST +
-                        (method.parameters().length + 1) + SQ_BCK_END + ";");
+                        (method.parameters().length + 1) + SQ_BCK_END + SM_COLN);
         my_writer.indent(LEVEL3);
         my_writer.print("my_newObjs = objects();");
         
@@ -553,7 +552,7 @@ public class TestDataClassGenerator implements Constants
           {
 
             my_writer.print(my_itname + SQ_BCK_ST + i + SQ_BCK_END + EQUAL +
-                            "StringArray" + UND + name + UND +
+                            ST_ARR + UND + name + UND +
                          parameters[i].ident() + BKTS + SM_COLN);
           }
           else if (parameters[i].typeToString().equals(STR))
@@ -685,7 +684,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.printOnLine("return (Iterator<Object[]>) new CombinedIteratorFor_" + 
                           the_method.ident() + BKTS + SM_COLN);
     //my_writer.printOnLine(".getIter_" + name + "();");
-    my_writer.printOnLine("\n");
+    my_writer.printOnLine(NEWLINE);
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_END);
    
@@ -723,7 +722,7 @@ public class TestDataClassGenerator implements Constants
     for (int i = 0; i < parameters.length; i++)
     { 
       my_writer.indent(LEVEL4);
-      my_writer.print("my_current_objects" + SQ_BCK_ST + (i + 1) + SQ_BCK_END +
+      my_writer.print(MY_CURR_OBJS + SQ_BCK_ST + (i + 1) + SQ_BCK_END +
                       EQUAL + my_itname + SQ_BCK_ST + i + SQ_BCK_END + GET);
       my_writer.indent(LEVEL4);
       my_writer.print(my_itname + SQ_BCK_ST + i + SQ_BCK_END + ADV);
@@ -737,7 +736,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.print(BLK_END);
     
     my_writer.indent(LEVEL3);
-    my_writer.print("else");
+    my_writer.print(ELSE);
     my_writer.indent(LEVEL3);
     my_writer.print(BLK_ST);
     
@@ -748,7 +747,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.print(BLK_ST);
     
     my_writer.indent(LEVEL5);
-    my_writer.print("my_current_objects" + SQ_BCK_ST + parameters.length + 
+    my_writer.print(MY_CURR_OBJS + SQ_BCK_ST + parameters.length + 
                     SQ_BCK_END + EQUAL + my_itname + SQ_BCK_ST + (parameters.length - 1) +
                     SQ_BCK_END + GET);
     my_writer.indent(LEVEL5);
@@ -765,7 +764,7 @@ public class TestDataClassGenerator implements Constants
       my_writer.print(BLK_ST);
       
       my_writer.indent(LEVEL5);
-      my_writer.print("my_current_objects" + SQ_BCK_ST + (i + 1) + 
+      my_writer.print(MY_CURR_OBJS + SQ_BCK_ST + (i + 1) + 
                       SQ_BCK_END + EQUAL + my_itname + SQ_BCK_ST + i + SQ_BCK_END + GET);
       my_writer.indent(LEVEL5);
       my_writer.print(my_itname + SQ_BCK_ST + i + SQ_BCK_END + ADV);
@@ -776,7 +775,7 @@ public class TestDataClassGenerator implements Constants
         {
 
           my_writer.print(my_itname + SQ_BCK_ST + j + SQ_BCK_END + EQUAL +
-                          "StringArray" + UND + name + UND +
+                          ST_ARR + UND + name + UND +
                        parameters[j].ident() + BKTS + SM_COLN);
         }
         else if (parameters[j].typeToString().equals(STR))
@@ -801,7 +800,7 @@ public class TestDataClassGenerator implements Constants
     }
     
     my_writer.indent(LEVEL4);
-    my_writer.print("else");
+    my_writer.print(ELSE);
     my_writer.indent(LEVEL4);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL5);
@@ -814,7 +813,7 @@ public class TestDataClassGenerator implements Constants
       {
 
         my_writer.print(my_itname + SQ_BCK_ST + j + SQ_BCK_END + EQUAL +
-                        "StringArray" + UND + name + UND +
+                        ST_ARR + UND + name + UND +
                      parameters[j].ident() + BKTS + SM_COLN);
       }
       else if (parameters[j].typeToString().equals(STR))
@@ -830,7 +829,7 @@ public class TestDataClassGenerator implements Constants
                      parameters[j].ident() + "();");
       }
       my_writer.indent(LEVEL5);
-      my_writer.print("my_current_objects" + SQ_BCK_ST + (j + 1) + SQ_BCK_END + 
+      my_writer.print(MY_CURR_OBJS + SQ_BCK_ST + (j + 1) + SQ_BCK_END + 
                       EQUAL + my_itname + SQ_BCK_ST + j + SQ_BCK_END + GET);
       my_writer.indent(LEVEL5);
       my_writer.print(my_itname + SQ_BCK_ST + j + SQ_BCK_END + ADV);
@@ -872,12 +871,12 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL3);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL4);
-    my_writer.print("return" + " true;");
+    my_writer.print("return " + "true;");
     my_writer.indent(LEVEL3);
     my_writer.print(BLK_END);
     my_writer.indent(LEVEL3);
     
-    my_writer.print("else");
+    my_writer.print(ELSE);
     my_writer.indent(LEVEL3);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL4);
@@ -951,7 +950,7 @@ public class TestDataClassGenerator implements Constants
           my_writer.print(JDOC_ST);
           my_writer.indent(LEVEL1);
           my_writer.print(" * This is the user input data method for parameter " +
-                          params[j].ident() + " from method " + method.ident() + " ");
+                          params[j].ident() + " from method " + method.ident() + SPACE);
           my_writer.indent(LEVEL1);
           my_writer.print(" * @return " + params[j].typeToString());
           my_writer.indent(LEVEL1);
@@ -960,15 +959,15 @@ public class TestDataClassGenerator implements Constants
           if (params[j].typeToString().equals(STRARR))
           {
 
-            my_writer.print("private static " + STRARR + 
+            my_writer.print(PRIVATE + SPACE + "static " + STRARR + 
                             " get_StringArray" + UND + name + UND +
                             params[j].ident() + BKTS);
             
           }
           else if (params[j].typeToString().equals(STR))
           {
-            my_writer.print("private static " + STR + "[] get" + UND + STR + UND + name + UND +
-                            params[j].ident() + BKTS);
+            my_writer.print(PRIVATE + " static " + STR + "[] get" + 
+                      UND + STR + UND + name + UND + params[j].ident() + BKTS);
           }
           else
           {
@@ -983,19 +982,14 @@ public class TestDataClassGenerator implements Constants
           if (params[j].typeToString().equals(STRARR))
           {
 
-            my_writer.print("return new " + params[j].typeToString() +
-            " {/* Add data elements here. */};");
+            my_writer.print("return new" + SPACE + params[j].typeToString() +
+              " {/* Add data elements here. */};");
             
           }
-          else if (params[j].typeToString().equals(STR))
+          else 
           {
             my_writer.print("return new " + params[j].typeToString() + "[] " +
-            "{/* Add data elements here. */};");
-          }
-          else
-          {
-            my_writer.print("return new " + params[j].typeToString() + "[] " +
-            "{/* Add data elements here. */};");
+              "{/* Add data elements here. */};");
           }
           my_writer.indent(LEVEL1);
           my_writer.print(BLK_END);

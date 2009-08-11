@@ -77,7 +77,8 @@ public class TestClassGenerator implements Constants
    * @param the_iter Iterator object.
    */
   public void createTest(final JTypeDeclarationType the_decl,
-                         final JCompilationUnit the_cunit_type, final Iterator the_iter)
+                         final JCompilationUnit the_cunit_type,
+                         final Iterator<JTypeDeclarationType> the_iter)
   {
 
     printHeaderImportandJavadoc(the_decl);
@@ -130,7 +131,7 @@ public class TestClassGenerator implements Constants
     my_writer.indent(LEVEL1);
     my_writer.print(JDOC_END);
     my_writer.indent(LEVEL1);
-    my_writer.print("public " + my_class_name + BKTS);
+    my_writer.print(PUBLIC + SPACE + my_class_name + BKTS);
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL1);
@@ -144,7 +145,7 @@ public class TestClassGenerator implements Constants
    * @param the_decl JTypeDeclarationType object.
    * @param the_method_iter Iterator object.
    */
-  private void createTestMethods(final Iterator the_method_iter,
+  private void createTestMethods(final Iterator<JTypeDeclarationType> the_method_iter,
                                  final JTypeDeclarationType the_decl)
   {
     while (the_method_iter.hasNext())
@@ -156,19 +157,19 @@ public class TestClassGenerator implements Constants
         final String name = generateMethodName(obj);
         printMethodJavaDoc(obj, name);
         my_writer.indent(LEVEL1);
-        my_writer.printOnLine("public " + "void " + name + "(final " + 
-                              the_decl.ident() + " the_obj");
+        my_writer.printOnLine(PUBLIC + SPACE + "void " + name + "(" + "final " + 
+                              the_decl.ident() + SPACE + "the_obj");
         for (int i = 0; i < construct.parameters().length; i++)
         {
-          my_writer.printOnLine(", final " + construct.parameters()[i].typeToString() + " " +
-                             PARAM_ST + construct.parameters()[i].ident());
+          my_writer.printOnLine("," + " final " + construct.parameters()[i].typeToString() + 
+                                SPACE + PARAM_ST + construct.parameters()[i].ident());
         }
         my_writer.printOnLine(BKT_END);
         my_writer.printOnLine(" \n");
         my_writer.indent(LEVEL1);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL2);
-        my_writer.print("try");
+        my_writer.print(TRY);
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL3);
@@ -178,29 +179,31 @@ public class TestClassGenerator implements Constants
           my_writer.printOnLine(PARAM_ST + construct.parameters()[i].ident());
           if (i != construct.parameters().length - 1)
           {
-            my_writer.printOnLine(", ");
+            my_writer.printOnLine(COMMA + SPACE);
           }
         }
         my_writer.printOnLine(BKT_END + SM_COLN);
-        my_writer.printOnLine("\n");
+        my_writer.printOnLine(NEWLINE);
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL2);
-        my_writer.print("catch " + 
-          "(final org.jmlspecs.jmlrac.runtime.JMLEntryPreconditionError the_exp)");
+        my_writer.print(CATCH + SPACE + 
+          "(final" + " org.jmlspecs.jmlrac.runtime.JMLEntryPreconditionError the_exp)");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL3);
-        my_writer.print("throw new PreconditionSkipException(the_exp.getMessage())" + SM_COLN);
+        my_writer.print("throw new" + " PreconditionSkipException(the_exp.getMessage())" +
+                        SM_COLN);
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL2);
-        my_writer.print("catch" + 
-          " (final org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError the_exp)");
+        my_writer.print(CATCH + SPACE + 
+          " (final org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError" +
+          " the_exp)");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL3);
-        my_writer.print("throw new PreconditionSkipException(the_exp.getMessage());");
+        my_writer.print("throw " + "new PreconditionSkipException(the_exp.getMessage());");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL1);
@@ -217,15 +220,15 @@ public class TestClassGenerator implements Constants
                               the_decl.ident() + " the_obj");
         for (int i = 0; i < method.parameters().length; i++)
         {
-          my_writer.printOnLine(", final " + method.parameters()[i].typeToString() + " " +
+          my_writer.printOnLine(", final " + method.parameters()[i].typeToString() + SPACE +
                              PARAM_ST + method.parameters()[i].ident());
         }
         my_writer.printOnLine(BKT_END);
-        my_writer.printOnLine("\n");
+        my_writer.printOnLine(NEWLINE);
         my_writer.indent(LEVEL1);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL2);
-        my_writer.print("try");
+        my_writer.print(TRY);
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL3);
@@ -235,15 +238,15 @@ public class TestClassGenerator implements Constants
           my_writer.printOnLine(PARAM_ST + method.parameters()[i].ident());
           if (i != method.parameters().length - 1)
           {
-            my_writer.printOnLine(", ");
+            my_writer.printOnLine(COMMA + SPACE);
           }
         }
-        my_writer.printOnLine(")" + SM_COLN);
-        my_writer.printOnLine("\n");
+        my_writer.printOnLine(BKT_END + SM_COLN);
+        my_writer.printOnLine(NEWLINE);
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL2);
-        my_writer.print("catch " + 
+        my_writer.print(CATCH + SPACE + 
           "(final org.jmlspecs.jmlrac.runtime.JMLEntryPreconditionError the_exp)");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_ST);
@@ -285,9 +288,9 @@ public class TestClassGenerator implements Constants
       final JFormalParameter[] pams = construct.parameters();
       for (int i = 0; i < pams.length; i++)
       {
-        if (pams[i].typeToString().equals("String[]"))
+        if (pams[i].typeToString().equals(STRARR))
         {
-          name.append(UND + "StringArray");
+          name.append(UND + ST_ARR);
         }
         else
         {
@@ -306,7 +309,7 @@ public class TestClassGenerator implements Constants
       {
         if (pams[i].typeToString().equals("String[]"))
         {
-          name.append(UND + "StringArray");
+          name.append(UND + ST_ARR);
         }
         else
         {
@@ -332,22 +335,22 @@ public class TestClassGenerator implements Constants
     {
       final JConstructorDeclaration jConstruct = (JConstructorDeclaration) the_method;
       my_writer.indent(LEVEL1);
-      my_writer.print(JDOC_ST + " This method is a test for Constructor " + jConstruct.ident() +
-                   " from the ");
+      my_writer.print(JDOC_ST + " This method is a test " + "for Constructor " +
+                      jConstruct.ident() + " from" + " the ");
       my_writer.indent(LEVEL1);
-      my_writer.print(" * class to  be tested.");
+      my_writer.print(" * class" + " to  be tested.");
       my_writer.indent(LEVEL1);
-      my_writer.print(" * @param the_obj The object to be passed.");
+      my_writer.print(" * @param" + " the_obj " + "The object to be passed.");
       for (int i = 0; i < jConstruct.parameters().length; i++)
       {
         my_writer.indent(LEVEL1);
-        my_writer.print(" * @param the_" + jConstruct.parameters()[i].ident() + " The " +
-                     jConstruct.parameters()[i].typeToString() + " to be passed.");
+        my_writer.print(" * @param " + "the_" + jConstruct.parameters()[i].ident() + " The " +
+                     jConstruct.parameters()[i].typeToString() + " to be passed" + PERIOD);
       }
       my_writer.indent(LEVEL1);
       my_writer.print(JDOC_END);
       my_writer.indent(LEVEL1);
-      my_writer.print("@Test(dataProvider = \"" + the_name + "\")");
+      my_writer.print("@Test(dataProvider" + " = \"" + the_name + "\"" + ")");
 
     }
     else if (the_method instanceof JMethodDeclaration)
@@ -363,7 +366,7 @@ public class TestClassGenerator implements Constants
       for (int i = 0; i < method.parameters().length; i++)
       {
         my_writer.indent(LEVEL1);
-        my_writer.print(" * @param the_" + method.parameters()[i].ident() + " The " +
+        my_writer.print(" * @param the_" + method.parameters()[i].ident() + " This is the " +
                      method.parameters()[i].typeToString() + " to be passed.");
       }
       my_writer.indent(LEVEL1);

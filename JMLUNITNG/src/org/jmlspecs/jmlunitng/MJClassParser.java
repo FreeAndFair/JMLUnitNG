@@ -21,7 +21,7 @@ import antlr.TokenStreamException;
  * @author Rinkesh Nagmoti
  * @version 1.0
  */
-public class MJClassParser extends org.multijava.mjc.Main
+public class MJClassParser extends org.multijava.mjc.Main implements Constants
 {
   /**
    * MjcCommonOptions for getting the required class parsed.
@@ -64,6 +64,7 @@ public class MJClassParser extends org.multijava.mjc.Main
     MjcParser my_parser;
     JCompilationUnitType j_cunit;
     ParsingController controller;
+   
 
     controller = new ParsingController(buffer, my_file);
     mjclexer =
@@ -71,9 +72,9 @@ public class MJClassParser extends org.multijava.mjc.Main
                      allowUniverseKeywords, this);
     jdoclexer = new JavadocLexer(controller);
 
-    controller.addInputStream(mjclexer, "multijava");
+    controller.addInputStream(mjclexer, MLTJAVA);
     controller.addInputStream(jdoclexer, "javadoc");
-    controller.selectInitial("multijava");
+    controller.selectInitial(MLTJAVA);
 
     setAllowUniverses();
 

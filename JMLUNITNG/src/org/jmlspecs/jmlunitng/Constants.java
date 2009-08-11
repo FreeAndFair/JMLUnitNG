@@ -66,6 +66,29 @@ public interface Constants
   String STRARR = "String[]";
   /**This is the "=" string.*/
   String EQUAL = " = ";
+  /**This is the " " string.*/
+  String SPACE = " ";
+  /**This is the "," string.*/
+  String COMMA = ",";
+  /**This is the "try" string.*/
+  String TRY = "try";
+  /**This is the "catch" string.*/
+  String CATCH = "catch";
+  /**This is the "\n" string.*/
+  String NEWLINE = "\n";
+  /**This is the "private" string.*/
+  String PRIVATE = "private";
+  /**This is the "public" string.*/
+  String PUBLIC = "public";
+  /**This is the "StringArray" string.*/
+  String ST_ARR = "StringArray";
+  /**This is the "my_current_objects" string.*/
+  String MY_CURR_OBJS = "my_current_objects";
+  /**This is the "else" string.*/
+  String ELSE = "else";
+  /**This is the "multijava" string.*/
+  String MLTJAVA = "multijava";
+    
   /**
    * This is the underscore sign.
    */

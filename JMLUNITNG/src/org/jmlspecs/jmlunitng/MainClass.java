@@ -88,7 +88,8 @@ public class MainClass
    * @param the_decl This is JTypeDeclarationType object to be passed as argument.
    * @return Iterator.
    */
-  protected Iterator getMethodIterator(final JTypeDeclarationType the_decl)
+  protected Iterator<JTypeDeclarationType> getMethodIterator
+  (final JTypeDeclarationType the_decl)
   {
     return the_decl.methods().iterator();
   }

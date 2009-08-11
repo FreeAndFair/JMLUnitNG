@@ -31,5 +31,28 @@ public class Parameter
     this.my_type = the_type.toString();
     this.my_ident = the_ident;
   }
-
+ /**
+  *  This is the CType. 
+  * @return CType
+  */
+  public CType getCType()
+  {
+    return my_ctype;
+  }
+/**
+ *  This is the String type.
+ * @return String
+ */
+  public String getType()
+  {
+    return my_type;
+  }
+  /**
+   * This is the identity. 
+   * @return String.
+   */
+  public String getident()
+  {
+    return my_ident;
+  }
 }
