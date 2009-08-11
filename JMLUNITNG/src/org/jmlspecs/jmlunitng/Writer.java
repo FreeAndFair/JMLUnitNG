@@ -36,7 +36,7 @@ public class Writer implements Constants
    */
   protected final void print(final String the_line)
   {
-    my_print_writer.print(the_line + NEWLINE);
+    my_print_writer.print(the_line + "\n");
     my_print_writer.flush();
   }
 
@@ -70,7 +70,7 @@ public class Writer implements Constants
   {
     for (int i = 0; i < the_indent; i++)
     {
-      my_print_writer.print(NEWLINE);
+      my_print_writer.print(" ");
     }
     my_print_writer.flush();
   }

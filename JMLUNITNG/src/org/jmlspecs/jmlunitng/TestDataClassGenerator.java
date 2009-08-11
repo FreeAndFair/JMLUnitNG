@@ -684,7 +684,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.printOnLine("return (Iterator<Object[]>) new CombinedIteratorFor_" + 
                           the_method.ident() + BKTS + SM_COLN);
     //my_writer.printOnLine(".getIter_" + name + "();");
-    my_writer.printOnLine(NEWLINE);
+    my_writer.printOnLine("\n");
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_END);
    

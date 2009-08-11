@@ -183,7 +183,7 @@ public class TestClassGenerator implements Constants
           }
         }
         my_writer.printOnLine(BKT_END + SM_COLN);
-        my_writer.printOnLine(NEWLINE);
+        my_writer.printOnLine("\n");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL2);
@@ -224,7 +224,7 @@ public class TestClassGenerator implements Constants
                              PARAM_ST + method.parameters()[i].ident());
         }
         my_writer.printOnLine(BKT_END);
-        my_writer.printOnLine(NEWLINE);
+        my_writer.printOnLine("\n");
         my_writer.indent(LEVEL1);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL2);
@@ -242,7 +242,7 @@ public class TestClassGenerator implements Constants
           }
         }
         my_writer.printOnLine(BKT_END + SM_COLN);
-        my_writer.printOnLine(NEWLINE);
+        my_writer.printOnLine("\n");
         my_writer.indent(LEVEL2);
         my_writer.print(BLK_END);
         my_writer.indent(LEVEL2);
