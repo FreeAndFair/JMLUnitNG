@@ -75,11 +75,12 @@ public class MainClass
     final JTypeDeclarationType[] decl = j_type.typeDeclarations();
 
     final TestClassGenerator testgen = new 
-    TestClassGenerator("c:\\Addition_JMLUNITNG_Test.java", decl[0], j_type);
+    TestClassGenerator("c:\\" + decl[0].ident() + "_JMLUNITNG_Test.java", decl[0], j_type);
     testgen.createTest(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
 
     final TestDataClassGenerator testDataGen = new 
-    TestDataClassGenerator("c:\\Addition_JMLUNITNG_Test_Data.java", decl[0], j_type);
+    TestDataClassGenerator("c:" + "\\" + decl[0].ident() + "_JMLUNITNG_Test_Data.java",
+                           decl[0], j_type);
     testDataGen.createTestDataClass(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
   }
 
