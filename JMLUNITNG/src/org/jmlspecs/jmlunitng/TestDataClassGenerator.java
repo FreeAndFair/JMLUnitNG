@@ -417,7 +417,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL3);
     my_writer.print("int object_count = 0;");
     my_writer.indent(LEVEL3);
-    my_writer.print("final int numberOfObjects = 2; //change this number for more objects.");
+    my_writer.print("final int numberOfObjects = getNumberOfObjects();");
     my_writer.indent(LEVEL3);
     my_writer.print("while (object_count < numberOfObjects)");
     my_writer.indent(LEVEL3);
@@ -937,6 +937,22 @@ public class TestDataClassGenerator implements Constants
   {
     final List<Object> methods = the_decl.methods();
    
+    my_writer.indent(LEVEL1);
+    my_writer.print(JDOC_ST);
+    my_writer.indent(LEVEL1);
+    my_writer.print(" * This is the user input data method for number of objects.");
+    my_writer.indent(LEVEL1);
+    my_writer.print(" * @return int");
+    my_writer.indent(LEVEL1);
+    my_writer.print(JDOC_END);
+    my_writer.indent(LEVEL1);
+    my_writer.print("private static int getNumberOfObjects()");
+    my_writer.indent(LEVEL1);
+    my_writer.print(BLK_ST);
+    my_writer.indent(LEVEL1);
+    my_writer.print("return 2;//Please provide the number of objects for test.");
+    my_writer.indent(LEVEL1);
+    my_writer.print(BLK_END);
     
     for (int i = 0; i < methods.size(); i++)
     {
@@ -945,6 +961,7 @@ public class TestDataClassGenerator implements Constants
         final JMethodDeclaration method = (JMethodDeclaration) methods.get(i);
         final JFormalParameter[] params = method.parameters();
         final String name = method.ident() + getCombinedName(params);
+        
         for (int j = 0; j < params.length; j++)
         {
           my_writer.indent(LEVEL1);
