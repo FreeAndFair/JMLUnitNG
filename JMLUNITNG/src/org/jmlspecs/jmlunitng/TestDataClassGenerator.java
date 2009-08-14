@@ -791,7 +791,7 @@ public class TestDataClassGenerator implements Constants
                        parameters[j].ident() + BKTS + SM_COLN);
         }
         my_writer.indent(LEVEL5);
-        my_writer.print(MY_CURR_OBJS + SQ_BCK_ST + (i + 1) + 
+        my_writer.print(MY_CURR_OBJS + SQ_BCK_ST + (j + 1) + 
                         SQ_BCK_END + EQUAL + my_itname + SQ_BCK_ST + j + SQ_BCK_END + GET);
         my_writer.indent(LEVEL5);
         my_writer.print(my_itname + SQ_BCK_ST + j + SQ_BCK_END + ADV);
