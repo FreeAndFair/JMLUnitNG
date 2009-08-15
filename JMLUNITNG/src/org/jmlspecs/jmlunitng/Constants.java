@@ -118,32 +118,5 @@ public interface Constants
    */
   int LEVEL5 = 10;
 
-  /*
-   * @ invariant PKG_JUNIT.length() > 0
-   * 
-   * @ ==> PKG_JUNIT.charAt(PKG_JUNIT.length()) == '.';
-   * 
-   * @
-   */
-  /*
-   * @ invariant PKG_JMLRAC.length() > 0
-   * 
-   * @ ==> PKG_JMLRAC.charAt(PKG_JMLRAC.length()) == '.';
-   * 
-   * @
-   */
-  /*
-   * @ invariant PKG_JMLUNITNG.length() > 0
-   * 
-   * @ ==> PKG_JMLUNITNG.charAt(PKG_JMLUNITNG.length()) == '.';
-   * 
-   * @
-   */
-  /*
-   * @ invariant PKG_STRATEGIES.length() > 0
-   * 
-   * @ ==> PKG_STRATEGIES.charAt(PKG_JMLUNITNG.length()) == '.';
-   * 
-   * @
-   */
+ 
 }
