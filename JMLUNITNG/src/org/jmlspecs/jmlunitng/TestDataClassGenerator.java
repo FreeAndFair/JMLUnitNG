@@ -238,9 +238,10 @@ public class TestDataClassGenerator implements Constants
 
       if (the_parameter.typeToString().equals(STRARR))
       {
-        my_writer.print("final " + "org.jmlspecs.jmlunit.strategies.StringStrategy " + 
+        my_writer.print("final " + "org.jmlspecs.jmlunitng.StringArrayStrategy " + 
                         the_parameter.ident() + UND +
-                     "string_Strategy = new org.jmlspecs.jmlunit.strategies.StringStrategy()");
+                     "string_Strategy = new org.jmlspecs.jmlunitng." +
+                     "StringArrayStrategy()");
       }
       else if (the_parameter.typeToString().equals(STR))
       {
