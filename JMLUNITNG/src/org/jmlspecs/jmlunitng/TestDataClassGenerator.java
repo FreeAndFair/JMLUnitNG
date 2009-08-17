@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.multijava.mjc.CClass;
 import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JCompilationUnitType;
 import org.multijava.mjc.JConstructorDeclaration;
@@ -159,7 +160,8 @@ public class TestDataClassGenerator implements Constants
     JFormalParameter[] parameters;
     String name;
     if (obj instanceof JConstructorDeclaration)
-    {
+    { 
+    
       final JConstructorDeclaration construct = (JConstructorDeclaration) obj;
       parameters = construct.parameters();
       name = construct.ident() + getCombinedName(parameters);

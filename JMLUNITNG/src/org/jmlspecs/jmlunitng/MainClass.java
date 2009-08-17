@@ -3,6 +3,7 @@ package org.jmlspecs.jmlunitng;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 import org.jmlspecs.jmlunit.JntOptions;
 import org.multijava.mjc.JCompilationUnit;
@@ -82,6 +83,19 @@ public class MainClass
     TestDataClassGenerator("c:" + "\\" + decl[0].ident() + "_JMLUNITNG_Test_Data.java",
                            decl[0], j_type);
     testDataGen.createTestDataClass(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
+    
+    XMLGenerator xmlgen = null;
+    
+    try
+    {
+      xmlgen = new XMLGenerator(decl[0], j_type);
+    }
+    catch (final IOException the_exp)
+    {
+      the_exp.printStackTrace();
+    }
+    
+    xmlgen.createXML();
   }
 
   /**
