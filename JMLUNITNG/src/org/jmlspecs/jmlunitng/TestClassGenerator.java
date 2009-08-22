@@ -12,7 +12,7 @@ import org.multijava.mjc.JPackageImportType;
 import org.multijava.mjc.JTypeDeclarationType;
 import org.testng.TestNG;
 
-import Test.Multiply_JMLUNITNG_Test;
+
 
 /**
  * Generates the JMLUNITNG_Test class by JMLUNITNG framework. The generated
