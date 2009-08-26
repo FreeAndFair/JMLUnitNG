@@ -1009,7 +1009,7 @@ public class TestDataClassGenerator implements Constants
           my_writer.indent(LEVEL1);
           if(!params[j].dynamicType().isPrimitive())
           {
-            my_writer.print("private static Object[]" +
+            my_writer.print("private static Object[] " +
                             "get_" + params[j].typeToString() + UND + name + UND +
                             params[j].ident() + BKTS);
           }
@@ -1029,7 +1029,7 @@ public class TestDataClassGenerator implements Constants
           else
           {
             my_writer.print("private static " + params[j].typeToString() + "[]" +
-                            "get_" + params[j].typeToString() + UND + name + UND +
+                            " get_" + params[j].typeToString() + UND + name + UND +
                             params[j].ident() + BKTS);
           }
           my_writer.indent(LEVEL1);
