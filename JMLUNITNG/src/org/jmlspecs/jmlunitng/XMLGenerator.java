@@ -19,22 +19,22 @@ public class XMLGenerator implements Constants
  /**
   * This is the JTypeDeclarationType object.
   */
-  private final transient JTypeDeclarationType my_decl;
+  private final transient JTypeDeclarationType my_decl[];
   /**
    * This is the JCompilationUnit object.
    */
-  private final transient JCompilationUnit my_cunit;
+  private final transient JCompilationUnit my_cunit[];
   /**
    * Constructs the XMLGenerator object.
    * @param the_decl JTypeDeclarationType object.
    * @param the_cunit JCompilationUnit object.
    * @throws IOException throws exception if failed to initialize my_writer.
    */
-  public XMLGenerator(final JTypeDeclarationType the_decl, 
-                      final JCompilationUnit the_cunit) throws IOException
+  public XMLGenerator(final JTypeDeclarationType[] the_decl, 
+                      final JCompilationUnit[] the_cunit) throws IOException
   {
     
-    my_writer = new Writer("C:\\" + the_decl.ident() + XML_POSTFIX);
+    my_writer = new Writer("C:\\" + "testng" + XML_POSTFIX);
     my_decl = the_decl;
     my_cunit = the_cunit;
   }
@@ -59,22 +59,25 @@ public class XMLGenerator implements Constants
   private void printXML()
   {
     my_writer.print(SUITE_OPEN + " skipfailedinvocationCounts=\"false\" " +
-       "verbose=\"1\" name=\"" + my_decl.ident() + " Suite\"" + 
+       "verbose=\"1\" name=\"" + "Test Suite\"" + 
        " junit=\"false\" annotations=\"JDK\"" + XML_B_CLOSE);
     
     my_writer.indent(LEVEL1);
-    my_writer.print(TEST_OPEN + " name= \"" + my_decl.ident() +
-                    " test\"" + " junit=\"false\"" + XML_B_CLOSE);
+    my_writer.print(TEST_OPEN + " name= \"" + 
+                    "TestNG test\"" + " junit=\"false\"" + XML_B_CLOSE);
     
     my_writer.indent(LEVEL2);
     my_writer.print(CLSS_OPEN + XML_B_CLOSE);
     my_writer.indent(LEVEL3);
-    my_writer.print(CLS_OPEN + " name=\"" +
-                    my_cunit.packageNameAsString().replaceAll("/", "") +
-                    "." + my_decl.ident() + T_C_POSTFIX + "\"" + CLS_CLOSE);
+    for (int i = 0; i < my_decl.length; i++)
+    {
+      my_writer.print(CLS_OPEN + " name=\"" +
+                      my_cunit[i].packageNameAsString().replaceAll("/", "") +
+                      "." + my_decl[i].ident() + T_C_POSTFIX + "\"" + CLS_CLOSE);
+     
+    }
     my_writer.indent(LEVEL2);
     my_writer.print(CLSS_CLOSE);
-    
     
     my_writer.indent(LEVEL1);
     my_writer.print(TEST_CLOSE);
