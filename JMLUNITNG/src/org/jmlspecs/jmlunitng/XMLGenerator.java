@@ -68,9 +68,10 @@ public class XMLGenerator implements Constants
     
     my_writer.indent(LEVEL2);
     my_writer.print(CLSS_OPEN + XML_B_CLOSE);
-    my_writer.indent(LEVEL3);
+   
     for (int i = 0; i < my_decl.length; i++)
     {
+      my_writer.indent(LEVEL3);
       my_writer.print(CLS_OPEN + " name=\"" +
                       my_cunit[i].packageNameAsString().replaceAll("/", "") +
                       "." + my_decl[i].ident() + T_C_POSTFIX + "\"" + CLS_CLOSE);
