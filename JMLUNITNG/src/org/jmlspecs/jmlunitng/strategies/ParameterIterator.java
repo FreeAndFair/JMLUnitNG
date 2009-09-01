@@ -61,7 +61,7 @@ public class ParameterIterator
   /**
    * This method advances an iterator to the next location.
    */
-  public void advamce()
+  public void advance()
   {
     if (my_current < (my_max ))
     {

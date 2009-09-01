@@ -20,7 +20,7 @@ public abstract class AbstractBasicStrategy
   public AbstractBasicStrategy()
   {
     final int size = defaultData().length + addData().length;
-    System.out.println("size = " + size);
+  
     final Object[] def = defaultData();
     final Object[] added = addData();
     my_objects = new Object[size];
@@ -32,7 +32,7 @@ public abstract class AbstractBasicStrategy
       }
       else
       {
-        System.out.println("i " + i + " and " + (i - (defaultData().length - 1)));
+       
         my_objects[i] = added[i - (defaultData().length)];
       }
     }
@@ -57,6 +57,8 @@ public abstract class AbstractBasicStrategy
    * @return Object[]
    */
   public abstract Object[] addData();
+  
+
  
 
 }

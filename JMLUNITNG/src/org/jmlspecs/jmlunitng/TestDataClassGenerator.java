@@ -4,8 +4,10 @@ package org.jmlspecs.jmlunitng;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.multijava.mjc.CClass;
 import org.multijava.mjc.JCompilationUnit;
@@ -53,6 +55,10 @@ public class TestDataClassGenerator implements Constants
   protected final transient JPackageImportType[] my_pkgs;
  
   /**
+   * This is the map of primitive data types and their Class names.
+   */
+  protected final transient Map<String, String> my_primitives;
+  /**
    * This is the name of iterator.
    */
   private final transient String my_itname = "my_iter";
@@ -75,6 +81,17 @@ public class TestDataClassGenerator implements Constants
     my_pkgs = the_cunit_type.importedPackages();
     this.my_file = the_file_name;
     my_writer = new Writer(this.my_file);
+    my_primitives = new HashMap<String, String>();
+    my_primitives.put("boolean", "Boolean");
+    my_primitives.put("byte", "Byte");
+    my_primitives.put("double", "Double");
+    my_primitives.put("float", "Float");
+    my_primitives.put("int", "Integer");
+    my_primitives.put("long", "Long");
+    my_primitives.put("short", "Short");
+    my_primitives.put("string", "String");
+   
+    
   }
 
   /**
@@ -212,17 +229,10 @@ public class TestDataClassGenerator implements Constants
     String parameter = the_parameter.typeToString();
     final char new_char = Character.toUpperCase(parameter.charAt(0));
     parameter = parameter.replace(parameter.charAt(0), new_char);
-   
-    if (the_parameter.typeToString().equals(STRARR))
+      
+   if (the_parameter.typeToString().equals(STR))
     {
-
-      my_writer.print(PRIVATE + SPACE + "org.jmlspecs.jmlunit.strategies.IndefiniteIterator" +
-                      " StringArray" + UND + the_name + UND +
-                   the_parameter.ident() + BKTS);
-    }
-    else if (the_parameter.typeToString().equals(STR))
-    {
-      my_writer.print(PRIVATE + " org.jmlspecs.jmlunit.strategies.IndefiniteIterator " + 
+      my_writer.print(PRIVATE + " org.jmlspecs.jmlunitng.strategies.ParameterIterator " + 
                       STR + UND + the_name + UND +
                    the_parameter.ident() + BKTS);
     }
@@ -230,13 +240,13 @@ public class TestDataClassGenerator implements Constants
     {
       if(the_parameter.typeToString().endsWith("[]"))
       {
-        my_writer.print("private org.jmlspecs.jmlunit.strategies.IndefiniteIterator " +
+        my_writer.print(PRIVATE +  " org.jmlspecs.jmlunitng.strategies.ParameterIterator " +
                         the_parameter.typeToString().replace("[]", "Array") +
                         UND + the_name + UND + the_parameter.ident() + BKTS);
       }
       else
       {
-        my_writer.print("private org.jmlspecs.jmlunit.strategies.IndefiniteIterator " +
+        my_writer.print(PRIVATE + " org.jmlspecs.jmlunitng.strategies.ParameterIterator " +
                         the_parameter.typeToString() + UND + the_name + UND +
                         the_parameter.ident() + BKTS);
       }
@@ -244,7 +254,7 @@ public class TestDataClassGenerator implements Constants
     }
     else
     {
-      my_writer.print("private org.jmlspecs.jmlunit.strategies.IndefiniteIterator " +
+      my_writer.print(PRIVATE + " org.jmlspecs.jmlunitng.strategies.ParameterIterator " +
                    the_parameter.typeToString() + UND + the_name + UND +
                    the_parameter.ident() + BKTS);
     }
@@ -253,18 +263,10 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL3);
    
    
-    if (the_parameter.typeToString().equals(STRARR) ||
-        the_parameter.typeToString().equals(STR))
+    if (the_parameter.typeToString().equals(STR))
     {
 
-      if (the_parameter.typeToString().equals(STRARR))
-      {
-        my_writer.print("final " + "org.jmlspecs.jmlunitng.StringArrayStrategy " + 
-                        the_parameter.ident() + UND +
-                     "string_Strategy = new org.jmlspecs.jmlunitng." +
-                     "StringArrayStrategy()");
-      }
-      else if (the_parameter.typeToString().equals(STR))
+      if (the_parameter.typeToString().equals(STR))
       {
         my_writer.print("final org.jmlspecs.jmlunit.strategies.StringStrategy " + 
                         the_parameter.ident() + UND + "string_Strategy " + 
@@ -273,22 +275,10 @@ public class TestDataClassGenerator implements Constants
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_ST);
       
-      if (the_parameter.typeToString().equals(STRARR))
+      if (the_parameter.typeToString().equals(STR))
       {
         my_writer.indent(LEVEL5);
-        my_writer.print("protected Object[] addData()");
-        my_writer.indent(LEVEL5);
-        my_writer.print(BLK_ST);
-        my_writer.indent(LEVEL5 + 2);
-
-        my_writer.print("return get_StringArray" + UND + the_name + UND +
-                        the_parameter.ident() + BKTS + SM_COLN);
-        
-      }
-      else if (the_parameter.typeToString().equals(STR))
-      {
-        my_writer.indent(LEVEL5);
-        my_writer.print("protected String[] addData()");
+        my_writer.print("public Object[] addData()");
         my_writer.indent(LEVEL5);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL5 + 2);
@@ -307,14 +297,24 @@ public class TestDataClassGenerator implements Constants
     }
     else if (!the_parameter.dynamicType().isPrimitive())
     {
-      my_writer.print("final org.jmlspecs.jmlunitng.NewObjectStrategy " +
-         the_parameter.ident() + UND + the_parameter.typeToString() + "_Strategy" + " =");
+      if (the_parameter.typeToString().endsWith("[]"))
+      {
+        my_writer.print("final org.jmlspecs.jmlunitng.strategies.NewObjectStrategy " +
+          the_parameter.ident() + UND + the_parameter.typeToString().replace("[]", "Array") +
+          "_Strategy" + " =");
+      }
+      else
+      {
+        my_writer.print("final org.jmlspecs.jmlunitng.strategies.NewObjectStrategy " +
+             the_parameter.ident() + UND + the_parameter.typeToString() + 
+                        "_Strategy" + " =");
+      }
       my_writer.indent(LEVEL4);
-      my_writer.print("new org.jmlspecs.jmlunitng.NewObjectStrategy()");
+      my_writer.print("new org.jmlspecs.jmlunitng.strategies.NewObjectStrategy()");
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL5);
-      my_writer.print("protected Object[] addData()");
+      my_writer.print("public Object[] addData()");
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL4);
@@ -334,20 +334,30 @@ public class TestDataClassGenerator implements Constants
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_END + SM_COLN);
       my_writer.indent(LEVEL5 + 2);
-      my_writer.print("return" + SPACE + the_parameter.ident() + UND +
-                     the_parameter.typeToString() + "_Strategy.iterator()" + SM_COLN); 
+      if (the_parameter.typeToString().endsWith("[]"))
+      {
+        my_writer.print("return" + SPACE + the_parameter.ident() + UND +
+                     the_parameter.typeToString().replace("[]", "Array") +
+                     "_Strategy.iterator()" + SM_COLN);
+      }
+      else
+      {
+        my_writer.print("return" + SPACE + the_parameter.ident() + UND +
+                        the_parameter.typeToString() + "_Strategy.iterator()" + SM_COLN);
+      }
     }
     else
     {
-      my_writer.print("final org.jmlspecs.jmlunit.strategies." + parameter + "StrategyType " +
+      my_writer.print("final org.jmlspecs.jmlunitng.strategies." + parameter +
+                      "Strategy " +
                    the_parameter.ident() + UND + the_parameter.typeToString() + "_Strategy =");
       my_writer.indent(LEVEL4);
-      my_writer.print("new org.jmlspecs.jmlunit.strategies." + parameter +
+      my_writer.print("new org.jmlspecs.jmlunitng.strategies." + parameter +
                    "Strategy()");
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL5);
-      my_writer.print("protected " + the_parameter.typeToString() + "[] addData()");
+      my_writer.print("public " + "Object" + "[] addData()");
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL4);
@@ -670,15 +680,15 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL2);
     my_writer.print(JDOC_ST);
     my_writer.indent(LEVEL2);
-    my_writer.print(" * This is the array of IndefiniteIterator objects for" +
+    my_writer.print(" * This is the array of ParameterIterator objects for" +
                       " all parameters.");
     my_writer.indent(LEVEL2);
     my_writer.print(JDOC_END);
     my_writer.indent(LEVEL2);
-    my_writer.print("protected org.jmlspecs.jmlunit.strategies.IndefiniteIterator[] " +
+    my_writer.print("protected org.jmlspecs.jmlunitng.strategies.ParameterIterator[] " +
          my_itname + EQUAL);
     my_writer.indent(LEVEL3);
-    my_writer.print("new org.jmlspecs.jmlunit.strategies.IndefiniteIterator[" +
+    my_writer.print("new org.jmlspecs.jmlunitng.strategies.ParameterIterator[" +
                     the_param_num + "];");
     my_writer.indent(LEVEL2);
     my_writer.print(JDOC_ST);
@@ -1035,17 +1045,9 @@ public class TestDataClassGenerator implements Constants
           my_writer.print(JDOC_END);
           my_writer.indent(LEVEL1);
           
-          if (params[j].typeToString().equals(STRARR))
+         if (params[j].typeToString().equals(STR))
           {
-
-            my_writer.print(PRIVATE + SPACE + "static " + "Object[]" + 
-                            " get_StringArray" + UND + name + UND +
-                            params[j].ident() + BKTS);
-            
-          }
-          else if (params[j].typeToString().equals(STR))
-          {
-            my_writer.print(PRIVATE + " static " + STR + "[] get" + 
+            my_writer.print(PRIVATE + " static " + "Object[] get" + 
                       UND + STR + UND + name + UND + params[j].ident() + BKTS);
           }
           else if (!params[j].dynamicType().isPrimitive())
@@ -1066,7 +1068,7 @@ public class TestDataClassGenerator implements Constants
           }
           else
           {
-            my_writer.print("private static " + params[j].typeToString() + "[]" +
+            my_writer.print("private static " + "Object[]" +
                             " get_" + params[j].typeToString() + UND + name + UND +
                             params[j].ident() + BKTS);
           }
@@ -1074,22 +1076,15 @@ public class TestDataClassGenerator implements Constants
           my_writer.print(BLK_ST);
           my_writer.indent(LEVEL2);
         
-          if (params[j].typeToString().equals(STRARR))
+          if (!params[j].dynamicType().isPrimitive())
           {
-
-            my_writer.print("return new" + SPACE + params[j].typeToString() + "[]" +
-              " {/* Add data elements here. */};");
-            
-          }
-          else if (!params[j].dynamicType().isPrimitive())
-          {
-            my_writer.print("return new " + params[j].typeToString() + "[]" +
+            my_writer.print("return new " + "Object[] " +
               " {/* Add data elements here.*/};");
           }
           else 
           {
-            my_writer.print("return new " + params[j].typeToString() + "[] " +
-              "{/* Add data elements here. */};");
+            my_writer.print("return new " + my_primitives.get(params[j].typeToString()) + 
+                            "[]" + "{/* Add data elements here. */};");
           }
           my_writer.indent(LEVEL1);
           my_writer.print(BLK_END);
