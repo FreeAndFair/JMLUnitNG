@@ -29,12 +29,14 @@ public class XMLGenerator implements Constants
    * @param the_decl JTypeDeclarationType object.
    * @param the_cunit JCompilationUnit object.
    * @throws IOException throws exception if failed to initialize my_writer.
+   * 
    */
   public XMLGenerator(final JTypeDeclarationType[] the_decl, 
-                      final JCompilationUnit[] the_cunit) throws IOException
+                      final JCompilationUnit[] the_cunit)
+    throws IOException
   {
     
-    my_writer = new Writer("C:\\" + "testng" + XML_POSTFIX);
+    my_writer = new Writer("C:\\testng" + XML_POSTFIX);
     my_decl = the_decl;
     my_cunit = the_cunit;
   }

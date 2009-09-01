@@ -22,7 +22,7 @@ import antlr.TokenStreamException;
  * @author Rinkesh Nagmoti.
  * @version 1.0 Some of the code is taken from MultiJava open source project.
  */
-public class MainClass
+public class MainClass implements Constants
 {
   /**
    * MjcComminOptions instance to parse the given file.
@@ -48,10 +48,12 @@ public class MainClass
   {
     final Logger my_logger = Logger.getLogger(org.jmlspecs.jmlunitng.MainClass.class);
     final MainClass my_Main = new MainClass();
-    JTypeDeclarationType[] declarations = new JTypeDeclarationType[the_args.length]; 
-    JCompilationUnit[] jcunits = new JCompilationUnit[the_args.length];
+    final JTypeDeclarationType[] declarations = new JTypeDeclarationType[the_args.length]; 
+    final JCompilationUnit[] jcunits = new JCompilationUnit[the_args.length];
     JCompilationUnit j_type = null;
     MJClassParser parser;
+    String path = null;
+    String xml_path = null;
     for (int i = 0; i < the_args.length; i++)
     {
       final File parsedArguments = new File(the_args[i]);
@@ -61,6 +63,23 @@ public class MainClass
         parser = new MJClassParser(parsedArguments, my_Main.my_options);
         j_type = (JCompilationUnit) parser.parse();
         jcunits[i] = j_type;
+        path = j_type.getFilePath(parsedArguments);
+        final String location = path.replace(".java", "");
+        path = location.replace("\\", "\\\\");
+//        final StringBuilder loc = new StringBuilder();
+//        for (int count = 0; count < location.length - 1; count++)
+//        {
+//          loc.append(location[count]);
+//          
+//          if (count == 0)
+//          {
+//            loc.append("\\\\");
+//          }
+//          else
+//          {
+//            loc.append("\\");  
+//          }
+//        }
       }
       catch (final TokenStreamException e)
       {
@@ -80,17 +99,17 @@ public class MainClass
       final JTypeDeclarationType[] decl = j_type.typeDeclarations();
       declarations[i] = decl[0];
       final TestClassGenerator testgen = new 
-      TestClassGenerator("c:\\" + decl[0].ident() + "_JMLUNITNG_Test.java", decl[0], j_type);
+      TestClassGenerator(path  + T_C_FILE_POSTFIX, decl[0], j_type);
       testgen.createTest(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
   
       final TestDataClassGenerator testDataGen = new 
-      TestDataClassGenerator("c:" + "\\" + decl[0].ident() + "_JMLUNITNG_Test_Data.java",
+      TestDataClassGenerator(path  + T_D_FILE_POSTFIX,
                              decl[0], j_type);
       testDataGen.createTestDataClass(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
       
     }
     XMLGenerator xmlgen = null;
-    
+   
     try
     {
       xmlgen = new XMLGenerator(declarations, jcunits);
