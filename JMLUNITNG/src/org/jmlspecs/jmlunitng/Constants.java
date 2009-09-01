@@ -28,7 +28,7 @@ public interface Constants
    */
   String XML_POSTFIX = ".xml";
   
-
+  /** The name of the JML jmlunitng package. */
   String PKG_JMLUNITNG = "org.jmlspecs.jmlunitng.";
   /** The name of the JML jmlunitng strategies package. */
   String PKG_STRATEGIES = "org.jmlspecs.jmlunitng.strategies.";

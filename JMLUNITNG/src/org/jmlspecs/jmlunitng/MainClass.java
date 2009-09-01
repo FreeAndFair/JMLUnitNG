@@ -53,7 +53,7 @@ public class MainClass implements Constants
     JCompilationUnit j_type = null;
     MJClassParser parser;
     String path = null;
-    String xml_path = null;
+    final String xml_path = null;
     for (int i = 0; i < the_args.length; i++)
     {
       final File parsedArguments = new File(the_args[i]);
@@ -117,7 +117,7 @@ public class MainClass implements Constants
     }
     catch (final IOException the_exp)
     {
-      the_exp.printStackTrace();
+      my_logger.error("IOException " + the_exp.getMessage());
     }
     
      
