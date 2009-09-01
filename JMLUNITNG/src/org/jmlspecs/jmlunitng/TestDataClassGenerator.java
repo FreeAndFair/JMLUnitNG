@@ -1079,8 +1079,25 @@ public class TestDataClassGenerator implements Constants
         
           if (!params[j].dynamicType().isPrimitive())
           {
-            my_writer.print("return new " + "Object[] " +
-              " {/* Add data elements here.*/};");
+            if (params[j].typeToString().endsWith("[]"))
+            {
+              final String param = params[j].typeToString().replace("[]", "");
+              if (my_primitives.containsKey(param))
+              {
+                my_writer.print("return new " +  my_primitives.get(params[j].typeToString()) +
+                  "[][] {/* Add data elements here.*/};");
+              }
+              else
+              {
+                my_writer.print("return new " + params[j].typeToString() +
+                "[]" + " {/* Add data elements here.*/};");
+              }
+            }
+            else
+            {
+              my_writer.print("return new " + "Object[] " +
+                " {/* Add data elements here.*/};");
+            }
           }
           else 
           {
