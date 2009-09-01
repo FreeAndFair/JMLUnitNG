@@ -25,6 +25,6 @@ public class CharStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Object[]{null, 'a', };
+    return new Character[]{null, 'a', };
   }
 }

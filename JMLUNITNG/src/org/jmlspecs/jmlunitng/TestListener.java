@@ -1,12 +1,8 @@
 package org.jmlspecs.jmlunitng;
-import java.util.logging.Logger;
-
-import org.omg.IOP.IOR;
-import org.omg.IOP.IORHelper;
 import org.testng.TestListenerAdapter;
 import org.testng.ITestResult;
 
-import bsh.Console;
+
 
 
 /**
@@ -14,7 +10,7 @@ import bsh.Console;
  * @author Rinkesh Nagmoti
  * @version 1.0
  */
-public class TestListener extends TestListenerAdapter
+public class TestListener extends TestListenerAdapter implements Constants
 {
 
 
@@ -28,7 +24,7 @@ public class TestListener extends TestListenerAdapter
     final Object[] parameters = the_tr.getParameters();
    
     final StringBuilder message = new StringBuilder();
-    message.append("Failed test : " + the_tr.getMethod().getMethodName() + "(");
+    message.append("Failed test : " + the_tr.getMethod().getMethodName() + BKT_ST);
    // message.append("Object used is : " + parameters[0] + "  and parameters used are : ");
     for (int i = 1; i < parameters.length; i++)
     {
@@ -36,10 +32,10 @@ public class TestListener extends TestListenerAdapter
       
       if (i <  parameters.length - 1)
       {
-        message.append(", ");
+        message.append("," + " ");
       }
     }
-    message.append(")" + "  for object " + parameters[0] + "\n");
+    message.append(")  for object " + parameters[0] + " \n");
     log(message.toString());
   }
 

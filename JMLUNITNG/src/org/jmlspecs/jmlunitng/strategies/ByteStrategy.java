@@ -25,6 +25,6 @@ public class ByteStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Object[]{-1, 0, 1, };
+    return new Byte[]{-1, 0, 1, };
   }
 }

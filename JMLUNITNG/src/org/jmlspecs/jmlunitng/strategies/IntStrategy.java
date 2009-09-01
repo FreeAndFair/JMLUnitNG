@@ -24,7 +24,7 @@ public class IntStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Object[]{-1, 0, 1, };
+    return new Integer[]{-1, 0, 1, };
   }
 
 }

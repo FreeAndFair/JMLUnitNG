@@ -25,6 +25,6 @@ public class FloatStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Object[]{-1.0, 0.0, 1.0, };
+    return new Float[]{(float) -1.0, (float) 0.0, (float) 1.0, };
   }
 }

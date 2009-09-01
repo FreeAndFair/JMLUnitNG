@@ -19,11 +19,11 @@ public class XMLGenerator implements Constants
  /**
   * This is the JTypeDeclarationType object.
   */
-  private final transient JTypeDeclarationType my_decl[];
+  private final transient JTypeDeclarationType[] my_decl;
   /**
    * This is the JCompilationUnit object.
    */
-  private final transient JCompilationUnit my_cunit[];
+  private final transient JCompilationUnit[] my_cunit;
   /**
    * Constructs the XMLGenerator object.
    * @param the_decl JTypeDeclarationType object.

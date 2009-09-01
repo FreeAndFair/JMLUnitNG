@@ -25,6 +25,6 @@ public class LongStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Object[]{-1, 0, 1, };
+    return new Long[]{(long) -1, (long) 0, (long) 1, };
   }
 }

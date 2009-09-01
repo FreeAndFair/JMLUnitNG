@@ -50,8 +50,11 @@ public interface Constants
   String SQ_BCK_ST = "[";
   /**This is the square bracket end.*/
   String SQ_BCK_END = "]";
+  /** This is the square brackets.*/
+  String SQ_BCKTS = "[]";
   /**This is the semicolon sign.*/
   String SM_COLN = ";";
+
   /**This is the get method string.*/
   String GET = ".get();"; 
   /**This is the advance method string.*/
@@ -88,7 +91,14 @@ public interface Constants
   String ELSE = "else";
   /**This is the "multijava" string.*/
   String MLTJAVA = "multijava";
-    
+   /** This is the return String.*/
+  String RETURN = "return";
+  /** This is the Array String.*/
+  String ARR = "Array";
+  /** This is the get String.*/
+  String GETSTR = "get";
+  /** This is the strategy String.*/
+  String STRGY = "Strategy";
   /**
    * This is the underscore sign.
    */

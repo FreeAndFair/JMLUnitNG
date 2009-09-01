@@ -10,6 +10,7 @@ import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JTypeDeclarationType;
 import org.multijava.mjc.MjcCommonOptions;
 import org.multijava.mjc.ParsingController.ConfigurationException;
+import org.multijava.util.Utils;
 import org.testng.log4testng.Logger;
 
 import antlr.RecognitionException;
@@ -53,7 +54,7 @@ public class MainClass implements Constants
     JCompilationUnit j_type = null;
     MJClassParser parser;
     String path = null;
-    final String xml_path = null;
+
     for (int i = 0; i < the_args.length; i++)
     {
       final File parsedArguments = new File(the_args[i]);
@@ -63,7 +64,7 @@ public class MainClass implements Constants
         parser = new MJClassParser(parsedArguments, my_Main.my_options);
         j_type = (JCompilationUnit) parser.parse();
         jcunits[i] = j_type;
-        path = j_type.getFilePath(parsedArguments);
+        path = Utils.getFilePath(parsedArguments);
         final String location = path.replace(".java", "");
         path = location.replace("\\", "\\\\");
 //        final StringBuilder loc = new StringBuilder();

@@ -63,7 +63,7 @@ public class ParameterIterator
    */
   public void advance()
   {
-    if (my_current < (my_max ))
+    if (my_current < (my_max))
     {
       my_current++;
     }

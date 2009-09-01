@@ -25,6 +25,6 @@ public class BooleanStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Object[]{false, true, };
+    return new Boolean[]{false, true, };
   }
 }
