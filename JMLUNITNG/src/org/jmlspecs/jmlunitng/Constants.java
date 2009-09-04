@@ -99,6 +99,12 @@ public interface Constants
   String GETSTR = "get";
   /** This is the strategy String.*/
   String STRGY = "Strategy";
+  /** This is the boolean String.*/
+  String BOOLEAN = "boolean";
+  /** This is the char String.*/
+  String CHAR = "char";
+  /** This is the null String.*/
+  String NULL = "null";
   /**
    * This is the underscore sign.
    */

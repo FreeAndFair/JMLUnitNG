@@ -82,7 +82,7 @@ public class TestDataClassGenerator implements Constants
     this.my_file = the_file_name;
     my_writer = new Writer(this.my_file);
     my_primitives = new HashMap<String, String>();
-    my_primitives.put("boolean", "Boolean");
+    my_primitives.put(BOOLEAN, "Boolean");
     my_primitives.put("byte", "Byte");
     my_primitives.put("double", "Double");
     my_primitives.put("float", "Float");
@@ -501,25 +501,25 @@ public class TestDataClassGenerator implements Constants
         if (parameters.get(count).typeToString().equals(STR) ||
             parameters.get(count).typeToString().equals(STRARR))
         {
-          my_writer.printOnLine("null");
+          my_writer.printOnLine(NULL);
         }
         else if (parameters.get(count).dynamicType().isPrimitive() &&
-            !parameters.get(count).typeToString().equals("char") &&
-            !parameters.get(count).typeToString().equals("boolean")) 
+            !parameters.get(count).typeToString().equals(CHAR) &&
+            !parameters.get(count).typeToString().equals(BOOLEAN)) 
         {
           my_writer.printOnLine("0");
         }
-        else if (parameters.get(count).typeToString().equals("char"))
+        else if (parameters.get(count).typeToString().equals(CHAR))
         {
           my_writer.printOnLine("'a'");
         }
-        else if (parameters.get(count).typeToString().equals("boolean"))
+        else if (parameters.get(count).typeToString().equals(BOOLEAN))
         {
           my_writer.printOnLine("false");
         }
         else
         {
-          my_writer.printOnLine("null");
+          my_writer.printOnLine(NULL);
         }
         if (count < (parameters.size() - 1))
         {
