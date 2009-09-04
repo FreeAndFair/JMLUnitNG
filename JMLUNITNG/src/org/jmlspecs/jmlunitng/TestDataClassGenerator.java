@@ -294,8 +294,8 @@ public class TestDataClassGenerator implements Constants
       my_writer.print(BLK_END + SM_COLN);
       
       my_writer.indent(LEVEL3);
-      my_writer.print(RETURN + SPACE + the_parameter.ident() + UND + "string" +
-                   "_Strategy." + "iterator()" + SM_COLN);
+      my_writer.print(RETURN + SPACE + the_parameter.ident() + UND + 
+                      "string_Strategy." + "iterator()" + SM_COLN);
     }
     else if (!the_parameter.dynamicType().isPrimitive())
     {
@@ -488,15 +488,11 @@ public class TestDataClassGenerator implements Constants
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL3);
     my_writer.print("my_objs = new ArrayList<Object>();");
+  
     my_writer.indent(LEVEL3);
-    my_writer.print("int object_count = 0;");
+    my_writer.print("final Object[] userObjects = getUserObjects();");
+   
     my_writer.indent(LEVEL3);
-    my_writer.print("final int numberOfObjects = getNumberOfObjects();");
-    my_writer.indent(LEVEL3);
-    my_writer.print("while (object_count < numberOfObjects)");
-    my_writer.indent(LEVEL3);
-    my_writer.print(BLK_ST);
-    my_writer.indent(LEVEL4);
     my_writer.printOnLine("my_objs.add(new " + my_class_nm + "(");
     if (!parameters.isEmpty())
     {
@@ -507,9 +503,23 @@ public class TestDataClassGenerator implements Constants
         {
           my_writer.printOnLine("null");
         }
-        else
+        else if (parameters.get(count).dynamicType().isPrimitive() &&
+            !parameters.get(count).typeToString().equals("char") &&
+            !parameters.get(count).typeToString().equals("boolean")) 
         {
           my_writer.printOnLine("0");
+        }
+        else if (parameters.get(count).typeToString().equals("char"))
+        {
+          my_writer.printOnLine("'a'");
+        }
+        else if (parameters.get(count).typeToString().equals("boolean"))
+        {
+          my_writer.printOnLine("false");
+        }
+        else
+        {
+          my_writer.printOnLine("null");
         }
         if (count < (parameters.size() - 1))
         {
@@ -520,10 +530,27 @@ public class TestDataClassGenerator implements Constants
     }
     my_writer.printOnLine("));");
     my_writer.printOnLine(" \n");
+  
+    my_writer.newLine(2);
+    my_writer.indent(LEVEL3);
+    my_writer.print("if (userObjects.length > 0)");
+    my_writer.indent(LEVEL3);
+    my_writer.print(BLK_ST);
+    
     my_writer.indent(LEVEL4);
-    my_writer.print("object_count++;");
+    my_writer.print("for (int i = 0; i < userObjects.length; i++)");
+    my_writer.indent(LEVEL4);
+    my_writer.print(BLK_ST);
+    
+    my_writer.indent(LEVEL5);
+    my_writer.print("my_objs.add(userObjects[i]);");
+    
+    my_writer.indent(LEVEL4);
+    my_writer.print(BLK_END);
+    
     my_writer.indent(LEVEL3);
     my_writer.print(BLK_END);
+ 
   
 
     my_writer.indent(LEVEL3);
@@ -1020,11 +1047,12 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL1);
     my_writer.print(JDOC_END);
     my_writer.indent(LEVEL1);
-    my_writer.print("private static int getNumberOfObjects()");
+    my_writer.print(PRIVATE + SPACE + "static " + the_decl.ident() + "[] getUserObjects()");
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL1);
-    my_writer.print("return 2;//Please provide the number of objects for test.");
+    my_writer.print(RETURN + SPACE + "new" + SPACE + the_decl.ident() + 
+                    "[]{/*Please provide the number of objects for test.*/};");
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_END);
     

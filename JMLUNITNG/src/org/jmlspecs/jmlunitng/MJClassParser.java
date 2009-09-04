@@ -64,25 +64,29 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
     MjcParser my_parser;
     JCompilationUnitType j_cunit;
     ParsingController controller;
-   
+ 
 
     controller = new ParsingController(buffer, my_file);
     mjclexer =
         new MjcLexer(controller, my_opt.source().equals("1.5"), my_opt.multijava(),
                      allowUniverseKeywords, this);
     jdoclexer = new JavadocLexer(controller);
-
+    
     controller.addInputStream(mjclexer, MLTJAVA);
     controller.addInputStream(jdoclexer, "javadoc");
     controller.selectInitial(MLTJAVA);
-
+    
     setAllowUniverses();
 
+    my_opt.set_generic(true);
+    my_opt.set_multijava(true);
+    my_opt.set_relaxed(true);
     my_parser =
         new MjcParser(this, controller.initialOutputStream(), controller, my_opt.generic(),
                       my_opt.multijava(), my_opt.relaxed(), allowUniverseKeywords,
                       parseJavadoc);
 
+    
     j_cunit = my_parser.jCompilationUnit();
     return j_cunit;
   }

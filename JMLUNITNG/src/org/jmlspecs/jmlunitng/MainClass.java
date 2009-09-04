@@ -62,6 +62,7 @@ public class MainClass implements Constants
       {
         
         parser = new MJClassParser(parsedArguments, my_Main.my_options);
+        
         j_type = (JCompilationUnit) parser.parse();
         jcunits[i] = j_type;
         path = Utils.getFilePath(parsedArguments);
