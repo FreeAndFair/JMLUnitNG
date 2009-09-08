@@ -280,7 +280,7 @@ public class TestDataClassGenerator implements Constants
       if (the_parameter.typeToString().equals(STR))
       {
         my_writer.indent(LEVEL5);
-        my_writer.print("public Object[]" + " addData()");
+        my_writer.print(PUBLIC + SPACE + "Object[] addData()");
         my_writer.indent(LEVEL5);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL5 + 2);
@@ -291,12 +291,12 @@ public class TestDataClassGenerator implements Constants
         
         
         my_writer.indent(LEVEL5);
-        my_writer.print("public Object[]" + " addDataForAll()");
+        my_writer.print("public Object[] addDataForAll()");
         my_writer.indent(LEVEL5);
         my_writer.print(BLK_ST);
         my_writer.indent(LEVEL5 + 2);
-        my_writer.print(RETURN + SPACE + the_parameter.typeToString() + UND + "for_all" + 
-                        BKTS + SM_COLN);
+        my_writer.print(RETURN + SPACE + the_parameter.typeToString() + UND +
+                        "for_all()" + SM_COLN);
         my_writer.indent(LEVEL5);
         my_writer.print(BLK_END);
       
@@ -829,7 +829,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL2);
     my_writer.print(" * This method returns the next Object[]" + " in the iterator.");
     my_writer.indent(LEVEL2);
-    my_writer.print(" * @return Object[]");
+    my_writer.print(" * @ " + RETURN + " Object[]");
     my_writer.indent(LEVEL2);
     my_writer.print(JDOC_END);
     my_writer.indent(LEVEL2);
@@ -1072,11 +1072,12 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL1);
     my_writer.print(JDOC_END);
     my_writer.indent(LEVEL1);
-    my_writer.print(PRIVATE + SPACE + "static " + the_decl.ident() + "[] getUserObjects()");
+    my_writer.print(PRIVATE + SPACE + "static" + SPACE + 
+                    the_decl.ident() + "[] getUserObjects()");
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL1);
-    my_writer.print(RETURN + SPACE + "new" + SPACE + the_decl.ident() + 
+    my_writer.print(RETURN + SPACE + NEW + SPACE + the_decl.ident() + 
                     "[]{/*Please provide the number of objects for test.*/};");
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_END);
@@ -1098,7 +1099,7 @@ public class TestDataClassGenerator implements Constants
       my_writer.indent(LEVEL1);
       my_writer.print(BLK_ST);
       my_writer.indent(LEVEL2);
-      my_writer.print(RETURN + SPACE + "new" + SPACE + my_primitives.get(param) + 
+      my_writer.print(RETURN + SPACE + NEW + SPACE + my_primitives.get(param) + 
                       "[]{/*Please provide the data for all " + param + 
                       " iterators for test.*/};");
       my_writer.indent(LEVEL1);
@@ -1173,7 +1174,7 @@ public class TestDataClassGenerator implements Constants
               }
               else
               {
-                my_writer.print(RETURN + SPACE + "new " + params[j].typeToString() +
+                my_writer.print(RETURN + SPACE + NEW + SPACE + params[j].typeToString() +
                   SQ_BCKTS + " {/*" + " Add data elements here." + "*/};");
               }
             }

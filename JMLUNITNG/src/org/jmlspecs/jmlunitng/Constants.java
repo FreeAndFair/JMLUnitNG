@@ -105,6 +105,8 @@ public interface Constants
   String CHAR = "char";
   /** This is the null String.*/
   String NULL = "null";
+  /** This is the new String.*/
+  String NEW = "new";
   /**
    * This is the underscore sign.
    */
