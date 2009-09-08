@@ -16,7 +16,7 @@ public class DoubleStrategy extends AbstractBasicStrategy
   public Object[] addData()
   {
    
-    return new Object[]{};
+    return new Double[]{};
   }
 /**
  * This method provides the default data.
@@ -26,5 +26,15 @@ public class DoubleStrategy extends AbstractBasicStrategy
   public Object[] defaultData()
   {
     return new Double[]{-1.0, 0.0, 1.0, };
+  }
+  /**
+   * This method provides the user data for all Double strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Double[]{};
   }
 }

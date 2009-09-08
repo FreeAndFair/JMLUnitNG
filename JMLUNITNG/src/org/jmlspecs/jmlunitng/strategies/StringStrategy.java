@@ -27,4 +27,14 @@ public class StringStrategy extends AbstractBasicStrategy
   {
     return new String[]{null, "", };
   }
+  /**
+   * This method provides the user data for all string strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new String[]{};
+  }
 }

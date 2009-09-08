@@ -16,7 +16,7 @@ public class FloatStrategy extends AbstractBasicStrategy
   public Object[] addData()
   {
    
-    return new Object[]{};
+    return new Float[]{};
   }
 /**
  * This method provides the default data.
@@ -26,5 +26,15 @@ public class FloatStrategy extends AbstractBasicStrategy
   public Object[] defaultData()
   {
     return new Float[]{(float) -1.0, (float) 0.0, (float) 1.0, };
+  }
+  /**
+   * This method provides the user data for all float strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Float[]{};
   }
 }

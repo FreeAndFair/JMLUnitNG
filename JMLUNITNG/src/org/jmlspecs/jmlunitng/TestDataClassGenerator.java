@@ -286,10 +286,21 @@ public class TestDataClassGenerator implements Constants
         my_writer.indent(LEVEL5 + 2);
         my_writer.print("return get" + UND + STR + UND + the_name + UND +
                         the_parameter.ident() + BKTS + SM_COLN);
+        my_writer.indent(LEVEL5);
+        my_writer.print(BLK_END);
+        
+        
+        my_writer.indent(LEVEL5);
+        my_writer.print("public Object[]" + " addDataForAll()");
+        my_writer.indent(LEVEL5);
+        my_writer.print(BLK_ST);
+        my_writer.indent(LEVEL5 + 2);
+        my_writer.print(RETURN + SPACE + the_parameter.typeToString() + UND + "for_all" + 
+                        BKTS + SM_COLN);
+        my_writer.indent(LEVEL5);
+        my_writer.print(BLK_END);
+      
       }
-     
-      my_writer.indent(LEVEL5);
-      my_writer.print(BLK_END + SM_COLN);
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_END + SM_COLN);
       
@@ -320,7 +331,7 @@ public class TestDataClassGenerator implements Constants
       my_writer.print("public Object[] addData()");
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_ST);
-      my_writer.indent(LEVEL4);
+      my_writer.indent(LEVEL5 + 2);
       if (the_parameter.typeToString().endsWith(SQ_BCKTS))
       {
         my_writer.print(RETURN + SPACE + GETSTR + UND + 
@@ -335,6 +346,8 @@ public class TestDataClassGenerator implements Constants
       }
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_END);
+
+      
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_END + SM_COLN);
       my_writer.indent(LEVEL5 + 2);
@@ -369,6 +382,18 @@ public class TestDataClassGenerator implements Constants
                       the_parameter.ident() + BKTS + SM_COLN);
       my_writer.indent(LEVEL5);
       my_writer.print(BLK_END);
+      
+      my_writer.indent(LEVEL5);
+      my_writer.print("public Object[]" + " addDataForAll()");
+      my_writer.indent(LEVEL5);
+      my_writer.print(BLK_ST);
+      my_writer.indent(LEVEL5 + 2);
+      my_writer.print(RETURN + SPACE + the_parameter.typeToString() + UND + "for_all" + 
+                      BKTS + SM_COLN);
+      my_writer.indent(LEVEL5);
+      my_writer.print(BLK_END);
+      
+      
       my_writer.indent(LEVEL4);
       my_writer.print(BLK_END + SM_COLN);
       my_writer.indent(LEVEL5 + 2);
@@ -1041,9 +1066,9 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL1);
     my_writer.print(JDOC_ST);
     my_writer.indent(LEVEL1);
-    my_writer.print(" * This is the user input data method for number of objects.");
+    my_writer.print(" * This is the user input data method for class objects.");
     my_writer.indent(LEVEL1);
-    my_writer.print(" * @return int");
+    my_writer.print(" * @return Object[]");
     my_writer.indent(LEVEL1);
     my_writer.print(JDOC_END);
     my_writer.indent(LEVEL1);
@@ -1055,6 +1080,32 @@ public class TestDataClassGenerator implements Constants
                     "[]{/*Please provide the number of objects for test.*/};");
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_END);
+    
+    for (String param : my_primitives.keySet())
+    {
+      my_writer.indent(LEVEL1);
+      my_writer.print(JDOC_ST);
+      my_writer.indent(LEVEL1);
+      my_writer.print(" * This is the user input data method for all " +
+                      param + " iterators.");
+      my_writer.indent(LEVEL1);
+      my_writer.print(" * @" + RETURN + SPACE + my_primitives.get(param) + SQ_BCKTS);
+      my_writer.indent(LEVEL1);
+      my_writer.print(JDOC_END);
+      my_writer.indent(LEVEL1);
+      my_writer.print(PRIVATE + SPACE +  "static " + my_primitives.get(param) + 
+                      SQ_BCKTS + SPACE + param + UND + "for" + UND + "all" + BKTS);
+      my_writer.indent(LEVEL1);
+      my_writer.print(BLK_ST);
+      my_writer.indent(LEVEL2);
+      my_writer.print(RETURN + SPACE + "new" + SPACE + my_primitives.get(param) + 
+                      "[]{/*Please provide the data for all " + param + 
+                      " iterators for test.*/};");
+      my_writer.indent(LEVEL1);
+      my_writer.print(BLK_END);
+    }
+    
+    
     
     for (int i = 0; i < methods.size(); i++)
     {

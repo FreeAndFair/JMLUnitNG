@@ -19,21 +19,28 @@ public abstract class AbstractBasicStrategy
    */
   public AbstractBasicStrategy()
   {
-    final int size = defaultData().length + addData().length;
-  
+    final int size = defaultData().length + addData().length + addDataForAll().length;
+
     final Object[] def = defaultData();
     final Object[] added = addData();
+    final Object[] forall = addDataForAll();
     my_objects = new Object[size];
     for (int i = 0; i < size; i++)
     {
       if (i < defaultData().length)
       {
         my_objects[i] = def[i];
+    
       }
-      else
+      else if (i < (def.length + added.length))
+      {
+     
+        my_objects[i] = added[i - (defaultData().length)];
+      }
+      else if (i < (def.length + added.length + forall.length))
       {
        
-        my_objects[i] = added[i - (defaultData().length)];
+        my_objects[i] = forall[i - (def.length + added.length)];
       }
     }
     my_itr = new ParameterIterator(my_objects);
@@ -57,6 +64,14 @@ public abstract class AbstractBasicStrategy
    * @return Object[]
    */
   public abstract Object[] addData();
+  
+  /**
+   * This method return the user provided data for 
+   * all iterators of one kind.
+   * @return Object[]
+   */
+  public abstract Object[] addDataForAll();
+  
   
 
  

@@ -28,4 +28,14 @@ public class ShortStrategy extends AbstractBasicStrategy
   {
     return new Short[]{-1, 0, 1, };
   }
+  /**
+   * This method provides the user data for all Short strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Short[]{};
+  }
 }

@@ -16,7 +16,7 @@ public class BooleanStrategy extends AbstractBasicStrategy
   public Object[] addData()
   {
    
-    return new Object[]{};
+    return new Boolean[]{};
   }
 /**
  * This method provides the default data.
@@ -26,5 +26,15 @@ public class BooleanStrategy extends AbstractBasicStrategy
   public Object[] defaultData()
   {
     return new Boolean[]{false, true, };
+  }
+  /**
+   * This method provides the user data for all boolean strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Boolean[]{};
   }
 }

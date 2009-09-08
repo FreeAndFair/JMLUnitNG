@@ -27,4 +27,14 @@ public class NewObjectStrategy extends AbstractBasicStrategy
   {
     return new Object[]{null, };
   }
+  /**
+   * This method provides the user data for all object strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Object[]{};
+  }
 }

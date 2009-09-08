@@ -27,4 +27,14 @@ public class LongStrategy extends AbstractBasicStrategy
   {
     return new Long[]{(long) -1, (long) 0, (long) 1, };
   }
+  /**
+   * This method provides the user data for all Long strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Long[]{};
+  }
 }

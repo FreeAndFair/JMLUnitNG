@@ -16,7 +16,7 @@ public class CharStrategy extends AbstractBasicStrategy
   public Object[] addData()
   {
    
-    return new Object[]{};
+    return new Character[]{};
   }
 /**
  * This method provides the default data.
@@ -26,5 +26,15 @@ public class CharStrategy extends AbstractBasicStrategy
   public Object[] defaultData()
   {
     return new Character[]{null, 'a', };
+  }
+  /**
+   * This method provides the user data for all char strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Character[]{};
   }
 }

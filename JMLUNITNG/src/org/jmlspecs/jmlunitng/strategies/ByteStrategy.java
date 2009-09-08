@@ -16,7 +16,7 @@ public class ByteStrategy extends AbstractBasicStrategy
   public Object[] addData()
   {
    
-    return new Object[]{};
+    return new Byte[]{};
   }
 /**
  * This method provides the default data.
@@ -26,5 +26,15 @@ public class ByteStrategy extends AbstractBasicStrategy
   public Object[] defaultData()
   {
     return new Byte[]{-1, 0, 1, };
+  }
+  /**
+   * This method provides the user data for all Byte strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Byte[]{};
   }
 }

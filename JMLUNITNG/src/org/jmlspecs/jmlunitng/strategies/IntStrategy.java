@@ -15,7 +15,7 @@ public class IntStrategy extends AbstractBasicStrategy
   public Object[] addData()
   {
    
-    return new Object[]{};
+    return new Integer[]{};
   }
 /**
  * This method provides the default data.
@@ -25,6 +25,16 @@ public class IntStrategy extends AbstractBasicStrategy
   public Object[] defaultData()
   {
     return new Integer[]{-1, 0, 1, };
+  }
+  /**
+   * This method provides the user data for all Integer strategies.
+   * @return Object[]
+   */
+  @Override
+  public Object[] addDataForAll()
+  {
+   
+    return new Integer[]{};
   }
 
 }
