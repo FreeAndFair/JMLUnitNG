@@ -5,9 +5,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 import org.multijava.mjc.JCompilationUnit;
@@ -1062,13 +1064,12 @@ public class TestDataClassGenerator implements Constants
   private void printUserInputData(final JTypeDeclarationType the_decl)
   {
     final List<Object> methods = the_decl.methods();
+    final Set<String> variables = new HashSet<String>();
    
     my_writer.indent(LEVEL1);
     my_writer.print(JDOC_ST);
     my_writer.indent(LEVEL1);
-    my_writer.print(" * This is the user input data method for class objects.");
-    my_writer.indent(LEVEL1);
-    my_writer.print(" * @return Object[]");
+    my_writer.print(" * @return Objects of class " + the_decl.ident() + PERIOD);
     my_writer.indent(LEVEL1);
     my_writer.print(JDOC_END);
     my_writer.indent(LEVEL1);
@@ -1082,17 +1083,33 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL1);
     my_writer.print(BLK_END);
     
-    for (String param : my_primitives.keySet())
+    for (int cnt = 0; cnt < methods.size(); cnt++)
+    {
+      if (methods.get(cnt) instanceof JMethodDeclaration)
+      {
+        final JMethodDeclaration method = (JMethodDeclaration) methods.get(cnt);
+        final JFormalParameter[] params = method.parameters();
+        for (int j = 0; j < params.length; j++)
+        {
+          if (my_primitives.containsKey(params[j].typeToString()) &&
+              !variables.contains(params[j].typeToString()))
+          {
+            variables.add(params[j].typeToString()); 
+          }
+        }
+      }
+    }
+    for (String param : variables)
     {
       my_writer.indent(LEVEL1);
       my_writer.print(JDOC_ST);
       my_writer.indent(LEVEL1);
-      my_writer.print(" * This is the user input data method for all " +
-                      param + " iterators.");
+      my_writer.print(" * @" + RETURN + SPACE + my_primitives.get(param) + "s for all");
       my_writer.indent(LEVEL1);
-      my_writer.print(" * @" + RETURN + SPACE + my_primitives.get(param) + SQ_BCKTS);
+      my_writer.print(" *" + SPACE + param + " variables.");
       my_writer.indent(LEVEL1);
       my_writer.print(JDOC_END);
+     
       my_writer.indent(LEVEL1);
       my_writer.print(PRIVATE + SPACE +  "static " + my_primitives.get(param) + 
                       SQ_BCKTS + SPACE + param + UND + "for" + UND + "all" + BKTS);
@@ -1121,10 +1138,19 @@ public class TestDataClassGenerator implements Constants
           my_writer.indent(LEVEL1);
           my_writer.print(JDOC_ST);
           my_writer.indent(LEVEL1);
-          my_writer.print(" * This is the user input data method for parameter " +
-                          params[j].ident() + " from method " + method.ident() + SPACE);
+          my_writer.print(" * @return " + my_primitives.get(params[j].typeToString()) +
+                          "s to use for parameter " + params[j].ident() + " of ");
           my_writer.indent(LEVEL1);
-          my_writer.print(" * @return " + params[j].typeToString());
+          my_writer.printOnLine(" * " + method.ident() + BKT_ST);
+          for (int m = 0; m < method.parameters().length; m++)
+          {
+            my_writer.printOnLine(method.parameters()[m].typeToString());
+            if (m < method.parameters().length - 1)
+            {
+              my_writer.printOnLine(COMMA);
+            }
+          }
+          my_writer.printOnLine(BKT_END + "\n");
           my_writer.indent(LEVEL1);
           my_writer.print(JDOC_END);
           my_writer.indent(LEVEL1);
