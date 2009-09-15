@@ -541,7 +541,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.print(BLK_ST);
    
     
-    if(parameters.size() == 0)
+    if (parameters.size() == 0)
     {
       my_writer.indent(LEVEL3);
       my_writer.print("my_objs = new ArrayList<Object>();");
@@ -1132,7 +1132,7 @@ public class TestDataClassGenerator implements Constants
       }
     }
     
-    if(!has_construct)
+    if (!has_construct)
     {
       my_writer.indent(LEVEL1);
       my_writer.print(JDOC_ST);
