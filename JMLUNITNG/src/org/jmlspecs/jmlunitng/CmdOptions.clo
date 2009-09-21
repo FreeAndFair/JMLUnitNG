@@ -1,0 +1,19 @@
+NAME::
+CmdOptions
+ARGS::
+  Destination: {"-d", "--dest"}:{string}
+  List:{"-f", "--files"}:{file-list}:[allowmultiple="true", splitter=",", mustexist="true", canbedir="false", allowdash="true" ]
+  Help:{"-h", "--help"} 
+  Package:{"-p", "--package"}:{file-list}:[allowmultiple="true", splitter=",", mustbedir="true", allowdash="true"]
+  Universes:{"-u", "--universes"}
+  Deprication:{"-dep", "--deprication"}
+  SafeMath: {"-s", "--safemath"}
+  Verbose: {"-v", "--verbose"}
+  Universesx: {"-E"}:{string}
+
+FORMAT::
+  Option* Destination? Universesx?;   
+
+WHERE::
+  Option:  
+    Destination|List|Help|Package|Universes|Deprication|SafeMath|Verbose|Universesx;

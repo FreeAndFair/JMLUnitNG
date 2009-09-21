@@ -55,7 +55,7 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
    * @throws RecognitionException Exception for issues related to recognition.
    * @throws TokenStreamException Exception for issues related to TokenStream.
    */
-  public JCompilationUnitType parse() throws FileNotFoundException, ConfigurationException,
+  public JCompilationUnitType parse(final boolean the_universes, final boolean the_deprication, final boolean the_safemath, final boolean the_verbose, final String the_universesx) throws FileNotFoundException, ConfigurationException,
       RecognitionException, TokenStreamException
   {
     final BufferedReader buffer = new BufferedReader(new FileReader(my_file));
@@ -76,8 +76,30 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
     controller.addInputStream(jdoclexer, "javadoc");
     controller.selectInitial(MLTJAVA);
     
-    setAllowUniverses();
-
+    
+   
+    
+    if (the_universes)
+    {
+      setAllowUniverses();
+    }
+    if (the_deprication)
+    {
+      my_opt.set_deprecation(the_deprication);
+    }
+    if (the_safemath)
+    {
+      my_opt.set_safemath(the_safemath);
+    }
+    if (the_verbose)
+    {
+      my_opt.set_verbose(the_verbose);
+    }
+    if (the_universesx != null)
+    {
+      my_opt.set_universesx(the_universesx);
+    }
+      
     my_opt.set_generic(true);
     my_opt.set_multijava(true);
     my_opt.set_relaxed(true);

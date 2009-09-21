@@ -32,11 +32,11 @@ public class XMLGenerator implements Constants
    * 
    */
   public XMLGenerator(final JTypeDeclarationType[] the_decl, 
-                      final JCompilationUnit[] the_cunit)
+                      final JCompilationUnit[] the_cunit, final String the_path)
     throws IOException
   {
     
-    my_writer = new Writer("C:\\testng" + XML_POSTFIX);
+    my_writer = new Writer(the_path + "testng" + XML_POSTFIX);
     my_decl = the_decl;
     my_cunit = the_cunit;
   }
@@ -74,8 +74,18 @@ public class XMLGenerator implements Constants
     for (int i = 0; i < my_decl.length; i++)
     {
       my_writer.indent(LEVEL3);
+      String package_name = "";
+      try
+      {
+        package_name = my_cunit[i].packageNameAsString();   
+      }
+      catch (final NullPointerException the_exp)
+      {
+        package_name = "";
+      }
+     
       my_writer.print(CLS_OPEN + " name=\"" +
-                      my_cunit[i].packageNameAsString().replaceAll("/", "") +
+                      package_name.replaceAll("/", "") +
                       "." + my_decl[i].ident() + T_C_POSTFIX + "\"" + CLS_CLOSE);
      
     }
