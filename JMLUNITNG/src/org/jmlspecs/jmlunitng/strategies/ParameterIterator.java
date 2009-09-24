@@ -1,6 +1,9 @@
+
 package org.jmlspecs.jmlunitng.strategies;
+
 /**
- *  This Class is the basic iterator for all data types.
+ * This Class is the basic iterator for all data types.
+ * 
  * @author Rinkesh Nagmoti
  * @version 1.0
  */
@@ -22,8 +25,10 @@ public class ParameterIterator
    * This is the array of objects to iterate.
    */
   private final transient Object[] my_objs;
+
   /**
-   * This is the constructor for this class. 
+   * This is the constructor for this class.
+   * 
    * @param the_data Object[].
    */
   public ParameterIterator(final Object[] the_data)
@@ -32,19 +37,24 @@ public class ParameterIterator
     my_max = the_data.length;
     my_objs = the_data;
     my_end = false;
-    
+
   }
+
   /**
    * This method provides current element in the iterator.
+   * 
    * @return Object
    */
   public Object get()
   {
     return my_objs[my_current];
   }
+
   /**
-   * This method returns the boolean value if the iterator is at the last element.
-   * @return boolean 
+   * This method returns the boolean value if the iterator is at the last
+   * element.
+   * 
+   * @return boolean
    */
   public boolean atEnd()
   {
@@ -58,6 +68,7 @@ public class ParameterIterator
     }
     return my_end;
   }
+
   /**
    * This method advances an iterator to the next location.
    */

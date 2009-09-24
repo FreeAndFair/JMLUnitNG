@@ -1,3 +1,4 @@
+
 package org.jmlspecs.jmlunitng;
 
 import java.io.File;
@@ -23,47 +24,48 @@ public class ParserTest
 
   /**
    * @param args
-   * @throws ConfigurationException 
-   * @throws TokenStreamException 
-   * @throws RecognitionException 
-   * @throws FileNotFoundException 
+   * @throws ConfigurationException
+   * @throws TokenStreamException
+   * @throws RecognitionException
+   * @throws FileNotFoundException
    */
-  public static void main(String[] args) throws FileNotFoundException, RecognitionException, TokenStreamException, ConfigurationException
+  public static void main(String[] args) throws FileNotFoundException, RecognitionException,
+      TokenStreamException, ConfigurationException
   {
-   File file = new File(args[0]);
-   final MjcCommonOptions my_options = new JntOptions("jmlunitng");
-   MJClassParser parser = new MJClassParser(file, my_options);
-   JCompilationUnit j_type = (JCompilationUnit) parser.parse(true, true, true, true, "jmlunit");
-   JTypeDeclarationType[] decl = j_type.typeDeclarations();
-   List<Object> methods = decl[0].methods();
-   CSourceClass[] sc = j_type.allTypeSignatures();
-   for(int i = 0; i < sc.length; i++)
-   {
-      ArrayList list = null;
-     sc[i].getAllMethods(list);
-     for(Object k : list)
-     {
-       if (k instanceof JMethodDeclaration)
-       {
-         JMethodDeclaration mth = (JMethodDeclaration)k;
-        
-        // System.out.println(decl[0].modifiers());
-         System.out.println(mth.ident() + " " + mth);
-       }
-     }
-   }
-   for(Object m : methods)
-   {
-   
-   
-    if (m instanceof JMethodDeclaration)
+    File file = new File(args[0]);
+    final MjcCommonOptions my_options = new JntOptions("jmlunitng");
+    MJClassParser parser = new MJClassParser(file, my_options);
+    JCompilationUnit j_type =
+        (JCompilationUnit) parser.parse(true, true, true, true, "jmlunit");
+    JTypeDeclarationType[] decl = j_type.typeDeclarations();
+    List<Object> methods = decl[0].methods();
+    CSourceClass[] sc = j_type.allTypeSignatures();
+    for (int i = 0; i < sc.length; i++)
     {
-      JMethodDeclaration mth = (JMethodDeclaration)m;
-     
-     // System.out.println(decl[0].modifiers());
-      System.out.println(mth.ident() + " " + mth);
+      ArrayList list = null;
+      sc[i].getAllMethods(list);
+      for (Object k : list)
+      {
+        if (k instanceof JMethodDeclaration)
+        {
+          JMethodDeclaration mth = (JMethodDeclaration) k;
+
+          // System.out.println(decl[0].modifiers());
+          System.out.println(mth.ident() + " " + mth);
+        }
+      }
     }
-   }
+    for (Object m : methods)
+    {
+
+      if (m instanceof JMethodDeclaration)
+      {
+        JMethodDeclaration mth = (JMethodDeclaration) m;
+
+        // System.out.println(decl[0].modifiers());
+        System.out.println(mth.ident() + " " + mth);
+      }
+    }
 
   }
 

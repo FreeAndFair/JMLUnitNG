@@ -50,13 +50,17 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
    * This method parses the given class file in AST format.
    * 
    * @return JCompilationUnitType
-   * @throws FileNotFoundException  Exception if unable to find file.
-   * @throws ConfigurationException Exception for issues related to configuration.
+   * @throws FileNotFoundException Exception if unable to find file.
+   * @throws ConfigurationException Exception for issues related to
+   *           configuration.
    * @throws RecognitionException Exception for issues related to recognition.
    * @throws TokenStreamException Exception for issues related to TokenStream.
    */
-  public JCompilationUnitType parse(final boolean the_universes, final boolean the_deprication, final boolean the_safemath, final boolean the_verbose, final String the_universesx) throws FileNotFoundException, ConfigurationException,
-      RecognitionException, TokenStreamException
+  public JCompilationUnitType parse(final boolean the_universes,
+                                    final boolean the_deprication, final boolean the_safemath,
+                                    final boolean the_verbose, final String the_universesx)
+      throws FileNotFoundException, ConfigurationException, RecognitionException,
+      TokenStreamException
   {
     final BufferedReader buffer = new BufferedReader(new FileReader(my_file));
     MjcLexer mjclexer;
@@ -64,21 +68,17 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
     MjcParser my_parser;
     JCompilationUnitType j_cunit;
     ParsingController controller;
- 
 
     controller = new ParsingController(buffer, my_file);
     mjclexer =
         new MjcLexer(controller, my_opt.source().equals("1.5"), my_opt.multijava(),
                      allowUniverseKeywords, this);
     jdoclexer = new JavadocLexer(controller);
-    
+
     controller.addInputStream(mjclexer, MLTJAVA);
     controller.addInputStream(jdoclexer, "javadoc");
     controller.selectInitial(MLTJAVA);
-    
-    
-   
-    
+
     if (the_universes)
     {
       setAllowUniverses();
@@ -99,7 +99,7 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
     {
       my_opt.set_universesx(the_universesx);
     }
-      
+
     my_opt.set_generic(true);
     my_opt.set_multijava(true);
     my_opt.set_relaxed(true);
@@ -108,7 +108,6 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
                       my_opt.multijava(), my_opt.relaxed(), allowUniverseKeywords,
                       parseJavadoc);
 
-    
     j_cunit = my_parser.jCompilationUnit();
     return j_cunit;
   }

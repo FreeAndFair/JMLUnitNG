@@ -1,6 +1,9 @@
+
 package org.jmlspecs.jmlunitng.strategies;
+
 /**
  * This class creates a basic strategy for generating an iterator.
+ * 
  * @author Rinkesh Nagmoti.
  * @version 1.0
  */
@@ -14,6 +17,7 @@ public abstract class AbstractBasicStrategy
    * This is hte array of objects to create iterator.
    */
   protected final transient Object[] my_objects;
+
   /**
    * This is the constructor.
    */
@@ -30,50 +34,51 @@ public abstract class AbstractBasicStrategy
       if (i < defaultData().length)
       {
         my_objects[i] = def[i];
-    
+
       }
       else if (i < (def.length + added.length))
       {
-     
+
         my_objects[i] = added[i - (defaultData().length)];
       }
       else if (i < (def.length + added.length + forall.length))
       {
-       
+
         my_objects[i] = forall[i - (def.length + added.length)];
       }
     }
     my_itr = new ParameterIterator(my_objects);
   }
+
   /**
    * This method returns the created ParameterIterator.
+   * 
    * @return ParameterIterator
    */
   public ParameterIterator iterator()
   {
     return my_itr;
   }
+
   /**
    * This method return the default data for iterator.
+   * 
    * @return Object[]
    */
   public abstract Object[] defaultData();
- 
+
   /**
    * This method return the user provided data for iterator.
+   * 
    * @return Object[]
    */
   public abstract Object[] addData();
-  
+
   /**
-   * This method return the user provided data for 
-   * all iterators of one kind.
+   * This method return the user provided data for all iterators of one kind.
+   * 
    * @return Object[]
    */
   public abstract Object[] addDataForAll();
-  
-  
-
- 
 
 }

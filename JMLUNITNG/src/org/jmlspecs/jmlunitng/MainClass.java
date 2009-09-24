@@ -46,26 +46,26 @@ public class MainClass implements Constants
   {
     my_options = new JntOptions("jmlunitng");
   }
-  
+
   /**
    * This method is the entry point for the tool.
    * 
    * @param the_args This is the argument to be passed to main method.
-   * @throws FileNotFoundException  exception if unable to find the file.
+   * @throws FileNotFoundException exception if unable to find the file.
    * @throws InvalidOptionPropertyValueException if invalid option is specified.
-   * @throws InvalidOptionValueException  if invalid option value is specified.
-   * @throws AutomatonException  if AutomationException occurs.
+   * @throws InvalidOptionValueException if invalid option value is specified.
+   * @throws AutomatonException if AutomationException occurs.
    */
   public static void main(final String[]/* @ not null @ */the_args)
-    throws FileNotFoundException, InvalidOptionPropertyValueException, 
-    AutomatonException, InvalidOptionValueException
+      throws FileNotFoundException, InvalidOptionPropertyValueException, AutomatonException,
+      InvalidOptionValueException
   {
-    
+
     final CmdOptionsParser jparser = new CmdOptionsParser();
     jparser.parse(the_args);
     final CmdOptionsOptionsInterface my_opt = jparser.getOptionStore();
     List<File> file_list = new ArrayList<File>();
-    
+
     if (my_opt.isHelpSet())
     {
       printHelp();
@@ -81,7 +81,7 @@ public class MainClass implements Constants
         final List<File> all_packages = my_opt.getPackage();
         for (int cnt = 0; cnt < all_packages.size(); cnt++)
         {
-          
+
           final File[] all_packed_files = all_packages.get(cnt).listFiles();
           for (int k = 0; k < all_packed_files.length; k++)
           {
@@ -92,44 +92,42 @@ public class MainClass implements Constants
           }
         }
       }
-      
-    
+
     }
     else
     {
       System.out.println("Enter valid file names or package names.");
       System.exit(1);
     }
-    
+
     final Logger my_logger = Logger.getLogger(org.jmlspecs.jmlunitng.MainClass.class);
     final MainClass my_Main = new MainClass();
-    final JTypeDeclarationType[] declarations = new JTypeDeclarationType[file_list.size()]; 
+    final JTypeDeclarationType[] declarations = new JTypeDeclarationType[file_list.size()];
     final JCompilationUnit[] jcunits = new JCompilationUnit[file_list.size()];
     JCompilationUnit j_type = null;
     MJClassParser parser;
     String path = null;
-    
-   
+
     for (int i = 0; i < file_list.size(); i++)
     {
-      //final File parsedArguments = new File(the_args[i]);
-      
+      // final File parsedArguments = new File(the_args[i]);
+
       try
       {
-        
+
         parser = new MJClassParser(file_list.get(i), my_Main.my_options);
         boolean universes = true;
         boolean deprication, safemath = false;
         String universesx;
-        if(my_opt.isUniversesxSet())
+        if (my_opt.isUniversesxSet())
         {
-         universesx = my_opt.getUniversesx(); 
+          universesx = my_opt.getUniversesx();
         }
         else
         {
           universesx = null;
         }
-        if(my_opt.isUniversesSet())
+        if (my_opt.isUniversesSet())
         {
           universes = true;
         }
@@ -137,9 +135,9 @@ public class MainClass implements Constants
         {
           universes = true;
         }
-        j_type = (JCompilationUnit) parser.parse(universes, 
-                  my_opt.isDepricationSet(), my_opt.isSafeMathSet(),
-                  my_opt.isVerboseSet(), universesx);
+        j_type =
+            (JCompilationUnit) parser.parse(universes, my_opt.isDepricationSet(), my_opt
+                .isSafeMathSet(), my_opt.isVerboseSet(), universesx);
         jcunits[i] = j_type;
         if (my_opt.isDestinationSet())
         {
@@ -159,65 +157,65 @@ public class MainClass implements Constants
           final String location = path.replace(".java", "");
           path = location.replace("\\", "\\\\");
         }
-//        final StringBuilder loc = new StringBuilder();
-//        for (int count = 0; count < location.length - 1; count++)
-//        {
-//          loc.append(location[count]);
-//          
-//          if (count == 0)
-//          {
-//            loc.append("\\\\");
-//          }
-//          else
-//          {
-//            loc.append("\\");  
-//          }
-//        }
+        // final StringBuilder loc = new StringBuilder();
+        // for (int count = 0; count < location.length - 1; count++)
+        // {
+        // loc.append(location[count]);
+        //          
+        // if (count == 0)
+        // {
+        // loc.append("\\\\");
+        // }
+        // else
+        // {
+        // loc.append("\\");
+        // }
+        // }
       }
       catch (final TokenStreamException e)
       {
         my_logger.error("TokenStreamException " + e.getMessage());
-        
-      } 
+
+      }
       catch (final RecognitionException e)
       {
         my_logger.error("RecognitionException " + e.getMessage());
-      } 
+      }
       catch (final ConfigurationException e)
       {
         my_logger.error("ConfigurationException " + e.getMessage());
       }
-     
-  
+
       final JTypeDeclarationType[] decl = j_type.typeDeclarations();
       declarations[i] = decl[0];
-      final TestClassGenerator testgen = new 
-      TestClassGenerator(path  + T_C_FILE_POSTFIX, decl[0], j_type, my_opt.isDepricationSet());
+      final TestClassGenerator testgen =
+          new TestClassGenerator(path + T_C_FILE_POSTFIX, decl[0], j_type, my_opt
+              .isDepricationSet());
       testgen.createTest(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
-  
-      final TestDataClassGenerator testDataGen = new 
-      TestDataClassGenerator(path  + T_D_FILE_POSTFIX,
-                             decl[0], j_type, my_opt.isDepricationSet());
+
+      final TestDataClassGenerator testDataGen =
+          new TestDataClassGenerator(path + T_D_FILE_POSTFIX, decl[0], j_type, my_opt
+              .isDepricationSet());
       testDataGen.createTestDataClass(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
-      
+
     }
-   
+
     XMLGenerator xmlgen = null;
-   
+
     if (file_list.size() > 0)
     {
       try
       {
         if (my_opt.isDestinationSet())
         {
-          
+
           if (my_opt.getDestination().endsWith("\\"))
           {
             path = my_opt.getDestination();
           }
           else
           {
-            path = my_opt.getDestination()+ "\\";
+            path = my_opt.getDestination() + "\\";
           }
         }
         else
@@ -235,7 +233,7 @@ public class MainClass implements Constants
         my_logger.error("IOException " + the_exp.getMessage());
       }
     }
-     
+
   }
 
   /**
@@ -246,30 +244,30 @@ public class MainClass implements Constants
     System.out.println("-d, --dest : To specify the oputput directory for generated files.");
     System.out.println("-f, --files : To specify the files for testing with jmluning.");
     System.out.println("-h, --help : To see command line options.");
-    System.out.println("-p, --package : To specify the files for testing" +
-                         " with jmluning.");
-    System.out.println("-u, --universes : Enable universe type modifiers and full" +
-                         " type checking.");
+    System.out.println("-p, --package : To specify the files for testing" + " with jmluning.");
+    System.out.println("-u, --universes : Enable universe type modifiers and full"
+                       + " type checking.");
     System.out.println("-dep, --deprication : Test for Depricated members.");
     System.out.println("-s, --safemath : Report Integral Arithmatic Overflow.");
-    System.out.println("-v, --verbose : Display verbose information during" +
-                                      " compilation.");
+    System.out.println("-v, --verbose : Display verbose information during" + " compilation.");
     System.out.println("-E : Universe type system.");
     System.out.println("-inherited : Generate tests for inherited methods.");
     System.out.println("-public : Generates tests only for public method.");
     System.out.println("-pprotected : Generates tests for public and protected methods.");
-    
+
   }
-  
+
   /**
    * Returns the Method iterator.
-   * @param the_decl This is JTypeDeclarationType object to be passed as argument.
+   * 
+   * @param the_decl This is JTypeDeclarationType object to be passed as
+   *          argument.
    * @return Iterator.
    */
-  protected Iterator<JTypeDeclarationType> getMethodIterator
-  (final JTypeDeclarationType the_decl)
+  protected Iterator<JTypeDeclarationType> getMethodIterator(
+                                                             final JTypeDeclarationType the_decl)
   {
-    
+
     return the_decl.methods().iterator();
   }
 }

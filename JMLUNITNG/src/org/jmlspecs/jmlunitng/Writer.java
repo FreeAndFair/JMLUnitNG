@@ -16,12 +16,11 @@ public class Writer implements Constants
   /** PrintWriter object to write string to the file. */
   private final transient PrintWriter my_print_writer;
 
-
   /**
    * Constructs a Writer object for java code.
    * 
    * @param the_file_name String name of the file.
-   *@throws FileNotFoundException Exception if unable to find specified file. 
+   *@throws FileNotFoundException Exception if unable to find specified file.
    */
   public Writer(final String the_file_name) throws FileNotFoundException
   {
@@ -42,6 +41,7 @@ public class Writer implements Constants
 
   /**
    * Prints without a newline character.
+   * 
    * @param the_line The line to be printed.
    */
   protected final void printOnLine(final String the_line)
@@ -51,6 +51,7 @@ public class Writer implements Constants
 
   /**
    * Print a newline.
+   * 
    * @param the_new_lines The number of new lines to be inserted.
    */
   protected final void newLine(final int the_new_lines)
@@ -64,6 +65,7 @@ public class Writer implements Constants
 
   /**
    * Indent a space.
+   * 
    * @param the_indent The number of spaces for indentation.
    */
   protected final void indent(final int the_indent)

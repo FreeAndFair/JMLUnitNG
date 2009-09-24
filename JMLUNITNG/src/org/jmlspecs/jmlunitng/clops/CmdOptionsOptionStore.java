@@ -1,3 +1,4 @@
+
 package org.jmlspecs.jmlunitng.clops;
 
 import ie.ucd.clops.runtime.options.CLOPSErrorOption;
@@ -9,7 +10,8 @@ import ie.ucd.clops.runtime.options.BooleanOption;
 import ie.ucd.clops.runtime.options.StringOption;
 import ie.ucd.clops.runtime.options.FileListOption;
 
-public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOptionsInterface {
+public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOptionsInterface
+{
 
   private final StringOption ogDestination;
   private final FileListOption ogList;
@@ -25,9 +27,10 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
   private final BooleanOption ogProtected;
   private final CLOPSErrorOption CLOPSERROROPTION;
 
-  public CmdOptionsOptionStore() throws InvalidOptionPropertyValueException {
+  public CmdOptionsOptionStore() throws InvalidOptionPropertyValueException
+  {
 
-    //Options
+    // Options
     ogDestination = new StringOption("Destination", "(?:-d)|(?:--dest)");
     addOption(ogDestination);
     ogDestination.setProperty("aliases", "-d,--dest");
@@ -73,17 +76,17 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     ogProtected = new BooleanOption("Protected", "(?:-protected)");
     addOption(ogProtected);
     ogProtected.setProperty("aliases", "-protected");
-  
+
     CLOPSERROROPTION = new ie.ucd.clops.runtime.options.CLOPSErrorOption();
     addOption(CLOPSERROROPTION);
-  
-    //Option groups
+
+    // Option groups
     final OptionGroup ogOption = new OptionGroup("Option");
     addOptionGroup(ogOption);
     final OptionGroup ogAllOptions = new OptionGroup("AllOptions");
     addOptionGroup(ogAllOptions);
-    
-    //Setup groupings
+
+    // Setup groupings
     ogOption.addOptionOrGroup(ogVerbose);
     ogOption.addOptionOrGroup(ogHelp);
     ogOption.addOptionOrGroup(ogSafeMath);
@@ -96,7 +99,7 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     ogOption.addOptionOrGroup(ogDestination);
     ogOption.addOptionOrGroup(ogPublic);
     ogOption.addOptionOrGroup(ogInherited);
-    //AllOptions group
+    // AllOptions group
     ogAllOptions.addOptionOrGroup(ogDestination);
     ogAllOptions.addOptionOrGroup(ogList);
     ogAllOptions.addOptionOrGroup(ogHelp);
@@ -110,293 +113,341 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     ogAllOptions.addOptionOrGroup(ogPublic);
     ogAllOptions.addOptionOrGroup(ogProtected);
   }
-  
-// Option Destination.
-// Aliases: [-d, --dest]
-  
+
+  // Option Destination.
+  // Aliases: [-d, --dest]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isDestinationSet() {
+  public boolean isDestinationSet()
+  {
     return ogDestination.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public String getDestination() {
+  public String getDestination()
+  {
     return ogDestination.getValue();
   }
 
   /** {@inheritDoc} */
-  public String getRawDestination() {
+  public String getRawDestination()
+  {
     return ogDestination.getRawValue();
   }
-  
-  public StringOption getDestinationOption() {
+
+  public StringOption getDestinationOption()
+  {
     return ogDestination;
   }
-  
-// Option List.
-// Aliases: [-f, --files]
-  
+
+  // Option List.
+  // Aliases: [-f, --files]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isListSet() {
+  public boolean isListSet()
+  {
     return ogList.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public List<java.io.File> getList() {
+  public List<java.io.File> getList()
+  {
     return ogList.getValue();
   }
 
   /** {@inheritDoc} */
-  public List<java.io.File> getRawList() {
+  public List<java.io.File> getRawList()
+  {
     return ogList.getRawValue();
   }
-  
-  public FileListOption getListOption() {
+
+  public FileListOption getListOption()
+  {
     return ogList;
   }
-  
-// Option Help.
-// Aliases: [-h, --help]
-  
+
+  // Option Help.
+  // Aliases: [-h, --help]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isHelpSet() {
+  public boolean isHelpSet()
+  {
     return ogHelp.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public boolean getHelp() {
+  public boolean getHelp()
+  {
     return ogHelp.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawHelp() {
+  public boolean getRawHelp()
+  {
     return ogHelp.getRawValue();
   }
-  
-  public BooleanOption getHelpOption() {
+
+  public BooleanOption getHelpOption()
+  {
     return ogHelp;
   }
-  
-// Option Package.
-// Aliases: [-p, --package]
-  
+
+  // Option Package.
+  // Aliases: [-p, --package]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isPackageSet() {
+  public boolean isPackageSet()
+  {
     return ogPackage.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public List<java.io.File> getPackage() {
+  public List<java.io.File> getPackage()
+  {
     return ogPackage.getValue();
   }
 
   /** {@inheritDoc} */
-  public List<java.io.File> getRawPackage() {
+  public List<java.io.File> getRawPackage()
+  {
     return ogPackage.getRawValue();
   }
-  
-  public FileListOption getPackageOption() {
+
+  public FileListOption getPackageOption()
+  {
     return ogPackage;
   }
-  
-// Option Universes.
-// Aliases: [-u, --universes]
-  
+
+  // Option Universes.
+  // Aliases: [-u, --universes]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isUniversesSet() {
+  public boolean isUniversesSet()
+  {
     return ogUniverses.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public boolean getUniverses() {
+  public boolean getUniverses()
+  {
     return ogUniverses.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawUniverses() {
+  public boolean getRawUniverses()
+  {
     return ogUniverses.getRawValue();
   }
-  
-  public BooleanOption getUniversesOption() {
+
+  public BooleanOption getUniversesOption()
+  {
     return ogUniverses;
   }
-  
-// Option Deprication.
-// Aliases: [-dep, --deprication]
-  
+
+  // Option Deprication.
+  // Aliases: [-dep, --deprication]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isDepricationSet() {
+  public boolean isDepricationSet()
+  {
     return ogDeprication.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public boolean getDeprication() {
+  public boolean getDeprication()
+  {
     return ogDeprication.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawDeprication() {
+  public boolean getRawDeprication()
+  {
     return ogDeprication.getRawValue();
   }
-  
-  public BooleanOption getDepricationOption() {
+
+  public BooleanOption getDepricationOption()
+  {
     return ogDeprication;
   }
-  
-// Option SafeMath.
-// Aliases: [-s, --safemath]
-  
+
+  // Option SafeMath.
+  // Aliases: [-s, --safemath]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isSafeMathSet() {
+  public boolean isSafeMathSet()
+  {
     return ogSafeMath.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public boolean getSafeMath() {
+  public boolean getSafeMath()
+  {
     return ogSafeMath.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawSafeMath() {
+  public boolean getRawSafeMath()
+  {
     return ogSafeMath.getRawValue();
   }
-  
-  public BooleanOption getSafeMathOption() {
+
+  public BooleanOption getSafeMathOption()
+  {
     return ogSafeMath;
   }
-  
-// Option Verbose.
-// Aliases: [-v, --verbose]
-  
+
+  // Option Verbose.
+  // Aliases: [-v, --verbose]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isVerboseSet() {
+  public boolean isVerboseSet()
+  {
     return ogVerbose.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public boolean getVerbose() {
+  public boolean getVerbose()
+  {
     return ogVerbose.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawVerbose() {
+  public boolean getRawVerbose()
+  {
     return ogVerbose.getRawValue();
   }
-  
-  public BooleanOption getVerboseOption() {
+
+  public BooleanOption getVerboseOption()
+  {
     return ogVerbose;
   }
-  
-// Option Universesx.
-// Aliases: [-E]
-  
+
+  // Option Universesx.
+  // Aliases: [-E]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isUniversesxSet() {
+  public boolean isUniversesxSet()
+  {
     return ogUniversesx.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public String getUniversesx() {
+  public String getUniversesx()
+  {
     return ogUniversesx.getValue();
   }
 
   /** {@inheritDoc} */
-  public String getRawUniversesx() {
+  public String getRawUniversesx()
+  {
     return ogUniversesx.getRawValue();
   }
-  
-  public StringOption getUniversesxOption() {
+
+  public StringOption getUniversesxOption()
+  {
     return ogUniversesx;
   }
-  
-// Option Inherited.
-// Aliases: [-inherited]
-  
+
+  // Option Inherited.
+  // Aliases: [-inherited]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isInheritedSet() {
+  public boolean isInheritedSet()
+  {
     return ogInherited.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public boolean getInherited() {
+  public boolean getInherited()
+  {
     return ogInherited.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawInherited() {
+  public boolean getRawInherited()
+  {
     return ogInherited.getRawValue();
   }
-  
-  public BooleanOption getInheritedOption() {
+
+  public BooleanOption getInheritedOption()
+  {
     return ogInherited;
   }
-  
-// Option Public.
-// Aliases: [-public]
-  
+
+  // Option Public.
+  // Aliases: [-public]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isPublicSet() {
+  public boolean isPublicSet()
+  {
     return ogPublic.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public boolean getPublic() {
+  public boolean getPublic()
+  {
     return ogPublic.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawPublic() {
+  public boolean getRawPublic()
+  {
     return ogPublic.getRawValue();
   }
-  
-  public BooleanOption getPublicOption() {
+
+  public BooleanOption getPublicOption()
+  {
     return ogPublic;
   }
-  
-// Option Protected.
-// Aliases: [-protected]
-  
+
+  // Option Protected.
+  // Aliases: [-protected]
+
   /**
    * {@inheritDoc}
    */
-  public boolean isProtectedSet() {
+  public boolean isProtectedSet()
+  {
     return ogProtected.hasValue();
   }
-  
+
   /** {@inheritDoc} */
-  public boolean getProtected() {
+  public boolean getProtected()
+  {
     return ogProtected.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawProtected() {
+  public boolean getRawProtected()
+  {
     return ogProtected.getRawValue();
   }
-  
-  public BooleanOption getProtectedOption() {
+
+  public BooleanOption getProtectedOption()
+  {
     return ogProtected;
   }
-  
+
 }
