@@ -67,7 +67,7 @@ public class TestDataClassGenerator implements Constants
    * This is the boolean representing if the tests need to be generated for
    * public methods or both public and protected methods.
    */
-  private boolean my_depricated;
+  private final transient boolean my_depricated;
 
   /**
    * Constructs JMLUNITNGTestDataClassGenerator Object.
