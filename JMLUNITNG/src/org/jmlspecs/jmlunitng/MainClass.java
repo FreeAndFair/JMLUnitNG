@@ -245,7 +245,7 @@ public class MainClass implements Constants
     System.out.println("-E : Universe type system.");
     System.out.println("-inherited : Generate tests for inherited methods.");
     System.out.println("-public : Generates tests only for public method.");
-    System.out.println("-pprotected : Generates tests for public and protected methods.");
+    System.out.println("-protected : Generates tests for public and protected methods.");
 
   }
 
