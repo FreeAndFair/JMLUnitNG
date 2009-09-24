@@ -1,0 +1,869 @@
+<html>
+<head>
+<title>TestNG:  Command line test</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>Command line test</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>16/0/22</td>
+</tr><tr>
+<td>Started on:</td><td>Tue Sep 01 10:43:42 PDT 2009</td>
+</tr>
+<tr><td>Total time:</td><td>0 seconds (63 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='3' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td width="30%"><b>Exception</b></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td></td>
+</tr>
+</table><p>
+<table width='100%' border='1' class='invocation-skipped'>
+<tr><td colspan='3' align='center'><b>SKIPPED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td width="30%"><b>Exception</b></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace32635808", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace32635808'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace20732290", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace20732290'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace18378667", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace18378667'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace21722195", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace21722195'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace12773951", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace12773951'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace23025815", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace23025815'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace30389577", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace30389577'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace25613505", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace25613505'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace16382424", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace16382424'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_Addition_int_int()'>test_Addition_int_int<br/><b>Parameters:</b> TEST.Addition@b162d5, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace18019860", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace18019860'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.Addition
+	at TEST.Addition_JML_Test.test_Addition_int_int(Addition_JML_Test.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace3195425", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace3195425'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace16197143", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace16197143'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace31843011", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace31843011'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace25860399", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace25860399'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace14452073", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace14452073'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace22068557", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace22068557'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace19621457", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace19621457'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace4872882", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace4872882'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace25724761", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace25724761'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_add_int_int()'>test_add_int_int<br/><b>Parameters:</b> TEST.Addition@1bc4459, 1, 1</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace32716405", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace32716405'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.add
+	at TEST.Addition_JML_Test.test_add_int_int(Addition_JML_Test.java:80)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_main_StringArray()'>test_main_StringArray<br/><b>Parameters:</b> TEST.Addition@e48e1b, null</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.main
+	at TEST.Addition_JML_Test.test_main_StringArray(Addition_JML_Test.java:102)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace33482492", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace33482492'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.main
+	at TEST.Addition_JML_Test.test_main_StringArray(Addition_JML_Test.java:102)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+<tr>
+<td title='TEST.Addition_JML_Test.test_main_StringArray()'>test_main_StringArray<br/><b>Parameters:</b> TEST.Addition@e48e1b, null</td>
+<td>0</td>
+<td><div><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.main
+	at TEST.Addition_JML_Test.test_main_StringArray(Addition_JML_Test.java:102)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+... Removed 20 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace25669322", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace25669322'><pre>org.jmlspecs.jmlunitng.PreconditionSkipException: by method Addition.main
+	at TEST.Addition_JML_Test.test_main_StringArray(Addition_JML_Test.java:102)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:877)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:842)
+	at org.testng.TestNG.run(TestNG.java:751)
+	at TEST.Addition_JML_Test.main(Addition_JML_Test.java:38)
+</pre></div></td>
+</tr>
+</table><p>
+</body>
+</html>

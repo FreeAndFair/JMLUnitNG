@@ -10,10 +10,13 @@ ARGS::
   SafeMath: {"-s", "--safemath"}
   Verbose: {"-v", "--verbose"}
   Universesx: {"-E"}:{string}
+  Inherited: {"-inherited"}
+  Public: {"-public"}
+  Protected: {"-protected"}
 
 FORMAT::
   Option* Destination? Universesx?;   
 
 WHERE::
   Option:  
-    Destination|List|Help|Package|Universes|Deprication|SafeMath|Verbose|Universesx;
+    Destination|List|Help|Package|Universes|Deprication|SafeMath|Verbose|Universesx|Inherited|Public|Protected;

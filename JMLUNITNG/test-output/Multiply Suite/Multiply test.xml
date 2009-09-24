@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Multiply test" failures="0" tests="18" time="0.093" errors="0">
+  <properties/>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int_int" time="0.015" classname="Test.Multiply_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.016" classname="Test.Multiply_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+</testsuite>

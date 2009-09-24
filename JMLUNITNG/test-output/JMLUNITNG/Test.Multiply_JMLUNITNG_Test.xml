@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test.Multiply_JMLUNITNG_Test" failures="0" tests="10" time="0.078" errors="0">
+  <properties/>
+  <testcase name="test_get_sqaure_Addition_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.016" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.016" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_Addition_int" time="0.0" classname="Test.Multiply_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+</testsuite>

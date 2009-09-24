@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="5" skipfailedinvocationCounts="false" verbose="1" name="Failed suite [Square Suite]" junit="false" parallel="false" annotations="JDK">
+  <test name="Square test(failed)" junit="false" parallel="false" annotations="JDK">
+    <classes>
+      <class name="Test.Square_JMLUNITNG_Test">
+        <methods>
+          <include name="test_get_sqaure_int"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

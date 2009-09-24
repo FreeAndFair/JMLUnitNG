@@ -46,6 +46,11 @@ public class TestClassGenerator implements Constants
    * This array represents the list of imported packages.
    */
   protected final transient/* @ spec_public @ */JPackageImportType[] my_pkgs;
+  /**
+   * This is the boolean representing if the tests needs to be generated 
+   * for both public and protected methods of the class.
+   */
+  protected boolean my_depricated;
 
   /**
    * This is the list of all the methods the class to be tested contains.
@@ -58,17 +63,20 @@ public class TestClassGenerator implements Constants
    * @param the_file The file to write the generated class to.
    * @param the_decl the JTypeDeclarationType object.
    * @param the_cunit_type JCompilationUnit object.
+   * @param the_only_public boolean.
    * @throws FileNotFoundException  Exception if unable to find the specified file.
    */
   public TestClassGenerator(final/* @ non_null @ */String the_file,
                             final JTypeDeclarationType the_decl,
-                            final JCompilationUnit the_cunit_type) throws FileNotFoundException
+                            final JCompilationUnit the_cunit_type, final boolean
+                            the_depricated)throws FileNotFoundException
   {
     this.my_pkgs = the_cunit_type.importedPackages();
     this.my_decl_type = the_decl;
     this.my_class_name = the_decl.ident() + T_C_POSTFIX;
     this.my_file = the_file;
     my_writer = new Writer(the_file);
+    this.my_depricated = the_depricated;
     
   }
 
@@ -221,57 +229,18 @@ public class TestClassGenerator implements Constants
         final String name = generateMethodName(obj);
         printMethodJavaDoc(obj, name);
         final JMethodDeclaration method = (JMethodDeclaration) obj;
-        my_writer.indent(LEVEL1);
-        my_writer.printOnLine("public void " + name + "(final " +
-                              the_decl.ident() + " the_obj");
-        for (int i = 0; i < method.parameters().length; i++)
+        if (my_depricated)
         {
-          my_writer.printOnLine(", final " + method.parameters()[i].typeToString() + SPACE +
-                             PARAM_ST + method.parameters()[i].ident());
+          printTest(method, the_decl, name);
         }
-        my_writer.printOnLine(BKT_END);
-        my_writer.printOnLine("\n");
-        my_writer.indent(LEVEL1);
-        my_writer.print(BLK_ST);
-        my_writer.indent(LEVEL2);
-        my_writer.print(TRY);
-        my_writer.indent(LEVEL2);
-        my_writer.print(BLK_ST);
-        my_writer.indent(LEVEL3);
-        my_writer.printOnLine("the_obj." + method.ident() + BKT_ST);
-        for (int i = 0; i < method.parameters().length; i++)
+        else
         {
-          my_writer.printOnLine(PARAM_ST + method.parameters()[i].ident());
-          if (i != method.parameters().length - 1)
+          if (!method.isDeprecated()) 
           {
-            my_writer.printOnLine(COMMA + SPACE);
+            printTest(method, the_decl, name);
           }
         }
-        my_writer.printOnLine(BKT_END + SM_COLN);
-        my_writer.printOnLine("\n");
-        my_writer.indent(LEVEL2);
-        my_writer.print(BLK_END);
-        my_writer.indent(LEVEL2);
-        my_writer.print(CATCH + SPACE + 
-          "(final org.jmlspecs.jmlrac.runtime.JMLEntryPreconditionError the_exp)");
-        my_writer.indent(LEVEL2);
-        my_writer.print(BLK_ST);
-        my_writer.indent(LEVEL3);
-        my_writer.print("throw new PreconditionSkipException(the_exp.getMessage())" + SM_COLN);
-        my_writer.indent(LEVEL2);
-        my_writer.print(BLK_END);
-        my_writer.indent(LEVEL2);
-        my_writer.print("catch" + 
-          " (final org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError the_exp)");
-        my_writer.indent(LEVEL2);
-        my_writer.print(BLK_ST);
-        my_writer.indent(LEVEL3);
-        my_writer.print("throw new PreconditionSkipException(the_exp.getMessage());");
-        my_writer.indent(LEVEL2);
-        my_writer.print(BLK_END);
-        my_writer.indent(LEVEL1);
-        my_writer.print(BLK_END);
-        my_writer.newLine(ONE);
+        
       }
     }
   }
@@ -424,5 +393,63 @@ public class TestClassGenerator implements Constants
   private void printDataMembers()
   {
   // add data members to be printed here.
+  }
+  
+  /**
+   * Prints actual test in the class.
+   */
+  private void printTest(final JMethodDeclaration the_method, final JTypeDeclarationType the_decl, final String the_name)
+  {
+    my_writer.indent(LEVEL1);
+    my_writer.printOnLine("public void " + the_name + "(final " +
+                          the_decl.ident() + " the_obj");
+    for (int i = 0; i < the_method.parameters().length; i++)
+    {
+      my_writer.printOnLine(", final " + the_method.parameters()[i].typeToString() + SPACE +
+                         PARAM_ST + the_method.parameters()[i].ident());
+    }
+    my_writer.printOnLine(BKT_END);
+    my_writer.printOnLine("\n");
+    my_writer.indent(LEVEL1);
+    my_writer.print(BLK_ST);
+    my_writer.indent(LEVEL2);
+    my_writer.print(TRY);
+    my_writer.indent(LEVEL2);
+    my_writer.print(BLK_ST);
+    my_writer.indent(LEVEL3);
+    my_writer.printOnLine("the_obj." + the_method.ident() + BKT_ST);
+    for (int i = 0; i < the_method.parameters().length; i++)
+    {
+      my_writer.printOnLine(PARAM_ST + the_method.parameters()[i].ident());
+      if (i != the_method.parameters().length - 1)
+      {
+        my_writer.printOnLine(COMMA + SPACE);
+      }
+    }
+    my_writer.printOnLine(BKT_END + SM_COLN);
+    my_writer.printOnLine("\n");
+    my_writer.indent(LEVEL2);
+    my_writer.print(BLK_END);
+    my_writer.indent(LEVEL2);
+    my_writer.print(CATCH + SPACE + 
+      "(final org.jmlspecs.jmlrac.runtime.JMLEntryPreconditionError the_exp)");
+    my_writer.indent(LEVEL2);
+    my_writer.print(BLK_ST);
+    my_writer.indent(LEVEL3);
+    my_writer.print("throw new PreconditionSkipException(the_exp.getMessage())" + SM_COLN);
+    my_writer.indent(LEVEL2);
+    my_writer.print(BLK_END);
+    my_writer.indent(LEVEL2);
+    my_writer.print("catch" + 
+      " (final org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError the_exp)");
+    my_writer.indent(LEVEL2);
+    my_writer.print(BLK_ST);
+    my_writer.indent(LEVEL3);
+    my_writer.print("throw new PreconditionSkipException(the_exp.getMessage());");
+    my_writer.indent(LEVEL2);
+    my_writer.print(BLK_END);
+    my_writer.indent(LEVEL1);
+    my_writer.print(BLK_END);
+    my_writer.newLine(ONE);
   }
 }

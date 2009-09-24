@@ -1,4 +1,4 @@
-package org.jmlspecs.jmlunitng;
+package org.jmlspecs.jmlunitng.clops;
 
 import ie.ucd.clops.runtime.parser.AbstractSpecificCLParser;
 import ie.ucd.clops.runtime.rules.RuleStore;

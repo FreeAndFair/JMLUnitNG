@@ -9,5 +9,7 @@
 	<classpathentry exported="true" kind="lib" path="jmlruntime.jar"/>
 	<classpathentry exported="true" kind="lib" path="testng-5.9-jdk15.jar"/>
 	<classpathentry kind="lib" path="mjc-1_3_2.jar"/>
+	<classpathentry kind="lib" path="src/org/jmlspecs/jmlunitng/clops-runtime.jar"/>
+	<classpathentry kind="lib" path="clops-runtime.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

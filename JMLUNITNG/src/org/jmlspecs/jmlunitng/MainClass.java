@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jmlspecs.jmlunit.JntOptions;
+import org.jmlspecs.jmlunitng.clops.CmdOptionsOptionsInterface;
+import org.jmlspecs.jmlunitng.clops.CmdOptionsParser;
 import org.multijava.mjc.JCompilationUnit;
 import org.multijava.mjc.JTypeDeclarationType;
 import org.multijava.mjc.MjcCommonOptions;
@@ -116,7 +118,8 @@ public class MainClass implements Constants
       {
         
         parser = new MJClassParser(file_list.get(i), my_Main.my_options);
-        boolean universes, deprication, safemath = false;
+        boolean universes = true;
+        boolean deprication, safemath = false;
         String universesx;
         if(my_opt.isUniversesxSet())
         {
@@ -126,8 +129,17 @@ public class MainClass implements Constants
         {
           universesx = null;
         }
-        
-        j_type = (JCompilationUnit) parser.parse(my_opt.isUniversesSet(), my_opt.isDepricationSet(), my_opt.isSafeMathSet(), my_opt.isVerboseSet(), universesx);
+        if(my_opt.isUniversesSet())
+        {
+          universes = true;
+        }
+        else
+        {
+          universes = true;
+        }
+        j_type = (JCompilationUnit) parser.parse(universes, 
+                  my_opt.isDepricationSet(), my_opt.isSafeMathSet(),
+                  my_opt.isVerboseSet(), universesx);
         jcunits[i] = j_type;
         if (my_opt.isDestinationSet())
         {
@@ -180,12 +192,12 @@ public class MainClass implements Constants
       final JTypeDeclarationType[] decl = j_type.typeDeclarations();
       declarations[i] = decl[0];
       final TestClassGenerator testgen = new 
-      TestClassGenerator(path  + T_C_FILE_POSTFIX, decl[0], j_type);
+      TestClassGenerator(path  + T_C_FILE_POSTFIX, decl[0], j_type, my_opt.isDepricationSet());
       testgen.createTest(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
   
       final TestDataClassGenerator testDataGen = new 
       TestDataClassGenerator(path  + T_D_FILE_POSTFIX,
-                             decl[0], j_type);
+                             decl[0], j_type, my_opt.isDepricationSet());
       testDataGen.createTestDataClass(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
       
     }
@@ -243,6 +255,10 @@ public class MainClass implements Constants
     System.out.println("-v, --verbose : Display verbose information during" +
                                       " compilation.");
     System.out.println("-E : Universe type system.");
+    System.out.println("-inherited : Generate tests for inherited methods.");
+    System.out.println("-public : Generates tests only for public method.");
+    System.out.println("-pprotected : Generates tests for public and protected methods.");
+    
   }
   
   /**

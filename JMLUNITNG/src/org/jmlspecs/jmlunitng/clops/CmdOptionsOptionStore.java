@@ -1,4 +1,4 @@
-package org.jmlspecs.jmlunitng;
+package org.jmlspecs.jmlunitng.clops;
 
 import ie.ucd.clops.runtime.options.CLOPSErrorOption;
 import ie.ucd.clops.runtime.options.OptionGroup;
@@ -20,6 +20,9 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
   private final BooleanOption ogSafeMath;
   private final BooleanOption ogVerbose;
   private final StringOption ogUniversesx;
+  private final BooleanOption ogInherited;
+  private final BooleanOption ogPublic;
+  private final BooleanOption ogProtected;
   private final CLOPSErrorOption CLOPSERROROPTION;
 
   public CmdOptionsOptionStore() throws InvalidOptionPropertyValueException {
@@ -61,6 +64,15 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     ogUniversesx = new StringOption("Universesx", "(?:-E)");
     addOption(ogUniversesx);
     ogUniversesx.setProperty("aliases", "-E");
+    ogInherited = new BooleanOption("Inherited", "(?:-inherited)");
+    addOption(ogInherited);
+    ogInherited.setProperty("aliases", "-inherited");
+    ogPublic = new BooleanOption("Public", "(?:-public)");
+    addOption(ogPublic);
+    ogPublic.setProperty("aliases", "-public");
+    ogProtected = new BooleanOption("Protected", "(?:-protected)");
+    addOption(ogProtected);
+    ogProtected.setProperty("aliases", "-protected");
   
     CLOPSERROROPTION = new ie.ucd.clops.runtime.options.CLOPSErrorOption();
     addOption(CLOPSERROROPTION);
@@ -73,14 +85,17 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     
     //Setup groupings
     ogOption.addOptionOrGroup(ogVerbose);
-    ogOption.addOptionOrGroup(ogDeprication);
     ogOption.addOptionOrGroup(ogHelp);
     ogOption.addOptionOrGroup(ogSafeMath);
+    ogOption.addOptionOrGroup(ogDeprication);
     ogOption.addOptionOrGroup(ogUniverses);
     ogOption.addOptionOrGroup(ogPackage);
+    ogOption.addOptionOrGroup(ogProtected);
     ogOption.addOptionOrGroup(ogList);
     ogOption.addOptionOrGroup(ogUniversesx);
     ogOption.addOptionOrGroup(ogDestination);
+    ogOption.addOptionOrGroup(ogPublic);
+    ogOption.addOptionOrGroup(ogInherited);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogDestination);
     ogAllOptions.addOptionOrGroup(ogList);
@@ -91,6 +106,9 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     ogAllOptions.addOptionOrGroup(ogSafeMath);
     ogAllOptions.addOptionOrGroup(ogVerbose);
     ogAllOptions.addOptionOrGroup(ogUniversesx);
+    ogAllOptions.addOptionOrGroup(ogInherited);
+    ogAllOptions.addOptionOrGroup(ogPublic);
+    ogAllOptions.addOptionOrGroup(ogProtected);
   }
   
 // Option Destination.
@@ -307,6 +325,78 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
   
   public StringOption getUniversesxOption() {
     return ogUniversesx;
+  }
+  
+// Option Inherited.
+// Aliases: [-inherited]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isInheritedSet() {
+    return ogInherited.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getInherited() {
+    return ogInherited.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawInherited() {
+    return ogInherited.getRawValue();
+  }
+  
+  public BooleanOption getInheritedOption() {
+    return ogInherited;
+  }
+  
+// Option Public.
+// Aliases: [-public]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isPublicSet() {
+    return ogPublic.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getPublic() {
+    return ogPublic.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawPublic() {
+    return ogPublic.getRawValue();
+  }
+  
+  public BooleanOption getPublicOption() {
+    return ogPublic;
+  }
+  
+// Option Protected.
+// Aliases: [-protected]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isProtectedSet() {
+    return ogProtected.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getProtected() {
+    return ogProtected.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawProtected() {
+    return ogProtected.getRawValue();
+  }
+  
+  public BooleanOption getProtectedOption() {
+    return ogProtected;
   }
   
 }

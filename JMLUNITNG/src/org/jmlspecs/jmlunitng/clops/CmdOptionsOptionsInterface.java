@@ -1,4 +1,4 @@
-package org.jmlspecs.jmlunitng;
+package org.jmlspecs.jmlunitng.clops;
 
 import java.util.List;
 
@@ -160,5 +160,56 @@ public interface CmdOptionsOptionsInterface {
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
   String getUniversesx();
+  
+
+// Option Inherited. 
+// Aliases: [-inherited]
+
+  /**
+   * @return true if the option Inherited has been used
+   * in the command line.
+   */
+  boolean isInheritedSet();
+
+  /**
+   * Get the value of {@code Option} Inherited.
+   * @return the value of the option Inherited if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getInherited();
+  
+
+// Option Public. 
+// Aliases: [-public]
+
+  /**
+   * @return true if the option Public has been used
+   * in the command line.
+   */
+  boolean isPublicSet();
+
+  /**
+   * Get the value of {@code Option} Public.
+   * @return the value of the option Public if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getPublic();
+  
+
+// Option Protected. 
+// Aliases: [-protected]
+
+  /**
+   * @return true if the option Protected has been used
+   * in the command line.
+   */
+  boolean isProtectedSet();
+
+  /**
+   * Get the value of {@code Option} Protected.
+   * @return the value of the option Protected if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getProtected();
   
 }
