@@ -60,14 +60,15 @@ public class TestClassGenerator implements Constants
    * @param the_file The file to write the generated class to.
    * @param the_decl the JTypeDeclarationType object.
    * @param the_cunit_type JCompilationUnit object.
-   * @param the_only_public boolean.
+   * @param the_depricated boolean.
    * @throws FileNotFoundException Exception if unable to find the specified
    *           file.
    */
   public TestClassGenerator(final/* @ non_null @ */String the_file,
                             final JTypeDeclarationType the_decl,
-                            final JCompilationUnit the_cunit_type, final boolean the_depricated)
-      throws FileNotFoundException
+                            final JCompilationUnit the_cunit_type,
+                            final boolean the_depricated)
+    throws FileNotFoundException
   {
     this.my_pkgs = the_cunit_type.importedPackages();
     this.my_decl_type = the_decl;
@@ -394,6 +395,9 @@ public class TestClassGenerator implements Constants
 
   /**
    * Prints actual test in the class.
+   * @param the_method JMethodDeclaration object.
+   * @param the_decl JTypeDeclarationType object.
+   * @param the_name Name String.
    */
   private void printTest(final JMethodDeclaration the_method,
                          final JTypeDeclarationType the_decl, final String the_name)
@@ -439,8 +443,8 @@ public class TestClassGenerator implements Constants
     my_writer.print(BLK_END);
     my_writer.indent(LEVEL2);
     my_writer
-        .print("catch"
-               + " (final org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError the_exp)");
+        .print("catch" +
+               " (final org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError the_exp)");
     my_writer.indent(LEVEL2);
     my_writer.print(BLK_ST);
     my_writer.indent(LEVEL3);

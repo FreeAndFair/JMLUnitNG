@@ -57,7 +57,7 @@ public class MainClass implements Constants
    * @throws AutomatonException if AutomationException occurs.
    */
   public static void main(final String[]/* @ not null @ */the_args)
-      throws FileNotFoundException, InvalidOptionPropertyValueException, AutomatonException,
+    throws FileNotFoundException, InvalidOptionPropertyValueException, AutomatonException,
       InvalidOptionValueException
   {
 
@@ -85,7 +85,7 @@ public class MainClass implements Constants
           final File[] all_packed_files = all_packages.get(cnt).listFiles();
           for (int k = 0; k < all_packed_files.length; k++)
           {
-            if (all_packed_files[k].getPath().endsWith(".java"))
+            if (all_packed_files[k].getPath().endsWith(DOT_JAVA))
             {
               file_list.add(all_packed_files[k]);
             }
@@ -116,8 +116,7 @@ public class MainClass implements Constants
       {
 
         parser = new MJClassParser(file_list.get(i), my_Main.my_options);
-        boolean universes = true;
-        boolean deprication, safemath = false;
+       
         String universesx;
         if (my_opt.isUniversesxSet())
         {
@@ -125,37 +124,30 @@ public class MainClass implements Constants
         }
         else
         {
-          universesx = null;
+          universesx = "";
         }
-        if (my_opt.isUniversesSet())
-        {
-          universes = true;
-        }
-        else
-        {
-          universes = true;
-        }
+       
         j_type =
-            (JCompilationUnit) parser.parse(universes, my_opt.isDepricationSet(), my_opt
-                .isSafeMathSet(), my_opt.isVerboseSet(), universesx);
+            (JCompilationUnit) parser.parse(my_opt.isUniversesSet(), my_opt.isDepricationSet(),
+                               my_opt.isSafeMathSet(), my_opt.isVerboseSet(), universesx);
         jcunits[i] = j_type;
         if (my_opt.isDestinationSet())
         {
           final String dest = my_opt.getDestination();
-          if (dest.endsWith("\\"))
+          if (dest.endsWith(BCK_SLASH))
           {
-            path = dest + file_list.get(i).getName().replaceAll(".java", "");
+            path = dest + file_list.get(i).getName().replaceAll(DOT_JAVA, "");
           }
           else
           {
-            path = dest + "\\" + file_list.get(i).getName().replaceAll(".java", "");
+            path = dest + BCK_SLASH + file_list.get(i).getName().replaceAll(DOT_JAVA, "");
           }
         }
         else
         {
           path = Utils.getFilePath(file_list.get(i));
-          final String location = path.replace(".java", "");
-          path = location.replace("\\", "\\\\");
+          final String location = path.replace(DOT_JAVA, "");
+          path = location.replace(BCK_SLASH, "\\\\");
         }
         // final StringBuilder loc = new StringBuilder();
         // for (int count = 0; count < location.length - 1; count++)
@@ -168,7 +160,7 @@ public class MainClass implements Constants
         // }
         // else
         // {
-        // loc.append("\\");
+        // loc.append(BCK_SLASH);
         // }
         // }
       }
@@ -209,21 +201,21 @@ public class MainClass implements Constants
         if (my_opt.isDestinationSet())
         {
 
-          if (my_opt.getDestination().endsWith("\\"))
+          if (my_opt.getDestination().endsWith(BCK_SLASH))
           {
             path = my_opt.getDestination();
           }
           else
           {
-            path = my_opt.getDestination() + "\\";
+            path = my_opt.getDestination() + BCK_SLASH;
           }
         }
         else
         {
           path = file_list.get(0).getPath();
-          final int index = path.lastIndexOf("\\");
+          final int index = path.lastIndexOf(BCK_SLASH);
           final String xmlpath = path.substring(0, index);
-          path = xmlpath + "\\";
+          path = xmlpath + BCK_SLASH;
         }
         xmlgen = new XMLGenerator(declarations, jcunits, path);
         xmlgen.createXML();
@@ -245,8 +237,8 @@ public class MainClass implements Constants
     System.out.println("-f, --files : To specify the files for testing with jmluning.");
     System.out.println("-h, --help : To see command line options.");
     System.out.println("-p, --package : To specify the files for testing" + " with jmluning.");
-    System.out.println("-u, --universes : Enable universe type modifiers and full"
-                       + " type checking.");
+    System.out.println("-u, --universes : Enable universe type modifiers and full" +
+                       " type checking.");
     System.out.println("-dep, --deprication : Test for Depricated members.");
     System.out.println("-s, --safemath : Report Integral Arithmatic Overflow.");
     System.out.println("-v, --verbose : Display verbose information during" + " compilation.");
@@ -265,7 +257,7 @@ public class MainClass implements Constants
    * @return Iterator.
    */
   protected Iterator<JTypeDeclarationType> getMethodIterator(
-                                                             final JTypeDeclarationType the_decl)
+              final JTypeDeclarationType the_decl)
   {
 
     return the_decl.methods().iterator();

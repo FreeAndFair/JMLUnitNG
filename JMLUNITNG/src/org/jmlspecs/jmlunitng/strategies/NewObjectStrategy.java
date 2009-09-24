@@ -31,7 +31,7 @@ public class NewObjectStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Object[] {null,};
+    return new Object[] {null, };
   }
 
   /**

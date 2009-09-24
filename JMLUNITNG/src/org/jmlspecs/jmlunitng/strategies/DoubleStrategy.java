@@ -31,7 +31,7 @@ public class DoubleStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Double[] {-1.0, 0.0, 1.0,};
+    return new Double[] {-1.0, 0.0, 1.0, };
   }
 
   /**

@@ -31,7 +31,7 @@ public class ShortStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new Short[] {-1, 0, 1,};
+    return new Short[] {-1, 0, 1, };
   }
 
   /**

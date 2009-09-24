@@ -21,6 +21,6 @@ public class StringArrayStrategy extends ImmutableObjectAbstractStrategy
    */
   protected Object[] defaultData()
   {
-    return new String[][] {null, {"", ""},};
+    return new String[][] {null, {"", ""}, };
   }
 }

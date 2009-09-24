@@ -178,4 +178,49 @@ public interface Constants
    * This is the XML class tag end.
    */
   String CLS_CLOSE = "/>";
+  /**
+   * This is the start of the comment.
+   */
+  String CMT_ST = "/*";
+  /**
+   * This is the end of the comment.
+   */
+  String CMT_END = "*/";
+  /**
+   * This is the asterisk.
+   */
+  String AST = "*";
+  /**
+   * This is the @ symbol.
+   */
+  String AT = "@";
+  /**
+   * This is static string.
+   */
+  String STATIC = "static";
+  /**
+   * This is the .atEnd() string. .
+   */
+  String ATEND = ".atEnd()";
+  /**
+   * This is the "Object" string.
+   */
+  String OBJ = "Object";  
+  /**
+   * This is the newline string.
+   */
+  String NEWLN = "\n"; 
+  /**
+   * This is the "iterators" string.
+   */
+  String ITR = "iterators"; 
+  /**
+   * This is the "parameters" string.
+   */
+  String PARAMS =  "parameters"; 
+  /**
+   * This is the \ string.
+   */
+  String BCK_SLASH =  "\\"; 
+ 
 }

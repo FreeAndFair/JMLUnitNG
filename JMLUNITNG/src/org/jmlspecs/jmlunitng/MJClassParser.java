@@ -48,7 +48,11 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
 
   /**
    * This method parses the given class file in AST format.
-   * 
+   * @param the_universes boolean
+   * @param the_deprication boolean
+   * @param the_safemath boolean
+   * @param the_verbose boolean
+   * @param the_universesx  String
    * @return JCompilationUnitType
    * @throws FileNotFoundException Exception if unable to find file.
    * @throws ConfigurationException Exception for issues related to
@@ -59,7 +63,7 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
   public JCompilationUnitType parse(final boolean the_universes,
                                     final boolean the_deprication, final boolean the_safemath,
                                     final boolean the_verbose, final String the_universesx)
-      throws FileNotFoundException, ConfigurationException, RecognitionException,
+    throws FileNotFoundException, ConfigurationException, RecognitionException,
       TokenStreamException
   {
     final BufferedReader buffer = new BufferedReader(new FileReader(my_file));
