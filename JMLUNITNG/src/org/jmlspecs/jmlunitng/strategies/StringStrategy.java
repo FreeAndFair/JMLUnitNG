@@ -31,7 +31,7 @@ public class StringStrategy extends AbstractBasicStrategy
   @Override
   public Object[] defaultData()
   {
-    return new String[] {null, "",};
+    return new String[] {null, "", };
   }
 
   /**

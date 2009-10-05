@@ -545,7 +545,7 @@ public class TestDataClassGenerator implements Constants
     my_writer.indent(LEVEL2);
     my_writer.print(BLK_ST);
 
-    if (parameters.size() == 0)
+    if (parameters.isEmpty())
     {
       my_writer.indent(LEVEL3);
       my_writer.print("my_objs = new ArrayList<Object>();");
@@ -1134,7 +1134,7 @@ public class TestDataClassGenerator implements Constants
         {
           final JConstructorDeclaration method = (JConstructorDeclaration) methods.get(i);
           final JFormalParameter[] params = method.parameters();
-          final String name = method.ident();
+          final String name = method.ident() + UND + "objects";
           for (int j = 0; j < params.length; j++)
           {
             my_writer.indent(LEVEL1);
@@ -1503,18 +1503,20 @@ public class TestDataClassGenerator implements Constants
       {
 
         my_writer.print(ITR + SQ_BCK_ST + i + SQ_BCK_END + EQUAL + ST_ARR + UND +
-                        the_construct.ident() + UND + params[i].ident() + BKTS + SM_COLN);
+                        the_construct.ident() + "_objects" + UND + params[i].ident() +
+                        BKTS + SM_COLN);
       }
       else if (params[i].typeToString().equals(STR))
       {
         my_writer.print(ITR + SQ_BCK_ST + i + SQ_BCK_END + EQUAL + STR + UND +
-                        the_construct.ident() + UND + params[i].ident() + BKTS + SM_COLN);
+                        the_construct.ident() + "_objects" + UND + params[i].ident() + 
+                        BKTS + SM_COLN);
       }
       else
       {
         my_writer.print(ITR + SQ_BCK_ST + i + SQ_BCK_END + EQUAL +
-                        params[i].typeToString() + UND + the_construct.ident() + UND +
-                        params[i].ident() + BKTS + SM_COLN);
+                        params[i].typeToString() + UND + the_construct.ident() + "_objects" +
+                        UND + params[i].ident() + BKTS + SM_COLN);
       }
     }
 
@@ -1525,7 +1527,7 @@ public class TestDataClassGenerator implements Constants
     for (int i = 0; i < params.length; i++)
     {
 
-      printDataTypeMethod(params[i], the_construct.ident(), true);
+      printDataTypeMethod(params[i], the_construct.ident() + "_objects", true);
 
     }
 
@@ -1689,17 +1691,20 @@ public class TestDataClassGenerator implements Constants
         {
 
           my_writer.print(ITR + SQ_BCK_ST + j + SQ_BCK_END + EQUAL + ST_ARR + UND +
-                          the_construct.ident() + UND + params[j].ident() + BKTS + SM_COLN);
+                          the_construct.ident() + "_objects" + UND + 
+                          params[j].ident() + BKTS + SM_COLN);
         }
         else if (params[j].typeToString().equals(STR))
         {
           my_writer.print(ITR + SQ_BCK_ST + j + SQ_BCK_END + EQUAL + STR + UND +
-                          the_construct.ident() + UND + params[j].ident() + BKTS + SM_COLN);
+                          the_construct.ident() + "_objects" + UND + 
+                          params[j].ident() + BKTS + SM_COLN);
         }
         else
         {
           my_writer.print(ITR + SQ_BCK_ST + j + SQ_BCK_END + EQUAL +
-                          params[j].typeToString() + UND + the_construct.ident() + UND +
+                          params[j].typeToString() + UND + the_construct.ident() + 
+                          "_objects" + UND +
                           params[j].ident() + BKTS + SM_COLN);
         }
         my_writer.indent(LEVEL5);
@@ -1724,17 +1729,20 @@ public class TestDataClassGenerator implements Constants
       {
 
         my_writer.print(ITR + SQ_BCK_ST + j + SQ_BCK_END + EQUAL + ST_ARR + UND +
-                        the_construct.ident() + UND + params[j].ident() + BKTS + SM_COLN);
+                        the_construct.ident() + "_objects" + UND + 
+                        params[j].ident() + BKTS + SM_COLN);
       }
       else if (params[j].typeToString().equals(STR))
       {
         my_writer.print(ITR + SQ_BCK_ST + j + SQ_BCK_END + EQUAL + STR + UND +
-                        the_construct.ident() + UND + params[j].ident() + BKTS + SM_COLN);
+                        the_construct.ident() + "_objects" + UND + 
+                        params[j].ident() + BKTS + SM_COLN);
       }
       else
       {
         my_writer.print(ITR + SQ_BCK_ST + j + SQ_BCK_END + EQUAL +
-                        params[j].typeToString() + UND + the_construct.ident() + UND +
+                        params[j].typeToString() + UND + the_construct.ident() + 
+                        "_objects" + UND +
                         params[j].ident() + BKTS + SM_COLN);
       }
       my_writer.indent(LEVEL5);

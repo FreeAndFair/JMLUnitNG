@@ -42,8 +42,8 @@ public class XMLGenerator implements Constants
   {
 
     my_writer = new Writer(the_path + "testng" + XML_POSTFIX);
-    my_decl = the_decl;
-    my_cunit = the_cunit;
+    my_decl = the_decl.clone();
+    my_cunit = the_cunit.clone();
   }
 
   /**
