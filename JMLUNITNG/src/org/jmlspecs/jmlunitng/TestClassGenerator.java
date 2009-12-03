@@ -170,8 +170,15 @@ public class TestClassGenerator implements Constants
         final String name = generateMethodName(obj);
         printMethodJavaDoc(obj, name);
         my_writer.indent(LEVEL1);
-        my_writer.printOnLine(PUBLIC + SPACE + "void " + name + "(" + "final " +
+        if (construct.parameters().length == 0)
+        {
+          my_writer.printOnLine(PUBLIC + SPACE + "void" + SPACE + name + "(");
+        }
+        else
+        {
+          my_writer.printOnLine(PUBLIC + SPACE + "void " + name + "(" + "final " +
                               the_decl.ident() + SPACE + "the_obj");
+        }
         for (int i = 0; i < construct.parameters().length; i++)
         {
           my_writer.printOnLine("," + " final " + construct.parameters()[i].typeToString() +
@@ -323,7 +330,15 @@ public class TestClassGenerator implements Constants
       my_writer.indent(LEVEL1);
       my_writer.print(JDOC_END);
       my_writer.indent(LEVEL1);
-      my_writer.print("@Test(dataProvider" + " = \"" + the_name + "\"" + ")");
+      if (jConstruct.parameters().length == 0)
+      {
+        my_writer.print("@Test");
+      }
+      else
+      {
+        my_writer.print("@Test(dataProvider" + " = \"" + the_name + "\"" + ")");
+      }
+     
 
     }
     else if (the_method instanceof JMethodDeclaration)

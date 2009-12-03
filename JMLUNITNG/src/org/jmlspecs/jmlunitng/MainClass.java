@@ -15,7 +15,10 @@ import java.util.List;
 import org.jmlspecs.jmlunit.JntOptions;
 import org.jmlspecs.jmlunitng.clops.CmdOptionsOptionsInterface;
 import org.jmlspecs.jmlunitng.clops.CmdOptionsParser;
+import org.multijava.mjc.JClassOrGFImportType;
 import org.multijava.mjc.JCompilationUnit;
+import org.multijava.mjc.JPackageImportType;
+import org.multijava.mjc.JPackageName;
 import org.multijava.mjc.JTypeDeclarationType;
 import org.multijava.mjc.MjcCommonOptions;
 import org.multijava.mjc.ParsingController.ConfigurationException;
@@ -185,6 +188,7 @@ public class MainClass implements Constants
               .isDepricationSet());
       testgen.createTest(decl[0], j_type, my_Main.getMethodIterator(decl[0]));
 
+     
       final TestDataClassGenerator testDataGen =
           new TestDataClassGenerator(path + T_D_FILE_POSTFIX, decl[0], j_type, my_opt
               .isDepricationSet());
