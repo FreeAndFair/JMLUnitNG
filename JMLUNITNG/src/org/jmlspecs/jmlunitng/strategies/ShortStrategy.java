@@ -17,10 +17,10 @@ public class ShortStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Object[] {};
+    return new ParameterIterator(new Short[]{});
   }
 
   /**
@@ -29,9 +29,9 @@ public class ShortStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Short[] {-1, 0, 1, };
+    return new ParameterIterator(new Short[] {-1, 0, 1});
   }
 
   /**
@@ -40,9 +40,9 @@ public class ShortStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Short[] {};
+    return new ParameterIterator(new Short[]{});
   }
 }

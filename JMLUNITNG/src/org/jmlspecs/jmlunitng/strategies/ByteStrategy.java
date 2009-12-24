@@ -2,8 +2,7 @@
 package org.jmlspecs.jmlunitng.strategies;
 
 /**
- * This class provides the strategy to generate the iterator to provide data of
- * type byte.
+ * This is the strategy to handle basic data of type byte.
  * 
  * @author Rinkesh Nagmoti
  * @version 1.0
@@ -17,10 +16,10 @@ public class ByteStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Byte[] {};
+    return new ParameterIterator(new Byte[]{});
   }
 
   /**
@@ -29,20 +28,21 @@ public class ByteStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Byte[] {-1, 0, 1, };
+    return new ParameterIterator(new Byte[]{-1, 0, 1});
   }
 
   /**
-   * This method provides the user data for all Byte strategies.
+   * This method provides the user data for all Integer strategies.
    * 
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Byte[] {};
+    return new ParameterIterator(new Byte[]{});
   }
+
 }

@@ -75,7 +75,7 @@ public class TestListener extends TestListenerAdapter implements Constants
   @Override
   public void onTestSuccess(final ITestResult the_tr)
   {
-    // log(".");
+    log(".");
   }
 
   /**

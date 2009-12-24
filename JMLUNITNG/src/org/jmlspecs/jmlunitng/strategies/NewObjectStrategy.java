@@ -17,10 +17,9 @@ public class NewObjectStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
-
-    return new Object[] {};
+    return new ParameterIterator(new Object[]{});
   }
 
   /**
@@ -29,9 +28,9 @@ public class NewObjectStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Object[] {null, };
+    return new ParameterIterator(new Object[]{ null });
   }
 
   /**
@@ -40,9 +39,9 @@ public class NewObjectStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Object[] {};
+    return new ParameterIterator(new Object[]{});
   }
 }

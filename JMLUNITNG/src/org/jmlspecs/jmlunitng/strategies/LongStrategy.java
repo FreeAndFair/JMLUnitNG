@@ -17,10 +17,10 @@ public class LongStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Object[] {};
+    return new ParameterIterator(new Long[]{});
   }
 
   /**
@@ -29,9 +29,9 @@ public class LongStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Long[] {(long) -1, (long) 0, (long) 1, };
+    return new ParameterIterator(new Long[]{-1L, 0L, 1L});
   }
 
   /**
@@ -40,9 +40,9 @@ public class LongStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Long[] {};
+    return new ParameterIterator(new Long[]{});
   }
 }

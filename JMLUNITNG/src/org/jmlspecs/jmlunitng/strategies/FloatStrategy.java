@@ -17,10 +17,10 @@ public class FloatStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Float[] {};
+    return new ParameterIterator(new Float[]{});
   }
 
   /**
@@ -29,20 +29,20 @@ public class FloatStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Float[] {(float) -1.0, (float) 0.0, (float) 1.0, };
+    return new ParameterIterator(new Float[]{-1.0f, 0.0f, 1.0f});
   }
 
   /**
-   * This method provides the user data for all float strategies.
+   * This method provides the user data for all Long strategies.
    * 
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Float[] {};
+    return new ParameterIterator(new Float[]{});
   }
 }

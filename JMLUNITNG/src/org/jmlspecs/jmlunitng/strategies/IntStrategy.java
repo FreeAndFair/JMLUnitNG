@@ -16,10 +16,10 @@ public class IntStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Integer[] {};
+    return new ParameterIterator(new Integer[]{});
   }
 
   /**
@@ -28,9 +28,9 @@ public class IntStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Integer[] {-1, 0, 1, };
+    return new ParameterIterator(new Integer[]{-1, 0, 1});
   }
 
   /**
@@ -39,10 +39,10 @@ public class IntStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Integer[] {};
+    return new ParameterIterator(new Integer[]{});
   }
 
 }

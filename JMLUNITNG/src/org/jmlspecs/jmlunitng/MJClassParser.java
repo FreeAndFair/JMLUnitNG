@@ -105,7 +105,7 @@ public class MJClassParser extends org.multijava.mjc.Main implements Constants
     }
 
     my_opt.set_generic(true);
-    my_opt.set_multijava(true);
+    my_opt.set_multijava(false);
     my_opt.set_relaxed(true);
     my_parser =
         new MjcParser(this, controller.initialOutputStream(), controller, my_opt.generic(),

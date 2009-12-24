@@ -7,20 +7,13 @@ package org.jmlspecs.jmlunitng.strategies;
  * @author Rinkesh Nagmoti
  * @version 1.0
  */
-public class ParameterIterator
+public class ParameterIterator implements StrategyIterator
 {
   /**
    * This int signifies current element.
    */
   private transient int my_current;
-  /**
-   * This int signifies max element.
-   */
-  private final transient int my_max;
-  /**
-   * This boolean signifies if the iterator is at the last element.
-   */
-  private transient boolean my_end;
+  
   /**
    * This is the array of objects to iterate.
    */
@@ -34,10 +27,7 @@ public class ParameterIterator
   public ParameterIterator(final Object[] the_data)
   {
     my_current = 0;
-    my_max = the_data.length;
-    my_objs = the_data;
-    my_end = false;
-
+    my_objs = the_data.clone();
   }
 
   /**
@@ -58,15 +48,7 @@ public class ParameterIterator
    */
   public boolean atEnd()
   {
-    if (my_current < (my_max))
-    {
-      my_end = false;
-    }
-    else
-    {
-      my_end = true;
-    }
-    return my_end;
+    return my_objs.length <= my_current;
   }
 
   /**
@@ -74,9 +56,9 @@ public class ParameterIterator
    */
   public void advance()
   {
-    if (my_current < (my_max))
+    if (my_current < my_objs.length)
     {
-      my_current++;
+      my_current = my_current + 1;
     }
   }
 }

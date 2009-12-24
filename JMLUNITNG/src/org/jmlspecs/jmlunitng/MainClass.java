@@ -137,13 +137,13 @@ public class MainClass implements Constants
         if (my_opt.isDestinationSet())
         {
           final String dest = my_opt.getDestination();
-          if (dest.endsWith(BCK_SLASH))
+          if (dest.endsWith(File.separator))
           {
             path = dest + file_list.get(i).getName().replaceAll(DOT_JAVA, "");
           }
           else
           {
-            path = dest + BCK_SLASH + file_list.get(i).getName().replaceAll(DOT_JAVA, "");
+            path = dest + File.separator + file_list.get(i).getName().replaceAll(DOT_JAVA, "");
           }
         }
         else
@@ -205,21 +205,21 @@ public class MainClass implements Constants
         if (my_opt.isDestinationSet())
         {
 
-          if (my_opt.getDestination().endsWith(BCK_SLASH))
+          if (my_opt.getDestination().endsWith(File.separator))
           {
             path = my_opt.getDestination();
           }
           else
           {
-            path = my_opt.getDestination() + BCK_SLASH;
+            path = my_opt.getDestination() + File.separator;
           }
         }
         else
         {
           path = file_list.get(0).getPath();
-          final int index = path.lastIndexOf(BCK_SLASH);
+          final int index = path.lastIndexOf(File.separator);
           final String xmlpath = path.substring(0, index);
-          path = xmlpath + BCK_SLASH;
+          path = xmlpath + File.separator;
         }
         xmlgen = new XMLGenerator(declarations, jcunits, path);
         xmlgen.createXML();

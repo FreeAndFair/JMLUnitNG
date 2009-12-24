@@ -2,8 +2,7 @@
 package org.jmlspecs.jmlunitng.strategies;
 
 /**
- * This class provides the strategy to generate the iterator to provide data of
- * type Boolean.
+ * This is the strategy to handle basic data of type boolean.
  * 
  * @author Rinkesh Nagmoti
  * @version 1.0
@@ -17,10 +16,10 @@ public class BooleanStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Boolean[] {};
+    return new ParameterIterator(new Boolean[]{});
   }
 
   /**
@@ -29,20 +28,21 @@ public class BooleanStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Boolean[] {false, true, };
+    return new ParameterIterator(new Boolean[]{false, true});
   }
 
   /**
-   * This method provides the user data for all boolean strategies.
+   * This method provides the user data for all Integer strategies.
    * 
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Boolean[] {};
+    return new ParameterIterator(new Boolean[]{});
   }
+
 }

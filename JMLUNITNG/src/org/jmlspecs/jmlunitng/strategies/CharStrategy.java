@@ -2,8 +2,7 @@
 package org.jmlspecs.jmlunitng.strategies;
 
 /**
- * This class provides the strategy to generate the iterator to provide data of
- * type Char.
+ * This is the strategy to handle basic data of type char.
  * 
  * @author Rinkesh Nagmoti
  * @version 1.0
@@ -17,10 +16,10 @@ public class CharStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Character[] {};
+    return new ParameterIterator(new Character[]{});
   }
 
   /**
@@ -29,20 +28,21 @@ public class CharStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Character[] {null, 'a', };
+    return new ParameterIterator(new Character[]{0, 1});
   }
 
   /**
-   * This method provides the user data for all char strategies.
+   * This method provides the user data for all Integer strategies.
    * 
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Character[] {};
+    return new ParameterIterator(new Character[]{});
   }
+
 }

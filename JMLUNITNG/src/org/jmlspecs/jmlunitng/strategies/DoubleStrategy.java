@@ -17,10 +17,10 @@ public class DoubleStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Double[] {};
+    return new ParameterIterator(new Double[]{});
   }
 
   /**
@@ -29,20 +29,20 @@ public class DoubleStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new Double[] {-1.0, 0.0, 1.0, };
+    return new ParameterIterator(new Double[]{-1.0, 0.0, 1.0});
   }
 
   /**
-   * This method provides the user data for all Double strategies.
+   * This method provides the user data for all Long strategies.
    * 
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
 
-    return new Double[] {};
+    return new ParameterIterator(new Double[]{});
   }
 }

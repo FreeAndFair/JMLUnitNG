@@ -17,10 +17,10 @@ public class StringStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addData()
+  public StrategyIterator addData()
   {
 
-    return new Object[] {};
+    return new ParameterIterator(new String[] {});
   }
 
   /**
@@ -29,9 +29,9 @@ public class StringStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] defaultData()
+  public StrategyIterator defaultData()
   {
-    return new String[] {null, "", };
+    return new ParameterIterator(new String[]{null, ""});
   }
 
   /**
@@ -40,9 +40,8 @@ public class StringStrategy extends AbstractBasicStrategy
    * @return Object[]
    */
   @Override
-  public Object[] addDataForAll()
+  public StrategyIterator addDataForAll()
   {
-
-    return new String[] {};
+    return new ParameterIterator(new String[]{});
   }
 }
