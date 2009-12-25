@@ -70,22 +70,22 @@ public class ForgetfulTestListenerAdapter extends TestListenerAdapter {
 		super.setSkippedTests(skippedTests);
 	}
 	@Override
-	public void onTestFailedButWithinSuccessPercentage(ITestResult tr) {
+	public synchronized void onTestFailedButWithinSuccessPercentage(ITestResult tr) {
 		failed++;
 	}
 
 	@Override
-	public void onTestFailure(ITestResult tr) {
+	public synchronized void onTestFailure(ITestResult tr) {
 		failed++;
 	}
 
 	@Override
-	public void onTestSkipped(ITestResult tr) {
+	public synchronized void onTestSkipped(ITestResult tr) {
 		skipped++;
 	}
 
 	@Override
-	public void onTestSuccess(ITestResult tr) {
+	public synchronized void onTestSuccess(ITestResult tr) {
 		passed++;
 	}
 

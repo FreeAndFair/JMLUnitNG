@@ -215,8 +215,8 @@ public class SuiteRunner implements ISuite, Serializable {
         StringBuffer bufLog= new StringBuffer(getName());
         bufLog.append("\nTotal tests run: ")
             .append(total)
-            .append(", Failures: ").append(m_textReporter.skipped())
-            .append(", Skips: ").append(m_textReporter.failed());;
+            .append(", Failures: ").append(m_textReporter.failed())
+            .append(", Skips: ").append(m_textReporter.skipped());;
         if(confFailures > 0 || confSkips > 0) {
           bufLog.append("\nConfiguration Failures: ").append(confFailures)
               .append(", Skips: ").append(confSkips)
