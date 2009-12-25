@@ -19,7 +19,7 @@ public abstract class AbstractBasicStrategy
    */
   public AbstractBasicStrategy()
   {
-    my_itr = new MultiIterator(defaultData(), addDataForAll(), addData());
+    my_itr = new MultiIterator(addData(), addDataForAll(), defaultData());
   }
 
   /**

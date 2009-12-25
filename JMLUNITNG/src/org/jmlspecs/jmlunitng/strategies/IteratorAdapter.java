@@ -10,10 +10,17 @@ import java.util.Iterator;
  */
 public class IteratorAdapter implements StrategyIterator
 {
+  private int count = 0;
+  
   /**
    * The "current" element.
    */
   private Object my_current;
+  
+  /**
+   * A boolean indicating whether we are at the end or not.
+   */
+  private boolean my_at_end;
   
   /**
    * The iterator.
@@ -28,6 +35,11 @@ public class IteratorAdapter implements StrategyIterator
   public IteratorAdapter(final Iterator<Object> the_iterator)
   {
     my_iterator = the_iterator;
+    if (my_iterator.hasNext())
+    {
+      my_current = my_iterator.next();
+      my_at_end = false;
+    }
   }
   
   /**
@@ -35,15 +47,24 @@ public class IteratorAdapter implements StrategyIterator
    */
   public void advance()
   {
+    count++;
     if (my_iterator.hasNext())
     {
       my_current = my_iterator.next();
+    }
+    else if (my_at_end)
+    {
+      throw new IllegalArgumentException("invalid call");
+    }
+    else
+    {
+      my_at_end = true;
     }
   }
 
   public boolean atEnd()
   {
-    return !my_iterator.hasNext();
+    return my_at_end;
   }
 
   public Object get()

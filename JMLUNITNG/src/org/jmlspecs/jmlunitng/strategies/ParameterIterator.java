@@ -37,7 +37,14 @@ public class ParameterIterator implements StrategyIterator
    */
   public Object get()
   {
-    return my_objs[my_current];
+    if (!atEnd())
+    {
+      return my_objs[my_current];
+    }
+    else
+    {
+      throw new IllegalArgumentException("invalid call");
+    }
   }
 
   /**
@@ -59,6 +66,10 @@ public class ParameterIterator implements StrategyIterator
     if (my_current < my_objs.length)
     {
       my_current = my_current + 1;
+    }
+    else
+    {
+      throw new IllegalArgumentException("invalid call");
     }
   }
 }

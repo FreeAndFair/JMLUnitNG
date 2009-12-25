@@ -25,14 +25,15 @@ public class ShortFormTestListener extends TestListenerAdapter {
     log(".");
   }
  
-  private void log(String string) {
-    System.out.print(string);
-    if (m_count % 40 == 0) {
+  private synchronized void log(String string) {
+    boolean new_line = m_count++ % 40 == 0;
+    
+    if ((m_count - 1) % 100000 == 0 && m_count != 1) {
+      System.out.println("\n" + (m_count - 1) + " tests completed" + "\n");
+    }
+    else if (new_line) {
       System.out.println("");
     }
-    if (m_count % 100000 == 0) {
-      System.out.println("\n" + m_count + " tests completed" + "\n");
-    }
-    m_count++;
+    System.out.print(string);
   }
 }

@@ -38,7 +38,7 @@ public class MultiIterator implements StrategyIterator
   /* (non-Javadoc)
    * @see org.jmlspecs.jmlunitng.strategies.StrategyIterator#get()
    */
-  public Object get()
+  public final Object get()
   {
     if (!atEnd())
     {
@@ -53,38 +53,39 @@ public class MultiIterator implements StrategyIterator
   /* (non-Javadoc)
    * @see org.jmlspecs.jmlunitng.strategies.StrategyIterator#atEnd()
    */
-  public boolean atEnd()
+  public final boolean atEnd()
   {
-    // "at the end" means we're on the last iterator, and it's at the end,
-    // or we're past the last iterator
+    // "at the end" means we're past the last iterator or 
+    // have no iterators left with items
     
-    boolean result = my_iterators.length <= my_current_iterator;
-    result = result || 
-             (my_current_iterator == my_iterators.length - 1 &&
-              my_iterators[my_current_iterator].atEnd());
-    return result;
+    boolean no_more_items = true;
+    for (int i = my_current_iterator; i < my_iterators.length; i++)
+    {
+      no_more_items = no_more_items && my_iterators[i].atEnd();
+    }
+    
+    return no_more_items;
   }
 
   /* (non-Javadoc)
    * @see org.jmlspecs.jmlunitng.strategies.StrategyIterator#advance()
    */
-  public void advance()
+  public final void advance()
   {
     if (atEnd())
     {
       throw new IllegalStateException("invalid call");
     }
-    else if (my_iterators[my_current_iterator].atEnd())
-    {
-      while (my_current_iterator < my_iterators.length && 
-             my_iterators[my_current_iterator].atEnd())
-      {
-        my_current_iterator = my_current_iterator + 1;
-      }
-    }
-    else
+    
+    if (!my_iterators[my_current_iterator].atEnd())
     {
       my_iterators[my_current_iterator].advance();
+    }
+    
+    while (my_current_iterator < my_iterators.length && 
+           my_iterators[my_current_iterator].atEnd())
+    {
+      my_current_iterator = my_current_iterator + 1;
     }
   }
 }
