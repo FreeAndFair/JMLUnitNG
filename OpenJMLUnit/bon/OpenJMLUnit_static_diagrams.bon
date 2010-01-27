@@ -1,0 +1,35 @@
+-- OpenJMLUnit
+-- Copyright (C) 2010 Daniel M. Zimmerman
+
+-- ===================================================================
+-- Static Diagrams
+-- ===================================================================
+static_diagram BUILT_IN_BON_TYPES
+  component
+    effective class BOOLEAN reused
+    effective class VALUE reused
+    effective class INTEGER reused
+    effective class REAL reused
+    effective class SEQUENCE reused
+    effective class SET reused
+end
+
+static_diagram STRATEGY_RELATIONS
+  component
+    cluster STRATEGY reused
+    cluster ITERATORS reused
+    
+    deferred class BASIC_STRATEGY reused
+    class REPEATED_ACCESS_ITERATOR reused
+    BASIC_STRATEGY client REPEATED_ACCESS_ITERATOR
+    BOOLEAN_STRATEGY inherit BASIC_STRATEGY
+    BYTE_STRATEGY inherit BASIC_STRATEGY
+    CHAR_STRATEGY inherit BASIC_STRATEGY
+    DOUBLE_STRATEGY inherit BASIC_STRATEGY
+    FLOAT_STRATEGY inherit BASIC_STRATEGY
+    INT_STRATEGY inherit BASIC_STRATEGY
+    LONG_STRATEGY inherit BASIC_STRATEGY
+    OBJECT_STRATEGY inherit BASIC_STRATEGY
+    SHORT_STRATEGY inherit BASIC_STRATEGY
+    STRING_STRATEGY inherit BASIC_STRATEGY
+end

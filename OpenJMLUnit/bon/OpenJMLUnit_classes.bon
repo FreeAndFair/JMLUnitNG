@@ -1,0 +1,186 @@
+-- OpenJMLUnit
+-- Copyright (C) 2010 Daniel M. Zimmerman
+
+-- ===================================================================
+-- Built-in BON types
+-- ===================================================================
+
+class_chart TUPLE
+end
+
+class_chart BOOLEAN
+end
+
+class_chart VALUE
+end
+
+class_chart INTEGER
+end
+
+class_chart REAL
+end
+
+class_chart STRING
+end
+
+class_chart SEQUENCE
+end
+
+class_chart SET
+end
+
+class_chart BAG
+end
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- CLOPS cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class_chart OPENJMLUNIT_OPTIONS_INTERFACE
+end
+
+class_chart OPENJMLUNIT_OPTIONS_STORE
+end
+
+class_chart OPENJMLUNIT_PARSER
+end
+
+class_chart OPENJMLUNIT_RULE_STORE
+end
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- GENERATOR cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class_chart CLASS_INFO
+  query
+    "What is the class name?",
+    "What is the protection level?",
+    "What is the info for the class's parent class?",
+    "Is the class abstract?",
+    "What are the constructors?",
+    "What are the factory methods?",
+    "What are the non-factory static methods?",
+    "What are the inherited instance methods?",
+    "What are the non-inherited instance methods?",
+    "What are the testable methods?"
+  command
+    "You represent class the_class!"
+  constraint
+    "The name is non-null and non-empty.",
+    "The protection level is a valid Java protection level.",
+    "The info for the parent class is null if and only if the class \
+   \ is 'java.lang.Object'.",
+    "There is at least one constructor."
+end
+
+class_chart METHOD_INFO
+  query
+    "What is the method name?",
+    "What is the info for the class the method belongs to?",
+    "What is the info for the class the method is declared in?",
+    "What is the protection level?",
+    "What are the parameter types?",
+    "What is the return type?",
+    "Is the method a constructor?",
+    "Is the method a factory?",
+    "Is the method static?",
+    "Is the method testable?",
+    "Is the method inherited?"
+  command
+    "You represent method the_method!"
+  constraint
+    "The classes the method belongs to and is declared in are non-null.",
+    "The method name is non-null and non-empty.",
+    "The protection level is a valid Java protection level.",
+    "The return type is null if and only if the Java return type is 'void'.",
+    "A method cannot be both a constructor and static.",
+    "A method is a factory if and only if it is static and its return type is\
+   \ the same as the class it belongs to or an abstract parent class thereof.",
+    "A method is testable if and only if it has a non-private protection level and \
+   \ is not (and does not override) one of the following methods from java.lang.Object:\
+   \ finalize, getClass, notify, notifyAll, wait.",
+    "A method is inherited if and only if the class it belongs to and the class\
+   \ in which it is declared are different classes."
+end
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- STRATEGY cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class_chart BASIC_STRATEGY
+  query
+    "What is your default set of values?",
+    "What is your custom set of values?",
+    "What is your global set of values?",
+    "What is an iterator over all your sets of values?"
+  constraint
+    "The iterator over all sets of values must have a finite number of elements."
+end
+
+class_chart BOOLEAN_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'boolean'."
+end
+
+class_chart BYTE_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'byte'."
+end
+
+class_chart CHAR_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'char'."
+end
+
+class_chart DOUBLE_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'double'."
+end
+
+class_chart FLOAT_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'float'."
+end
+
+class_chart INT_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'int'."
+end
+
+class_chart LONG_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'long'."
+end
+
+class_chart OBJECT_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'Object'."
+end
+
+class_chart SHORT_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'short'."
+end
+
+class_chart STRING_STRATEGY
+  constraint
+    "All values in all sets of values are assignable to Java type 'String'."
+end
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ITERATORS cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- TESTNG cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- TOOL cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class_chart MAIN
+  command
+    "Run the tool with this command line!"
+end
