@@ -33,3 +33,43 @@ static_diagram STRATEGY_RELATIONS
     SHORT_STRATEGY inherit BASIC_STRATEGY
     STRING_STRATEGY inherit BASIC_STRATEGY
 end
+
+static_diagram ITERATOR_RELATIONS
+  component
+--    cluster ITERATORS reused
+-- really? it isn't a duplicate as far as I can tell    
+--    deferred class REPEATED_ACCESS_ITERATOR reused
+-- really? it isn't a duplicate as far as I can tell
+    ITERATOR_ADAPTER inherit REPEATED_ACCESS_ITERATOR
+    MULTI_ITERATOR inherit REPEATED_ACCESS_ITERATOR
+    MULTI_ITERATOR client REPEATED_ACCESS_ITERATOR
+    OBJECT_ARRAY_ITERATOR inherit REPEATED_ACCESS_ITERATOR
+    OBJECT_ARRAY_ITERATOR client REPEATED_ACCESS_ITERATOR
+end
+
+static_diagram TEST_LISTENER_RELATIONS
+  component
+    cluster TESTNG reused
+    
+    class MINIMAL_TEST_LISTENER reused
+    BASIC_TEST_LISTENER inherit MINIMAL_TEST_LISTENER
+    FULL_TEST_LISTENER inherit MINIMAL_TEST_LISTENER
+end
+
+static_diagram GENERATOR_RELATIONS
+  component
+    cluster GENERATOR reused
+
+    class CLASS_INFO reused
+    class METHOD_INFO reused
+    class SOURCE_WRITER reused
+    METHOD_INFO client CLASS_INFO
+    CLASS_INFO client METHOD_INFO
+    TEST_CLASS_GENERATOR client CLASS_INFO
+    TEST_CLASS_GENERATOR client METHOD_INFO
+    TEST_CLASS_GENERATOR client SOURCE_WRITER
+    TEST_DATA_CLASS_GENERATOR client CLASS_INFO
+    TEST_DATA_CLASS_GENERATOR client METHOD_INFO
+    TEST_DATA_CLASS_GENERATOR client SOURCE_WRITER
+    XML_GENERATOR client CLASS_INFO
+end
