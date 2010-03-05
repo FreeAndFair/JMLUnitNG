@@ -121,6 +121,7 @@ class_chart SOURCE_WRITER
     "The indent level is at least 0.",
     "A Java block cannot be started inside a Javadoc block.",
     "A Java block cannot be ended if one is not in progress.",
+    "A Java block cannot be ended if a Javadoc block is in progress.",
     "A Javadoc block cannot be ended if one is not in progress."
 end
 

@@ -86,14 +86,14 @@ cluster_chart STRATEGY
     description "A test data generation strategy for the Java type 'String'."
 end
 
-cluster_chart ITERATORS
+cluster_chart ITERATOR
   class ITERATOR_ADAPTER
     description "An adapter that turns a standard Java iterator into a repeated access iterator."
   class MULTI_ITERATOR
     description "A repeated access iterator that combines one or more other iterators."
   class OBJECT_ARRAY_ITERATOR
-    description "An iterator that generates arrays of objects by reflectively using iterator\
-               \ generation methods to refresh individual array element iterators."
+    description "A reperated access iterator that generates arrays of objects by reflectively \
+               \ using iterator generation methods to refresh individual array element iterators."
   class REPEATED_ACCESS_ITERATOR
     description "An iterator that supports accessing the current value multiple times."
 end
@@ -123,7 +123,7 @@ cluster_chart TOOL
     description "Generate test classes."
   cluster STRATEGY
     description "Test data generation strategies for Java types."
-  cluster ITERATORS
+  cluster ITERATOR
     description "Iterator types used by the tool."
   cluster TESTNG
     description "Support components for TestNG."
