@@ -10,39 +10,61 @@
 
 package org.jmlspecs.openjmlunit.generator;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A wrapper for a Class object that represents the Class in terms
- * of ClassInfo and MethodInfo objects.
+ * Information about a class under test.
+ * 
  * @author Jonathan Hogins
+ * @version April 2010
  */
 public class ClassInfo {
   /**
-   * The class object for this class.
+   * The name of this class.
    */
-  private final Class<?> my_class;
+  private final String my_name;
+  //@ invariant my_parent == null ^ my_name.equals("java.lang.Object");
+  /**
+   * The parent ClassInfo object.
+   */
+  private final ClassInfo my_parent;
+  /**
+   * The ProtectionLevel of this class.
+   */
+  private final ProtectionLevel my_protection_level;
+  /**
+   * Is this class abstract?
+   */
+  private final boolean my_is_abstract;
+  /*@ invariant (\exists MethodInfo m; my_method_infos.contains(m);
+    @ m.isConstructor()) */
   /**
    * The MethodInfo objects or the methods of this class.
    */
-  private final ArrayList<MethodInfo> my_method_infos;
+  private final List<MethodInfo> my_method_infos;
 
   /**
-   * Constructor for a ClassInfo object for class the_class
+   * Constructor for a ClassInfo object given the describing parameters. For use
+   * by factory classes.
    * 
-   * @param the_class The class that this ClassInfo should represent.
+   * @param the_name The name of the class.
+   * @param the_protection_level The protection level of the class.
+   * @param the_is_abstract Is this class abstract?
+   * @param the_method_infos The methods of this class.
+   * @param the_parent The ClassInfo object for this class' parent. May be null
+   *          only if the class is java.lang.Object.
    */
-  public ClassInfo(Class<?> the_class) {
-    my_class = the_class;
-    Method[] methods = the_class.getMethods();
-    my_method_infos = new ArrayList<MethodInfo>(methods.length);
-    for (Method m : methods) {
-      my_method_infos.add(new MethodInfo(m, the_class));
-    }
+  //@ requires the_parent != null || (the_parent == null && the_name == "Object");
+  protected ClassInfo(final String the_name, final ProtectionLevel the_protection_level,
+                      final boolean the_is_abstract, final List<MethodInfo> the_method_infos,
+                      final/*@ nullable */ClassInfo the_parent) {
+    my_name = the_name;
+    my_protection_level = the_protection_level;
+    my_is_abstract = the_is_abstract;
+    my_method_infos = Collections.unmodifiableList(the_method_infos);
+    my_parent = the_parent;
   }
 
   /**
@@ -50,28 +72,26 @@ public class ClassInfo {
    * 
    * @return The name of the class
    */
-  public/* @pure */String getName() {
-    return my_class.getName();
+  public/*@pure*/String getName() {
+    return my_name;
+  }
+  
+  /**
+   * Returns the ClassInfo for this ClassInfo's parent. Returns null if
+   * this ClassInfo represents java.lang.Object.
+   * @return This ClassInfo's parent.
+   */
+  public/*@pure*/ClassInfo getParent() {
+    return my_parent;
   }
 
   /**
-   * Returns the protection level of the class. Currently, the return value
-   * is an integer representation the class' modifiers. To decode, use the
-   * Modifier class.
+   * Returns the protection level of the class.
    * 
    * @return The protection level of the class.
    */
-  public/* @pure */int getProtectionLevel() {
-    return my_class.getModifiers();
-  }
-
-  /**
-   * Returns the class represented by this object.
-   * 
-   * @return The class passed into this object's constructor.
-   */
-  public/* @ pure */Class<?> getRepresentedClass() {
-    return my_class;
+  public/*@pure */ProtectionLevel getProtectionLevel() {
+    return my_protection_level;
   }
 
   // "What is the info for the class's parent class?",
@@ -80,11 +100,8 @@ public class ClassInfo {
    * 
    * @return The ClassInfo for the class' super-class.
    */
-  /*
-   * @ \result
-   */
-  public/* @pure */ClassInfo getSuperClassInfo() {
-    return new ClassInfo(my_class.getSuperclass());
+  public/*@pure */ClassInfo getSuperClassInfo() {
+    return null;
   }
 
   // "Is the class abstract?",
@@ -93,9 +110,9 @@ public class ClassInfo {
    * 
    * @return True if the class is abstract, false otherwise.
    */
-  /* @ \result == (getRepresentedClass().getModifiers() && Modifiers.ABSTRACT) */
-  public/* @ pure */boolean isAbstract() {
-    return (my_class.getModifiers() & Modifier.ABSTRACT) > 0;
+  /*@ \result == (getRepresentedClass().getModifiers() && Modifiers.ABSTRACT) */
+  public/*@ pure */boolean isAbstract() {
+    return my_is_abstract;
   }
 
   // "What are the constructors?",
@@ -106,11 +123,9 @@ public class ClassInfo {
    * 
    * @return A List of MethodInfo objects.
    */
-  /*
-   * @ (\foreach MethodInfo m; \result.contains(m); m.isFactory())
-   */
+  /*@ (\foreach MethodInfo m; \result.contains(m); m.isFactory())*/
   public List<MethodInfo> getFactoryMethods() {
-    List<MethodInfo> result = new LinkedList<MethodInfo>();
+    final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
       if (m.isFactory()) {
         result.add(m);
@@ -126,12 +141,10 @@ public class ClassInfo {
    * 
    * @return A List of MethodInfo objects.
    */
-  /*
-   * @ (\foreach MethodInfo m; \result.contains(m);
-   * @    m.isStatic() && !m.isFactory)
-   */
+  /*@ (\foreach MethodInfo m; \result.contains(m);
+   *@ m.isStatic() && !m.isFactory)*/
   public List<MethodInfo> getNonFactoryStaticMethods() {
-    List<MethodInfo> result = new LinkedList<MethodInfo>();
+    final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
       if (m.isStatic() && !m.isFactory()) {
         result.add(m);
@@ -147,10 +160,9 @@ public class ClassInfo {
    * 
    * @return A List of MethodInfo objects.
    */
-  /* @ (\foreach MethodInfo m; \result.contains(m); m.isInherited())
-   */
+  /*@ (\foreach MethodInfo m; \result.contains(m); m.isInherited())*/
   public List<MethodInfo> getInheritedMethods() {
-    List<MethodInfo> result = new LinkedList<MethodInfo>();
+    final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
       if (m.isInherited()) {
         result.add(m);
@@ -158,17 +170,17 @@ public class ClassInfo {
     }
     return result;
   }
+
   // "What are the non-inherited instance methods?",
   /**
-   * Returns a List of MethodInfo objects that represent the non-inherited methods
-   * of the class.
+   * Returns a List of MethodInfo objects that represent the non-inherited
+   * methods of the class.
    * 
    * @return A List of MethodInfo objects.
    */
-  /* @ (\foreach MethodInfo m; \result.contains(m); !m.isInherited())
-   */
+  /*@ (\foreach MethodInfo m; \result.contains(m); !m.isInherited())*/
   public List<MethodInfo> getNonInheritedMethods() {
-    List<MethodInfo> result = new LinkedList<MethodInfo>();
+    final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
       if (!m.isInherited()) {
         result.add(m);
@@ -179,15 +191,14 @@ public class ClassInfo {
 
   // "What are the testable methods?"
   /**
-   * Returns a List of MethodInfo objects that represent the testable methods
-   * of the class. For a definition of testable, see MethodInfo.isTestable().
+   * Returns a List of MethodInfo objects that represent the testable methods of
+   * the class. For a definition of testable, see MethodInfo.isTestable().
    * 
    * @return A List of MethodInfo objects.
    */
-  /* @ (\foreach MethodInfo m; \result.contains(m); !m.isInherited())
-   */
+  /*@ (\foreach MethodInfo m; \result.contains(m); !m.isInherited())*/
   public List<MethodInfo> getTestableMethods() {
-    List<MethodInfo> result = new LinkedList<MethodInfo>();
+    final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
       if (!m.isTestable()) {
         result.add(m);
@@ -195,9 +206,5 @@ public class ClassInfo {
     }
     return result;
   }
-  // constraint
-  // "The info for the parent class is null if and only if the class \
-  // \ is 'java.lang.Object'.",
-  // "There is at least one constructor."
 
 }

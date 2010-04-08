@@ -49,6 +49,8 @@ end
 cluster_chart GENERATOR
   class CLASS_INFO
     description "Information about a class under test."
+  class INFO_FACTORY
+  	description "Factory class that generates CLASS_INFO and METHOD_INFO objects."
   class METHOD_INFO
     description "Information about a method under test."
   class SOURCE_WRITER
