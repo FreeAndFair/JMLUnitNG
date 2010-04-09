@@ -76,7 +76,6 @@ end
 
 class_chart INFO_FACTORY
   command
-  	"Create a CLASS_INFO object for the given .java File!",
     "Create a CLASS_INFO object for the given JCTree!",
     "Create a CLASS_INFO object for the given Class!",
     "Create a List<METHOD_INFO> objects for the given JCTree!"

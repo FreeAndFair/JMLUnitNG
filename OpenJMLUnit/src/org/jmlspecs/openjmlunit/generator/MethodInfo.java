@@ -129,7 +129,7 @@ public class MethodInfo {
     my_is_factory = determineIsFactory();
     my_is_testable =
         !my_protection_level.equals(ProtectionLevel.PRIVATE) &&
-            UNTESTABLE_METHOD_NAMES.contains(my_name);
+            !UNTESTABLE_METHOD_NAMES.contains(my_name);
   }
 
   /**

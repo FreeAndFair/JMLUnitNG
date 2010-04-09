@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="lib/jmlruntime.jar"/>
 	<classpathentry kind="lib" path="lib/jmlspecs.jar"/>
-	<classpathentry kind="lib" path="lib/openjml.jar"/>
+	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJDK"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

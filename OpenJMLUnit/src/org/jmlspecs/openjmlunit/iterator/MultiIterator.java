@@ -19,7 +19,7 @@ import java.util.List;
  * @author Daniel M. Zimmerman
  * @version March 2010
  */
-public class MultiIterator implements RepeatedAccessIterator {
+public class MultiIterator extends Object implements RepeatedAccessIterator {
   // Commands
 
   // @command "Embed the_list_of_iterators into a single iterator!"
@@ -57,7 +57,7 @@ public class MultiIterator implements RepeatedAccessIterator {
   /**
    * Advances the MultiIterator to the next value in the sequence.
    */
-  /* @ requires hasMoreElements() */
+  /*@ requires hasMoreElements(); */
   @Override
   public void advance() {
     internalAdvance();
@@ -69,7 +69,7 @@ public class MultiIterator implements RepeatedAccessIterator {
    * @return The current element.
    */
   @Override
-  public/* @ pure */Object element() {
+  public/*@ pure */Object element() {
     return my_current_element;
   }
 
@@ -79,7 +79,7 @@ public class MultiIterator implements RepeatedAccessIterator {
    * @return True if there are more elements in the sequence. False otherwise.
    */
   @Override
-  public/* @ pure */boolean hasMoreElements() {
+  public/*@ pure */boolean hasMoreElements() {
     return my_current_iterator.element() != null &&
            (my_current_iterator.element().hasNext() || my_current_iterator.hasMoreElements());
   }
@@ -89,8 +89,7 @@ public class MultiIterator implements RepeatedAccessIterator {
    * advance method to be called from the constructor while allowing the public
    * advance() to be non-final.
    */
-  /*@ helper;
-   *@ requires hasMoreElements(); */
+  /*@ requires hasMoreElements(); */
   private void internalAdvance() {
     //proceed in the sequence until the first element is found or the end is reached.
     while (!my_current_iterator.element().hasNext() && my_current_iterator.hasMoreElements()) {

@@ -200,7 +200,7 @@ public class ClassInfo {
   public List<MethodInfo> getTestableMethods() {
     final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
-      if (!m.isTestable()) {
+      if (m.isTestable()) {
         result.add(m);
       }
     }
