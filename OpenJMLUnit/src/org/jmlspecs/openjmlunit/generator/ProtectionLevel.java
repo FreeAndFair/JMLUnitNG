@@ -11,5 +11,7 @@ public enum ProtectionLevel {
   /** The protected protection level. **/
   PROTECTED,
   /** The private protection level. **/
-  PRIVATE
+  PRIVATE,
+  /** No protection level specified. **/
+  NO_LEVEL
 }

@@ -56,7 +56,7 @@ class_chart CLASS_INFO
   query
     "What is the class name?",
     "What is the protection level?",
-    "What is the info for the class's parent class?",
+    "What is the info for the class's Superclass?",
     "Is the class abstract?",
     "What are the constructors?",
     "What are the factory methods?",

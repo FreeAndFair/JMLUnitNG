@@ -39,7 +39,7 @@ public class ClassInfo {
    */
   private final boolean my_is_abstract;
   /*@ invariant (\exists MethodInfo m; my_method_infos.contains(m);
-    @ m.isConstructor()) */
+    @           m.isConstructor()); */
   /**
    * The MethodInfo objects or the methods of this class.
    */
@@ -49,14 +49,14 @@ public class ClassInfo {
    * Constructor for a ClassInfo object given the describing parameters. For use
    * by factory classes.
    * 
-   * @param the_name The name of the class.
+   * @param the_name The fully qualified name of the class.
    * @param the_protection_level The protection level of the class.
    * @param the_is_abstract Is this class abstract?
    * @param the_method_infos The methods of this class.
    * @param the_parent The ClassInfo object for this class' parent. May be null
-   *          only if the class is java.lang.Object.
+   *          only if the class name is java.lang.Object.
    */
-  //@ requires the_parent != null || (the_parent == null && the_name == "Object");
+  //@ requires the_parent == null ==> the_name.equals("java.lang.Object");
   protected ClassInfo(final String the_name, final ProtectionLevel the_protection_level,
                       final boolean the_is_abstract, final List<MethodInfo> the_method_infos,
                       final/*@ nullable */ClassInfo the_parent) {
@@ -68,7 +68,7 @@ public class ClassInfo {
   }
 
   /**
-   * Returns the name of the class.
+   * Returns the fully qualified name of the class.
    * 
    * @return The name of the class
    */
@@ -94,14 +94,14 @@ public class ClassInfo {
     return my_protection_level;
   }
 
-  // "What is the info for the class's parent class?",
+  // "What is the info for the class's Superclass?",
   /**
-   * Returns the ClassInfo object for the class' super-class.
+   * Returns the ClassInfo object for the class' Superclass.
    * 
-   * @return The ClassInfo for the class' super-class.
+   * @return The ClassInfo for the class' Superclass.
    */
-  public/*@pure */ClassInfo getSuperClassInfo() {
-    return null;
+  public/*@pure */ClassInfo getSuperclassInfo() {
+    return my_parent;
   }
 
   // "Is the class abstract?",
@@ -110,7 +110,6 @@ public class ClassInfo {
    * 
    * @return True if the class is abstract, false otherwise.
    */
-  /*@ \result == (getRepresentedClass().getModifiers() && Modifiers.ABSTRACT) */
   public/*@ pure */boolean isAbstract() {
     return my_is_abstract;
   }
@@ -123,7 +122,7 @@ public class ClassInfo {
    * 
    * @return A List of MethodInfo objects.
    */
-  /*@ (\foreach MethodInfo m; \result.contains(m); m.isFactory())*/
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isFactory()); */
   public List<MethodInfo> getFactoryMethods() {
     final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
@@ -141,8 +140,8 @@ public class ClassInfo {
    * 
    * @return A List of MethodInfo objects.
    */
-  /*@ (\foreach MethodInfo m; \result.contains(m);
-   *@ m.isStatic() && !m.isFactory)*/
+  /*@ ensures (\forall MethodInfo m; \result.contains(m);
+    @           m.isStatic() && !m.isFactory()); */
   public List<MethodInfo> getNonFactoryStaticMethods() {
     final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
@@ -160,7 +159,7 @@ public class ClassInfo {
    * 
    * @return A List of MethodInfo objects.
    */
-  /*@ (\foreach MethodInfo m; \result.contains(m); m.isInherited())*/
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
   public List<MethodInfo> getInheritedMethods() {
     final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
@@ -178,7 +177,7 @@ public class ClassInfo {
    * 
    * @return A List of MethodInfo objects.
    */
-  /*@ (\foreach MethodInfo m; \result.contains(m); !m.isInherited())*/
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
   public List<MethodInfo> getNonInheritedMethods() {
     final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
@@ -196,7 +195,7 @@ public class ClassInfo {
    * 
    * @return A List of MethodInfo objects.
    */
-  /*@ (\foreach MethodInfo m; \result.contains(m); !m.isInherited())*/
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
   public List<MethodInfo> getTestableMethods() {
     final List<MethodInfo> result = new LinkedList<MethodInfo>();
     for (MethodInfo m : my_method_infos) {
@@ -205,6 +204,14 @@ public class ClassInfo {
       }
     }
     return result;
+  }
+  
+  /**
+   * Returns the fully qualified name of the class.
+   * @return The name of the class.
+   */
+  public String toString() {
+    return getName();
   }
 
 }

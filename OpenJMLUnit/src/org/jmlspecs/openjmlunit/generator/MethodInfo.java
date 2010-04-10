@@ -79,10 +79,7 @@ public class MethodInfo {
    * Is the method inherited?
    */
   private boolean my_is_inherited;
-
-  /*@ invariant my_is_factory ==  isStatic() &&
-    @  getMethod().getClass().isAssignableFrom(my_method.getReturnType();
-  */
+  
   /**
    * Is the method a factory?
    */
@@ -110,7 +107,7 @@ public class MethodInfo {
    * @param the_is_constructor Is the method a constructor?
    * @param the_is_static Is the method static?
    */
-  //@ requires !the_is_constructor || !the_is_static
+  //@ requires !the_is_constructor || !the_is_static;
   public MethodInfo(final String the_name, final ClassInfo the_parent_class,
                     final ClassInfo the_declaring_class,
                     final ProtectionLevel the_protection_level,
@@ -252,7 +249,7 @@ public class MethodInfo {
     //decide if factory
     ClassInfo cur = my_declaring_class;
     while (cur != null && my_name.equals(cur.getName())) {
-      cur = cur.getSuperClassInfo();
+      cur = cur.getSuperclassInfo();
     }
     return my_is_static && cur != null;
   }
