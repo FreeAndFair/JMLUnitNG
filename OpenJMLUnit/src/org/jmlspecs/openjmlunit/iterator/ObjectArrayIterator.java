@@ -51,7 +51,7 @@ public class ObjectArrayIterator implements RepeatedAccessIterator {
    * @throws IllegalArgumentException A MethodInfo in the list has a return type
    *           that is does not match java.util.Iterator<?>.
    */
-  /*@ signals (IllegalArgumentException e) (e ==> 
+  /*@ signals (IllegalArgumentException e)
     @         (\exists MethodInfo m; the_iterator_generators.contains(m); 
     @           !isIterator(m.getReturnType()));
    */

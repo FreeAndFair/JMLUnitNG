@@ -211,8 +211,8 @@ public class SourceWriter {
     @         (\old (my_block_level) == my_block_level - 1);
    */
   public void startJavaBlock() throws IOException {
-    incrementIndentLevel();
     writeLine(BLOCK_START);
+    incrementIndentLevel();
     my_block_level++;
   }
 
