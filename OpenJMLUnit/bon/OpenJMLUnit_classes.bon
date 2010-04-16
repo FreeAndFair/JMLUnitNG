@@ -161,10 +161,9 @@ end
  
 class_chart XML_GENERATOR
   command
-    "You will be generating test XML for testing the_class_list!",
-    "Write the generated XML to the_writer!"
+    "Write a TestNG XML test for the_class to the_writer!"
+    "Write a TestNG XML test for the_classes to the_writer!"
   constraint
-    "The elements of the class list used for generating text XML must exist."
 end
     
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

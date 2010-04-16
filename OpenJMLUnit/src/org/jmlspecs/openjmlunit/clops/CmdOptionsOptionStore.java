@@ -15,6 +15,7 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
 
   private final StringOption ogDestination;
   private final FileListOption ogList;
+  private final FileListOption ogClasspath;
   private final BooleanOption ogHelp;
   private final FileListOption ogPackage;
   private final BooleanOption ogUniverses;
@@ -52,6 +53,13 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     ogPackage.setProperty("mustbedir", "true");
     ogPackage.setProperty("allowdash", "true");
     ogPackage.setProperty("aliases", "-p,--package");
+    ogClasspath = new FileListOption("Classpath", "(?:-c)|(?:--classpath)");
+    addOption(ogClasspath);
+    ogClasspath.setProperty("allowmultiple", "true");
+    ogClasspath.setProperty("splitter", ",");
+    ogClasspath.setProperty("mustbedir", "true");
+    ogClasspath.setProperty("allowdash", "true");
+    ogClasspath.setProperty("aliases", "-c,--classpath");
     ogUniverses = new BooleanOption("Universes", "(?:-u)|(?:--universes)");
     addOption(ogUniverses);
     ogUniverses.setProperty("aliases", "-u,--universes");
@@ -95,6 +103,7 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     ogOption.addOptionOrGroup(ogPackage);
     ogOption.addOptionOrGroup(ogProtected);
     ogOption.addOptionOrGroup(ogList);
+    ogOption.addOptionOrGroup(ogClasspath);
     ogOption.addOptionOrGroup(ogUniversesx);
     ogOption.addOptionOrGroup(ogDestination);
     ogOption.addOptionOrGroup(ogPublic);
@@ -104,6 +113,7 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     ogAllOptions.addOptionOrGroup(ogList);
     ogAllOptions.addOptionOrGroup(ogHelp);
     ogAllOptions.addOptionOrGroup(ogPackage);
+    ogAllOptions.addOptionOrGroup(ogClasspath);
     ogAllOptions.addOptionOrGroup(ogUniverses);
     ogAllOptions.addOptionOrGroup(ogDeprication);
     ogAllOptions.addOptionOrGroup(ogSafeMath);
@@ -168,6 +178,34 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
   public FileListOption getListOption()
   {
     return ogList;
+  }
+
+  // Option Classpath.
+  // Aliases: [-c, --classpath]
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isClasspathSet()
+  {
+    return ogClasspath.hasValue();
+  }
+
+  /** {@inheritDoc} */
+  public List<java.io.File> getClasspath()
+  {
+    return ogClasspath.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public List<java.io.File> getRawClasspath()
+  {
+    return ogClasspath.getRawValue();
+  }
+
+  public FileListOption getClasspathOption()
+  {
+    return ogClasspath;
   }
 
   // Option Help.

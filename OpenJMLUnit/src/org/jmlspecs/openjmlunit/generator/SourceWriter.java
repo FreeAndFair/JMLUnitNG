@@ -16,6 +16,7 @@ package org.jmlspecs.openjmlunit.generator;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,27 +34,27 @@ public class SourceWriter {
   /**
    * The java block start character.
    */
-  private static final String BLOCK_START = "{";
+  public static final String BLOCK_START = "BLOCK_START";
   /**
    * The java block end character.
    */
-  private static final String BLOCK_END = "}";
+  public static final String BLOCK_END = "BLOCK_END";
   /**
    * The prefix to use for Javadoc comment lines.
    */
-  private static final String JAVADOC_PREFIX = " * ";
+  public static final String COMMENT_LINE_PREFIX = "COMMENT_LINE_PREFIX";
   /**
    * The Javadoc block start character.
    */
-  private static final String JAVADOC_BLOCK_START = "\\*";
+  public static final String COMMENT_OPEN = "COMMENT_OPEN";
   /**
    * The Javadoc block end character.
    */
-  private static final String JAVADOC_BLOCK_END = " */";
+  public static final String COMMENT_CLOSE = "COMMENT_CLOSE";
   /**
    * The pattern for finding newline characters.
    */
-  private static final Pattern NEWLINE_PATTERN = Pattern.compile("([^.])");
+  private static final Pattern NEWLINE_PATTERN = Pattern.compile("(^.)");
   /**
    * Default IndentCharacter to use for code indentation.
    */
@@ -62,6 +63,13 @@ public class SourceWriter {
    * Default indent size.
    */
   private static int DEFAULT_INDENT_SIZE = 1;
+  /**
+   * The ResourceBundle to use for writing constants.
+   */
+  /*@ invariant my_resource_bundle
+    @
+   */
+  private ResourceBundle my_resource_bundle;
   /**
    * The current indent level.
    */
@@ -91,31 +99,40 @@ public class SourceWriter {
   private Writer my_writer;
 
   /**
-   * Creates a new SourceWriter whose output is sent to the_writer.
+   * Creates a new SourceWriter whose output is sent to the_writer. The language
+   * definition is contained in the_lang_bundle. The language definition must
+   * declare the constants BLOCK_START, BLOCK_END, COMMENT_LINE_PREFIX, COMMENT_OPEN,
+   * and COMMENT_CLOSE. 
    * 
    * @param the_writer The writer to use for source output.
+   * @param the_lang_bundle The resource bundle containing the language definition.
    */
-  public SourceWriter(final Writer the_writer) {
-    this(the_writer, DEFAULT_INDENT_SIZE, DEFAULT_INDENT_CHAR);
+  public SourceWriter(final Writer the_writer, final ResourceBundle the_lang_bundle) {
+    this(the_writer, the_lang_bundle, DEFAULT_INDENT_SIZE, DEFAULT_INDENT_CHAR);
   }
 
   /**
    * Creates a new SourceWriter whose output is sent to the_writer. Indents will
-   * be composed of the_indent_char repeated the_indent_size times.
+   * be composed of the_indent_char repeated the_indent_size times. The language
+   * definition is contained in the_lang_bundle. The language definition must
+   * declare the constants BLOCK_START, BLOCK_END, COMMENT_LINE_PREFIX, COMMENT_OPEN,
+   * and COMMENT_CLOSE. 
    * 
    * @param the_writer The writer to use for source output.
+   * @param the_lang_bundle The resource bundle containing the language definition.
    * @param the_indent_size The number of characters to be written for each
    *          indent level.
    * @param the_indent_char The char to use for indentation.
    */
-  public SourceWriter(final Writer the_writer, final int the_indent_size,
-                      final char the_indent_char) {
+  public SourceWriter(final Writer the_writer, final ResourceBundle the_lang_bundle, 
+                      final int the_indent_size, final char the_indent_char) {
     my_writer = the_writer;
     my_indent_level = 0;
     my_indent_size = the_indent_size;
     my_indent_char = the_indent_char;
     my_block_level = 0;
     my_chars_on_cur_line = false;
+    my_resource_bundle = the_lang_bundle;
   }
 
   /**
@@ -141,6 +158,7 @@ public class SourceWriter {
   public void writeLine(final String the_string) throws IOException {
     my_writer.append(formatString(the_string) + NEWLINE);
     my_chars_on_cur_line = false;
+    my_writer.flush();
   }
 
   /**
@@ -211,7 +229,7 @@ public class SourceWriter {
     @         (\old (my_block_level) == my_block_level - 1);
    */
   public void startJavaBlock() throws IOException {
-    writeLine(BLOCK_START);
+    writeLine(my_resource_bundle.getString(BLOCK_START));
     incrementIndentLevel();
     my_block_level++;
   }
@@ -229,7 +247,7 @@ public class SourceWriter {
    */
   public void endJavaBlock() throws IOException {
     incrementIndentLevel();
-    writeLine(BLOCK_END);
+    writeLine(my_resource_bundle.getString(BLOCK_END));
     my_block_level++;
   }
 
@@ -243,7 +261,7 @@ public class SourceWriter {
     //@ requires my_block_level != 0;
   public void startJavadocBlock() throws IOException {
     my_block_level = -1;
-    writeLine(JAVADOC_BLOCK_START);
+    writeLine(my_resource_bundle.getString(COMMENT_OPEN));
   }
 
   /**
@@ -257,7 +275,7 @@ public class SourceWriter {
     @         (\old (my_block_level) == my_block_level + 1);
    */
   public void endJavadocBlock() throws IOException {
-    writeLine(JAVADOC_BLOCK_END);
+    writeLine(my_resource_bundle.getString(COMMENT_CLOSE));
     my_block_level++;
   }
 
@@ -276,7 +294,7 @@ public class SourceWriter {
     }
     // Javadoc level
     if (my_block_level == -1) {
-      sb.append(JAVADOC_PREFIX);
+      sb.append(my_resource_bundle.getString(COMMENT_LINE_PREFIX));
     }
     return sb.toString();
   }
@@ -301,7 +319,17 @@ public class SourceWriter {
       sb.append(getLinePrefix());
     }
     final Matcher match = NEWLINE_PATTERN.matcher(the_string);
-    match.appendReplacement(sb, "$1" + getLinePrefix() + my_indent_char);
+    if (match.find()) {
+      int begin = match.start();
+      while (match.find()) {
+        sb.append(getLinePrefix() + my_indent_char);
+        sb.append(the_string.subSequence(begin, match.start()));
+        begin = match.start();
+      }
+      sb.append(the_string.subSequence(begin, the_string.length()));
+    } else {
+      sb.append(the_string);
+    }
     return sb.toString();
   }
 }

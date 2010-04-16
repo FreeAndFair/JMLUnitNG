@@ -43,6 +43,22 @@ public interface CmdOptionsOptionsInterface
    */
   List<java.io.File> getList();
 
+  // Option Classpath.
+  // Aliases: [-f, --files]
+
+  /**
+   * @return true if the option Classpath has been used in the command line.
+   */
+  boolean isClasspathSet();
+
+  /**
+   * Get the value of {@code Option} Classpath.
+   * 
+   * @return the value of the option Classpath if it has been set using the
+   *         arguments. Throws an {@code IllegalStateException} otherwise.
+   */
+  List<java.io.File> getClasspath();
+
   // Option Help.
   // Aliases: [-h, --help]
 

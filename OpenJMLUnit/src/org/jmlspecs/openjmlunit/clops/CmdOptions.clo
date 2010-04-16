@@ -3,6 +3,7 @@ CmdOptions
 ARGS::
   Destination: {"-d", "--dest"}:{string}
   List:{"-f", "--files"}:{file-list}:[allowmultiple="true", splitter=",", mustexist="true", canbedir="false", allowdash="true" ]
+  Reflection:{"-r"}
   Help:{"-h", "--help"} 
   Package:{"-p", "--package"}:{file-list}:[allowmultiple="true", splitter=",", mustbedir="true", allowdash="true"]
   Universes:{"-u", "--universes"}

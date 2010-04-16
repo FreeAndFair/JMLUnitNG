@@ -19,7 +19,7 @@ import java.util.List;
  * @author Daniel M. Zimmerman
  * @version March 2010
  */
-public class MultiIterator extends Object implements RepeatedAccessIterator {
+public class MultiIterator extends Object implements RepeatedAccessIterator<Object> {
   // Commands
 
   // @command "Embed the_list_of_iterators into a single iterator!"
