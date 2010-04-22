@@ -98,6 +98,8 @@ cluster_chart ITERATOR
                \ using iterator generation methods to refresh individual array element iterators."
   class REPEATED_ACCESS_ITERATOR
     description "An iterator that supports accessing the current value multiple times."
+  class ITERATOR_WRAPPER
+  	description "A wrapper that lets RepeatedAccessIterator act like a java.util.Iterator."
 end
 
 cluster_chart TESTNG

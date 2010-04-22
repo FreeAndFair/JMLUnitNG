@@ -10,5 +10,6 @@
 			<attribute name="javadoc_location" value="file:/D:/Documents/School/OpenJMLWorkspace/clops/doc/java/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/testng-5.12.jar" sourcepath="D:/Documents/School/OpenJMLWorkspace/testNG"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

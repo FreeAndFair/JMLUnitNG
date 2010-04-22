@@ -161,9 +161,8 @@ end
  
 class_chart XML_GENERATOR
   command
-    "Write a TestNG XML test for the_class to the_writer!"
+    "Write a TestNG XML test for the_class to the_writer!",
     "Write a TestNG XML test for the_classes to the_writer!"
-  constraint
 end
     
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -270,6 +269,14 @@ class_chart REPEATED_ACCESS_ITERATOR
     "Advance the iterator to the next element!"
   constraint
     "The iterator cannot be advanced if it has no elements remaining."
+end
+
+class_chart ITERATOR_WRAPPER
+  query
+    "Does the iterator have any elements remaining?"
+  command
+  	"Retrieve the next element!",
+  	"Remove the last element!"
 end
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
