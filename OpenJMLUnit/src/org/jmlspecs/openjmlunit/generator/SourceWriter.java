@@ -1,6 +1,8 @@
 /*
  * OpenJMLUnit
  * 
+ * @author "Daniel M. Zimmerman (dmz@acm.org)"
+ * 
  * @author "Jonathan Hogins (jon.hogins@gmail.com)"
  * 
  * @module "OpenJML"

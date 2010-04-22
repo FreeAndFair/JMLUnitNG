@@ -14,11 +14,12 @@ package org.jmlspecs.openjmlunit.iterator;
  * An iterator that supports accessing the current value multiple times.
  * 
  * @author Daniel M. Zimmerman
+ * @author Jonathan Hogins
  * @version March 2010
+ * @param <T> The type of the returned elements.
  */
 public interface RepeatedAccessIterator<T> {
   // Queries
-	
   /**
    * @return Does the iterator have any elements remaining?
    */
@@ -28,7 +29,6 @@ public interface RepeatedAccessIterator<T> {
    * @return What is the current element of the iterator?
    */
   T element();
-	
   // Commands
   
   /**
