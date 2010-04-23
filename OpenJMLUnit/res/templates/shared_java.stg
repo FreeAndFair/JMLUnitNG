@@ -1,0 +1,20 @@
+group shared_java;
+
+dataProviderName(name, params) ::= "p_<testName(name=name, params=params)>"
+
+testName(name, params) ::= <<
+test_<name><if(params)>_<params; separator="_"><endif>
+>>
+
+varJavaDocLine() ::= <<
+
+ * @param <it:varName()> The <it> to be passed.
+>>
+
+varDecList(list) ::= "<trunc(list):varDec():{, }><last(list):varDec()>"
+
+varDec() ::= "final <it> <it:varName()>"
+
+varNameList(list) ::= "<trunc(list):varName():{, }><last(list):varName()>"
+
+varName() ::= "the_<it>"

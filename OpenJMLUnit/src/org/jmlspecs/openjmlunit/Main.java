@@ -32,6 +32,7 @@ import org.jmlspecs.openjmlunit.clops.CmdOptionsParser;
 import org.jmlspecs.openjmlunit.generator.ClassInfo;
 import org.jmlspecs.openjmlunit.generator.InfoFactory;
 import org.jmlspecs.openjmlunit.generator.MethodInfo;
+import org.jmlspecs.openjmlunit.generator.TestClassGenerator;
 import org.jmlspecs.openjmlunit.generator.XMLGenerator;
 
 /**
@@ -133,6 +134,9 @@ public final class Main {
                                m.getProtectionLevel().toString());
           }
           XMLGenerator.generateXML(info, write);
+          final TestClassGenerator generator = new TestClassGenerator();
+          generator.generateTestClass(info, write);
+          write.flush();
         }
       }
     } catch (final InvalidOptionPropertyValueException e1) {

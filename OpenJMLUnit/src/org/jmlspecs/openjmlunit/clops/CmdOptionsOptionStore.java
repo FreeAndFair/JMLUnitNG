@@ -57,7 +57,7 @@ public class CmdOptionsOptionStore extends OptionStore implements CmdOptionsOpti
     addOption(ogClasspath);
     ogClasspath.setProperty("allowmultiple", "true");
     ogClasspath.setProperty("splitter", ",");
-    ogClasspath.setProperty("mustbedir", "true");
+//    ogClasspath.setProperty("mustbedir", "true");
     ogClasspath.setProperty("allowdash", "true");
     ogClasspath.setProperty("aliases", "-c,--classpath");
     ogUniverses = new BooleanOption("Universes", "(?:-u)|(?:--universes)");

@@ -134,26 +134,23 @@ end
 
 class_chart TEST_CLASS_GENERATOR
   command
-    "You will be generating a test class for the_class!",
     "Generate tests for methods of protection level at most the_level!",
     "Generate tests for inherited methods!",
     "Generate tests for deprecated methods!",
-    "Write the generated test class to the_writer!"
+    "Generate a test class for the_class and write it to the_writer!"
   constraint
-    "The class for which tests will be generated must exist.",
     "The specified protection level must be a valid Java protection level."
 end
 
 class_chart TEST_DATA_CLASS_GENERATOR
   command
-    "You will be generating a test data class for the_class!",
     "Use reflective test data generation!",
     "Do not use reflective test data generation!",
     "Generate test data of classes the_gen_classes for parameters of class the_param_class!",
     "Generate test data for methods of protection level at most the_level!",
     "Generate test data for inherited methods!",
     "Generate test data for deprecated methods!",
-    "Write the generated test data class to the_writer!"
+    "Generate a test data class for the_class and write it to the_writer!"
   constraint
     "The class for which test data will be generated must exist.",
     "The specified protection level must be a valid Java protection level."
@@ -163,6 +160,13 @@ class_chart XML_GENERATOR
   command
     "Write a TestNG XML test for the_class to the_writer!",
     "Write a TestNG XML test for the_classes to the_writer!"
+end
+
+class_chart STRING_TEMPATE_UTIL
+  query
+  	"Has StringTemplate been initialized?"
+  command
+  	"Initialize StringTemplate!"
 end
     
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -161,7 +161,9 @@ public final class InfoFactory {
                                             final/*@ nullable */ClassInfo the_parent_class) {
     final List<String> params = new ArrayList<String>(the_sym.getParameters().size());
     for (VarSymbol v : the_sym.params) {
-      params.add(v.getSimpleName().toString());
+      String type = v.type.toString();
+      type = type.substring(type.lastIndexOf('.') + 1);
+      params.add(type);
     }
     ClassInfo declaring_class = the_parent_class;
     if (the_sym.getEnclosingElement() instanceof ClassSymbol) {

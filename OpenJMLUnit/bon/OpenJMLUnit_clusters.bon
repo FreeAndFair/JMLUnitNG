@@ -61,6 +61,8 @@ cluster_chart GENERATOR
     description "Generator for classes that contain unit test data."
   class XML_GENERATOR 
     description "Generator for XML files used by TestNG."
+  class STRING_TEMPATE_UTIL
+  	description "Handles initialization of StringTemplate."
 end
 
 cluster_chart STRATEGY
