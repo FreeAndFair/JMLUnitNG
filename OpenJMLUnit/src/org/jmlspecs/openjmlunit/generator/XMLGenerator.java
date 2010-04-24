@@ -103,7 +103,7 @@ public final class XMLGenerator {
    */
   private static void writeClass(final ClassInfo the_class, final SourceWriter the_writer)
     throws IOException {
-    the_writer.writeLine(getProp("CLS_OPEN") + " name=\"" + the_class.getName() + "\"" +
+    the_writer.writeLine(getProp("CLS_OPEN") + " name=\"" + the_class.getShortName() + "\"" +
                          getProp("XML_B_CLOSE"));
   }
 

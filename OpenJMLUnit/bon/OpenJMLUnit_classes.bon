@@ -54,7 +54,9 @@ end
 
 class_chart CLASS_INFO
   query
-    "What is the class name?",
+    "What is the unqualified class name?",
+    "What is the fully qualified class name?",
+    "What is the package name?",
     "What is the protection level?",
     "What is the info for the class's Superclass?",
     "Is the class abstract?",

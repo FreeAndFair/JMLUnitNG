@@ -169,7 +169,7 @@ public final class InfoFactory {
     if (the_sym.getEnclosingElement() instanceof ClassSymbol) {
       final ClassSymbol parent = (ClassSymbol) the_sym.getEnclosingElement();
       if (the_parent_class == null ||
-          !parent.getQualifiedName().toString().equals(the_parent_class.getName())) {
+          !parent.getQualifiedName().toString().equals(the_parent_class.getShortName())) {
         declaring_class = getClassInfo(parent);
       }
     }

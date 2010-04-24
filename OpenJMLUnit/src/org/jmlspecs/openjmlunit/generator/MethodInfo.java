@@ -248,7 +248,7 @@ public class MethodInfo {
   private /*@ pure */ boolean determineIsFactory() {
     //decide if factory
     ClassInfo cur = my_declaring_class;
-    while (cur != null && my_name.equals(cur.getName())) {
+    while (cur != null && my_name.equals(cur.getShortName())) {
       cur = cur.getSuperclassInfo();
     }
     return my_is_static && cur != null;

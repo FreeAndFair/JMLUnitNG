@@ -124,8 +124,8 @@ public final class Main {
         System.out.println("Units: " + units.size());
         for (JmlCompilationUnit unit : units) {
           final ClassInfo info = InfoFactory.getClassInfo(unit);
-          System.out.println("Name: " + info.getName());
-          System.out.println("Parent Name: " + info.getSuperclassInfo().getName());
+          System.out.println("Name: " + info.getShortName());
+          System.out.println("Parent Name: " + info.getSuperclassInfo().getShortName());
           System.out.println("Prot Level: " + info.getProtectionLevel().toString());
           System.out.println("Testable methods:");
           for (MethodInfo m : info.getTestableMethods()) {

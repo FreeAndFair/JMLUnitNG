@@ -19,6 +19,8 @@ package org.jmlspecs.openjmlunit.generator;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
@@ -156,6 +158,8 @@ public class TestClassGenerator {
       StringTemplateGroup.loadGroup("test_class_java");
     final StringTemplate t = group.getInstanceOf("main");
     t.setAttribute("class", the_class);
+    t.setAttribute("date", 
+                   DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
     the_writer.write(t.toString());
   }
 }

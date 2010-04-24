@@ -2,6 +2,9 @@ group shared_java;
 
 dataProviderName(name, params) ::= "p_<testName(name=name, params=params)>"
 
+testClassName(class) ::= "<class.shortName>_JML_Test"
+dataClassName(class) ::= "<class.shortName>_JML_Test_Data"
+
 testName(name, params) ::= <<
 test_<name><if(params)>_<params; separator="_"><endif>
 >>
