@@ -20,16 +20,7 @@ import java.util.List;
  * @author Jonathan Hogins
  * @version April 2010
  */
-public class ClassInfo {
-  /**
-   * The fully qualified name of this class.
-   */
-  private final String my_name;
-  //@ invariant my_parent == null ^ my_name.equals("java.lang.Object");
-  /**
-   * The unqualified name of the class.
-   */
-  private final String my_short_name;
+public class ClassInfo extends Type {
   /*@ invariant my_short_name.equals(
     @   getFullyQualifiedName().substring(getFullyQualifiedName().lastIndexOf('.') + 1));
    */
@@ -67,47 +58,13 @@ public class ClassInfo {
   protected ClassInfo(final String the_name, final ProtectionLevel the_protection_level,
                       final boolean the_is_abstract, final List<MethodInfo> the_method_infos,
                       final/*@ nullable */ClassInfo the_parent) {
-    my_name = the_name;
-    my_short_name = the_name.substring(the_name.lastIndexOf('.') + 1);
+    super(the_name);
     my_protection_level = the_protection_level;
     my_is_abstract = the_is_abstract;
     my_method_infos = Collections.unmodifiableList(the_method_infos);
     my_parent = the_parent;
   }
 
-  /**
-   * Returns the unqualified name of the class.
-   * 
-   * @return The name of the class
-   */
-  public/*@pure*/String getShortName() {
-    return my_short_name;
-  }
-
-  /**
-   * Returns the fully qualified name of the class.
-   * 
-   * @return The name of the class
-   */
-  public /*@ pure*/String getFullyQualifiedName() {
-    return my_name;
-  }
-  /**
-   * Returns the package name of the class.
-   * 
-   * @return The package name of the class
-   */
-  /*@ ensures my_name.length() > my_short_name.length() ==>
-    @   \result.equals(my_name.substring(0, my_name.length() - my_short_name.length() - 1) &&
-    @         my_name.length() == my_short_name.length() ==> \result.equals("");
-    */
-  public /*@ pure*/String getPackageName() {
-    if (my_name.length() > my_short_name.length()) {
-      return my_name.substring(0, my_name.length() - my_short_name.length() - 1);
-    } else {
-      return "";
-    }
-  }
   /**
    * Returns the ClassInfo for this ClassInfo's parent. Returns null if
    * this ClassInfo represents java.lang.Object.

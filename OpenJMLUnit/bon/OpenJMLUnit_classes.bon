@@ -51,12 +51,15 @@ end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- GENERATOR cluster classes
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-class_chart CLASS_INFO
+class_chart TYPE
   query
     "What is the unqualified class name?",
     "What is the fully qualified class name?",
-    "What is the package name?",
+    "What is the package name?"
+end
+
+class_chart CLASS_INFO
+  query
     "What is the protection level?",
     "What is the info for the class's Superclass?",
     "Is the class abstract?",
@@ -135,23 +138,26 @@ class_chart SOURCE_WRITER
 end
 
 class_chart TEST_CLASS_GENERATOR
+  query
+  	"Are tests generated for inherited methods?",
+  	"Are tests generated for deprecated methods?",
+  	"Is reflection used in test data generation?"
   command
+    "Use/don't use reflective test data generation!",
     "Generate tests for methods of protection level at most the_level!",
     "Generate tests for inherited methods!",
     "Generate tests for deprecated methods!",
-    "Generate a test class for the_class and write it to the_writer!"
+    "Generate a test class for the_class and write it to the_writer!",
+    "Generate a test data class for the_class and write it to the_writer!",
+    "Generate both a test class and a test data class for the_class and write it to the_test_writer and the_data_writer, respectively!",
+    "Generate test data for methods of protection level at most the_level!"
   constraint
     "The specified protection level must be a valid Java protection level."
 end
 
 class_chart TEST_DATA_CLASS_GENERATOR
   command
-    "Use reflective test data generation!",
-    "Do not use reflective test data generation!",
     "Generate test data of classes the_gen_classes for parameters of class the_param_class!",
-    "Generate test data for methods of protection level at most the_level!",
-    "Generate test data for inherited methods!",
-    "Generate test data for deprecated methods!",
     "Generate a test data class for the_class and write it to the_writer!"
   constraint
     "The class for which test data will be generated must exist.",

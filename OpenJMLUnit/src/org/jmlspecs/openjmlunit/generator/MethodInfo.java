@@ -47,12 +47,12 @@ public class MethodInfo {
   /**
    * The name of the return type of the method.
    */
-  private String my_return_type;
+  private Type my_return_type;
 
   /**
    * The parameter types of the method in order.
    */
-  private List<String> my_parameter_types;
+  private List<Type> my_parameter_types;
 
   /**
    * The ClassInfo for the class this method belongs to.
@@ -111,7 +111,7 @@ public class MethodInfo {
   public MethodInfo(final String the_name, final ClassInfo the_parent_class,
                     final ClassInfo the_declaring_class,
                     final ProtectionLevel the_protection_level,
-                    final List<String> the_parameter_types, final String the_return_type,
+                    final List<Type> the_parameter_types, final Type the_return_type,
                     final boolean the_is_constructor, final boolean the_is_static) {
     my_name = the_name;
     my_parent_class = the_parent_class;
@@ -143,7 +143,7 @@ public class MethodInfo {
    * 
    * @return The ClassInfo object for the class who owns this method.
    */
-  public/*@ pure */ClassInfo getParentClass() {
+  public/*@ pure */Type getParentClass() {
     return my_parent_class;
   }
 
@@ -152,7 +152,7 @@ public class MethodInfo {
    * 
    * @return The ClassInfo object for the class who declared this method.
    */
-  public/*@ pure */ClassInfo getDeclaringClass() {
+  public/*@ pure */Type getDeclaringClass() {
     return my_declaring_class;
   }
 
@@ -171,7 +171,7 @@ public class MethodInfo {
    * 
    * @return A list of parameter types.
    */
-  public/*@pure */List<String> getParameterTypes() {
+  public/*@pure */List<Type> getParameterTypes() {
     return my_parameter_types;
   }
 
@@ -180,7 +180,7 @@ public class MethodInfo {
    * 
    * @return The return type.
    */
-  public/*@ pure */String getReturnType() {
+  public/*@ pure */Type getReturnType() {
     return my_return_type;
   }
 

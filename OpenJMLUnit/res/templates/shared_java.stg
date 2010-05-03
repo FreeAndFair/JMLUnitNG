@@ -10,7 +10,6 @@ test_<name><if(params)>_<params; separator="_"><endif>
 >>
 
 varJavaDocLine() ::= <<
-
  * @param <it:varName()> The <it> to be passed.
 >>
 
@@ -20,4 +19,5 @@ varDec() ::= "final <it> <it:varName()>"
 
 varNameList(list) ::= "<trunc(list):varName():{, }><last(list):varName()>"
 
-varName() ::= "the_<it>"
+varName() ::= "the_<it.shortName>_<i>"
+varNameWithParams(parameter) ::= "the_<it.shortName>_<i>"

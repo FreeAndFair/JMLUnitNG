@@ -135,7 +135,7 @@ public final class Main {
           }
           XMLGenerator.generateXML(info, write);
           final TestClassGenerator generator = new TestClassGenerator();
-          generator.generateTestClass(info, write);
+          generator.generateClasses(info, write, write);
           write.flush();
         }
       }

@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="lib/jmlruntime.jar"/>
 	<classpathentry kind="lib" path="lib/jmlspecs.jar"/>
-	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJML"/>
+	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJDK"/>
 	<classpathentry kind="lib" path="lib/clops-runtime.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/D:/Documents/School/OpenJMLWorkspace/clops/doc/java/"/>

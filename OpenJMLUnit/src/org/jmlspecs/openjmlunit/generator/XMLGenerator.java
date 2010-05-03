@@ -82,7 +82,7 @@ public final class XMLGenerator {
     swrite.incrementIndentLevel();
     swrite.writeLine(getProp("CLSS_OPEN") + getProp("XML_B_CLOSE"));
     swrite.incrementIndentLevel();
-    for (ClassInfo cls : the_classes) {
+    for (Type cls : the_classes) {
       writeClass(cls, swrite);
     }
     swrite.decrementIndentLevel();
@@ -101,7 +101,7 @@ public final class XMLGenerator {
    * @throws IOException throws exception if failed to load xml properties or
    *           failed to write to writer.
    */
-  private static void writeClass(final ClassInfo the_class, final SourceWriter the_writer)
+  private static void writeClass(final Type the_class, final SourceWriter the_writer)
     throws IOException {
     the_writer.writeLine(getProp("CLS_OPEN") + " name=\"" + the_class.getShortName() + "\"" +
                          getProp("XML_B_CLOSE"));

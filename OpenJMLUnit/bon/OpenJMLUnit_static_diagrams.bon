@@ -60,7 +60,8 @@ static_diagram GENERATOR_RELATIONS
   component
     cluster GENERATOR reused
 
-    class CLASS_INFO reused
+    class TYPE reused
+    CLASS_INFO inherit TYPE
     class METHOD_INFO reused
     class SOURCE_WRITER reused
     METHOD_INFO client CLASS_INFO
