@@ -59,7 +59,7 @@ public class ObjectArrayIterator implements RepeatedAccessIterator {
     throws IllegalArgumentException {
     my_iterator_generators = the_iterator_generators;
     for (MethodInfo m : the_iterator_generators) {
-      if (!isIterator(m.getReturnType())) {
+      if (!isIterator(m.getReturnType().getFullyQualifiedName())) {
         throw new IllegalArgumentException("Iterator generator method " + 
           "return type is not assignable to type java.util.Iterator");
       }
