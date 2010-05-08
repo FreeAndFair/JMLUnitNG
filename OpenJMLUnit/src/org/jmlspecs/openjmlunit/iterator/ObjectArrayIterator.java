@@ -15,61 +15,78 @@
 package org.jmlspecs.openjmlunit.iterator;
 
 import java.util.Iterator;
-import java.util.List;
 
-import org.jmlspecs.openjmlunit.generator.MethodInfo;
+import org.jmlspecs.openjmlunit.strategy.BasicStrategy;
 
 /**
  * A repeated access iterator that generates arrays of objects by reflectively
- * using iterator generation methods to refresh individual array element
- * iterators.
+ * instantiating iterator classes that contain test parameter data.
  * 
  * @author Daniel M. Zimmerman
+ * @author Jonathan Hogins
  * @version March 2010
  */
-public class ObjectArrayIterator implements RepeatedAccessIterator {
+public class ObjectArrayIterator implements RepeatedAccessIterator<Object[]>, Iterator<Object[]> {
   /**
    * The list of iterator generation methods
    */
-  /*@ invariant (\forall MethodInfo m; my_iterator_generators.contains(m); 
-    @             isIterator(m.getReturnType())); */
-  private final List<MethodInfo> my_iterator_generators;
+  private final Class<? extends BasicStrategy>[] my_strategy_classes;
+  
+  /**
+   * The current Strategies.
+   */
+  // @ invariant my_strategies.length == my_strategy_classes.length;
+  private RepeatedAccessIterator<?>[] my_strategies;
 
   /**
    * The current element.
    */
-  // @ invariant my_element.size() == my_iterator_generators.size();
-  private List<Object> my_element;
+  // @ invariant my_element.length == my_strategies.length;
+  private Object[] my_element;
+  
+  /**
+   * Is this iterator finished?
+   */
+  private boolean my_is_finished;
+  
+  /**
+   * A wrapper for this class that enables its use as a java.util.Iterator.
+   */
+  private IteratorWrapper<Object[]> my_iterator_wrapper;
 
   /**
-   * Creates a new ObjectArrayIterator that uses the given MethodInfo objects to
-   * generate iterators. Each MethodInfo must have a return value that matches
-   * java.util.Iterator<?>.
+   * Creates a new ObjectArrayIterator that iterates over all combinations of objects
+   * in the given Strategy classes.
    * 
-   * @param the_iterator_generators MethodInfo objects to use for generating
-   *          iterators.
-   * @throws IllegalArgumentException A MethodInfo in the list has a return type
-   *           that is does not match java.util.Iterator<?>.
+   * @param the_strategy_classes The strategies to iterate over.
+   * @throws IllegalArgumentException An InstantiationException or IllegalAccessException was caught
+   * when calling the nullary constructors of the_strategy_classes.
    */
-  /*@ signals (IllegalArgumentException e)
-    @         (\exists MethodInfo m; the_iterator_generators.contains(m); 
-    @           !isIterator(m.getReturnType()));
+  /*@ requires (\foreach int i; i >= 0 && i < the_strategy_classes.length; 
+    @		the_strategy_classes[i].newInstance().iterator().hasNext());
+    @ ensures my_strategies.length == the_strategy_classes.length &&
+    @		my_strategy_classes.length == the_strategy_classes.length &&
+    @		(\foreach int i; i >= 0 && i < my_strategies.length; my_strategies[i].hasNext());
    */
-  public ObjectArrayIterator(final List<MethodInfo> the_iterator_generators)
-    throws IllegalArgumentException {
-    my_iterator_generators = the_iterator_generators;
-    for (MethodInfo m : the_iterator_generators) {
-      if (!isIterator(m.getReturnType().getFullyQualifiedName())) {
-        throw new IllegalArgumentException("Iterator generator method " + 
-          "return type is not assignable to type java.util.Iterator");
-      }
-    }
-  }
+  public ObjectArrayIterator(Class<? extends BasicStrategy>... the_strategy_classes) {
+  	my_strategy_classes = the_strategy_classes;
+  	my_strategies = new RepeatedAccessIterator<?>[the_strategy_classes.length];
+  	my_is_finished = false;
+  	for (int i = 0; i < my_strategies.length; i++) {
+  		try {
+				my_strategies[i] = the_strategy_classes[i].newInstance().iterator();
+			} catch (InstantiationException e) {
+				throw new IllegalArgumentException(e);
+			} catch (IllegalAccessException e) {
+				throw new IllegalArgumentException(e);
+			}
+  	}
+  	internalAdvance();
+    my_iterator_wrapper = new IteratorWrapper<Object[]>(this);
+	}
 
-  // @Override
   public void advance() {
-    // TODO Auto-generated method stub
-
+  	internalAdvance();
   }
 
   /**
@@ -77,41 +94,74 @@ public class ObjectArrayIterator implements RepeatedAccessIterator {
    * iterator provided by the iterator generation method in the corresponding
    * position of the list.
    */
-  // @Override
-  public Object element() {
+  public Object[] element() {
     return my_element;
   }
 
-  // @Override
+  /**
+   * Returns true if there are more elements in this iterator. False if not.
+   * @return True if there are more elements in this iterator. False if not.
+   */
   public boolean hasMoreElements() {
-    // TODO Auto-generated method stub
-    return false;
+  	return my_is_finished;
+  }
+  
+  /**
+   * Helper method. Advances the iterator. Seperate from advance() to allow a call in the constructor.
+   */
+  //@ requires !my_is_finished;
+  private void internalAdvance() {
+  	int p = 0;
+		try {
+			my_element = new Object[my_strategies.length];
+			for (int i = 0; i < my_strategies.length; i++) {
+				my_element[i] = my_strategies[i].element();
+			}
+			while (p < my_strategies.length && !my_strategies[p].hasMoreElements()) {
+				my_strategies[p] = (RepeatedAccessIterator<?>) my_strategy_classes[p].newInstance();
+				p++;
+			}
+			if (p == my_strategies.length) {
+				//we've reset the last iterator, meaning we are finished.
+				my_is_finished = true;
+				
+			} else {
+				my_strategies[p].advance();
+			}
+		} catch (InstantiationException e) {
+			// Already checked for exceptions in constructor. Should never be hit
+			System.err.println(e);
+		} catch (IllegalAccessException e) {
+			System.err.println(e);
+		}
+  }
+  // Constraints
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasNext() {
+    return my_iterator_wrapper.hasNext();
   }
 
   /**
-   * Returns true if the given class name is java.util.Iterator or the qualified
-   * name of a child class of java.util.Iterator.
-   * 
-   * @param the_class_name The class name to test.
-   * @return True if the given class name is the fully qualified class name of
-   *         java.util.Iterator or a child class thereof. False otherwise.
+   * {@inheritDoc}
    */
-  // @ ensures \result ==
-  // Iterator.class.isAssignableFrom(Class.forName(name.substring(0,
-  // (name.indexOf('<') == -1 ? name.length() : name.indexOf('<')))))
-  private/*@ pure */boolean isIterator(final String the_class_name) {
-    int gen_pos = the_class_name.indexOf('<');
-    if (gen_pos == -1) {
-      gen_pos = the_class_name.length();
-    }
-    final String test = the_class_name.substring(0, gen_pos);
-    try {
-      return Iterator.class.isAssignableFrom(Class.forName(test));
-    } catch (final ClassNotFoundException e) {
-      return false;
-    }
+  @Override
+  public Object[] next() {
+    return my_iterator_wrapper.next();
   }
-  // Constraints
+
+  /**
+   * Not implemented.
+   * @throws UnsupportedOperationException Always thrown.
+   */
+  //@ signals (UnsupportedOperationException) true;
+  @Override
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
 
   // @constraint "The sequence of elements returned consists of arrays of
   // objects,

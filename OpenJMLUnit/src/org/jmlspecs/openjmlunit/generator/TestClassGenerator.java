@@ -53,6 +53,10 @@ public class TestClassGenerator {
    */
   public static final boolean DEF_USE_REFLECTION = true;
   /**
+   * The line max line width of generated code.
+   */
+  public static final int LINE_WIDTH = 120;
+  /**
    * The max protection level for which to generate tests.
    */
   private ProtectionLevel my_level;
@@ -236,14 +240,14 @@ public class TestClassGenerator {
     @   )
     @ );
    */
-  private List<Type> getUniqueParameterTypes(final List<MethodInfo> the_methods) {
-    final Set<Type> classes = new HashSet<Type>();
+  private List<TypeInfo> getUniqueParameterTypes(final List<MethodInfo> the_methods) {
+    final Set<TypeInfo> classes = new HashSet<TypeInfo>();
     for (MethodInfo m : the_methods) {
-      for (Type s : m.getParameterTypes()) {
+      for (TypeInfo s : m.getParameterTypes()) {
         classes.add(s);
       }
     }
-    return new ArrayList<Type>(classes);
+    return new ArrayList<TypeInfo>(classes);
   }
   /**
    * Generates both test and test data classes and writes them to the given writers.
@@ -259,7 +263,7 @@ public class TestClassGenerator {
                                final Writer the_data_writer) throws IOException {
     StringTemplateUtil.initialize();
     final List<MethodInfo> methods = getMethodsToTest(the_class);
-    final List<Type> types = getUniqueParameterTypes(methods);
+    final List<TypeInfo> types = getUniqueParameterTypes(methods);
     //generate test class
     if (the_test_writer != null) {
       final StringTemplateGroup group = 
@@ -269,7 +273,8 @@ public class TestClassGenerator {
       t.setAttribute("date", 
                      DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
       t.setAttribute("methods", methods);
-      the_test_writer.write(t.toString());
+      t.setAttribute("packageName", the_class.getPackageName());
+      the_test_writer.write(t.toString(LINE_WIDTH));
     }
     //generate data class
     if (the_data_writer != null) {
@@ -280,7 +285,8 @@ public class TestClassGenerator {
                      DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
       t.setAttribute("methods", methods);
       t.setAttribute("types", types);
-      the_data_writer.write(t.toString());
+      t.setAttribute("packageName", the_class.getPackageName());
+      the_data_writer.write(t.toString(LINE_WIDTH));
     }
   }
 }

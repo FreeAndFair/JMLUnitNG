@@ -74,7 +74,7 @@ public final class InfoFactory {
    * @param the_class The Class generate a ClassInfo object for.
    * @return A ClassInfo object representing the class.
    */
-  public static Type getClassInfo(final Class<?> the_class) {
+  public static TypeInfo getClassInfo(final Class<?> the_class) {
     // TODO: Implement.
     return null;
   }
@@ -159,9 +159,9 @@ public final class InfoFactory {
    */
   public static MethodInfo createMethodInfo(final MethodSymbol the_sym,
                                             final/*@ nullable */ClassInfo the_parent_class) {
-    final List<Type> params = new ArrayList<Type>(the_sym.getParameters().size());
+    final List<ParameterInfo> params = new ArrayList<ParameterInfo>(the_sym.getParameters().size());
     for (VarSymbol v : the_sym.params) {
-      params.add(new Type(v.type.toString()));
+      params.add(new ParameterInfo(v.type.toString(), v.name.toString()));
     }
     ClassInfo declaring_class = the_parent_class;
     if (the_sym.getEnclosingElement() instanceof ClassSymbol) {
@@ -177,7 +177,7 @@ public final class InfoFactory {
     }
     final ProtectionLevel level = getLevel(the_sym.getModifiers());
     return new MethodInfo(the_sym.getSimpleName().toString(), parent_class, declaring_class,
-                          level, params, new Type(the_sym.getReturnType().toString()),
+                          level, params, new TypeInfo(the_sym.getReturnType().toString()),
                           the_sym.isConstructor(), the_sym.isStatic());
   }
 

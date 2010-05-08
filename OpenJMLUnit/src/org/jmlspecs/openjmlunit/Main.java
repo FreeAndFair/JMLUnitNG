@@ -18,13 +18,20 @@ import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.antlr.stringtemplate.StringTemplate;
+import org.antlr.stringtemplate.StringTemplateGroup;
 import org.jmlspecs.openjml.API;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
 import org.jmlspecs.openjmlunit.clops.CmdOptionsOptionStore;
@@ -45,7 +52,7 @@ public final class Main {
   /**
    * The default output directory.
    */
-  private static final String DEF_OUTPUT_DIR = ".";
+  private static final String DEF_OUTPUT_DIR = "";
   /**
    * The separator for classpath entries.
    */
@@ -130,13 +137,33 @@ public final class Main {
           System.out.println("Testable methods:");
           for (MethodInfo m : info.getTestableMethods()) {
             System.out.println("Method Name: " + m.getName() + " Ret Type: " +
-                               m.getReturnType() + " Prot Level: " +
+                               m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
                                m.getProtectionLevel().toString());
           }
           XMLGenerator.generateXML(info, write);
           final TestClassGenerator generator = new TestClassGenerator();
-          generator.generateClasses(info, write, write);
-          write.flush();
+          String outputDir = DEF_OUTPUT_DIR;
+          if (opts.isDestinationSet() ) {
+            outputDir = opts.getDestination();
+            if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
+              outputDir = outputDir + "/";
+            }
+            outputDir = outputDir + info.getPackageName().replace('.', '/');
+            if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
+              outputDir = outputDir + "/";
+            }
+          }
+          final StringTemplateGroup group = new StringTemplateGroup(new FileReader(new File("res/templates/shared_java.stg")));
+          final StringTemplate testClassNameTemplate = group.lookupTemplate("testClassName");
+          testClassNameTemplate.setAttribute("class", info);
+          final StringTemplate dataClassNameTemplate = group.lookupTemplate("dataClassName");
+          dataClassNameTemplate.setAttribute("class", info);
+          new File(outputDir).mkdirs();
+          final FileWriter testClassWriter = new FileWriter(new File(outputDir + testClassNameTemplate.toString() + ".java"));
+          final FileWriter testDataClassWriter = new FileWriter(new File(outputDir + dataClassNameTemplate.toString() + ".java"));
+          generator.generateClasses(info, testClassWriter, testDataClassWriter);
+          testClassWriter.close();
+          testDataClassWriter.close();
         }
       }
     } catch (final InvalidOptionPropertyValueException e1) {
@@ -179,4 +206,5 @@ public final class Main {
     System.out.println("-public : Generates tests only for public methods.");
     System.out.println("-protected : Generates tests for public and protected methods.");
   }
+  
 }

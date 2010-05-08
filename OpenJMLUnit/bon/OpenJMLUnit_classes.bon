@@ -51,11 +51,16 @@ end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- GENERATOR cluster classes
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class_chart TYPE
+class_chart TYPE_INFO
   query
     "What is the unqualified class name?",
     "What is the fully qualified class name?",
     "What is the package name?"
+end
+
+class_chart PARAMETER_INFO
+  query
+    "What is the parameter name?"
 end
 
 class_chart CLASS_INFO

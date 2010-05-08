@@ -68,19 +68,16 @@ public class SourceWriter {
   /**
    * The ResourceBundle to use for writing constants.
    */
-  /*@ invariant my_resource_bundle
-    @
-   */
   private ResourceBundle my_resource_bundle;
   /**
    * The current indent level.
    */
-  // @ invariant my_indent_level >= 0;
+  //@ invariant my_indent_level >= 0;
   private int my_indent_level;
   /**
    * The number of characters to use for indents.
    */
-  // @ invariant my_indent_size >= 0;
+  //@ invariant my_indent_size >= 0;
   private int my_indent_size;
   /**
    * Char to use for indentation.
@@ -89,7 +86,7 @@ public class SourceWriter {
   /**
    * What level java block am I in? -1 is a Javadoc comment.
    */
-  // @ invariant my_block_level >= -1;
+  //@ invariant my_block_level >= -1;
   private int my_block_level;
   /**
    * Have any characters been written to the current line?
@@ -142,7 +139,7 @@ public class SourceWriter {
    * 
    * @return The current indent level.
    */
-  // @ensures \result == my_indent_level;
+  //@ ensures \result == my_indent_level;
   public int getIndentLevel() {
     return my_indent_level;
   }
@@ -156,7 +153,7 @@ public class SourceWriter {
    * @throws IOException an IOException occurred when attempting to append to
    *           the writer.
    */
-  // @ ensures !my_chars_on_cur_line;
+  //@ ensures !my_chars_on_cur_line;
   public void writeLine(final String the_string) throws IOException {
     my_writer.append(formatString(the_string) + NEWLINE);
     my_chars_on_cur_line = false;
@@ -172,7 +169,7 @@ public class SourceWriter {
    * @throws IOException an IOException occurred when attempting to append to
    *           the writer.
    */
-  // @ ensures my_chars_on_cur_line;
+  //@ ensures my_chars_on_cur_line;
   public void write(final String the_string) throws IOException {
     my_writer.append(formatString(the_string));
     my_chars_on_cur_line = true;
@@ -194,7 +191,7 @@ public class SourceWriter {
   /**
    * Increments the indent level by 1.
    */
-  // @ ensures \old (my_indent_level) == my_indent_level - 1;
+  //@ ensures \old (my_indent_level) == my_indent_level - 1;
   public void incrementIndentLevel() {
     my_indent_level++;
   }
@@ -202,8 +199,8 @@ public class SourceWriter {
   /**
    * Decrements the indent level by 1. The indent level must be at least 1.
    */
-  /* @ requires my_indent_level > 0;
-     @ ensures \old (my_indent_level) == my_indent_level + 1; 
+  /*@ requires my_indent_level > 0;
+    @ ensures \old (my_indent_level) == my_indent_level + 1; 
    */
   public void decrementIndentLevel() {
     my_indent_level--;

@@ -1,7 +1,22 @@
+/*
+ * OpenJMLUnit
+ * 
+ * @author "Jonathan Hogins (jon.hogins@gmail.com)"
+ * @module "OpenJML"
+ * @creation_date "April 2010"
+ * @last_updated_date "May 2010"
+ * @keywords "unit testing", "JML"
+ */
 
 package org.jmlspecs.openjmlunit.generator;
 
-public class Type {
+/**
+ * Name information about a type.
+ * 
+ * @author Jonathan Hogins
+ * @version April 2010
+ */
+public class TypeInfo {
 
   /**
    * The fully qualified name of this class.
@@ -17,7 +32,8 @@ public class Type {
    * Create a new Type with the given fully qualified name.
    * @param the_name The fully qualified name of the type.
    */
-  public Type(final String the_name) {
+  //@ requires false;
+  public TypeInfo(final String the_name) {
     my_name = the_name;
     my_short_name = the_name.substring(the_name.lastIndexOf('.') + 1);
   }
@@ -69,8 +85,8 @@ public class Type {
    * @return true if qualified names are equal. false otherwise.
    */
   public boolean equals(final Object the_o) {
-    if (the_o != null && the_o instanceof Type) {
-      return ((Type) the_o).my_name.equals(my_name);
+    if (the_o != null && the_o instanceof TypeInfo) {
+      return ((TypeInfo) the_o).my_name.equals(my_name);
     } else {
       return false;
     }
@@ -81,5 +97,13 @@ public class Type {
    */
   public int hashCode() {
     return my_name.hashCode();
+  }
+  /**
+   * Returns the fully qualified name as the string representation of
+   * the type.
+   * @return The fully qualified name.
+   */
+  public String toString() {
+    return getFullyQualifiedName();
   }
 }

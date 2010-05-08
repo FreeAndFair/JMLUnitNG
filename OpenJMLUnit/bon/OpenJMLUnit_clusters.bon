@@ -47,8 +47,10 @@ cluster_chart CLOPS
 end
 
 cluster_chart GENERATOR
-  class TYPE
+  class TYPE_INFO
   	description "Name information about a type."
+  class PARAMETER_INFO
+    description "Name information about a method parameter."
   class CLASS_INFO
     description "Information about a class under test."
   class INFO_FACTORY

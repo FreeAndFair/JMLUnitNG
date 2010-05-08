@@ -20,7 +20,7 @@ import java.util.List;
  * @author Jonathan Hogins
  * @version April 2010
  */
-public class ClassInfo extends Type {
+public class ClassInfo extends TypeInfo {
   /*@ invariant my_short_name.equals(
     @   getFullyQualifiedName().substring(getFullyQualifiedName().lastIndexOf('.') + 1));
    */
@@ -192,14 +192,6 @@ public class ClassInfo extends Type {
       }
     }
     return result;
-  }
-  
-  /**
-   * Returns the fully qualified name of the class.
-   * @return The name of the class.
-   */
-  public String toString() {
-    return getShortName();
   }
 
 }

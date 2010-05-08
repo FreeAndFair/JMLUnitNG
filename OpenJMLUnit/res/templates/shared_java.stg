@@ -6,18 +6,25 @@ testClassName(class) ::= "<class.shortName>_JML_Test"
 dataClassName(class) ::= "<class.shortName>_JML_Test_Data"
 
 testName(name, params) ::= <<
-test_<name><if(params)>_<params; separator="_"><endif>
+test_<name><if(params)>_<params:{<it.formattedName>}; separator="_"><endif>
 >>
 
 varJavaDocLine() ::= <<
  * @param <it:varName()> The <it> to be passed.
 >>
 
-varDecList(list) ::= "<trunc(list):varDec():{, }><last(list):varDec()>"
+classVarJavaDocLine() ::= <<
+ * @param <it:varName()> The <it.shortName> instance to be tested.
+>>
 
-varDec() ::= "final <it> <it:varName()>"
+varDecList(list) ::= <<
+<list:varDec(); separator=", ">
+>>
 
-varNameList(list) ::= "<trunc(list):varName():{, }><last(list):varName()>"
+varDec() ::= "final <it.fullyQualifiedName> <it:varName()>"
 
-varName() ::= "the_<it.shortName>_<i>"
-varNameWithParams(parameter) ::= "the_<it.shortName>_<i>"
+varNameList(list) ::= <<
+<list:varName(); separator=", ">
+>>
+
+varName() ::= "<it.parameterName>"
