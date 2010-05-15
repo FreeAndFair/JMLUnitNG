@@ -6,7 +6,6 @@ package <packageName>;
 
 import java.io.PrintWriter;
 
-import org.jmlspecs.openjmlunit.generator.SourceWriter;
 import org.jmlspecs.openjmlunit.testng.BasicTestListener;
 import org.testng.TestException;
 import org.testng.TestNG;
@@ -54,7 +53,7 @@ methodTest() ::= <<
 
 <it.parameterTypes:varJavaDocLine(); separator="\n">
  */
-@Test<if(it.parameterTypes)>(dataProvider = "<dataProviderName(name=it.name, params=it.parameterTypes)>")<endif>
+@Test(dataProvider = "<if(it.parameterTypes)><dataProviderName(name=it.name, params=it.parameterTypes)><else><classOnlyDataProviderName()><endif>")
 public void <testName(name=it.name, params=it.parameterTypes)>(<if(!it.constructor)>final <it.declaringClass.fullyQualifiedName> the_test_object<if(it.parameterTypes)>, <endif><endif><varDecList(it.parameterTypes)>) {
   try {
     <if(it.constructor)>

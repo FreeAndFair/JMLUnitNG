@@ -2,13 +2,21 @@
  * OpenJMLUnit
  * 
  * @author "Jonathan Hogins (jon.hogins@gmail.com)"
+ * 
  * @module "OpenJML"
+ * 
  * @creation_date "April 2010"
+ * 
  * @last_updated_date "May 2010"
+ * 
  * @keywords "unit testing", "JML"
  */
 
 package org.jmlspecs.openjmlunit.generator;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Name information about a type.
@@ -17,6 +25,24 @@ package org.jmlspecs.openjmlunit.generator;
  * @version April 2010
  */
 public class TypeInfo {
+  /**
+   * The set of primitive types.
+   */
+  private static final Set<String> PRIMITIVE_TYPES;
+
+  static {
+    Set<String> prims = new HashSet<String>();
+    prims.add("boolean");
+    prims.add("int");
+    prims.add("long");
+    prims.add("float");
+    prims.add("double");
+    prims.add("byte");
+    prims.add("short");
+    prims.add("char");
+    prims.add("java.lang.String");
+    PRIMITIVE_TYPES = Collections.unmodifiableSet(prims);
+  }
 
   /**
    * The fully qualified name of this class.
@@ -27,12 +53,14 @@ public class TypeInfo {
    */
   protected final String my_short_name;
 
-  //@ invariant my_short_name.equals(my_name.substring(my_name.lastIndexOf('.') + 1));
+  // @ invariant my_short_name.equals(my_name.substring(my_name.lastIndexOf('.')
+  // + 1));
   /**
    * Create a new Type with the given fully qualified name.
+   * 
    * @param the_name The fully qualified name of the type.
    */
-  //@ requires false;
+  // @ requires false;
   public TypeInfo(final String the_name) {
     my_name = the_name;
     my_short_name = the_name.substring(the_name.lastIndexOf('.') + 1);
@@ -55,13 +83,15 @@ public class TypeInfo {
   public String getFullyQualifiedName() {
     return my_name;
   }
-  
+
   /**
-   * Returns the fully qualified name of the type with '.' characters replaced by '_'.
-   * @return Fully qualified name of the type with '.' characters replaced by '_'.
+   * Returns the fully qualified name of the type with '.' characters replaced
+   * by '_' and [] replaced with "Array".
+   * 
+   * @return Formatted fully qualified name of the type.
    */
   public String getFormattedName() {
-    return my_name.replace('.', '_');
+    return my_name.replace('.', '_').replaceAll("\\[\\]", "Array");
   }
 
   /**
@@ -77,10 +107,22 @@ public class TypeInfo {
     }
   }
 
-  
   /**
-   * Compares with object for equality. To ClassInfo objects are equal if they have the same
-   * fully qualified names.
+   * Returns true if the type is a primitive, false otherwise. Primitive types
+   * are "boolean", "int", "long", "float", "double", "byte", "short", "char",
+   * and "java.lang.String".
+   * 
+   * @return true if the type is a primitive, false otherwise.
+   */
+  // @ensures \result == PRIMITIVE_TYPES.contains(my_name);
+  public boolean isPrimitive() {
+    return PRIMITIVE_TYPES.contains(my_name);
+  }
+
+  /**
+   * Compares with object for equality. To ClassInfo objects are equal if they
+   * have the same fully qualified names.
+   * 
    * @param the_o The object to compare.
    * @return true if qualified names are equal. false otherwise.
    */
@@ -91,16 +133,19 @@ public class TypeInfo {
       return false;
     }
   }
+
   /**
    * Returns a hash of this object.
+   * 
    * @return The hash code of this object.
    */
   public int hashCode() {
     return my_name.hashCode();
   }
+
   /**
-   * Returns the fully qualified name as the string representation of
-   * the type.
+   * Returns the fully qualified name as the string representation of the type.
+   * 
    * @return The fully qualified name.
    */
   public String toString() {

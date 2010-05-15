@@ -62,6 +62,7 @@ public class BasicTestListener extends TestListenerAdapter {
       my_writer.write(the_tr.toString());
       my_writer.write(NEWLINE);
       super.onTestSuccess(the_tr);
+      my_writer.flush();
     } catch (final IOException e) {
       System.err.println("Could not write to supplied Writer in BasicTestListener.");
       e.printStackTrace();
@@ -77,8 +78,10 @@ public class BasicTestListener extends TestListenerAdapter {
     try {
       my_writer.write("Test Failed\n");
       my_writer.write(the_tr.toString());
+      my_writer.write("   " + the_tr.getThrowable());
       my_writer.write(NEWLINE);
       super.onTestFailure(the_tr);
+      my_writer.flush();
     } catch (final IOException e) {
       System.err.println("onTestFailure: Could not write to supplied Writer " +
         "in BasicTestListener.");
@@ -97,6 +100,7 @@ public class BasicTestListener extends TestListenerAdapter {
       my_writer.write(the_tr.toString());
       my_writer.write(NEWLINE);
       super.onTestSkipped(the_tr);
+      my_writer.flush();
     } catch (final IOException e) {
       System.err.println("onTestSkipped: Could not write to supplied Writer " +
         "in BasicTestListener.");
@@ -113,13 +117,15 @@ public class BasicTestListener extends TestListenerAdapter {
     try {
       my_writer.write("Test Failed, but was within success percentage\n");
       my_writer.write(the_tr.toString());
+      my_writer.write("   " + the_tr.getThrowable());
       my_writer.write(NEWLINE);
+      super.onTestFailedButWithinSuccessPercentage(the_tr);
+      my_writer.flush();
     } catch (final IOException e) {
       System.err.println("onTestFailedButWithinSuccessPercentage: Could not write " + 
         "to supplied Writer in BasicTestListener.");
       e.printStackTrace();
     }
-    super.onTestFailedButWithinSuccessPercentage(the_tr);
   }
 
 }

@@ -10,7 +10,6 @@
 
 package org.jmlspecs.openjmlunit.iterator;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,26 +31,21 @@ public class MultiIterator extends Object implements RepeatedAccessIterator<Obje
   //              appear in the list."
 
   /**
-   * The Iterator over my_iterators.
+   * The Iterator over concatenated iterators.
    */
-  private IteratorAdapter<Iterator<?>> my_current_iterator;
-
-  /**
-   * The current element in the sequence.
-   */
-  private Object my_current_element;
+  private IteratorAdapter<RepeatedAccessIterator<?>> my_current_iterator;
 
   /**
    * Creates a new MultiIterator that iterates over all given iterators in
    * sequence.
    * 
-   * @param the_iterators The list of iterators to iterate over.
+   * @param iterators The list of iterators to iterate over.
    */
-  /*@ requires !the_iterators.isEmpty() && 
-    @         (\forall Iterator i; the_iterators.contains(i); i.hasNext()); */
-  public MultiIterator(List<Iterator<?>> the_iterators) {
-    my_current_iterator = new IteratorAdapter<Iterator<?>>(the_iterators.iterator());
-    internalAdvance();
+  public MultiIterator(List<RepeatedAccessIterator<?>> the_iterators) {
+    my_current_iterator = new IteratorAdapter<RepeatedAccessIterator<?>>(the_iterators.iterator());
+    while (my_current_iterator.hasElement() && !my_current_iterator.element().hasElement()) {
+      my_current_iterator.advance();
+    }
   }
 
   /**
@@ -70,18 +64,15 @@ public class MultiIterator extends Object implements RepeatedAccessIterator<Obje
    */
   @Override
   public/*@ pure */Object element() {
-    return my_current_element;
+    return my_current_iterator.element().element();
   }
 
   /**
-   * Returns true if there are more elements in the sequence. False otherwise.
-   * 
-   * @return True if there are more elements in the sequence. False otherwise.
+   * @inheritDoc
    */
   @Override
-  public/*@ pure */boolean hasMoreElements() {
-    return my_current_iterator.element() != null &&
-           (my_current_iterator.element().hasNext() || my_current_iterator.hasMoreElements());
+  public/*@ pure */boolean hasElement() {
+    return my_current_iterator.hasElement();
   }
 
   /**
@@ -89,14 +80,14 @@ public class MultiIterator extends Object implements RepeatedAccessIterator<Obje
    * advance method to be called from the constructor while allowing the public
    * advance() to be non-final.
    */
-  /*@ requires hasMoreElements(); */
+  /*@ requires hasElement(); */
   private void internalAdvance() {
-    //proceed in the sequence until the first element is found or the end is reached.
-    while (!my_current_iterator.element().hasNext() && my_current_iterator.hasMoreElements()) {
-      my_current_iterator.advance();
+    if (my_current_iterator.hasElement()) {
+      my_current_iterator.element().advance();
     }
-    if (my_current_iterator.element().hasNext()) {
-      my_current_element = my_current_iterator.element().next();
+    //proceed in the sequence until the first element is found or the end is reached.
+    while (my_current_iterator.hasElement() && !my_current_iterator.element().hasElement()) {
+      my_current_iterator.advance();
     }
   }
 }

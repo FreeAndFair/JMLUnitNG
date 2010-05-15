@@ -1,5 +1,6 @@
 group shared_java;
 
+classOnlyDataProviderName() ::= "p_class_only"
 dataProviderName(name, params) ::= "p_<testName(name=name, params=params)>"
 
 testClassName(class) ::= "<class.shortName>_JML_Test"
@@ -28,3 +29,28 @@ varNameList(list) ::= <<
 >>
 
 varName() ::= "<it.parameterName>"
+
+baseStrategyMap ::= [
+        "int":"IntStrategy",
+        "long":"LongStrategy",
+        "float":"FloatStrategy",
+        "double":"DoubleStrategy",
+        "boolean":"BooleanStrategy",
+        "byte":"ByteStrategy",
+        "short":"ShortStrategy",
+        "char":"CharacterStrategy",
+        "java.lang.String":"StringStrategy",
+        default:"ObjectStrategy" // anything other than an atomic type
+]
+
+typeTransMap ::= [
+        "int":"Integer",
+        "long":"Long",
+        "float":"Float",
+        "double":"Double",
+        "boolean":"Boolean",
+        "byte":"Byte",
+        "short":"Short",
+        "char":"Character",
+        default:key // anything other than an atomic type
+]

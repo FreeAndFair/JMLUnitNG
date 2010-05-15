@@ -37,6 +37,11 @@ public class IteratorAdapter<T> implements RepeatedAccessIterator<T> {
    * The current element of the embedded iterator.
    */
   private T my_current;
+  
+  /**
+   * Is this iterator on a valid element?
+   */
+  private boolean my_is_valid;
 
   /**
    * Embed the_java_util_iterator into a repeated access iterator!
@@ -48,6 +53,9 @@ public class IteratorAdapter<T> implements RepeatedAccessIterator<T> {
     my_iterator = the_java_util_iterator;
     if (my_iterator.hasNext()) {
       my_current = my_iterator.next();
+      my_is_valid = true;
+    } else {
+      my_is_valid = false;
     }
   }
 
@@ -56,8 +64,8 @@ public class IteratorAdapter<T> implements RepeatedAccessIterator<T> {
   /**
    * @return Does the iterator have any elements remaining?
    */
-  public boolean hasMoreElements() {
-    return my_iterator.hasNext();
+  public boolean hasElement() {
+    return my_is_valid;
   }
 
   /**
@@ -71,6 +79,10 @@ public class IteratorAdapter<T> implements RepeatedAccessIterator<T> {
    * Advance the iterator to the next element!
    */
   public void advance() {
-    my_current = my_iterator.next();
+    if (my_iterator.hasNext()) {
+      my_current = my_iterator.next();
+    } else {
+      my_is_valid = false;
+    }
   }
 }

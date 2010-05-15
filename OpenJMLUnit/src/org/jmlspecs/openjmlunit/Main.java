@@ -152,6 +152,8 @@ public final class Main {
             if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
               outputDir = outputDir + "/";
             }
+          } else {
+            outputDir = new File(unit.getSourceFile().toUri().getPath()).getParent() + "/";
           }
           final StringTemplateGroup group = new StringTemplateGroup(new FileReader(new File("res/templates/shared_java.stg")));
           final StringTemplate testClassNameTemplate = group.lookupTemplate("testClassName");

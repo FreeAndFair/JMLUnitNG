@@ -234,7 +234,7 @@ public class TestClassGenerator {
    * @param the_methods The methods for which to find parameter basic types.
    * @return A list of basic types.
    */
-  /*@ ensures (\forall Sring c; \result.contains(c); 
+  /*@ ensures (\forall String c; \result.contains(c); 
     @   (\exists MethodInfo m; the_methods.contains(m); 
     @     (\exists String s; m.getParameterTypes().contains(s); s.equals(c))
     @   )

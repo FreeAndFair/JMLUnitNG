@@ -21,20 +21,24 @@ package org.jmlspecs.openjmlunit.iterator;
 public interface RepeatedAccessIterator<T> {
   // Queries
   /**
-   * @return Does the iterator have any elements remaining?
+   * 
+   * @return True if the current element is valid. False if the iterator is past the end of the sequence.
    */
-  boolean hasMoreElements();
+  boolean hasElement();
   
   /**
-   * @return What is the current element of the iterator?
+   * Returns the current element of the iterator. hasElement must return true for this call to be
+   * valid.
+   * @return The current element of the iterator
    */
+  //@ requires hasElement();
   T element();
   // Commands
   
   /**
-   * Advance the iterator to the next element!
+   * Advances the iterator to the next element.
    */
   // @constraint "The iterator cannot be advanced if it has no elements remaining."
-  //@ requires hasMoreElements();
+  //@ requires hasElement();
   void advance();
 }

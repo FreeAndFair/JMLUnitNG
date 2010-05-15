@@ -100,7 +100,9 @@ cluster_chart ITERATOR
   class MULTI_ITERATOR
     description "A repeated access iterator that combines one or more other iterators."
   class OBJECT_ARRAY_ITERATOR
-    description "A reperated access iterator that generates arrays of objects by reflectively \
+    description "A repeated access iterator that iterates over an array of objects."
+  class PARAMETER_ARRAY_ITERATOR
+    description "A repeated access iterator that generates arrays of objects by reflectively \
                \ using iterator generation methods to refresh individual array element iterators."
   class REPEATED_ACCESS_ITERATOR
     description "An iterator that supports accessing the current value multiple times."

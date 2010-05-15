@@ -25,9 +25,12 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
 import com.sun.tools.javac.code.Scope;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTags;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
@@ -74,7 +77,7 @@ public final class InfoFactory {
    * @param the_class The Class generate a ClassInfo object for.
    * @return A ClassInfo object representing the class.
    */
-  public static TypeInfo getClassInfo(final Class<?> the_class) {
+  public static ClassInfo getClassInfo(final Class<?> the_class) {
     // TODO: Implement.
     return null;
   }
@@ -115,7 +118,8 @@ public final class InfoFactory {
     CLASS_CACHE.put(name, result);
     // add methods after ClassInfo creation.
     for (Scope.Entry e = members.elems; e != null; e = e.sibling) {
-      if (e.sym != null && e.sym.getKind().equals(ElementKind.METHOD)) {
+      if (e.sym != null && (e.sym.getKind().equals(ElementKind.METHOD) || 
+          e.sym.getKind().equals(ElementKind.CONSTRUCTOR))) {
         method_infos.add(createMethodInfo((MethodSymbol) e.sym, result));
       }
     }
@@ -145,8 +149,7 @@ public final class InfoFactory {
    * @param the_sym The MethodSymbol to create a MethodInfo object for.
    * @param the_parent_class The ClassInfo that contains this MethodInfo.
    */
-  /*@ ensures \result.getName().equals(the_sym.getSimpleName().toString()) &&
-    @         (\forall String s; \result.getParameterTypes().contains(s);
+  /*@ ensures (\forall String s; \result.getParameterTypes().contains(s);
     @             (\exists VarSymbol v; the_sym.params.contains(v); 
     @                 s.equals(v.getSimpleName().toString()))) &&
     @         the_parent_class != null ==> \result.getParentClass() == the_parent_class &&
@@ -161,7 +164,7 @@ public final class InfoFactory {
                                             final/*@ nullable */ClassInfo the_parent_class) {
     final List<ParameterInfo> params = new ArrayList<ParameterInfo>(the_sym.getParameters().size());
     for (VarSymbol v : the_sym.params) {
-      params.add(new ParameterInfo(v.type.toString(), v.name.toString()));
+      params.add(createParameterInfo(v));
     }
     ClassInfo declaring_class = the_parent_class;
     if (the_sym.getEnclosingElement() instanceof ClassSymbol) {
@@ -176,9 +179,34 @@ public final class InfoFactory {
       parent_class = declaring_class;
     }
     final ProtectionLevel level = getLevel(the_sym.getModifiers());
-    return new MethodInfo(the_sym.getSimpleName().toString(), parent_class, declaring_class,
+    String name = the_sym.getSimpleName().toString();
+    if ("<init>".equals(name)) {
+      name = the_parent_class.getShortName();
+    }
+    return new MethodInfo(name, parent_class, declaring_class,
                           level, params, new TypeInfo(the_sym.getReturnType().toString()),
                           the_sym.isConstructor(), the_sym.isStatic());
+  }
+  
+  /**
+   * Returns a ParameterInfo object representing the given VarSymbol.
+   * @param the_var_sym The VarSymbol to translate into a ParameterInfo object.
+   */
+  /*@ ensures \result.getParameterName.equals(the_var_sym.name.toString()) &&
+    @         \result.is_array == the_var_sym.type.tag == TypeTags.ARRAY;
+   */
+  public static ParameterInfo createParameterInfo(final VarSymbol the_var_sym) {
+    Type t = the_var_sym.type;
+    boolean is_array = false;
+    if (t.tag == TypeTags.ARRAY) {
+      is_array = true;
+      t = ((ArrayType)t).getComponentType();
+    }
+    //remove any generic elements
+    while (t.tag == TypeTags.TYPEVAR) {
+      t = t.getUpperBound().tsym.asType();
+    }
+    return new ParameterInfo(t.toString(), the_var_sym.name.toString(), is_array);
   }
 
   /**

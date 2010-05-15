@@ -101,7 +101,7 @@ public class ClassInfo extends TypeInfo {
   public/*@ pure */boolean isAbstract() {
     return my_is_abstract;
   }
-
+  
   // "What are the constructors?",
   // "What are the factory methods?",
   /**

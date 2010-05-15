@@ -15,7 +15,6 @@
 package org.jmlspecs.openjmlunit.strategy;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jmlspecs.openjmlunit.iterator.MultiIterator;
@@ -35,7 +34,7 @@ public abstract class BasicStrategy {
    * 
    * @return An Iterator over default values.
    */
-  public abstract Iterator<?> getDefaultValues();
+  public abstract RepeatedAccessIterator<?> getDefaultValues();
 
   // "What is your custom set of values?",
   /**
@@ -43,7 +42,7 @@ public abstract class BasicStrategy {
    * 
    * @return An Iterator over custom values.
    */
-  public abstract Iterator<?> getCustomValues();
+  public abstract RepeatedAccessIterator<?> getCustomValues();
 
   // "What is your global set of values?",
   /**
@@ -52,7 +51,7 @@ public abstract class BasicStrategy {
    * 
    * @return An Iterator over global values.
    */
-  public abstract Iterator<?> getGlobalValues();
+  public abstract RepeatedAccessIterator<?> getGlobalValues();
 
   // "What is an iterator over all your sets of values?"
   /**
@@ -62,7 +61,7 @@ public abstract class BasicStrategy {
    * @return Iterator over all values.
    */
   public RepeatedAccessIterator<?> iterator() {
-    final List<Iterator<?>> iterators = new ArrayList<Iterator<?>>(3);
+    final List<RepeatedAccessIterator<?>> iterators = new ArrayList<RepeatedAccessIterator<?>>(3);
     iterators.add(getDefaultValues());
     iterators.add(getCustomValues());
     iterators.add(getGlobalValues());
