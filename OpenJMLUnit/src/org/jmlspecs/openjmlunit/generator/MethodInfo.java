@@ -12,6 +12,7 @@ package org.jmlspecs.openjmlunit.generator;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -252,6 +253,35 @@ public class MethodInfo {
       cur = cur.getSuperclassInfo();
     }
     return my_is_static && cur != null;
+  }
+  
+  /**
+   * Returns the signature of this method as a String.
+   * @return The method signature
+   */
+  public /*@ pure */ String toString() {
+    StringBuilder sb = new StringBuilder();
+    if (my_return_type != null) {
+      sb.append(my_return_type.getFullyQualifiedName());
+      sb.append(" ");
+    }
+    sb.append(my_name);
+    sb.append("(");
+    Iterator<ParameterInfo> paramIter = my_parameter_types.iterator();
+    while (paramIter.hasNext()) {
+      ParameterInfo param = paramIter.next();
+      sb.append(param.getFullyQualifiedName());
+      sb.append(" ");
+      sb.append(param.getParameterName());
+      if (param.isArray()) {
+        sb.append("[]");
+      }
+      if (paramIter.hasNext()) {
+        sb.append(", ");
+      }
+    }
+    sb.append(")");
+    return sb.toString();
   }
 
 }
