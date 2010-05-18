@@ -40,7 +40,7 @@ baseStrategyMap ::= [
         "boolean":"BooleanStrategy",
         "byte":"ByteStrategy",
         "short":"ShortStrategy",
-        "char":"CharacterStrategy",
+        "char":"CharStrategy",
         "java.lang.String":"StringStrategy",
         default:"ObjectStrategy" // anything other than an atomic type
 ]

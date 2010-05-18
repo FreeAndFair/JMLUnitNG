@@ -62,11 +62,11 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]>,
    * @throws IllegalArgumentException An InstantiationException or IllegalAccessException was caught
    * when calling the nullary constructors of the_strategy_classes.
    */
-  /*@ requires (\foreach int i; i >= 0 && i < the_strategy_classes.length; 
+  /*@ requires (\forall int i; i >= 0 && i < the_strategy_classes.length; 
     @		the_strategy_classes[i].newInstance().iterator().hasElement());
     @ ensures my_strategies.length == the_strategy_classes.length &&
     @		my_strategy_classes.length == the_strategy_classes.length &&
-    @		(\foreach int i; i >= 0 && i < my_strategies.length; my_strategies[i].hasNext());
+    @		(\forall int i; i >= 0 && i < my_strategies.length; my_strategies[i].hasElement());
    */
   public ParameterArrayIterator(Class<? extends BasicStrategy>... the_strategy_classes) {
   	my_strategy_classes = the_strategy_classes;
@@ -111,7 +111,7 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]>,
    * Helper method. Advances the iterator. Seperate from advance() to allow a call in the constructor.
    */
   /*@ requires !my_is_finished;
-    @ ensures (\foreach Integer i; i >= 0 && i < my_strategies.length; my_strategies[i].hasElement()) ||
+    @ ensures (\forall Integer i; i >= 0 && i < my_strategies.length; my_strategies[i].hasElement()) ||
     @						my_is_finished;
    */
   private void internalAdvance() {

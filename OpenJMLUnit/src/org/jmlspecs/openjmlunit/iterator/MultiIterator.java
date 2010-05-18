@@ -51,7 +51,7 @@ public class MultiIterator extends Object implements RepeatedAccessIterator<Obje
   /**
    * Advances the MultiIterator to the next value in the sequence.
    */
-  /*@ requires hasMoreElements(); */
+  /*@ requires hasElement(); */
   @Override
   public void advance() {
     internalAdvance();

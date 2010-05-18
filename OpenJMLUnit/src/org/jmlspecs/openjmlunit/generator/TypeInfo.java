@@ -52,18 +52,28 @@ public class TypeInfo {
    * The unqualified name of the class.
    */
   protected final String my_short_name;
-
-  // @ invariant my_short_name.equals(my_name.substring(my_name.lastIndexOf('.')
-  // + 1));
   /**
-   * Create a new Type with the given fully qualified name.
+   * The generic component of the class.
+   */
+  protected final String my_generic_comp;
+
+  // @ invariant my_short_name.equals(my_name.substring(my_name.lastIndexOf('.') + 1));
+  /**
+   * Create a new Type with the given fully qualified name. If the given fully qualified name has a generic portion, it is removed.
    * 
    * @param the_name The fully qualified name of the type.
    */
-  // @ requires false;
+  // @ ensures my_generic_comp != null <==> the_name.indexOf('<') != the_name.length;
   public TypeInfo(final String the_name) {
-    my_name = the_name;
-    my_short_name = the_name.substring(the_name.lastIndexOf('.') + 1);
+    int generic_start = the_name.indexOf('<');
+    if (generic_start == -1) {
+      generic_start = the_name.length();
+      my_generic_comp = "";
+    } else {
+      my_generic_comp = the_name.substring(generic_start, the_name.length() - 1);
+    }
+    my_name = the_name.substring(0, generic_start);
+    my_short_name = the_name.substring(my_name.lastIndexOf('.') + 1);
   }
 
   /**
@@ -76,12 +86,21 @@ public class TypeInfo {
   }
 
   /**
-   * Returns the fully qualified name of the class.
+   * Returns the fully qualified name of the class. Does not include generics information.
    * 
    * @return The name of the class
    */
   public String getFullyQualifiedName() {
     return my_name;
+  }
+  
+  /**
+   * Returns the generic component of the type or the empty string if one does not exist.
+   * 
+   * @return The generic component of the type.
+   */
+  public String getGenericComponent() {
+    return my_generic_comp;
   }
 
   /**

@@ -91,7 +91,7 @@ public final class InfoFactory {
    */
   /*@ ensures \result.equals(CLASS_CACHE.get(the_class.getQualifiedName().toString())) &&
     @         !\old (CLASS_CACHE).containsKey(the_class.getQualifiedName().toString()) ==>
-    @           (\result.getName().equals(the_class.getQualifiedName().toString()) &&
+    @           (\result.getFullyQualifiedName().equals(the_class.getQualifiedName().toString()) &&
     @             \result.getParent() == null <==> the_class.getSuperclass() == null &&
     @             \result.getParent() != null ==> 
     @               \result.getParent().equals(getClassInfo((ClassSymbol) the_class.getSuperclass().tsym)) &&
@@ -154,7 +154,7 @@ public final class InfoFactory {
     @                 s.equals(v.getSimpleName().toString()))) &&
     @         the_parent_class != null ==> \result.getParentClass() == the_parent_class &&
     @         the_parent_class == null ==> \result.getParentClass() == \result.getDeclaringClass() &&
-    @         \result.getDeclaringClass().getName()
+    @         \result.getDeclaringClass().getFullyQualifiedName()
     @             .equals(the_sym.getEnclosingElement().getQualifiedName().toString()) &&
     @         \result.getProtectionLevel() == getLevel(the_sym.getModifiers()) &&
     @         \result.isConstructor() == the_sym.isConstructor() &&
@@ -192,8 +192,8 @@ public final class InfoFactory {
    * Returns a ParameterInfo object representing the given VarSymbol.
    * @param the_var_sym The VarSymbol to translate into a ParameterInfo object.
    */
-  /*@ ensures \result.getParameterName.equals(the_var_sym.name.toString()) &&
-    @         \result.is_array == the_var_sym.type.tag == TypeTags.ARRAY;
+  /*@ ensures \result.getParameterName().equals(the_var_sym.name.toString()) &&
+    @         \result.isArray() <==> the_var_sym.type.tag == TypeTags.ARRAY;
    */
   public static ParameterInfo createParameterInfo(final VarSymbol the_var_sym) {
     Type t = the_var_sym.type;

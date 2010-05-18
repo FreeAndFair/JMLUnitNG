@@ -56,6 +56,7 @@ class_chart TYPE_INFO
     "What is the unqualified class name?",
     "What is the fully qualified class name?",
     "What is the package name?",
+    "What is the generic component of this type?",
     "Is a primitive type?"
 end
 

@@ -36,8 +36,7 @@ public class IteratorWrapper<T> implements Iterator<T> {
    * Creates a new IteratorWrapper for the_iterator.
    * @param the_iterator The iterator to iterate over.
    */
-  /*@ ensures my_iterator == the_iterator &&
-    @         my_is_done == the_iterator.element() != null;
+  /*@ ensures my_iterator == the_iterator;
    */
   public IteratorWrapper(final RepeatedAccessIterator<T> the_iterator) {
     my_iterator = the_iterator;
