@@ -36,8 +36,10 @@ public class <dataClassName(class)> {
   }
   <methods:methodProvider()>
   
+  <if(!class.abstract)>
   <classOnlyDataProvider()>
   <classStrategy()>
+  <endif>
 }
 >>
 
@@ -59,7 +61,7 @@ public static abstract class <globalStrategyName(typeName=it.formattedName)> ext
 >>
 
 methodData(method) ::= <<
-<it.parameterTypes:paramData(the_method=method); separator="\n">
+<it.parameterTypes:paramData(the_method=method)>
 >>
 
 paramData(the_method) ::= <<
@@ -82,10 +84,11 @@ methodProvider(method) ::= <<
  * @return An iterator over strategies to use for parameter generation.
  */
 @SuppressWarnings({"unchecked"})
-@DataProvider(name = "<dataProviderName(name=method.name, params=method.parameterTypes)>")
-public static Iterator\<Object[]\> <dataProviderName(name=method.name, params=method.parameterTypes)>() {
+@DataProvider(name = "<dataProviderName()>")
+public static Iterator\<Object[]\> <dataProviderName()>() {
   return new ParameterArrayIterator(<if(!method.constructor)><classStrategyName()>.class, <endif><method.parameterTypes:{<strategyName(method=method, param=it)>.class}; wrap="\n    ", separator=", ">);
 }
+
 <endif>
 >>
 
@@ -130,7 +133,7 @@ classStrategyConstructorData(method) ::= <<
 <if(method.constructor)>
 //objects for constructor <method>
 <if(method.parameterTypes)>
-iter = <dataProviderName(name=method.name, params=method.parameterTypes)>();
+iter = <dataProviderName()>();
 while (iter.hasNext()) {
   params = iter.next();
   try {
@@ -151,6 +154,6 @@ try {
 
 cast(parameterType) ::= "(<parameterType:type()>)"
 
-strategyName(method, param) ::= "<param.parameterName>_<method.name>_<method.parameterTypes:{<it.formattedName>}>_Strategy"
+strategyName(method, param) ::= "<param.parameterName>_<method.uniqueName>_Strategy"
 classStrategyName() ::= "ClassObjectStrategy"
 globalStrategyName(typeName) ::= "<it.formattedName>_GlobalStrategy"

@@ -87,6 +87,7 @@ public class MethodInfo {
   private boolean my_is_factory;
 
   /*@ invariant my_is_testable == 
+    @        !(my_is_constructor && my_parent_class.isAbstract()) &&
     @        !my_protection_level.equals(ProtectionLevel.PRIVATE) && 
     @            !UNTESTABLE_METHOD_NAMES.contains(my_name); */
   /**
@@ -126,6 +127,7 @@ public class MethodInfo {
     my_is_inherited = !the_parent_class.equals(the_declaring_class);
     my_is_factory = determineIsFactory();
     my_is_testable =
+        !(my_is_constructor && my_parent_class.isAbstract()) &&
         !my_protection_level.equals(ProtectionLevel.PRIVATE) &&
             !UNTESTABLE_METHOD_NAMES.contains(my_name);
   }
@@ -221,7 +223,8 @@ public class MethodInfo {
   // "Is the method testable?",
   /**
    * Returns whether or not this method is testable. A method is testable if and
-   * only if it has a non-private protection level and does not (and does not
+   * only if it a) is not a constructor of an abstract class, 
+   * b)has a non-private protection level, and c) is not (and does not
    * override) one of the following methods from java.lang.Object: finalize,
    * getClass, notify, notifyAll, wait.
    * 

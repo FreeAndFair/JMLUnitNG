@@ -119,9 +119,10 @@ class_chart METHOD_INFO
     "A method cannot be both a constructor and static.",
     "A method is a factory if and only if it is static and its return type is\
    \ the same as the class it belongs to or an abstract parent class thereof.",
-    "A method is testable if and only if it has a non-private protection level and \
-   \ is not (and does not override) one of the following methods from java.lang.Object:\
-   \ finalize, getClass, notify, notifyAll, wait.",
+    "A method is testable if and only if it a) is not a constructor of an\
+    \ abstract class, b)has a non-private protection level, and c) is not (and\
+    \ does not override) one of the following methods from java.lang.Object:\
+    \ finalize, getClass, notify, notifyAll, wait.",
     "A method is inherited if and only if the class it belongs to and the class\
    \ in which it is declared are different classes."
 end

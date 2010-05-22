@@ -1,13 +1,13 @@
 group shared_java;
 
 classOnlyDataProviderName() ::= "p_class_only"
-dataProviderName(name, params) ::= "p_<testName(name=name, params=params)>"
+dataProviderName() ::= "p_<method.uniqueName>"
 
 testClassName(class) ::= "<class.shortName>_JML_Test"
 dataClassName(class) ::= "<class.shortName>_JML_Test_Data"
 
-testName(name, params) ::= <<
-test_<name><if(params)>_<params:{<it.formattedName>}; separator="_"><endif>
+testName() ::= <<
+test_<method.uniqueName>
 >>
 
 varJavaDocLine() ::= <<

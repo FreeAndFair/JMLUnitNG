@@ -70,10 +70,10 @@ public class TypeInfo {
       generic_start = the_name.length();
       my_generic_comp = "";
     } else {
-      my_generic_comp = the_name.substring(generic_start, the_name.length() - 1);
+      my_generic_comp = the_name.substring(generic_start, the_name.length());
     }
     my_name = the_name.substring(0, generic_start);
-    my_short_name = the_name.substring(my_name.lastIndexOf('.') + 1);
+    my_short_name = my_name.substring(my_name.lastIndexOf('.') + 1);
   }
 
   /**
