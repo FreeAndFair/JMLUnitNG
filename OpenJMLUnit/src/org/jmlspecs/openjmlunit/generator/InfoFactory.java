@@ -123,6 +123,30 @@ public final class InfoFactory {
         method_infos.add(createMethodInfo((MethodSymbol) e.sym, result));
       }
     }
+    // add inherited methods from the parent class
+    if (parent != null)
+    {
+      for (MethodInfo pm : parent.getAllMethods())
+      {
+        if (!pm.isConstructor() && !pm.isStatic() &&
+            !pm.getProtectionLevel().equals(ProtectionLevel.PRIVATE))
+        {
+          boolean duplicate = false;
+          for (MethodInfo m : method_infos)
+          {
+            duplicate = duplicate || 
+                        (m.getName().equals(pm.getName()) &&
+                         m.getParameterTypes().equals(pm.getParameterTypes()));
+          }
+          if (!duplicate)
+          {
+            method_infos.add(new MethodInfo(pm.getName(), result, pm.getDeclaringClass(),
+                                            pm.getProtectionLevel(), pm.getParameterTypes(),
+                                            pm.getReturnType(), false, false));
+          }
+        }
+      }
+    }
     return result;
   }
 

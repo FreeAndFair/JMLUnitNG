@@ -194,4 +194,13 @@ public class ClassInfo extends TypeInfo {
     return result;
   }
 
+  /**
+   * Returns a List of all the MethodInfo objects that represent the 
+   * methods of the class.
+   * 
+   * @return A List of MethodInfo objects.
+   */
+  public List<MethodInfo> getAllMethods() {
+    return new LinkedList<MethodInfo>(my_method_infos);
+  }
 }

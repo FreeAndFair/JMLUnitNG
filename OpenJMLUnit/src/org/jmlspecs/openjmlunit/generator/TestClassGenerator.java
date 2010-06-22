@@ -233,6 +233,7 @@ public class TestClassGenerator {
         methods.add(m);
       }
     }
+    System.err.println("Testing " + methods.size() + " methods for class " + the_class.getFullyQualifiedName());
     return methods;
   }
 
@@ -401,7 +402,7 @@ public class TestClassGenerator {
      * @return The unique name of the method.
      */
     public String getUniqueName() {
-      System.out.println("getUniqueName() called with result" + my_unique_name);
+//      System.out.println("getUniqueName() called with result" + my_unique_name);
       return my_unique_name;
     }
     /**

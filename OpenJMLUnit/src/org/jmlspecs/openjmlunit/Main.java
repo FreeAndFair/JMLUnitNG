@@ -39,6 +39,7 @@ import org.jmlspecs.openjmlunit.clops.CmdOptionsParser;
 import org.jmlspecs.openjmlunit.generator.ClassInfo;
 import org.jmlspecs.openjmlunit.generator.InfoFactory;
 import org.jmlspecs.openjmlunit.generator.MethodInfo;
+import org.jmlspecs.openjmlunit.generator.ProtectionLevel;
 import org.jmlspecs.openjmlunit.generator.StringTemplateUtil;
 import org.jmlspecs.openjmlunit.generator.TestClassGenerator;
 import org.jmlspecs.openjmlunit.generator.XMLGenerator;
@@ -188,16 +189,34 @@ public final class Main {
     final ClassInfo info = InfoFactory.getClassInfo(the_unit);
     //debug output
     System.out.println("Name: " + info.getShortName());
-//    System.out.println("Parent Name: " + info.getSuperclassInfo().getShortName());
+    System.out.println("Parent Name: " + info.getSuperclassInfo().getShortName());
     System.out.println("Prot Level: " + info.getProtectionLevel().toString());
-    System.out.println("Testable methods:");
+    System.out.println("Testable Methods:");
     for (MethodInfo m : info.getTestableMethods()) {
       System.out.println("Method Name: " + m.getName() + " Ret Type: " +
                          m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
                          m.getProtectionLevel().toString());
     }
+    System.out.println("Inherited Methods:");
+    for (MethodInfo m : info.getInheritedMethods()) {
+      System.out.println("Method Name: " + m.getName() + " Ret Type: " +
+                         m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
+                         m.getProtectionLevel().toString());      
+    }
+    if (info.isAbstract())
+    {
+      System.out.println("Abstract class, no test class generated");
+      return;
+    }
     //file generation
-    final TestClassGenerator generator = new TestClassGenerator();
+    ProtectionLevel level_to_test = ProtectionLevel.PUBLIC;
+    if (the_options.isProtectedSet())
+    {
+      level_to_test = ProtectionLevel.PROTECTED;
+    }
+    final TestClassGenerator generator = 
+      new TestClassGenerator(level_to_test, the_options.isInheritedSet(),
+                             the_options.isDepricationSet());
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
     final StringTemplate testClassNameTemplate = group.lookupTemplate("testClassName");
