@@ -7,11 +7,11 @@ package <packageName>;
 import java.io.PrintWriter;
 
 import org.jmlspecs.openjmlunit.testng.BasicTestListener;
+import org.jmlspecs.openjmlunit.testng.PreconditionSkipException;
 import org.testng.TestException;
 import org.testng.TestNG;
 import org.testng.annotations.Test;
 
-//Commented until JMLEntryPreconditionError is implemented in OpenJML
 import org.jmlspecs.jml4.rac.runtime.JMLEntryPreconditionError;
 import org.jmlspecs.jml4.rac.runtime.JMLAssertionError;
 
@@ -66,7 +66,7 @@ public void <testName()>(<if(!method.constructor)>final <method.declaringClass.f
     // meaningless test
     throw new PreconditionSkipException(the_exp.getMessage());
   }
-  catch (final JmlAssertionError the_exp) {
+  catch (final JMLAssertionError the_exp) {
     // test failure
     throw new TestException(the_exp.getMessage());
   }
