@@ -7,7 +7,7 @@ ARGS::
   Help:{"-h", "--help"} 
   Package:{"-p", "--package"}:{file-list}:[allowmultiple="true", splitter=",", mustbedir="true", allowdash="true"]
   Universes:{"-u", "--universes"}
-  Deprication:{"-dep", "--deprication"}
+  Deprecation:{"-dep", "--deprecation"}
   SafeMath: {"-s", "--safemath"}
   Verbose: {"-v", "--verbose"}
   Universesx: {"-E"}:{string}
@@ -20,4 +20,4 @@ FORMAT::
 
 WHERE::
   Option:  
-    Destination|List|Help|Package|Universes|Deprication|SafeMath|Verbose|Universesx|Inherited|Public|Protected;
+    Destination|List|Help|Package|Universes|Deprecation|SafeMath|Verbose|Universesx|Inherited|Public|Protected;

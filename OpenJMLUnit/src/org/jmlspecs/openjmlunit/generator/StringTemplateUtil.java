@@ -16,8 +16,9 @@
 
 package org.jmlspecs.openjmlunit.generator;
 
+import java.io.File;
+
 import org.antlr.stringtemplate.CommonGroupLoader;
-import org.antlr.stringtemplate.PathGroupLoader;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.antlr.stringtemplate.StringTemplateGroupLoader;
 
@@ -30,7 +31,7 @@ public final class StringTemplateUtil {
   /**
    * The path to all templates.
    */
-  private static final String TEMPLATE_PATH = "res\\templates";
+  private static final String TEMPLATE_PATH = "res" + File.separator + "templates";
   /**
    * Has StringTemplate been instantiated?
    */
@@ -49,7 +50,7 @@ public final class StringTemplateUtil {
   public static void initialize() {
     if (!my_is_initialized) {
       final StringTemplateGroupLoader loader =
-        new PathGroupLoader(TEMPLATE_PATH, null);
+        new CommonGroupLoader(TEMPLATE_PATH, null);
       StringTemplateGroup.registerGroupLoader(loader);
       my_is_initialized = true;
     }

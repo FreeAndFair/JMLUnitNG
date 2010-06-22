@@ -241,19 +241,19 @@ public final class Main {
   protected static void printHelp() {
     System.out.println("Generates TestNG tests for Java source code.");
     System.out.println();
-    System.out.println("java -j openjmlunit.jar [OPTION] ... -f FILE,[FILE]...");
+    System.out.println("jmlunitng [OPTION] ... -f FILE,[FILE]...");
     System.out.println("-c <directory-list>, --classpath <directory-list> :  Use the "
                        + "given string as the CLASSPATH during compilation. By default"
                        + "the value of the environment variable CLASSPATH is used instead.");
     System.out.println("-d, --dest [DIRECTORY] : Specify the oputput directory "
                        + "for generated files.");
-    System.out.println("-dep, --deprication : Test for Depricated members.");
+    System.out.println("-dep, --deprecation : Test for Depricated members.");
     System.out.println("-E : Universe type system.");
     System.out.println("-f, --files FILE,[FILE]... : Comma-seperated list of files "
                        + "for test generation.");
     System.out.println("-h, --help : To see command line options.");
     System.out.println("-p, --package : To specify the files for testing"
-                       + " with OpenJMLUnit.");
+                       + " with JMLUnitNG.");
     System.out.println("-s, --safemath : Report Integral Arithmatic Overflow.");
     System.out.println("-u, --universes : Enable universe type modifiers and full"
                        + " type checking.");
