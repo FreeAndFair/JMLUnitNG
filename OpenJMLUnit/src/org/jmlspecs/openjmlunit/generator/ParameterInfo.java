@@ -52,29 +52,5 @@ public class ParameterInfo extends TypeInfo {
   public final boolean isArray() {
     return my_is_array;
   }
-  
-  /**
-   * {@inheritDoc}
-   */
-  public boolean equals(final /*@ nullable @*/ Object the_other)
-  {
-    boolean result = false;
-    
-    if (super.equals(the_other))
-    {
-      final ParameterInfo other_info = (ParameterInfo) the_other;
-      result = other_info.my_param_name.equals(my_param_name) &&
-               other_info.my_is_array == my_is_array;
-    }
-    
-    return result;
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  public int hashCode()
-  {
-    return my_param_name.hashCode();
-  }
+
 }
