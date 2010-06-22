@@ -127,9 +127,9 @@ public class MethodInfo {
     my_is_inherited = !the_parent_class.equals(the_declaring_class);
     my_is_factory = determineIsFactory();
     my_is_testable =
-        !(my_is_constructor && my_parent_class.isAbstract()) &&
+        !(my_is_constructor && my_declaring_class.isAbstract()) &&
         !my_protection_level.equals(ProtectionLevel.PRIVATE) &&
-            !UNTESTABLE_METHOD_NAMES.contains(my_name);
+        !UNTESTABLE_METHOD_NAMES.contains(my_name);
   }
 
   /**

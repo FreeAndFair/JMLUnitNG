@@ -228,11 +228,8 @@ public class TestClassGenerator {
   private List<MethodInfo> getMethodsToTest(final ClassInfo the_class) {
     final List<MethodInfo> methods = new LinkedList<MethodInfo>();
     for (MethodInfo m : the_class.getTestableMethods()) {
-      if (m.isInherited()) {
-        if (my_test_inherited_methods) {
-          methods.add(m);
-        }
-      } else {
+      if (my_test_inherited_methods || !m.isInherited())
+      {
         methods.add(m);
       }
     }
