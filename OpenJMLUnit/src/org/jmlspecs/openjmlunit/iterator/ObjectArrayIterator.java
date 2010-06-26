@@ -56,6 +56,7 @@ public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
   /**
    * Returns the current element.
    */
+  //@ requires hasElement();
   public T element() {
     return my_array[my_element];
   }

@@ -72,7 +72,8 @@ public class MultiIterator extends Object implements RepeatedAccessIterator<Obje
    */
   @Override
   public/*@ pure */boolean hasElement() {
-    return my_current_iterator.hasElement();
+    return my_current_iterator.hasElement() && 
+           my_current_iterator.element().hasElement();
   }
 
   /**

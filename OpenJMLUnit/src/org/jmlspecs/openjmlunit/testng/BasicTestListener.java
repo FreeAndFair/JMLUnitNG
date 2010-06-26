@@ -58,8 +58,20 @@ public class BasicTestListener extends TestListenerAdapter {
    */
   public void onTestSuccess(final ITestResult the_tr) {
     try {
-      my_writer.write("Test Success.\n");
-      my_writer.write(the_tr.toString());
+      my_writer.write("Passed: ");
+      String trunc_name = 
+        the_tr.getMethod().getMethodName().replace("test_", "");
+      Object[] params = the_tr.getParameters();
+      my_writer.write(params[0] + "." + trunc_name + "(");
+      for (int i = 1; i < params.length - 1; i++)
+      {
+        my_writer.write(params[i] + ", ");
+      }
+      if (params.length > 1)
+      {
+        my_writer.write(String.valueOf(params[params.length - 1]));
+      }
+      my_writer.write(")");
       my_writer.write(NEWLINE);
       super.onTestSuccess(the_tr);
       my_writer.flush();
@@ -70,15 +82,26 @@ public class BasicTestListener extends TestListenerAdapter {
   }
 
   /**
-   * Writes test success info to my_writer.
+   * Writes test failure info to my_writer.
    * 
    * @param the_tr The test result info.
    */
   public void onTestFailure(final ITestResult the_tr) {
     try {
-      my_writer.write("Test Failed\n");
-      my_writer.write(the_tr.toString());
-      my_writer.write("   " + the_tr.getThrowable());
+      my_writer.write("Failed: ");
+      String trunc_name = 
+        the_tr.getMethod().getMethodName().replace("test_", "");
+      Object[] params = the_tr.getParameters();
+      my_writer.write(params[0] + "." + trunc_name + "(");
+      for (int i = 1; i < params.length - 1; i++)
+      {
+        my_writer.write(params[i] + ", ");
+      }
+      if (params.length > 1)
+      {
+        my_writer.write(String.valueOf(params[params.length - 1]));
+      }
+      my_writer.write(")");
       my_writer.write(NEWLINE);
       super.onTestFailure(the_tr);
       my_writer.flush();
@@ -96,8 +119,20 @@ public class BasicTestListener extends TestListenerAdapter {
    */
   public void onTestSkipped(final ITestResult the_tr) {
     try {
-      my_writer.write("Test Skipped\n");
-      my_writer.write(the_tr.toString());
+      my_writer.write("Skipped: ");
+      String trunc_name = 
+        the_tr.getMethod().getMethodName().replace("test_", "");
+      Object[] params = the_tr.getParameters();
+      my_writer.write(params[0] + "." + trunc_name + "(");
+      for (int i = 1; i < params.length - 1; i++)
+      {
+        my_writer.write(params[i] + ", ");
+      }
+      if (params.length > 1)
+      {
+        my_writer.write(String.valueOf(params[params.length - 1]));
+      }
+      my_writer.write(")");
       my_writer.write(NEWLINE);
       super.onTestSkipped(the_tr);
       my_writer.flush();

@@ -76,7 +76,11 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]>,
   	for (int i = 0; i < my_strategies.length; i++) {
   		try {
 				my_strategies[i] = the_strategy_classes[i].newInstance().iterator();
-				my_element[i] = my_strategies[i].element();
+				if (my_strategies[i].hasElement()) {
+				  my_element[i] = my_strategies[i].element();
+				} else {
+				  my_element[i] = null;
+				}
 			} catch (InstantiationException e) {
 				throw new IllegalArgumentException(e);
 			} catch (IllegalAccessException e) {
@@ -130,7 +134,11 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]>,
 			} while (p < my_strategies.length && continue_loop);
 			my_element = new Object[my_strategies.length];
 			for (int i = 0; i < my_strategies.length; i++) {
-				my_element[i] = my_strategies[i].element();
+				if (my_strategies[i].hasElement()) {
+				  my_element[i] = my_strategies[i].element();
+				} else {
+				  my_element[i] = null;
+				}
 			}
 			//we've reset the last iterator, meaning we are finished.
 			my_is_finished = p == my_strategies.length;

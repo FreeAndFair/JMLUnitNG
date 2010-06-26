@@ -13,6 +13,7 @@ import org.testng.TestNG;
 import org.testng.annotations.Test;
 
 import org.jmlspecs.jml4.rac.runtime.JMLEntryPreconditionError;
+import org.jmlspecs.jml4.rac.runtime.JMLEvaluationError;
 import org.jmlspecs.jml4.rac.runtime.JMLAssertionError;
 
 /**
@@ -55,6 +56,11 @@ methodTest(method) ::= <<
  */
 @Test(dataProvider = "<if(method.parameterTypes)><dataProviderName()><else><classOnlyDataProviderName()><endif>")
 public void <testName()>(<if(!method.constructor)>final <method.declaringClass.fullyQualifiedName> the_test_object<if(method.parameterTypes)>, <endif><endif><varDecList(method.parameterTypes)>) {
+  <if(!method.constructor)>
+  if (the_test_object == null) {
+    throw new PreconditionSkipException("could not construct an object");
+  }
+  <endif>
   try {
     <if(method.constructor)>
     new <method.name>(<varNameList(method.parameterTypes)>);
@@ -65,6 +71,15 @@ public void <testName()>(<if(!method.constructor)>final <method.declaringClass.f
   catch (final JMLEntryPreconditionError the_exp) {
     // meaningless test
     throw new PreconditionSkipException(the_exp.getMessage());
+  }
+  catch (final JMLEvaluationError the_exp) {
+    if (the_exp.getCause() instanceof JMLEntryPreconditionError) {
+      // meaningless test
+      throw new PreconditionSkipException(the_exp.getCause().getMessage());
+    } else {
+      // failed test
+      throw new TestException(the_exp.getCause().getMessage());
+    }
   }
   catch (final JMLAssertionError the_exp) {
     // test failure
