@@ -284,6 +284,7 @@ public class TestClassGenerator {
                      DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
       t.setAttribute("methods", methods);
       t.setAttribute("packageName", the_class.getPackageName());
+      t.setAttribute("packaged", !the_class.getPackageName().equals(""));
       the_test_writer.write(t.toString(LINE_WIDTH));
     }
     // generate data class
@@ -296,6 +297,7 @@ public class TestClassGenerator {
       t.setAttribute("methods", methods);
       t.setAttribute("types", types);
       t.setAttribute("packageName", the_class.getPackageName());
+      t.setAttribute("packaged", !the_class.getPackageName().equals(""));
       the_data_writer.write(t.toString(LINE_WIDTH));
     }
   }
