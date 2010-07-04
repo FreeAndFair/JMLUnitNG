@@ -31,6 +31,7 @@ varNameList(list) ::= <<
 varName() ::= "<it.parameterName>"
 
 type(typeInfo) ::= "<typeTransMap.(typeInfo.fullyQualifiedName)><if(it.array)>[]<endif>"
+rawtype(typeInfo) ::= "<typeInfo.fullyQualifiedName><if(it.array)>[]<endif>"
 
 baseStrategyMap ::= [
         "int":"IntStrategy",

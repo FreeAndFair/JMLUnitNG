@@ -14,10 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Iterator;
 
-import org.jmlspecs.openjmlunit.iterator.IteratorAdapter;
-import org.jmlspecs.openjmlunit.iterator.ObjectArrayIterator;
-import org.jmlspecs.openjmlunit.iterator.ParameterArrayIterator;
-import org.jmlspecs.openjmlunit.iterator.RepeatedAccessIterator;
+import org.jmlspecs.openjmlunit.iterator.*;
 import org.jmlspecs.openjmlunit.strategy.*;
 
 import org.jmlspecs.jml4.rac.runtime.JMLAssertionError;
@@ -125,17 +122,22 @@ classStrategy() ::= <<
  * on which to call methods under test.
  */
 public static class <classStrategyName()> extends ObjectStrategy {
-  public RepeatedAccessIterator\<?\> getGlobalValues() {
-    List\<<class.shortName>\> values = new LinkedList\<<class.shortName>\>();
-    Object[] params;
-    Iterator\<Object[]\> iter;
+  public RepeatedAccessIterator\<<class.shortName>\> getGlobalValues() {
+    final List\<RepeatedAccessIterator\<<class.shortName>\>\> iters = 
+      new LinkedList\<RepeatedAccessIterator\<<class.shortName>\>\>();
+    
+    // always add an instantiation iterator for the empty constructor
+    iters.add(new InstantiationIterator\<<class.shortName>\>
+      (<class.shortName>.class, new Class\<?\>[0], 
+       new ObjectArrayIterator\<Object[]\>(new Object[][]{{}})));
+    
     <methods:{<classStrategyConstructorData(method=it)>}>
-    return new IteratorAdapter\<<class.shortName>\>(values.iterator());
+    return new NonNullMultiIterator\<<class.shortName>\>(iters);
   }
-  public RepeatedAccessIterator\<?\> getCustomValues() {
+  public RepeatedAccessIterator\<<class.shortName>\> getCustomValues() {
     return new ObjectArrayIterator\<<class.shortName>\>(new <class.shortName>[0]);
   }
-  public RepeatedAccessIterator\<?\> getDefaultValues() {
+  public RepeatedAccessIterator\<<class.shortName>\> getDefaultValues() {
     return new ObjectArrayIterator\<<class.shortName>\>(new <class.shortName>[0]);
   }
   public <classStrategyName()>() {
@@ -147,33 +149,17 @@ public static class <classStrategyName()> extends ObjectStrategy {
 
 classStrategyConstructorData(method) ::= <<
 <if(method.constructor)>
-//objects for constructor <method>
 <if(method.parameterTypes)>
-iter = <dataProviderName()>();
-while (iter.hasNext()) {
-  params = iter.next();
-  try {
-    values.add(new <class.shortName>(<method.parameterTypes:{<cast(parameterType=it)> params[<i0>]}; wrap="\n      ", separator=", ">));
-  } catch (final JMLAssertionError e) {
-    // do nothing for JML failures in constructors
-  } catch (final Exception e) {
-    // do nothing for failed constructors
-  }
-}
-<else>
-try {
-  values.add(new <class.shortName>());
-} catch (final JMLAssertionError e) {
-  // do nothing for JML failures in constructors
-} catch (final Exception e) {
-  // do nothing for failed constructors
-}
+// parameters for method <method>
+iters.add(new InstantiationIterator\<<class.shortName>\>
+  (<class.shortName>.class, new Class\<?\>[]{<paramClasses()>},
+   new IteratorAdapter\<Object[]\>(<dataProviderName()>())));
+
 <endif>
 <endif>
 >>
 
-cast(parameterType) ::= "(<parameterType:type()>)"
-
+paramClasses() ::= "<method.parameterTypes:{<it:rawtype()>.class}; wrap=\"\n      \", separator=\", \">"
 strategyName(method, param) ::= "<param.parameterName>_<method.uniqueName>_Strategy"
 classStrategyName() ::= "ClassObjectStrategy"
 globalStrategyName(typeName) ::= "<it.formattedName>_GlobalStrategy"

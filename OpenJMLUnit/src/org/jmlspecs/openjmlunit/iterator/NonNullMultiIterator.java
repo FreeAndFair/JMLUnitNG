@@ -13,12 +13,14 @@ package org.jmlspecs.openjmlunit.iterator;
 import java.util.List;
 
 /**
- * A repeated access iterator that combines one or more other iterators.
+ * A repeated access iterator that combines one or more other iterators, 
+ * and eliminates as many <code>null</code> values as it can (the last
+ * value read may be null).
  * 
  * @author Daniel M. Zimmerman
  * @version July 2010
  */
-public class MultiIterator<T> implements RepeatedAccessIterator<T> {
+public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
   // Commands
 
   // @command "Embed the_list_of_iterators into a single iterator!"
@@ -41,10 +43,19 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    * 
    * @param iterators The list of iterators to iterate over.
    */
-  public MultiIterator(List<RepeatedAccessIterator<T>> the_iterators) {
+  public NonNullMultiIterator(List<RepeatedAccessIterator<T>> the_iterators) {
     my_current_iterator = new IteratorAdapter<RepeatedAccessIterator<T>>(the_iterators.iterator());
-    while (my_current_iterator.hasElement() && !my_current_iterator.element().hasElement()) {
+    // advance to the next non-null element
+    while (my_current_iterator.hasElement() && 
+           (my_current_iterator.element() == null || 
+            !my_current_iterator.element().hasElement())) {
       my_current_iterator.advance();
+      while (my_current_iterator.element() != null && 
+             my_current_iterator.element().hasElement() &&
+             my_current_iterator.element().element() == null)
+      {
+        my_current_iterator.element().advance();
+      }
     }
   }
 
@@ -62,6 +73,7 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    * 
    * @return The current element.
    */
+  //@ requires hasElement();
   @Override
   public /*@ pure */ T element() {
     return my_current_iterator.element().element();
@@ -83,12 +95,23 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    */
   /*@ requires hasElement(); */
   private void internalAdvance() {
-    if (my_current_iterator.hasElement()) {
-      my_current_iterator.element().advance();
+    if (my_current_iterator.hasElement() && my_current_iterator.element() != null &&
+        my_current_iterator.element().hasElement()) {
+      do
+      {
+        my_current_iterator.element().advance();
+      }
+      while (my_current_iterator.element().element() == null && my_current_iterator.element().hasElement());
     }
     //proceed in the sequence until the first element is found or the end is reached.
     while (my_current_iterator.hasElement() && !my_current_iterator.element().hasElement()) {
       my_current_iterator.advance();
+      while (my_current_iterator.element() != null && 
+             my_current_iterator.element().hasElement() &&
+             my_current_iterator.element().element() == null)
+      {
+        my_current_iterator.element().advance();
+      }
     }
   }
 }

@@ -60,7 +60,18 @@ methodTest(method) ::= <<
 
 <method.parameterTypes:varJavaDocLine(); separator="\n">
  */
-@Test(dataProvider = "<if(method.parameterTypes)><dataProviderName()><else><classOnlyDataProviderName()><endif>")
+<if(method.parameterTypes)>
+@Test(dataProvider = "<dataProviderName()>")
+
+<else>
+<if(!method.constructor)>
+@Test(dataProvider = "<classOnlyDataProviderName()>")
+
+<else>
+@Test
+
+<endif>
+<endif>
 public void <testName()>(<if(!method.constructor)>final <method.declaringClass.fullyQualifiedName> the_test_object<if(method.parameterTypes)>, <endif><endif><varDecList(method.parameterTypes)>) {
   <if(!method.constructor)>
   if (the_test_object == null) {
