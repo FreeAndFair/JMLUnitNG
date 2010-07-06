@@ -73,12 +73,12 @@ public class SourceWriter {
    * The current indent level.
    */
   //@ invariant my_indent_level >= 0;
-  private int my_indent_level;
+  private /*@ spec_public @*/ int my_indent_level;
   /**
    * The number of characters to use for indents.
    */
   //@ invariant my_indent_size >= 0;
-  private int my_indent_size;
+  private /*@ spec_public @*/ int my_indent_size;
   /**
    * Char to use for indentation.
    */
@@ -86,12 +86,12 @@ public class SourceWriter {
   /**
    * What level java block am I in? -1 is a Javadoc comment.
    */
-  //@ invariant my_block_level >= -1;
-  private int my_block_level;
+  //@ private invariant my_block_level >= -1;
+  private /*@ spec_public @*/ int my_block_level;
   /**
    * Have any characters been written to the current line?
    */
-  private boolean my_chars_on_cur_line;
+  private /*@ spec_public @*/ boolean my_chars_on_cur_line;
   /**
    * The writer containing the stream to write to.
    */

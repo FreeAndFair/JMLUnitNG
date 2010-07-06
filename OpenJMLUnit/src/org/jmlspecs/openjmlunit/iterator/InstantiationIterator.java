@@ -11,7 +11,6 @@
 package org.jmlspecs.openjmlunit.iterator;
 
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 
 
 /**

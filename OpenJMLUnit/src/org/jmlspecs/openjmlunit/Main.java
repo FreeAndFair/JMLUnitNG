@@ -18,15 +18,9 @@ import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,7 +36,6 @@ import org.jmlspecs.openjmlunit.generator.MethodInfo;
 import org.jmlspecs.openjmlunit.generator.ProtectionLevel;
 import org.jmlspecs.openjmlunit.generator.StringTemplateUtil;
 import org.jmlspecs.openjmlunit.generator.TestClassGenerator;
-import org.jmlspecs.openjmlunit.generator.XMLGenerator;
 
 /**
  * The main executable.
@@ -239,7 +232,7 @@ public final class Main {
    */
   private static String generateDestinationDirectory(final CmdOptionsOptionStore the_options, final JmlCompilationUnit the_unit) {
     String outputDir = DEF_OUTPUT_DIR;
-    if (the_options.isDestinationSet() ) {
+    if (the_options.isDestinationSet()) {
       outputDir = the_options.getDestination();
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
         outputDir = outputDir + "/";

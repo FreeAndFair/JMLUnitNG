@@ -55,8 +55,7 @@ public class BasicTestListener extends TestListenerAdapter {
   /**
    * Creates a new BasicTestListener that sends text results to standard output.
    */
-  public BasicTestListener()
-  {
+  public BasicTestListener() {
     this(new OutputStreamWriter(System.out));  
   }
   
@@ -141,8 +140,7 @@ public class BasicTestListener extends TestListenerAdapter {
    * @return a String describing the test that was run to generate
    * the result.
    */
-  private final String testString(final ITestResult the_test_result)
-  {
+  private final String testString(final ITestResult the_test_result) {
     final StringBuilder sb = new StringBuilder();
     final String trunc_name = 
       the_test_result.getMethod().getMethodName().replace("test_", "");
@@ -152,24 +150,20 @@ public class BasicTestListener extends TestListenerAdapter {
     String class_name = the_test_result.getTestClass().getName();
     class_name = class_name.substring(class_name.lastIndexOf('.') + 1);
     
-    if (class_name.startsWith(trunc_name + "_JML_Test"))
-    {
+    if (class_name.startsWith(trunc_name + "_JML_Test")) {
       // this is a constructor test, so there is no object to print and
       // we have to print parameter 0, if any, as the first parameter
       sb.append("Constructor " + trunc_name + "(");
     }
-    else
-    {
+    else {
       // this is a regular method test, so we have to print the object
       sb.append("<<" + params[0] + ">>." + trunc_name + "(");
       start_index = 1;
     }
-    for (int i = start_index; i < params.length - 1; i++)
-    {
+    for (int i = start_index; i < params.length - 1; i++) {
       sb.append(params[i] + ", ");
     }
-    if (params.length > 1)
-    {
+    if (params.length > 1) {
       sb.append(String.valueOf(params[params.length - 1]));
     }
     sb.append(")");
