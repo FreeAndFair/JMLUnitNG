@@ -12,7 +12,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/testng-5.12.jar" sourcepath="D:/Users/Jon/workspace/testng/src"/>
 	<classpathentry kind="lib" path="lib/stringtemplate-3.2.1.jar" sourcepath="D:/Documents/School/OpenJMLWorkspace/stringtemplate/src/org/antlr/stringtemplate/language"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jml4c.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jml4rt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
