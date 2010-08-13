@@ -1,0 +1,43 @@
+NAME::
+  JMLUnitNG
+
+ARGS::
+  Destination:{"-d", "--dest"}:{string}
+  TestPackage:{"--test-package"}:{string}
+  Files:{"-f", "--files"}:{file-list}:
+    [allowmultiple="true", splitter=",", mustexist="true", 
+     canbedir="true", allowdash="true"]
+  Reflection:{"-r", "--reflection"}
+  Help:{"-h", "--help"} 
+  Deprecation:{"-d", "--deprecation"}
+  Verbose: {"-v", "--verbose"}
+  Inherited: {"-i", "--inherited"}
+  Public: {"--public"}
+  Protected: {"--protected"}
+  Package: {"--package"}
+  Clean: {"--clean"}
+  Prune: {"--prune"}
+  Classpath: {"-cp", "--classpath"}:{file-list}:
+    [allowmultiple="true", splitter=":", mustexist="true",
+     mustbedir="true"]
+  Specspath: {"-sp", "--specspath"}:{file-list}:
+    [allowmultiple="true", splitter=":", mustexist="true",
+     mustbedir="true"]
+     
+FORMAT::
+  Option* Destination?;   
+
+WHERE::
+  Option:  
+    Destination|TestPackage|Files|Reflection|Help|Package|
+    Deprecation|Verbose|Inherited|Public|Package|Protected|
+    Clean|Prune|Classpath|Specpath;
+
+FLY::
+
+OVERRIDES::
+  // default is to generate tests for only public methods
+  {$(Public?)} -> Public := {true};
+  {$(Protected?)} -> Protected := {false};
+  {$(Package?)} -> Package := {false};
+  

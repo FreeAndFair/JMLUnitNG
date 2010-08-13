@@ -1,0 +1,5 @@
+group method_test_java;
+
+main(class) ::= <<
+Hi! <class.name>
+>>
