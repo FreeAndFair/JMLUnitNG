@@ -65,7 +65,7 @@ public abstract class ObjectStrategy extends BasicStrategy {
       // it's not an enum, so let's look for default values
       my_enum_constants = null;
       try {
-        Class<?> data_class = Class.forName(the_class.getName() + 
+        final Class<?> data_class = Class.forName(the_class.getName() + 
           "_JML_Test_Data$ClassObjectStrategy");
         if (ObjectStrategy.class.isAssignableFrom(data_class)) {
           my_test_data = (Class<? extends ObjectStrategy>) data_class;
@@ -88,23 +88,27 @@ public abstract class ObjectStrategy extends BasicStrategy {
    * @return An Iterator over default values.
    */
   public RepeatedAccessIterator<?> getDefaultValues() {
-    if (my_enum_constants != null) {
-      // return the enum constants
-      return new ObjectArrayIterator<Object>(my_enum_constants);
-    } else if (my_test_data == null) {
+    RepeatedAccessIterator<?> result;
+    
+    if (my_enum_constants == null && my_test_data == null) {
       // return the default null iterator, since we couldn't get data
-      return new IteratorAdapter<Object>(DEFAULT_VALUES.iterator());
-    } else {
+      result = new IteratorAdapter<Object>(DEFAULT_VALUES.iterator());
+    } else if (my_enum_constants == null) {
       // try to return data generated using reflection
       try {
-        return my_test_data.newInstance().iterator();
+        result = my_test_data.newInstance().iterator();
       } catch (InstantiationException e) {
         e.printStackTrace();
-        return new IteratorAdapter<Object>(DEFAULT_VALUES.iterator());
+        result = new IteratorAdapter<Object>(DEFAULT_VALUES.iterator());
       } catch (IllegalAccessException e) {
         e.printStackTrace();
-        return new IteratorAdapter<Object>(DEFAULT_VALUES.iterator());
+        result = new IteratorAdapter<Object>(DEFAULT_VALUES.iterator());
       }
+    } else { // my_enum_constants != null
+      // return the enum constants
+      result = new ObjectArrayIterator<Object>(my_enum_constants);
     }
+   
+    return result;
   }
 }

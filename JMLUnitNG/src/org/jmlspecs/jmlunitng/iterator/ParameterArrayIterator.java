@@ -52,7 +52,7 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]>,
   /**
    * A wrapper for this class that enables its use as a java.util.Iterator.
    */
-  private IteratorWrapper<Object[]> my_iterator_wrapper;
+  private final IteratorWrapper<Object[]> my_iterator_wrapper;
 
   /**
    * Creates a new ObjectArrayIterator that iterates over all combinations of objects
@@ -68,7 +68,7 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]>,
     @		my_strategy_classes.length == the_strategy_classes.length &&
     @		(\forall int i; i >= 0 && i < my_strategies.length; my_strategies[i].hasElement());
    */
-  public ParameterArrayIterator(Class<? extends BasicStrategy>... the_strategy_classes) {
+  public ParameterArrayIterator(final Class<? extends BasicStrategy>... the_strategy_classes) {
   	my_strategy_classes = the_strategy_classes;
   	my_strategies = new RepeatedAccessIterator<?>[the_strategy_classes.length];
   	my_is_finished = the_strategy_classes.length == 0;

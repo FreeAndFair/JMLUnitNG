@@ -76,8 +76,8 @@ public final class Main {
       }
 
       final List<File> file_list = filesToProcess(opts);
-      String classpath = generateClasspath(opts);
-      String specspath = generateSpecspath(opts);
+      final String classpath = generateClasspath(opts);
+      final String specspath = generateSpecspath(opts);
       final String[] arg =
           new String[] {"-noPurityCheck", "-noInternalSpecs", 
                         "-cp", classpath, "-specspath", specspath};
@@ -113,7 +113,7 @@ public final class Main {
   private static List<File> filesToProcess(final JMLUnitNGOptionStore the_options) {
     final List<File> file_list = new LinkedList<File>();
     if (the_options.isFilesSet()) {
-      List<File> options_files = the_options.getFiles();
+      final List<File> options_files = the_options.getFiles();
       for (File f : options_files) {
         if (f.isDirectory()) {
           file_list.addAll(findJavaFiles(f));
@@ -135,7 +135,7 @@ public final class Main {
    */
   //@ requires the_directory.isDirectory();
   private static List<File> findJavaFiles(final File the_directory) {
-    List<File> result = new LinkedList<File>();
+    final List<File> result = new LinkedList<File>();
     final File[] all_packed_files = the_directory.listFiles();
     for (int k = 0; k < all_packed_files.length; k++) {
       if (all_packed_files[k].isDirectory()) {
@@ -198,20 +198,20 @@ public final class Main {
   private static void processCompilationUnit(final JMLUnitNGOptionStore the_options, final JmlCompilationUnit the_unit) throws IOException {
     final ClassInfo info = InfoFactory.getClassInfo(the_unit);
     //debug output
-    System.out.println("Name: " + info.getShortName());
-    System.out.println("Parent Name: " + info.getSuperclassInfo().getShortName());
+    System.out.println("Name: " + info.shortName());
+    System.out.println("Parent Name: " + info.getSuperclassInfo().shortName());
     System.out.println("Prot Level: " + info.getProtectionLevel().toString());
     System.out.println("Testable Methods:");
     for (MethodInfo m : info.getTestableMethods()) {
-      System.out.println("Method Name: " + m.getName() + " Ret Type: " +
-                         m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
-                         m.getProtectionLevel().toString());
+      System.out.println("Method Name: " + m.name() + " Ret Type: " +
+                         m.returnType().fullyQualifiedName() + " Prot Level: " +
+                         m.protectionLevel().toString());
     }
     System.out.println("Inherited Methods:");
     for (MethodInfo m : info.getInheritedMethods()) {
-      System.out.println("Method Name: " + m.getName() + " Ret Type: " +
-                         m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
-                         m.getProtectionLevel().toString());      
+      System.out.println("Method Name: " + m.name() + " Ret Type: " +
+                         m.returnType().fullyQualifiedName() + " Prot Level: " +
+                         m.protectionLevel().toString());      
     }
     if (info.isAbstract())
     {
@@ -234,12 +234,16 @@ public final class Main {
     final StringTemplate dataClassNameTemplate = group.lookupTemplate("dataClassName");
     dataClassNameTemplate.setAttribute("class", info);
     final String outputDir = generateDestinationDirectory(the_options, the_unit);
-    new File(outputDir).mkdirs();
-    final FileWriter testClassWriter = new FileWriter(new File(outputDir + testClassNameTemplate.toString() + ".java"));
-    final FileWriter testDataClassWriter = new FileWriter(new File(outputDir + dataClassNameTemplate.toString() + ".java"));
-    generator.generateClasses(info, testClassWriter, testDataClassWriter);
-    testClassWriter.close();
-    testDataClassWriter.close();
+    if (new File(outputDir).mkdirs()) {
+      final FileWriter testClassWriter = new FileWriter(new File(outputDir + testClassNameTemplate.toString() + ".java"));
+      final FileWriter testDataClassWriter = new FileWriter(new File(outputDir + dataClassNameTemplate.toString() + ".java"));
+      generator.generateClasses(info, testClassWriter, testDataClassWriter);
+      testClassWriter.close();
+      testDataClassWriter.close();
+    } else {
+      System.err.println("Directory creation failed.");
+      System.exit(1);
+    }
   }
   
   /**
@@ -250,14 +254,15 @@ public final class Main {
   private static String generateDestinationDirectory(final JMLUnitNGOptionStore the_options, final JmlCompilationUnit the_unit) {
     String outputDir = DEF_OUTPUT_DIR;
     if (the_options.isDestinationSet()) {
-      outputDir = the_options.getDestination();
+      final StringBuilder sb = new StringBuilder(the_options.getDestination());
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
-        outputDir = outputDir + "/";
+        sb.append("/");
       }
-      outputDir = outputDir + the_unit.getPackageName().toString().replace('.', '/');
+      sb.append(the_unit.getPackageName().toString().replace('.', '/'));
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
-        outputDir = outputDir + "/";
+        sb.append("/");
       }
+      outputDir = sb.toString();
     } else {
       outputDir = new File(the_unit.getSourceFile().toUri().getPath()).getParent() + "/";
     }

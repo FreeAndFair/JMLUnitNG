@@ -66,8 +66,9 @@ public final class XMLGenerator {
    * @throws IOException throws exception if failed to load xml properties or
    *           failed to write to writer.
    */
-  public static void generateXML(final Collection<ClassInfo> the_classes,
-                                 final Writer the_writer) throws IOException {
+  public synchronized static void generateXML
+  (final Collection<ClassInfo> the_classes,
+   final Writer the_writer) throws IOException {
     if (prop_bundle == null) {
       prop_bundle = new PropertyResourceBundle(new FileInputStream(PROPS_FILENAME));
     }
@@ -103,7 +104,7 @@ public final class XMLGenerator {
    */
   private static void writeClass(final TypeInfo the_class, final SourceWriter the_writer)
     throws IOException {
-    the_writer.writeLine(getProp("CLS_OPEN") + " name=\"" + the_class.getShortName() + "\"" +
+    the_writer.writeLine(getProp("CLS_OPEN") + " name=\"" + the_class.shortName() + "\"" +
                          getProp("XML_B_CLOSE"));
   }
 

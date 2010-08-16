@@ -24,6 +24,7 @@ import org.antlr.stringtemplate.StringTemplateGroupLoader;
 
 /**
  * Handles initialization of StringTemplate.
+ * 
  * @author Jonathan Hogins
  * @version April 2010
  */
@@ -32,6 +33,7 @@ public final class StringTemplateUtil {
    * The path to all templates.
    */
   private static final String TEMPLATE_PATH = "res" + File.separator + "templates";
+  
   /**
    * Has StringTemplate been instantiated?
    */
@@ -47,7 +49,7 @@ public final class StringTemplateUtil {
    * Initialize StringTemplates if it not already initialized.
    */
   //@ ensures my_is_initialized == true;
-  public static void initialize() {
+  public synchronized static void initialize() {
     if (!my_is_initialized) {
       final StringTemplateGroupLoader loader =
         new CommonGroupLoader(TEMPLATE_PATH, null);

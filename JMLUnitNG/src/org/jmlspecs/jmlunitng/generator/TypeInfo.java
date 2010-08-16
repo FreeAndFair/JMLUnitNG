@@ -21,8 +21,9 @@ import java.util.Set;
 /**
  * Name information about a type.
  * 
+ * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version April 2010
+ * @version August 2010
  */
 public class TypeInfo {
   /**
@@ -31,7 +32,7 @@ public class TypeInfo {
   private static final Set<String> PRIMITIVE_TYPES;
 
   static {
-    Set<String> prims = new HashSet<String>();
+    final Set<String> prims = new HashSet<String>();
     prims.add("boolean");
     prims.add("int");
     prims.add("long");
@@ -58,8 +59,10 @@ public class TypeInfo {
   protected final String my_generic_comp;
 
   // @ invariant my_short_name.equals(my_name.substring(my_name.lastIndexOf('.') + 1));
+  
   /**
-   * Create a new Type with the given fully qualified name. If the given fully qualified name has a generic portion, it is removed.
+   * Create a new Type with the given fully qualified name. 
+   * If the given fully qualified name has a generic portion, it is removed.
    * 
    * @param the_name The fully qualified name of the type.
    */
@@ -81,7 +84,7 @@ public class TypeInfo {
    * 
    * @return The name of the class
    */
-  public String getShortName() {
+  public String shortName() {
     return my_short_name;
   }
 
@@ -90,7 +93,7 @@ public class TypeInfo {
    * 
    * @return The name of the class
    */
-  public String getFullyQualifiedName() {
+  public String fullyQualifiedName() {
     return my_name;
   }
   
@@ -99,7 +102,7 @@ public class TypeInfo {
    * 
    * @return The generic component of the type.
    */
-  public String getGenericComponent() {
+  public String genericComponent() {
     return my_generic_comp;
   }
 
@@ -109,7 +112,7 @@ public class TypeInfo {
    * 
    * @return Formatted fully qualified name of the type.
    */
-  public String getFormattedName() {
+  public String formattedName() {
     return my_name.replace('.', '_').replaceAll("\\[\\]", "Array");
   }
 
@@ -118,12 +121,14 @@ public class TypeInfo {
    * 
    * @return The package name of the class
    */
-  public String getPackageName() {
+  public String packageName() {
+    String result = "";
+
     if (my_name.length() > my_short_name.length()) {
-      return my_name.substring(0, my_name.length() - my_short_name.length() - 1);
-    } else {
-      return "";
+      result = my_name.substring(0, my_name.length() - my_short_name.length() - 1);
     }
+
+    return result;
   }
 
   /**
@@ -146,11 +151,13 @@ public class TypeInfo {
    * @return true if qualified names are equal. false otherwise.
    */
   public boolean equals(final Object the_o) {
-    if (the_o != null && the_o instanceof TypeInfo) {
-      return ((TypeInfo) the_o).my_name.equals(my_name);
-    } else {
-      return false;
-    }
+    boolean result = false;
+    
+    if (the_o instanceof TypeInfo) {
+      result = ((TypeInfo) the_o).my_name.equals(my_name);
+    } 
+
+    return result;
   }
 
   /**
@@ -168,6 +175,6 @@ public class TypeInfo {
    * @return The fully qualified name.
    */
   public String toString() {
-    return getFullyQualifiedName();
+    return fullyQualifiedName();
   }
 }

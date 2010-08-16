@@ -11,16 +11,23 @@
 package org.jmlspecs.jmlunitng.generator;
 
 /**
- * Name information about a method parameter.
+ * Information about a method parameter.
  * 
+ * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version May 2010
+ * @version August 2010
  */
-public class ParameterInfo extends TypeInfo {
+public class ParameterInfo {
+  /**
+   * The parameter type.
+   */
+  private final /*@ non_null @*/ TypeInfo my_type;
+  
   /**
    * The parameter name.
    */
-  private final String my_param_name;
+  private final /*@ non_null @*/ String my_name;
+  
   /**
    * Is this parameter an array?
    */
@@ -28,25 +35,34 @@ public class ParameterInfo extends TypeInfo {
   
   /**
    * Create a new ParameterInfo with the given fully qualified name and parameter name.
+   * 
    * @param the_type The fully qualified name of the type.
-   * @param the_parameter_name The name of the parameter.
+   * @param the_name The name of the parameter.
+   * @param the_is_array true if the parameter type is an array type, false otherwise.
    */
-  public ParameterInfo(final String the_type, final String the_parameter_name, final boolean the_is_array) {
-    super(the_type);
-    my_param_name = the_parameter_name;
+  public ParameterInfo(final /*@ non_null @*/ String the_type, 
+                       final /*@ non_null @*/ String the_name, 
+                       final boolean the_is_array) {
+    my_type = new TypeInfo(the_type);
+    my_name = the_name;
     my_is_array = the_is_array;
   }
   
   /**
-   * Returns the parameter name.
-   * @return The parameter name.
+   * @return The parameter type.
    */
-  public final String getParameterName() {
-    return my_param_name;
+  public final TypeInfo type() {
+    return my_type;
   }
   
   /**
-   * Returns true if this parameter is an array. False otherwise.
+   * @return The parameter name.
+   */
+  public final String name() {
+    return my_name;
+  }
+  
+  /**
    * @return True if this parameter is an array. False otherwise.
    */
   public final boolean isArray() {

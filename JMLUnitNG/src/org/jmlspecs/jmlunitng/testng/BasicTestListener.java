@@ -49,6 +49,7 @@ public class BasicTestListener extends TestListenerAdapter {
    */
   // @ ensures my_writer == the_writer
   public BasicTestListener(final Writer the_writer) {
+    super();
     my_writer = the_writer;
   }
 

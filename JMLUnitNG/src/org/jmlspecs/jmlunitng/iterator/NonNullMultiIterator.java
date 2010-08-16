@@ -35,7 +35,7 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
   /**
    * The Iterator over concatenated iterators.
    */
-  private IteratorAdapter<RepeatedAccessIterator<T>> my_current_iterator;
+  private final IteratorAdapter<RepeatedAccessIterator<T>> my_iterators;
 
   /**
    * Creates a new MultiIterator that iterates over all given iterators in
@@ -43,29 +43,26 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
    * 
    * @param iterators The list of iterators to iterate over.
    */
-  public NonNullMultiIterator(List<RepeatedAccessIterator<T>> the_iterators) {
-    my_current_iterator = new IteratorAdapter<RepeatedAccessIterator<T>>(the_iterators.iterator());
-    // advance to the next non-null element
-    while (my_current_iterator.hasElement() && 
-           (my_current_iterator.element() == null || 
-            !my_current_iterator.element().hasElement())) {
-      my_current_iterator.advance();
-      while (my_current_iterator.element() != null && 
-             my_current_iterator.element().hasElement() &&
-             my_current_iterator.element().element() == null)
-      {
-        my_current_iterator.element().advance();
-      }
-    }
+  public NonNullMultiIterator(final List<RepeatedAccessIterator<T>> the_iterators) {
+    my_iterators =
+      new IteratorAdapter<RepeatedAccessIterator<T>>(the_iterators.iterator());
+   
+    // advance to the first non-null element
+    advance();
   }
 
   /**
-   * Advances the MultiIterator to the next value in the sequence.
+   * Advances the multi-iterator to the next non-null value, if one exists.
    */
-  /*@ requires hasElement(); */
+  //@ requires hasElement();
   @Override
-  public void advance() {
-    internalAdvance();
+  public final void advance() {
+    advanceCurrentIterator();
+    while (my_iterators.hasElement() && !my_iterators.element().hasElement()) {
+      // we ran out of elements in current iterator, so go on to next one
+      my_iterators.advance();
+      advanceCurrentIterator();
+    }
   }
 
   /**
@@ -76,7 +73,7 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
   //@ requires hasElement();
   @Override
   public /*@ pure */ T element() {
-    return my_current_iterator.element().element();
+    return my_iterators.element().element();
   }
 
   /**
@@ -84,34 +81,22 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
    */
   @Override
   public /*@ pure */ boolean hasElement() {
-    return my_current_iterator.hasElement() && 
-           my_current_iterator.element().hasElement();
+    return my_iterators.hasElement() && 
+           my_iterators.element().hasElement();
   }
 
   /**
-   * Helper method for advancing to the next element. Allows the internal
-   * advance method to be called from the constructor while allowing the public
-   * advance() to be non-final.
+   * Advances the current iterator of the multi-iterator, until we reach
+   * a non-null value or the end.
    */
-  /*@ requires hasElement(); */
-  private void internalAdvance() {
-    if (my_current_iterator.hasElement() && my_current_iterator.element() != null &&
-        my_current_iterator.element().hasElement()) {
-      do
-      {
-        my_current_iterator.element().advance();
+  private void advanceCurrentIterator() {
+    if (my_iterators.hasElement() && my_iterators.element() != null &&
+        my_iterators.element().hasElement()) {
+      do {
+        my_iterators.element().advance();
       }
-      while (my_current_iterator.element().element() == null && my_current_iterator.element().hasElement());
-    }
-    //proceed in the sequence until the first element is found or the end is reached.
-    while (my_current_iterator.hasElement() && !my_current_iterator.element().hasElement()) {
-      my_current_iterator.advance();
-      while (my_current_iterator.element() != null && 
-             my_current_iterator.element().hasElement() &&
-             my_current_iterator.element().element() == null)
-      {
-        my_current_iterator.element().advance();
-      }
+      while (my_iterators.element().hasElement() &&
+             my_iterators.element().element() == null);
     }
   }
 }

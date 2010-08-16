@@ -19,14 +19,15 @@ import java.util.Set;
 /**
  * Information about a method under test.
  * 
+ * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version April 2010
+ * @version August 2010
  */
 public class MethodInfo {
   /**
    * The static set of untestable method names.
    */
-  private static final Set<String> UNTESTABLE_METHOD_NAMES;
+  private static final /*@ non_null @*/ Set<String> UNTESTABLE_METHOD_NAMES;
   static {
     final Set<String> untestable_methods = new HashSet<String>();
     untestable_methods.add("finalize");
@@ -36,55 +37,57 @@ public class MethodInfo {
     untestable_methods.add("wait");
     UNTESTABLE_METHOD_NAMES = Collections.unmodifiableSet(untestable_methods);
   }
+  
   /**
    * The name of the method.
    */
-  private String my_name;
+  private final /*@ non_null @*/ String my_name;
+  
   /**
    * The protection level of the method.
    */
-  private ProtectionLevel my_protection_level;
+  private final /*@ non_null @*/ ProtectionLevel my_protection_level;
 
   /**
    * The name of the return type of the method.
    */
-  private TypeInfo my_return_type;
+  private final /*@ non_null @*/ TypeInfo my_return_type;
 
   /**
    * The parameter types of the method in order.
    */
-  private List<ParameterInfo> my_parameter_types;
+  private final /*@ non_null @*/ List<ParameterInfo> my_parameter_types;
 
   /**
    * The ClassInfo for the class this method belongs to.
    */
-  private ClassInfo my_parent_class;
+  private final /*@ non_null @*/ ClassInfo my_parent_class;
 
   /**
    * The ClassInfo for the class this method is declared in.
    */
-  private ClassInfo my_declaring_class;
+  private final /*@ non_null @*/ ClassInfo my_declaring_class;
 
   /**
    * Is the method static?
    */
-  private boolean my_is_static;
+  private final boolean my_is_static;
 
   /**
    * Is the method a constructor?
    */
-  private boolean my_is_constructor;
+  private final boolean my_is_constructor;
 
   /*@ invariant my_is_inherited == !my_declaring_class.equals(my_parent_class); */
   /**
    * Is the method inherited?
    */
-  private boolean my_is_inherited;
+  private final boolean my_is_inherited;
   
   /**
    * Is the method a factory?
    */
-  private boolean my_is_factory;
+  private final boolean my_is_factory;
 
   /*@ invariant my_is_testable == 
     @        !(my_is_constructor && my_parent_class.isAbstract()) &&
@@ -93,7 +96,7 @@ public class MethodInfo {
   /**
    * Is the method testable?
    */
-  private boolean my_is_testable;
+  private final boolean my_is_testable;
 
   /**
    * Creates a MethodInfo object representing a method with the given
@@ -110,10 +113,12 @@ public class MethodInfo {
    * @param the_is_static Is the method static?
    */
   //@ requires !the_is_constructor || !the_is_static;
-  public MethodInfo(final String the_name, final ClassInfo the_parent_class,
-                    final ClassInfo the_declaring_class,
-                    final ProtectionLevel the_protection_level,
-                    final List<ParameterInfo> the_parameter_types, final TypeInfo the_return_type,
+  public MethodInfo(final /*@ non_null @*/ String the_name, 
+                    final /*@ non_null @*/ ClassInfo the_parent_class,
+                    final /*@ non_null @*/ ClassInfo the_declaring_class,
+                    final /*@ non_null @*/ ProtectionLevel the_protection_level,
+                    final /*@ non_null @*/ List<ParameterInfo> the_parameter_types, 
+                    final /*@ non_null @*/ TypeInfo the_return_type,
                     final boolean the_is_constructor, final boolean the_is_static) {
     my_name = the_name;
     my_parent_class = the_parent_class;
@@ -133,71 +138,55 @@ public class MethodInfo {
   }
 
   /**
-   * Returns the name of the method.
-   * 
    * @return The name of the method
    */
-  public/*@pure*/String getName() {
+  public /*@ pure non_null @*/ String name() {
     return my_name;
   }
 
   /**
-   * Returns the ClassInfo object for the class who owns this method.
-   * 
-   * @return The ClassInfo object for the class who owns this method.
+   * @return The ClassInfo object for the class that owns this method.
    */
-  public/*@ pure */ClassInfo getParentClass() {
+  public /*@ pure non_null @*/ ClassInfo parentClass() {
     return my_parent_class;
   }
 
   /**
-   * Returns the ClassInfo object for the class who declared this method.
-   * 
-   * @return The ClassInfo object for the class who declared this method.
+   * @return The ClassInfo object for the class that declared this method.
    */
-  public/*@ pure */ClassInfo getDeclaringClass() {
+  public /*@ pure non_null @*/ ClassInfo declaringClass() {
     return my_declaring_class;
   }
 
   /**
-   * Returns the protection level of the method.
-   * 
    * @return The protection level of the method.
    */
-  public/*@pure */ProtectionLevel getProtectionLevel() {
+  public /*@ pure non_null @*/ ProtectionLevel protectionLevel() {
     return my_protection_level;
   }
 
   /**
-   * Returns an unmodifiable list of the parameter types for this method in
-   * order.
-   * 
-   * @return A list of parameter types.
+   * @return an unmodifiable list of the parameter types of the method,
+   *  in the order they are declared in the parameter list.
    */
-  public/*@pure */List<ParameterInfo> getParameterTypes() {
+  public /*@ pure non_null @*/ List<ParameterInfo> parameterTypes() {
     return my_parameter_types;
   }
 
   /**
-   * Returns the return type of this method as a String.
-   * 
-   * @return The return type.
+   * @return The return type of the method.
    */
-  public/*@ pure */TypeInfo getReturnType() {
+  public /*@ pure @*/ TypeInfo returnType() {
     return my_return_type;
   }
 
-  // "Is the method a constructor?",
   /**
-   * Returns true if this method is a constructor. False if not.
-   * 
    * @return True if this method is a constructor. False if not.
    */
-  public/*@ pure */boolean isConstructor() {
+  public /*@ pure @*/ boolean isConstructor() {
     return my_is_constructor;
   }
 
-  // "Is the method a factory?",
   /**
    * Returns true if this method is a factory method. A factory method is
    * defined as a static method whose return type is the same as the class it
@@ -206,21 +195,19 @@ public class MethodInfo {
    * @return True if this method is a factory. False otherwise.
    * 
    */
-  public/*@ pure */boolean isFactory() {
+  public /*@ pure @*/ boolean isFactory() {
     return my_is_factory;
   }
 
-  // "Is the method static?",
   /**
    * Returns true if this method is a static method. False if not.
    * 
    * @return True if this method is static. False if not.
    */
-  public/*@ pure */boolean isStatic() {
+  public /*@ pure @*/ boolean isStatic() {
     return my_is_static;
   }
 
-  // "Is the method testable?",
   /**
    * Returns whether or not this method is testable. A method is testable if and
    * only if it a) is not a constructor of an abstract class, 
@@ -230,18 +217,14 @@ public class MethodInfo {
    * 
    * @return True if this method is testable. False otherwise.
    */
-  public/*@ pure */boolean isTestable() {
+  public /*@ pure @*/ boolean isTestable() {
     return my_is_testable;
   }
 
-  // "Is the method inherited?"
-
   /**
-   * Returns true if this method was inherited. False otherwise.
-   * 
    * @return True if this method was inherited. False otherwise.
    */
-  public/*@ pure */boolean isInherited() {
+  public /*@ pure @*/ boolean isInherited() {
     return my_is_inherited;
   }
   
@@ -249,33 +232,32 @@ public class MethodInfo {
    * Determines whether or not this method is a factory method.
    * @return True if this method is a factory. False otherwise.
    */
-  private /*@ pure */ boolean determineIsFactory() {
+  private /*@ pure @*/ boolean determineIsFactory() {
     //decide if factory
     ClassInfo cur = my_declaring_class;
-    while (cur != null && my_name.equals(cur.getShortName())) {
+    while (cur != null && my_name.equals(cur.shortName())) {
       cur = cur.getSuperclassInfo();
     }
     return my_is_static && cur != null;
   }
   
   /**
-   * Returns the signature of this method as a String.
-   * @return The method signature
+   * @return The method signature as a String.
    */
-  public /*@ pure */ String toString() {
-    StringBuilder sb = new StringBuilder();
+  public /*@ pure non_null @*/ String toString() {
+    final StringBuilder sb = new StringBuilder();
     if (my_return_type != null) {
-      sb.append(my_return_type.getFullyQualifiedName());
+      sb.append(my_return_type.fullyQualifiedName());
       sb.append(" ");
     }
     sb.append(my_name);
     sb.append("(");
-    Iterator<ParameterInfo> paramIter = my_parameter_types.iterator();
+    final Iterator<ParameterInfo> paramIter = my_parameter_types.iterator();
     while (paramIter.hasNext()) {
-      ParameterInfo param = paramIter.next();
-      sb.append(param.getFullyQualifiedName());
+      final ParameterInfo param = paramIter.next();
+      sb.append(param.type().fullyQualifiedName());
       sb.append(" ");
-      sb.append(param.getParameterName());
+      sb.append(param.name());
       if (param.isArray()) {
         sb.append("[]");
       }
@@ -286,5 +268,4 @@ public class MethodInfo {
     sb.append(")");
     return sb.toString();
   }
-
 }

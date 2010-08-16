@@ -33,7 +33,7 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
   /**
    * The Iterator over concatenated iterators.
    */
-  private IteratorAdapter<RepeatedAccessIterator<T>> my_current_iterator;
+  private final IteratorAdapter<RepeatedAccessIterator<T>> my_iterators;
 
   /**
    * Creates a new MultiIterator that iterates over all given iterators in
@@ -41,20 +41,25 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    * 
    * @param iterators The list of iterators to iterate over.
    */
-  public MultiIterator(List<RepeatedAccessIterator<T>> the_iterators) {
-    my_current_iterator = new IteratorAdapter<RepeatedAccessIterator<T>>(the_iterators.iterator());
-    while (my_current_iterator.hasElement() && !my_current_iterator.element().hasElement()) {
-      my_current_iterator.advance();
-    }
+  public MultiIterator(final List<RepeatedAccessIterator<T>> the_iterators) {
+    my_iterators = 
+      new IteratorAdapter<RepeatedAccessIterator<T>>(the_iterators.iterator());
+    advance();
   }
 
   /**
    * Advances the MultiIterator to the next value in the sequence.
    */
-  /*@ requires hasElement(); */
+  //@ requires hasElement();
   @Override
-  public void advance() {
-    internalAdvance();
+  public final void advance() {
+    if (my_iterators.hasElement()) {
+      my_iterators.element().advance();
+    }
+    while (my_iterators.hasElement() && 
+           !my_iterators.element().hasElement()) {
+      my_iterators.advance();
+    }
   }
 
   /**
@@ -62,9 +67,10 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    * 
    * @return The current element.
    */
+  //@ requires hasElement();
   @Override
   public /*@ pure */ T element() {
-    return my_current_iterator.element().element();
+    return my_iterators.element().element();
   }
 
   /**
@@ -72,23 +78,7 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    */
   @Override
   public /*@ pure */ boolean hasElement() {
-    return my_current_iterator.hasElement() && 
-           my_current_iterator.element().hasElement();
-  }
-
-  /**
-   * Helper method for advancing to the next element. Allows the internal
-   * advance method to be called from the constructor while allowing the public
-   * advance() to be non-final.
-   */
-  /*@ requires hasElement(); */
-  private void internalAdvance() {
-    if (my_current_iterator.hasElement()) {
-      my_current_iterator.element().advance();
-    }
-    //proceed in the sequence until the first element is found or the end is reached.
-    while (my_current_iterator.hasElement() && !my_current_iterator.element().hasElement()) {
-      my_current_iterator.advance();
-    }
+    return my_iterators.hasElement() && 
+           my_iterators.element().hasElement();
   }
 }

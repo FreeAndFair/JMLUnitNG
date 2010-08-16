@@ -228,13 +228,13 @@ public class TestClassGenerator {
   private List<MethodInfo> getMethodsToTest(final ClassInfo the_class) {
     final List<MethodInfo> methods = new LinkedList<MethodInfo>();
     for (MethodInfo m : the_class.getTestableMethods()) {
-      if (m.getProtectionLevel().weakerThanOrEqualTo(my_level) &&
+      if (m.protectionLevel().weakerThanOrEqualTo(my_level) &&
           (my_test_inherited_methods || !m.isInherited()))
       {
         methods.add(m);
       }
     }
-    System.err.println("Testing " + methods.size() + " methods for class " + the_class.getFullyQualifiedName());
+    System.err.println("Testing " + methods.size() + " methods for class " + the_class.fullyQualifiedName());
     return methods;
   }
 
@@ -253,8 +253,8 @@ public class TestClassGenerator {
   private List<TypeInfo> getUniqueParameterTypes(final List<? extends MethodInfo> the_methods) {
     final Set<TypeInfo> classes = new HashSet<TypeInfo>();
     for (MethodInfo m : the_methods) {
-      for (TypeInfo s : m.getParameterTypes()) {
-        classes.add(s);
+      for (ParameterInfo p : m.parameterTypes()) {
+        classes.add(p.type());
       }
     }
     return new ArrayList<TypeInfo>(classes);
@@ -283,8 +283,8 @@ public class TestClassGenerator {
       t.setAttribute("date",
                      DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
       t.setAttribute("methods", methods);
-      t.setAttribute("packageName", the_class.getPackageName());
-      t.setAttribute("packaged", !the_class.getPackageName().equals(""));
+      t.setAttribute("packageName", the_class.packageName());
+      t.setAttribute("packaged", !the_class.packageName().equals(""));
       the_test_writer.write(t.toString(LINE_WIDTH));
     }
     // generate data class
@@ -296,8 +296,8 @@ public class TestClassGenerator {
                      DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
       t.setAttribute("methods", methods);
       t.setAttribute("types", types);
-      t.setAttribute("packageName", the_class.getPackageName());
-      t.setAttribute("packaged", !the_class.getPackageName().equals(""));
+      t.setAttribute("packageName", the_class.packageName());
+      t.setAttribute("packaged", !the_class.packageName().equals(""));
       the_data_writer.write(t.toString(LINE_WIDTH));
     }
   }
@@ -308,24 +308,24 @@ public class TestClassGenerator {
    * @param the_infos The MethodInfo objects for which to generate
    *          GeneratorMethodInfo objects.
    * @return A list of GeneratorMethodInfo objects that are created from the
-   *         MethodInfo in the corrosponding position in the_infos.
+   *         MethodInfo in the corresponding position in the_infos.
    */
   /*@ ensures \result.size() == the_infos.size() &&
     @         (\forall int i; i >= 0 && \result.size() >= i; 
     @           \result.get(i).getName().equals(the_infos.get(i).getName()));
    */
   private List<GeneratorMethodInfo> generateUniquelyNamedMethodInfos(final List<MethodInfo> the_infos) {
-    Map<String, Integer> methodLevels = new HashMap<String, Integer>();
-    Map<String, List<GeneratorMethodInfo>> uniques = new HashMap<String, List<GeneratorMethodInfo>>();
+    final Map<String, Integer> methodLevels = new HashMap<String, Integer>();
+    final Map<String, List<GeneratorMethodInfo>> uniques = new HashMap<String, List<GeneratorMethodInfo>>();
     for (MethodInfo info : the_infos) {
-      String name = info.getName();
+      final String name = info.name();
       if (methodLevels.containsKey(name)) {
         int level = methodLevels.get(name);
         boolean foundEquality = false;
         String newName = generateName(info, level);
         do {
           foundEquality = false;
-          String lvlName = generateName(info, level);
+          final String lvlName = newName;
           for (GeneratorMethodInfo entry : uniques.get(name)) {
             if (entry.getUniqueName().equals(lvlName)) {
               foundEquality = true;
@@ -342,13 +342,14 @@ public class TestClassGenerator {
         } while (level <= MAX_NAME_LEVEL && foundEquality);
         uniques.get(name).add(new GeneratorMethodInfo(info, newName));
       } else {
-        List<GeneratorMethodInfo> start = new LinkedList<GeneratorMethodInfo>();
+        final List<GeneratorMethodInfo> start = new LinkedList<GeneratorMethodInfo>();
         start.add(new GeneratorMethodInfo(info, generateName(info, 1)));
-        uniques.put(info.getName(), start);
-        methodLevels.put(info.getName(), 1);
+        uniques.put(info.name(), start);
+        methodLevels.put(info.name(), 1);
       }
     }
-    List<GeneratorMethodInfo> result = new ArrayList<GeneratorMethodInfo>(the_infos.size());
+    final List<GeneratorMethodInfo> result = 
+      new ArrayList<GeneratorMethodInfo>(the_infos.size());
     for (List<GeneratorMethodInfo> infoList : uniques.values()) {
       result.addAll(infoList);
     }
@@ -361,14 +362,14 @@ public class TestClassGenerator {
    * @return The unique name of the_info to the given level.
    */
   private String generateName(final MethodInfo the_info, final int level) {
-    StringBuffer sb = new StringBuffer(the_info.getName());
+    final StringBuffer sb = new StringBuffer(the_info.name());
     if (level >= 2) {
-      for (ParameterInfo p : the_info.getParameterTypes()) {
+      for (ParameterInfo p : the_info.parameterTypes()) {
         sb.append("_");
         if (level == 2) {
-          sb.append(p.getShortName());
+          sb.append(p.type().shortName());
         } else {
-          sb.append(p.getFormattedName());
+          sb.append(p.type().formattedName());
         }
       }
     }
@@ -379,7 +380,7 @@ public class TestClassGenerator {
    * An extension to MethodInfo that adds a unique name string to be used in
    * generated code.
    */
-  class GeneratorMethodInfo extends MethodInfo {
+  private static class GeneratorMethodInfo extends MethodInfo {
     /**
      * The unique name of this method.
      */
@@ -392,10 +393,11 @@ public class TestClassGenerator {
      * @param the_method The method to derive from.
      * @param the_unique_name The unique name of this method.
      */
-    public GeneratorMethodInfo(final MethodInfo the_method, String the_unique_name) {
-      super(the_method.getName(), the_method.getParentClass(), the_method.getDeclaringClass(),
-            the_method.getProtectionLevel(), the_method.getParameterTypes(),
-            the_method.getReturnType(), the_method.isConstructor(), the_method.isStatic());
+    public GeneratorMethodInfo(final MethodInfo the_method, 
+                               final String the_unique_name) {
+      super(the_method.name(), the_method.parentClass(), the_method.declaringClass(),
+            the_method.protectionLevel(), the_method.parameterTypes(),
+            the_method.returnType(), the_method.isConstructor(), the_method.isStatic());
       my_unique_name = the_unique_name;
     }
 

@@ -129,20 +129,20 @@ public final class InfoFactory {
       for (MethodInfo pm : parent.getAllMethods())
       {
         if (!pm.isConstructor() && !pm.isStatic() &&
-            !pm.getProtectionLevel().equals(ProtectionLevel.PRIVATE))
+            !pm.protectionLevel().equals(ProtectionLevel.PRIVATE))
         {
           boolean duplicate = false;
           for (MethodInfo m : method_infos)
           {
             duplicate = duplicate || 
-                        (m.getName().equals(pm.getName()) &&
-                         m.getParameterTypes().equals(pm.getParameterTypes()));
+                        (m.name().equals(pm.name()) &&
+                         m.parameterTypes().equals(pm.parameterTypes()));
           }
           if (!duplicate)
           {
-            method_infos.add(new MethodInfo(pm.getName(), result, pm.getDeclaringClass(),
-                                            pm.getProtectionLevel(), pm.getParameterTypes(),
-                                            pm.getReturnType(), false, false));
+            method_infos.add(new MethodInfo(pm.name(), result, pm.declaringClass(),
+                                            pm.protectionLevel(), pm.parameterTypes(),
+                                            pm.returnType(), false, false));
           }
         }
       }
@@ -194,7 +194,7 @@ public final class InfoFactory {
     if (the_sym.getEnclosingElement() instanceof ClassSymbol) {
       final ClassSymbol parent = (ClassSymbol) the_sym.getEnclosingElement();
       if (the_parent_class == null ||
-          !parent.getQualifiedName().toString().equals(the_parent_class.getShortName())) {
+          !parent.getQualifiedName().toString().equals(the_parent_class.shortName())) {
         declaring_class = getClassInfo(parent);
       }
     }
@@ -205,7 +205,7 @@ public final class InfoFactory {
     final ProtectionLevel level = getLevel(the_sym.getModifiers());
     String name = the_sym.getSimpleName().toString();
     if ("<init>".equals(name)) {
-      name = the_parent_class.getShortName();
+      name = the_parent_class.shortName();
     }
     return new MethodInfo(name, parent_class, declaring_class,
                           level, params, new TypeInfo(the_sym.getReturnType().toString()),
@@ -275,13 +275,6 @@ public final class InfoFactory {
     private ClassInfo my_class_info;
 
     /**
-     * Creates a new ClassInfoParser.
-     */
-    public ClassInfoParser() {
-      my_class_info = null;
-    }
-
-    /**
      * Overridden method. Extracts all class data except method data.
      * 
      * @param the_tree The class declaration node.
@@ -315,15 +308,17 @@ public final class InfoFactory {
      * The parsed ClassInfo object.
      */
     private ClassInfo my_class_info;
+    
     /**
      * The MethodInfo objects parsed.
      */
-    private List<MethodInfo> my_method_infos;
+    private final List<MethodInfo> my_method_infos;
 
     /**
      * Creates a new MethodInfoParser.
      */
     public MethodInfoParser() {
+      super();
       my_method_infos = new LinkedList<MethodInfo>();
     }
 
