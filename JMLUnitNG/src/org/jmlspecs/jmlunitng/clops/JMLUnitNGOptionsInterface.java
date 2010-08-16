@@ -43,8 +43,25 @@ public interface JMLUnitNGOptionsInterface {
   String getTestPackage();
   
 
+// Option RACVersion. 
+// Aliases: [--rac-version]
+
+  /**
+   * @return true if the option RACVersion has been used
+   * in the command line.
+   */
+  boolean isRACVersionSet();
+
+  /**
+   * Get the value of {@code Option} RACVersion.
+   * @return the value of the option RACVersion if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  String getRACVersion();
+  
+
 // Option Files. 
-// Aliases: [-f, --files]
+// Aliases: []
 
   /**
    * @return true if the option Files has been used

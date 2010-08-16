@@ -164,6 +164,9 @@ public final class Main {
       classpath = sb.toString();
     } else {
       classpath = System.getenv("CLASSPATH");
+      if (classpath == null) {
+        classpath = "";
+      }
     }
     return classpath;
   }
@@ -184,7 +187,10 @@ public final class Main {
       }
       specspath = sb.toString();
     } else {
-      specspath = "";
+      specspath = System.getenv("SPECSPATH");
+      if (specspath == null) {
+        specspath = "";
+      }
     }
     return specspath;
   }
@@ -273,28 +279,40 @@ public final class Main {
    * Print usage to standard out.
    */
   protected static void printHelp() {
-    System.out.println("Generates TestNG tests for Java source code.");
+    System.out.println("JMLUnitNG - Generate TestNG Classes for JML-Annotated Java");
     System.out.println();
-    System.out.println("jmlunitng [OPTION] ... -f FILE,[FILE]...");
-    System.out.println("-c <directory-list>, --classpath <directory-list> :  Use the "
-                       + "given string as the CLASSPATH during compilation. By default"
-                       + "the value of the environment variable CLASSPATH is used instead.");
-    System.out.println("-d, --dest [DIRECTORY] : Specify the oputput directory "
-                       + "for generated files.");
-    System.out.println("-dep, --deprecation : Test for Depricated members.");
-    System.out.println("-E : Universe type system.");
-    System.out.println("-f, --files FILE,[FILE]... : Comma-seperated list of files "
-                       + "for test generation.");
-    System.out.println("-h, --help : To see command line options.");
-    System.out.println("-p, --package : To specify the files for testing"
-                       + " with JMLUnitNG.");
-    System.out.println("-s, --safemath : Report Integral Arithmatic Overflow.");
-    System.out.println("-u, --universes : Enable universe type modifiers and full"
-                       + " type checking.");
-    System.out.println("-v, --verbose : Display verbose information during compilation.");
-    System.out.println("-inherited : Generate tests for inherited methods.");
-    System.out.println("-public : Generates tests only for public methods.");
-    System.out.println("-protected : Generates tests for public and protected methods.");
+    System.out.println("jmlunitng [OPTION] ... path-list");
+    System.out.println("Generates unit tests for all Java source files listed in, " + 
+                       "or contained in directories listed in, path-list.\n");
+    System.out.println("-d, --dest [DIRECTORY] : Specify the output directory " +
+                       "for generated classes.");
+    System.out.println("--reflection : Generate test data reflectively " + 
+                       "(disabled by default).");
+    System.out.println("--deprecation : Generate tests for deprecated methods " + 
+                       "(disabled by default).");
+    System.out.println("--inherited : Generate tests for inherited methods " + 
+                       "(disabled by default).");
+    System.out.println("--public : Generate tests only for public methods (default).");
+    System.out.println("--package : Generate tests for package (no protection " +
+                       "modifier) methods (disabled by default).");
+    System.out.println("--protected : Generate tests for protected methods " + 
+                       "(disabled by default).");
+    System.out.println("--clean : Remove all old JMLUnitNG-generated files from the " + 
+                       "destination path, including any manual modifications " + 
+                       "(disabled by default).");
+    System.out.println("--prune : Remove old JMLUnitNG-generated files from the " + 
+                       "destination path that do not conform to the current API " + 
+                       "of the classes under test (disabled by default).");
+    System.out.println("-cp <directory-list>, --classpath <directory-list> : " + 
+                       "Use the given colon-separated list of directories and " +
+                       "Jar files as the classpath during compilation " +
+                       "(CLASSPATH environment variable, by default).");
+    System.out.println("-sp <directory-list>, --specspath <directory-list> : " +
+                       "Use the given colon-separated list of directories and " +
+                       "Jar files as the specspath during compilation. " +
+                       "(SPECSPATH environment variable, by default).");
+    System.out.println("-v, --verbose : Display verbose information during " + 
+                       "test generation.");
+    System.out.println("-h, --help : Shows this message.");
   }
-  
 }

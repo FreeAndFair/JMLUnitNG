@@ -48,6 +48,6 @@ public class JMLUnitNGParser extends AbstractSpecificCLParser {
    * @return the format string.
    */
   public String getFormatString() {
-    return "Option* Destination?"; 
+    return "Option* Files"; 
   }
 }

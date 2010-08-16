@@ -13,6 +13,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
 
   private final StringOption ogDestination;
   private final StringOption ogTestPackage;
+  private final StringOption ogRACVersion;
   private final FileListOption ogFiles;
   private final BooleanOption ogReflection;
   private final BooleanOption ogHelp;
@@ -37,14 +38,16 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogTestPackage = new StringOption("TestPackage", "(?:--test-package)");
     addOption(ogTestPackage);
     ogTestPackage.setProperty("aliases", "--test-package");
-    ogFiles = new FileListOption("Files", "(?:-f)|(?:--files)");
+    ogRACVersion = new StringOption("RACVersion", "(?:--rac-version)");
+    addOption(ogRACVersion);
+    ogRACVersion.setProperty("aliases", "--rac-version");
+    ogFiles = new FileListOption("Files", "");
     addOption(ogFiles);
     ogFiles.setProperty("allowmultiple", "true");
-    ogFiles.setProperty("splitter", ",");
+    ogFiles.setProperty("splitter", " ");
     ogFiles.setProperty("mustexist", "true");
     ogFiles.setProperty("canbedir", "true");
     ogFiles.setProperty("allowdash", "true");
-    ogFiles.setProperty("aliases", "-f,--files");
     ogReflection = new BooleanOption("Reflection", "(?:-r)|(?:--reflection)");
     addOption(ogReflection);
     ogReflection.setProperty("aliases", "-r,--reflection");
@@ -112,11 +115,13 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogPackage);
     ogOption.addOptionOrGroup(ogDestination);
     ogOption.addOptionOrGroup(ogTestPackage);
-    ogOption.addOptionOrGroup(ogPublic);
     ogOption.addOptionOrGroup(ogInherited);
+    ogOption.addOptionOrGroup(ogPublic);
+    ogOption.addOptionOrGroup(ogRACVersion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogDestination);
     ogAllOptions.addOptionOrGroup(ogTestPackage);
+    ogAllOptions.addOptionOrGroup(ogRACVersion);
     ogAllOptions.addOptionOrGroup(ogFiles);
     ogAllOptions.addOptionOrGroup(ogReflection);
     ogAllOptions.addOptionOrGroup(ogHelp);
@@ -180,8 +185,32 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     return ogTestPackage;
   }
   
+// Option RACVersion.
+// Aliases: [--rac-version]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isRACVersionSet() {
+    return ogRACVersion.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public String getRACVersion() {
+    return ogRACVersion.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public String getRawRACVersion() {
+    return ogRACVersion.getRawValue();
+  }
+  
+  public StringOption getRACVersionOption() {
+    return ogRACVersion;
+  }
+  
 // Option Files.
-// Aliases: [-f, --files]
+// Aliases: []
   
   /**
    * {@inheritDoc}

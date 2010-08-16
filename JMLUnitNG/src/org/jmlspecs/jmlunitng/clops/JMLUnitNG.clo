@@ -4,8 +4,9 @@ NAME::
 ARGS::
   Destination:{"-d", "--dest"}:{string}
   TestPackage:{"--test-package"}:{string}
-  Files:{"-f", "--files"}:{file-list}:
-    [allowmultiple="true", splitter=",", mustexist="true", 
+  RACVersion: {"--rac-version"}:{string}
+  Files:{}:{file-list}:
+    [allowmultiple="true", splitter=" ", mustexist="true", 
      canbedir="true", allowdash="true"]
   Reflection:{"-r", "--reflection"}
   Help:{"-h", "--help"} 
@@ -23,13 +24,13 @@ ARGS::
   Specspath: {"-sp", "--specspath"}:{file-list}:
     [allowmultiple="true", splitter=":", mustexist="true",
      mustbedir="true"]
-     
+
 FORMAT::
-  Option* Destination?;   
+  Option* Files;   
 
 WHERE::
   Option:  
-    Destination|TestPackage|Files|Reflection|Help|Package|
+    Destination|TestPackage|RACVersion|Files|Reflection|Help|Package|
     Deprecation|Verbose|Inherited|Public|Package|Protected|
     Clean|Prune|Classpath|Specpath;
 
@@ -41,3 +42,9 @@ OVERRIDES::
   {$(Protected?)} -> Protected := {false};
   {$(Package?)} -> Package := {false};
   
+VALIDITY::
+  // can't specify a test package if --package or --protected turned on
+  {$(Package?) && $(TestPackage?)}:
+    "You cannot specify a test package when testing package-level methods.";
+  {$(Protected?) && $(TestPackage?)}:
+    "You cannot specify a test package when testing protected methods.";
