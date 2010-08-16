@@ -72,9 +72,19 @@ public final class Main {
       final JMLUnitNGOptionStore opts = clops.getOptionStore();
       if (opts.isHelpSet()) {
         printHelp();
-        System.exit(1);
+        System.exit(0);
       }
-
+      if (opts.isRACVersionSet()) {
+        // see if a valid RAC version was chosen
+        if (!TestClassGenerator.VALID_RAC_VERSIONS.contains
+            (opts.getRACVersion())) {
+          System.err.println("Invalid RAC version specified. Valid versions are: ");
+          for (String s : TestClassGenerator.VALID_RAC_VERSIONS) {
+            System.err.println(s + " ");
+          }
+          System.exit(1);
+        }
+      }
       final List<File> file_list = filesToProcess(opts);
       final String classpath = generateClasspath(opts);
       final String specspath = generateSpecspath(opts);
@@ -230,9 +240,20 @@ public final class Main {
     {
       level_to_test = ProtectionLevel.PROTECTED;
     }
+    if (the_options.isPackageSet())
+    {
+      level_to_test = ProtectionLevel.NO_LEVEL;
+    }
+    String rac_version = TestClassGenerator.DEF_RAC_VERSION;
+    if (the_options.isRACVersionSet()) {
+      rac_version = the_options.getRACVersion();
+    }
     final TestClassGenerator generator = 
-      new TestClassGenerator(level_to_test, the_options.isInheritedSet(),
-                             the_options.isDeprecationSet());
+      new TestClassGenerator(level_to_test, 
+                             the_options.isInheritedSet(),
+                             the_options.isDeprecationSet(),
+                             the_options.isReflectionSet(),
+                             rac_version);
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
     final StringTemplate testClassNameTemplate = group.lookupTemplate("testClassName");
@@ -286,6 +307,10 @@ public final class Main {
                        "or contained in directories listed in, path-list.\n");
     System.out.println("-d, --dest [DIRECTORY] : Specify the output directory " +
                        "for generated classes.");
+    System.out.println("--rac-version <version-string> : Generate RAC " +
+                       "handling code for the specified JML RAC version; " +
+                       "currently supported values are 'jml2' for the " + 
+                       "original jmlc and 'jml4' for jml4c (the default).");
     System.out.println("--reflection : Generate test data reflectively " + 
                        "(disabled by default).");
     System.out.println("--deprecation : Generate tests for deprecated methods " + 
@@ -293,10 +318,10 @@ public final class Main {
     System.out.println("--inherited : Generate tests for inherited methods " + 
                        "(disabled by default).");
     System.out.println("--public : Generate tests only for public methods (default).");
-    System.out.println("--package : Generate tests for package (no protection " +
-                       "modifier) methods (disabled by default).");
     System.out.println("--protected : Generate tests for protected methods " + 
                        "(disabled by default).");
+    System.out.println("--package : Generate tests for package (no protection " +
+                       "modifier) and protected methods (disabled by default).");
     System.out.println("--clean : Remove all old JMLUnitNG-generated files from the " + 
                        "destination path, including any manual modifications " + 
                        "(disabled by default).");

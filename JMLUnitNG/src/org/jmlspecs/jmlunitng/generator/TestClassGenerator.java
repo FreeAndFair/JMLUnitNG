@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -39,150 +40,106 @@ import org.antlr.stringtemplate.StringTemplateGroup;
  */
 public class TestClassGenerator {
   /**
+   * Valid RAC versions.
+   */
+  public static final List<String> VALID_RAC_VERSIONS;
+  
+  static {
+    final List<String> temp = new ArrayList<String>();
+    temp.add("jml2");
+    temp.add("jml4");
+    VALID_RAC_VERSIONS = Collections.unmodifiableList(temp);
+  }
+    
+  /**
    * The default max protection level.
    */
   public static final ProtectionLevel DEF_PROTECTION_LEVEL = ProtectionLevel.PUBLIC;
+  
   /**
    * Are inherited methods tested by default?
    */
   public static final boolean DEF_TEST_INHERITED_METHODS = false;
+  
   /**
    * Are deprecated methods tested by default?
    */
   public static final boolean DEF_TEST_DEPRECATED_METHODS = false;
+  
   /**
    * Do test data classes use reflection by default?
    */
   public static final boolean DEF_USE_REFLECTION = true;
+  
+  /**
+   * The default RAC version to generate tests for.
+   */
+  public static final String DEF_RAC_VERSION = "jml4";
+  
   /**
    * The line max line width of generated code.
    */
   public static final int LINE_WIDTH = 120;
+  
   /**
    * The maximum name level for which to generate unique names.
    */
   private static final int MAX_NAME_LEVEL = 3;
+  
   /**
    * The max protection level for which to generate tests.
    */
-  private ProtectionLevel my_level;
+  private final ProtectionLevel my_level;
+  
   /**
    * Do I test inherited methods?
    */
-  private boolean my_test_inherited_methods;
+  private final boolean my_test_inherited_methods;
+  
   /**
    * Do I test deprecated methods?
    */
-  private boolean my_test_deprecated_methods;
+  private final boolean my_test_deprecated_methods;
+  
   /**
    * Do I use reflection?
    */
-  protected boolean my_use_reflection;
+  private final boolean my_use_reflection;
 
+  /**
+   * The RAC version to generate test classes for.
+   */
+  private final String my_rac_version;
+  
   /**
    * Create a new TestClassGenerator with the default options.
    */
   public TestClassGenerator() {
-    this(DEF_PROTECTION_LEVEL, DEF_TEST_INHERITED_METHODS, DEF_TEST_DEPRECATED_METHODS);
+    this(DEF_PROTECTION_LEVEL, DEF_TEST_INHERITED_METHODS, 
+         DEF_TEST_DEPRECATED_METHODS, DEF_USE_REFLECTION,
+         DEF_RAC_VERSION);
   }
 
   /**
    * Create a new TestClassGenerator with the given options.
    * 
    * @param the_protection_level The maximum protection level for which to
-   *          generate method tests.
+   *  generate method tests.
    * @param the_test_inherited_methods Do I test inherited methods?
    * @param the_test_deprecated_methods Do I test deprecated methods?
+   * @param the_use_reflection Do I use reflection to generate test data?
+   * @param the_rac_version The RAC version to generate test classes for.
    */
   public TestClassGenerator(final ProtectionLevel the_protection_level,
                             final boolean the_test_inherited_methods,
-                            final boolean the_test_deprecated_methods) {
+                            final boolean the_test_deprecated_methods,
+                            final boolean the_use_reflection,
+                            final String the_rac_version) {
     my_level = the_protection_level;
     my_test_inherited_methods = the_test_inherited_methods;
     my_test_deprecated_methods = the_test_deprecated_methods;
-  }
-
-  /**
-   * Generate tests for methods of protection level at most the_level. Must not
-   * be NO_LEVEL.
-   * 
-   * @param the_protection_level The max protection level of methods for which
-   *          to generate tests.
-   */
-  // @ requires !the_protection_level.equals(ProtectionLevel.NO_LEVEL);
-  public void setMaxProtectionLevel(final ProtectionLevel the_protection_level) {
-    my_level = the_protection_level;
-  }
-
-  /**
-   * Returns the maximum protection level of methods for which tests will be
-   * generated.
-   * 
-   * @return The maximum method protection level for which tests will be
-   *         generated.
-   */
-  public ProtectionLevel getMaxProtectionLevel() {
-    return my_level;
-  }
-
-  // "Generate tests for inherited methods!",
-  /**
-   * Sets whether or not tests will be generated for inherited methods.
-   * 
-   * @param the_test_inherited_methods If true, inherited methods will be
-   *          tested.
-   */
-  public void setTestInheritedMethods(final boolean the_test_inherited_methods) {
-    my_test_inherited_methods = the_test_inherited_methods;
-  }
-
-  /**
-   * Returns whether or not tests will be generated for inherited methods.
-   * 
-   * @return True if tests will be generated for inherited methods.
-   */
-  public boolean getTestInheritedMethods() {
-    return my_test_inherited_methods;
-  }
-
-  // "Generate tests for deprecated methods!",
-  /**
-   * Sets whether or not tests will be generated for deprecated methods.
-   * 
-   * @param the_test_deprecated_methods If true, deprecated methods will be
-   *          tested.
-   */
-  public void setTestDeprecatedMethods(final boolean the_test_deprecated_methods) {
-    my_test_deprecated_methods = the_test_deprecated_methods;
-  }
-
-  /**
-   * Returns whether or not tests will be generated for deprecated methods.
-   * 
-   * @return True if tests will be generated for deprecated methods.
-   */
-  public boolean getTestDeprecatedMethods() {
-    return my_test_deprecated_methods;
-  }
-
-  /**
-   * Sets whether or not this generator will use reflection in the generated
-   * test classes.
-   * 
-   * @param the_use_reflection If true, reflection will be used to generate test
-   *          classes.
-   */
-  public void setUseReflection(final boolean the_use_reflection) {
     my_use_reflection = the_use_reflection;
-  }
-
-  /**
-   * Returns true if the generated classes will use reflection. False if not.
-   * 
-   * @return True if the generated classes will use reflection. False if not.
-   */
-  public boolean getUseReflection() {
-    return my_use_reflection;
+    my_rac_version = the_rac_version;
   }
 
   /**
