@@ -77,6 +77,40 @@ public interface JMLUnitNGOptionsInterface {
   List<java.io.File> getFiles();
   
 
+// Option DashDash. 
+// Aliases: [--]
+
+  /**
+   * @return true if the option DashDash has been used
+   * in the command line.
+   */
+  boolean isDashDashSet();
+
+  /**
+   * Get the value of {@code Option} DashDash.
+   * @return the value of the option DashDash if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getDashDash();
+  
+
+// Option DashFiles. 
+// Aliases: []
+
+  /**
+   * @return true if the option DashFiles has been used
+   * in the command line.
+   */
+  boolean isDashFilesSet();
+
+  /**
+   * Get the value of {@code Option} DashFiles.
+   * @return the value of the option DashFiles if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  List<java.io.File> getDashFiles();
+  
+
 // Option Reflection. 
 // Aliases: [-r, --reflection]
 

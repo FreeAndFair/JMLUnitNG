@@ -15,6 +15,8 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   private final StringOption ogTestPackage;
   private final StringOption ogRACVersion;
   private final FileListOption ogFiles;
+  private final BooleanOption ogDashDash;
+  private final FileListOption ogDashFiles;
   private final BooleanOption ogReflection;
   private final BooleanOption ogHelp;
   private final BooleanOption ogDeprecation;
@@ -43,11 +45,21 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogRACVersion.setProperty("aliases", "--rac-version");
     ogFiles = new FileListOption("Files", "");
     addOption(ogFiles);
-    ogFiles.setProperty("allowmultiple", "true");
-    ogFiles.setProperty("splitter", " ");
+    ogFiles.setProperty("allowmultiple", "false");
+    ogFiles.setProperty("between", "");
     ogFiles.setProperty("mustexist", "true");
     ogFiles.setProperty("canbedir", "true");
-    ogFiles.setProperty("allowdash", "true");
+    ogFiles.setProperty("allowdash", "false");
+    ogDashDash = new BooleanOption("DashDash", "(?:--)");
+    addOption(ogDashDash);
+    ogDashDash.setProperty("aliases", "--");
+    ogDashFiles = new FileListOption("DashFiles", "");
+    addOption(ogDashFiles);
+    ogDashFiles.setProperty("allowmultiple", "false");
+    ogDashFiles.setProperty("between", "");
+    ogDashFiles.setProperty("mustexist", "true");
+    ogDashFiles.setProperty("canbedir", "true");
+    ogDashFiles.setProperty("allowdash", "true");
     ogReflection = new BooleanOption("Reflection", "(?:-r)|(?:--reflection)");
     addOption(ogReflection);
     ogReflection.setProperty("aliases", "-r,--reflection");
@@ -110,19 +122,21 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogClean);
     ogOption.addOptionOrGroup(ogProtected);
     ogOption.addOptionOrGroup(ogHelp);
-    ogOption.addOptionOrGroup(ogFiles);
+    ogOption.addOptionOrGroup(ogSpecspath);
     ogOption.addOptionOrGroup(ogReflection);
     ogOption.addOptionOrGroup(ogPackage);
-    ogOption.addOptionOrGroup(ogDestination);
     ogOption.addOptionOrGroup(ogTestPackage);
-    ogOption.addOptionOrGroup(ogInherited);
+    ogOption.addOptionOrGroup(ogDestination);
     ogOption.addOptionOrGroup(ogPublic);
+    ogOption.addOptionOrGroup(ogInherited);
     ogOption.addOptionOrGroup(ogRACVersion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogDestination);
     ogAllOptions.addOptionOrGroup(ogTestPackage);
     ogAllOptions.addOptionOrGroup(ogRACVersion);
     ogAllOptions.addOptionOrGroup(ogFiles);
+    ogAllOptions.addOptionOrGroup(ogDashDash);
+    ogAllOptions.addOptionOrGroup(ogDashFiles);
     ogAllOptions.addOptionOrGroup(ogReflection);
     ogAllOptions.addOptionOrGroup(ogHelp);
     ogAllOptions.addOptionOrGroup(ogDeprecation);
@@ -231,6 +245,54 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   
   public FileListOption getFilesOption() {
     return ogFiles;
+  }
+  
+// Option DashDash.
+// Aliases: [--]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isDashDashSet() {
+    return ogDashDash.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getDashDash() {
+    return ogDashDash.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawDashDash() {
+    return ogDashDash.getRawValue();
+  }
+  
+  public BooleanOption getDashDashOption() {
+    return ogDashDash;
+  }
+  
+// Option DashFiles.
+// Aliases: []
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isDashFilesSet() {
+    return ogDashFiles.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public List<java.io.File> getDashFiles() {
+    return ogDashFiles.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public List<java.io.File> getRawDashFiles() {
+    return ogDashFiles.getRawValue();
+  }
+  
+  public FileListOption getDashFilesOption() {
+    return ogDashFiles;
   }
   
 // Option Reflection.

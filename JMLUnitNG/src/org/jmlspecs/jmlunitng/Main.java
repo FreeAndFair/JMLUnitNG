@@ -21,8 +21,11 @@ import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
@@ -32,8 +35,8 @@ import org.jmlspecs.jmlunitng.generator.ClassInfo;
 import org.jmlspecs.jmlunitng.generator.InfoFactory;
 import org.jmlspecs.jmlunitng.generator.MethodInfo;
 import org.jmlspecs.jmlunitng.generator.ProtectionLevel;
-import org.jmlspecs.jmlunitng.generator.StringTemplateUtil;
 import org.jmlspecs.jmlunitng.generator.TestClassGenerator;
+import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
 import org.jmlspecs.openjml.API;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
 
@@ -70,7 +73,7 @@ public final class Main {
       clops = new JMLUnitNGParser();
       clops.parse(the_args);
       final JMLUnitNGOptionStore opts = clops.getOptionStore();
-      if (opts.isHelpSet()) {
+      if (opts.isHelpSet() || opts.getFiles().size() == 0) {
         printHelp();
         System.exit(0);
       }
@@ -121,23 +124,37 @@ public final class Main {
    * @return A list of files to be processed.
    */
   private static List<File> filesToProcess(final JMLUnitNGOptionStore the_options) {
-    final List<File> file_list = new LinkedList<File>();
+    final Set<File> file_set = new HashSet<File>();
     if (the_options.isFilesSet()) {
-      final List<File> options_files = the_options.getFiles();
-      for (File f : options_files) {
-        if (f.isDirectory()) {
-          file_list.addAll(findJavaFiles(f));
-        } else if (f.getPath().endsWith(JAVA_EXT)) {
-          file_list.add(f);
-        } // don't add non-java files to the list
-      }
-    } else {
-      System.err.println("No files specified.");
+      addFilesToSet(the_options.getFiles(), file_set);
+    }
+    if (the_options.isDashFilesSet()) {
+      addFilesToSet(the_options.getDashFiles(), file_set);
+    }
+    if (file_set.isEmpty()) {
+      System.err.println("Error: no Java files specified.");
       System.exit(1);
     }
-    return file_list;
+    return new ArrayList<File>(file_set);
   }
   
+  /**
+   * Adds all the Java files in the specified list of files/directories to
+   * the specified set of files.
+   * 
+   * @param the_search_list The list to search.
+   * @param the_add_set The set to add found files to.
+   */
+  private static void addFilesToSet(final List<File> the_search_list, 
+                                     final Set<File> the_add_set) {
+    for (File f : the_search_list) {
+      if (f.isDirectory()) {
+        the_add_set.addAll(findJavaFiles(f));
+      } else if (f.getPath().endsWith(JAVA_EXT)) {
+        the_add_set.add(f);
+      } // don't add non-java files to the list
+    }
+  }
   /**
    * Returns a list of files in all subdirectories of the given folder.
    * @param A File object representing the directory to parse.
@@ -300,44 +317,9 @@ public final class Main {
    * Print usage to standard out.
    */
   protected static void printHelp() {
-    System.out.println("JMLUnitNG - Generate TestNG Classes for JML-Annotated Java");
-    System.out.println();
-    System.out.println("jmlunitng [OPTION] ... path-list");
-    System.out.println("Generates unit tests for all Java source files listed in, " + 
-                       "or contained in directories listed in, path-list.\n");
-    System.out.println("-d, --dest [DIRECTORY] : Specify the output directory " +
-                       "for generated classes.");
-    System.out.println("--rac-version <version-string> : Generate RAC " +
-                       "handling code for the specified JML RAC version; " +
-                       "currently supported values are 'jml2' for the " + 
-                       "original jmlc and 'jml4' for jml4c (the default).");
-    System.out.println("--reflection : Generate test data reflectively " + 
-                       "(disabled by default).");
-    System.out.println("--deprecation : Generate tests for deprecated methods " + 
-                       "(disabled by default).");
-    System.out.println("--inherited : Generate tests for inherited methods " + 
-                       "(disabled by default).");
-    System.out.println("--public : Generate tests only for public methods (default).");
-    System.out.println("--protected : Generate tests for protected methods " + 
-                       "(disabled by default).");
-    System.out.println("--package : Generate tests for package (no protection " +
-                       "modifier) and protected methods (disabled by default).");
-    System.out.println("--clean : Remove all old JMLUnitNG-generated files from the " + 
-                       "destination path, including any manual modifications " + 
-                       "(disabled by default).");
-    System.out.println("--prune : Remove old JMLUnitNG-generated files from the " + 
-                       "destination path that do not conform to the current API " + 
-                       "of the classes under test (disabled by default).");
-    System.out.println("-cp <directory-list>, --classpath <directory-list> : " + 
-                       "Use the given colon-separated list of directories and " +
-                       "Jar files as the classpath during compilation " +
-                       "(CLASSPATH environment variable, by default).");
-    System.out.println("-sp <directory-list>, --specspath <directory-list> : " +
-                       "Use the given colon-separated list of directories and " +
-                       "Jar files as the specspath during compilation. " +
-                       "(SPECSPATH environment variable, by default).");
-    System.out.println("-v, --verbose : Display verbose information during " + 
-                       "test generation.");
-    System.out.println("-h, --help : Shows this message.");
+    StringTemplateUtil.initialize();
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("help");
+    final StringTemplate t = group.getInstanceOf("help_msg");
+    System.out.println(t.toString());
   }
 }

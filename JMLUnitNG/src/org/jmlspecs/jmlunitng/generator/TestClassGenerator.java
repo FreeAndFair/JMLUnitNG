@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
+import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
 
 /**
  * Generator for classes that contain unit tests.

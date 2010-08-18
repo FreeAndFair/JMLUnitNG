@@ -14,7 +14,7 @@
  * @keywords "unit testing", "JML"
  */
 
-package org.jmlspecs.jmlunitng.generator;
+package org.jmlspecs.jmlunitng.util;
 
 import java.io.File;
 

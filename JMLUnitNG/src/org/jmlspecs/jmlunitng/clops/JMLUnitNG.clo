@@ -6,7 +6,11 @@ ARGS::
   TestPackage:{"--test-package"}:{string}
   RACVersion: {"--rac-version"}:{string}
   Files:{}:{file-list}:
-    [allowmultiple="true", splitter=" ", mustexist="true", 
+    [allowmultiple="false", between="", mustexist="true", 
+     canbedir="true", allowdash="false"]
+  DashDash:{"--"}
+  DashFiles:{}:{file-list}:
+    [allowmultiple="false", between="", mustexist="true",
      canbedir="true", allowdash="true"]
   Reflection:{"-r", "--reflection"}
   Help:{"-h", "--help"} 
@@ -26,13 +30,13 @@ ARGS::
      mustbedir="true"]
 
 FORMAT::
-  Option* Files;   
+  (Option | Files)* (DashDash DashFiles*)?;  
 
 WHERE::
   Option:  
-    Destination|TestPackage|RACVersion|Files|Reflection|Help|Package|
+    Destination|TestPackage|RACVersion|Reflection|Help|Package|
     Deprecation|Verbose|Inherited|Public|Package|Protected|
-    Clean|Prune|Classpath|Specpath;
+    Clean|Prune|Classpath|Specspath;
 
 FLY::
 
