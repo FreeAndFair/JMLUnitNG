@@ -22,16 +22,16 @@ varDecList(list) ::= <<
 <list:varDec(); separator=", ">
 >>
 
-varDec() ::= "final <it.fullyQualifiedName> <it:varName()><if(it.array)>[]<endif>"
+varDec() ::= "final <it.type.fullyQualifiedName> <it:varName()><if(it.array)>[]<endif>"
 
 varNameList(list) ::= <<
 <list:varName(); separator=", ">
 >>
 
-varName() ::= "<it.parameterName>"
+varName() ::= "<it.name>"
 
-type(typeInfo) ::= "<typeTransMap.(typeInfo.fullyQualifiedName)><if(it.array)>[]<endif>"
-rawtype(typeInfo) ::= "<typeInfo.fullyQualifiedName><if(it.array)>[]<endif>"
+type(typeInfo, paramInfo) ::= "<typeTransMap.(typeInfo.fullyQualifiedName)><if(paramInfo.array)>[]<endif>"
+rawtype(typeInfo, paramInfo) ::= "<typeInfo.fullyQualifiedName><if(paramInfo.array)>[]<endif>"
 
 baseStrategyMap ::= [
         "int":"IntStrategy",

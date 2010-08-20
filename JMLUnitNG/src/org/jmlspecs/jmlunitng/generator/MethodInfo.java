@@ -140,28 +140,28 @@ public class MethodInfo {
   /**
    * @return The name of the method
    */
-  public /*@ pure non_null @*/ String name() {
+  public /*@ pure non_null @*/ String getName() {
     return my_name;
   }
 
   /**
    * @return The ClassInfo object for the class that owns this method.
    */
-  public /*@ pure non_null @*/ ClassInfo parentClass() {
+  public /*@ pure non_null @*/ ClassInfo getParentClass() {
     return my_parent_class;
   }
 
   /**
    * @return The ClassInfo object for the class that declared this method.
    */
-  public /*@ pure non_null @*/ ClassInfo declaringClass() {
+  public /*@ pure non_null @*/ ClassInfo getDeclaringClass() {
     return my_declaring_class;
   }
 
   /**
    * @return The protection level of the method.
    */
-  public /*@ pure non_null @*/ ProtectionLevel protectionLevel() {
+  public /*@ pure non_null @*/ ProtectionLevel getProtectionLevel() {
     return my_protection_level;
   }
 
@@ -169,14 +169,14 @@ public class MethodInfo {
    * @return an unmodifiable list of the parameter types of the method,
    *  in the order they are declared in the parameter list.
    */
-  public /*@ pure non_null @*/ List<ParameterInfo> parameterTypes() {
+  public /*@ pure non_null @*/ List<ParameterInfo> getParameterTypes() {
     return my_parameter_types;
   }
 
   /**
    * @return The return type of the method.
    */
-  public /*@ pure @*/ TypeInfo returnType() {
+  public /*@ pure @*/ TypeInfo getReturnType() {
     return my_return_type;
   }
 
@@ -235,7 +235,7 @@ public class MethodInfo {
   private /*@ pure @*/ boolean determineIsFactory() {
     //decide if factory
     ClassInfo cur = my_declaring_class;
-    while (cur != null && my_name.equals(cur.shortName())) {
+    while (cur != null && my_name.equals(cur.getShortName())) {
       cur = cur.getSuperclassInfo();
     }
     return my_is_static && cur != null;
@@ -247,7 +247,7 @@ public class MethodInfo {
   public /*@ pure non_null @*/ String toString() {
     final StringBuilder sb = new StringBuilder();
     if (my_return_type != null) {
-      sb.append(my_return_type.fullyQualifiedName());
+      sb.append(my_return_type.getFullyQualifiedName());
       sb.append(" ");
     }
     sb.append(my_name);
@@ -255,9 +255,9 @@ public class MethodInfo {
     final Iterator<ParameterInfo> paramIter = my_parameter_types.iterator();
     while (paramIter.hasNext()) {
       final ParameterInfo param = paramIter.next();
-      sb.append(param.type().fullyQualifiedName());
+      sb.append(param.getType().getFullyQualifiedName());
       sb.append(" ");
-      sb.append(param.name());
+      sb.append(param.getName());
       if (param.isArray()) {
         sb.append("[]");
       }

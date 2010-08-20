@@ -129,20 +129,20 @@ public final class InfoFactory {
       for (MethodInfo pm : parent.getAllMethods())
       {
         if (!pm.isConstructor() && !pm.isStatic() &&
-            !pm.protectionLevel().equals(ProtectionLevel.PRIVATE))
+            !pm.getProtectionLevel().equals(ProtectionLevel.PRIVATE))
         {
           boolean duplicate = false;
           for (MethodInfo m : method_infos)
           {
             duplicate = duplicate || 
-                        (m.name().equals(pm.name()) &&
-                         m.parameterTypes().equals(pm.parameterTypes()));
+                        (m.getName().equals(pm.getName()) &&
+                         m.getParameterTypes().equals(pm.getParameterTypes()));
           }
           if (!duplicate)
           {
-            method_infos.add(new MethodInfo(pm.name(), result, pm.declaringClass(),
-                                            pm.protectionLevel(), pm.parameterTypes(),
-                                            pm.returnType(), false, false));
+            method_infos.add(new MethodInfo(pm.getName(), result, pm.getDeclaringClass(),
+                                            pm.getProtectionLevel(), pm.getParameterTypes(),
+                                            pm.getReturnType(), false, false));
           }
         }
       }
@@ -194,7 +194,7 @@ public final class InfoFactory {
     if (the_sym.getEnclosingElement() instanceof ClassSymbol) {
       final ClassSymbol parent = (ClassSymbol) the_sym.getEnclosingElement();
       if (the_parent_class == null ||
-          !parent.getQualifiedName().toString().equals(the_parent_class.shortName())) {
+          !parent.getQualifiedName().toString().equals(the_parent_class.getShortName())) {
         declaring_class = getClassInfo(parent);
       }
     }
@@ -205,7 +205,7 @@ public final class InfoFactory {
     final ProtectionLevel level = getLevel(the_sym.getModifiers());
     String name = the_sym.getSimpleName().toString();
     if ("<init>".equals(name)) {
-      name = the_parent_class.shortName();
+      name = the_parent_class.getShortName();
     }
     return new MethodInfo(name, parent_class, declaring_class,
                           level, params, new TypeInfo(the_sym.getReturnType().toString()),

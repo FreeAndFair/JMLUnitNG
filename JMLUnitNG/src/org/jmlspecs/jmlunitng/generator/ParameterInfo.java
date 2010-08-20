@@ -51,14 +51,14 @@ public class ParameterInfo {
   /**
    * @return The parameter type.
    */
-  public final TypeInfo type() {
+  public final TypeInfo getType() {
     return my_type;
   }
   
   /**
    * @return The parameter name.
    */
-  public final String name() {
+  public final String getName() {
     return my_name;
   }
   

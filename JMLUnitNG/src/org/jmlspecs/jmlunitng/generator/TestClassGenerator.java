@@ -186,13 +186,13 @@ public class TestClassGenerator {
   private List<MethodInfo> getMethodsToTest(final ClassInfo the_class) {
     final List<MethodInfo> methods = new LinkedList<MethodInfo>();
     for (MethodInfo m : the_class.getTestableMethods()) {
-      if (m.protectionLevel().weakerThanOrEqualTo(my_level) &&
+      if (m.getProtectionLevel().weakerThanOrEqualTo(my_level) &&
           (my_test_inherited_methods || !m.isInherited()))
       {
         methods.add(m);
       }
     }
-    System.err.println("Testing " + methods.size() + " methods for class " + the_class.fullyQualifiedName());
+    System.err.println("Testing " + methods.size() + " methods for class " + the_class.getFullyQualifiedName());
     return methods;
   }
 
@@ -211,8 +211,8 @@ public class TestClassGenerator {
   private List<TypeInfo> getUniqueParameterTypes(final List<? extends MethodInfo> the_methods) {
     final Set<TypeInfo> classes = new HashSet<TypeInfo>();
     for (MethodInfo m : the_methods) {
-      for (ParameterInfo p : m.parameterTypes()) {
-        classes.add(p.type());
+      for (ParameterInfo p : m.getParameterTypes()) {
+        classes.add(p.getType());
       }
     }
     return new ArrayList<TypeInfo>(classes);
@@ -241,8 +241,8 @@ public class TestClassGenerator {
       t.setAttribute("date",
                      DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
       t.setAttribute("methods", methods);
-      t.setAttribute("packageName", the_class.packageName());
-      t.setAttribute("packaged", !the_class.packageName().equals(""));
+      t.setAttribute("packageName", the_class.getPackageName());
+      t.setAttribute("packaged", !the_class.getPackageName().equals(""));
       the_test_writer.write(t.toString(LINE_WIDTH));
     }
     // generate data class
@@ -254,8 +254,8 @@ public class TestClassGenerator {
                      DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
       t.setAttribute("methods", methods);
       t.setAttribute("types", types);
-      t.setAttribute("packageName", the_class.packageName());
-      t.setAttribute("packaged", !the_class.packageName().equals(""));
+      t.setAttribute("packageName", the_class.getPackageName());
+      t.setAttribute("packaged", !the_class.getPackageName().equals(""));
       the_data_writer.write(t.toString(LINE_WIDTH));
     }
   }
@@ -276,7 +276,7 @@ public class TestClassGenerator {
     final Map<String, Integer> methodLevels = new HashMap<String, Integer>();
     final Map<String, List<GeneratorMethodInfo>> uniques = new HashMap<String, List<GeneratorMethodInfo>>();
     for (MethodInfo info : the_infos) {
-      final String name = info.name();
+      final String name = info.getName();
       if (methodLevels.containsKey(name)) {
         int level = methodLevels.get(name);
         boolean foundEquality = false;
@@ -302,8 +302,8 @@ public class TestClassGenerator {
       } else {
         final List<GeneratorMethodInfo> start = new LinkedList<GeneratorMethodInfo>();
         start.add(new GeneratorMethodInfo(info, generateName(info, 1)));
-        uniques.put(info.name(), start);
-        methodLevels.put(info.name(), 1);
+        uniques.put(info.getName(), start);
+        methodLevels.put(info.getName(), 1);
       }
     }
     final List<GeneratorMethodInfo> result = 
@@ -320,14 +320,14 @@ public class TestClassGenerator {
    * @return The unique name of the_info to the given level.
    */
   private String generateName(final MethodInfo the_info, final int level) {
-    final StringBuffer sb = new StringBuffer(the_info.name());
+    final StringBuffer sb = new StringBuffer(the_info.getName());
     if (level >= 2) {
-      for (ParameterInfo p : the_info.parameterTypes()) {
+      for (ParameterInfo p : the_info.getParameterTypes()) {
         sb.append("_");
         if (level == 2) {
-          sb.append(p.type().shortName());
+          sb.append(p.getType().getShortName());
         } else {
-          sb.append(p.type().formattedName());
+          sb.append(p.getType().getFormattedName());
         }
       }
     }
@@ -353,9 +353,9 @@ public class TestClassGenerator {
      */
     public GeneratorMethodInfo(final MethodInfo the_method, 
                                final String the_unique_name) {
-      super(the_method.name(), the_method.parentClass(), the_method.declaringClass(),
-            the_method.protectionLevel(), the_method.parameterTypes(),
-            the_method.returnType(), the_method.isConstructor(), the_method.isStatic());
+      super(the_method.getName(), the_method.getParentClass(), the_method.getDeclaringClass(),
+            the_method.getProtectionLevel(), the_method.getParameterTypes(),
+            the_method.getReturnType(), the_method.isConstructor(), the_method.isStatic());
       my_unique_name = the_unique_name;
     }
 

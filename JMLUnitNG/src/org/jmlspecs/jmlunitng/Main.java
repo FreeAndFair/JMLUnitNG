@@ -135,6 +135,7 @@ public final class Main {
       System.err.println("Error: no Java files specified.");
       System.exit(1);
     }
+    // TODO: we don't properly de-dupe files with "." in the path
     return new ArrayList<File>(file_set);
   }
   
@@ -231,20 +232,20 @@ public final class Main {
   private static void processCompilationUnit(final JMLUnitNGOptionStore the_options, final JmlCompilationUnit the_unit) throws IOException {
     final ClassInfo info = InfoFactory.getClassInfo(the_unit);
     //debug output
-    System.out.println("Name: " + info.shortName());
-    System.out.println("Parent Name: " + info.getSuperclassInfo().shortName());
+    System.out.println("Name: " + info.getShortName());
+    System.out.println("Parent Name: " + info.getSuperclassInfo().getShortName());
     System.out.println("Prot Level: " + info.getProtectionLevel().toString());
     System.out.println("Testable Methods:");
     for (MethodInfo m : info.getTestableMethods()) {
-      System.out.println("Method Name: " + m.name() + " Ret Type: " +
-                         m.returnType().fullyQualifiedName() + " Prot Level: " +
-                         m.protectionLevel().toString());
+      System.out.println("Method Name: " + m.getName() + " Ret Type: " +
+                         m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
+                         m.getProtectionLevel().toString());
     }
     System.out.println("Inherited Methods:");
     for (MethodInfo m : info.getInheritedMethods()) {
-      System.out.println("Method Name: " + m.name() + " Ret Type: " +
-                         m.returnType().fullyQualifiedName() + " Prot Level: " +
-                         m.protectionLevel().toString());      
+      System.out.println("Method Name: " + m.getName() + " Ret Type: " +
+                         m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
+                         m.getProtectionLevel().toString());      
     }
     if (info.isAbstract())
     {
@@ -278,16 +279,20 @@ public final class Main {
     final StringTemplate dataClassNameTemplate = group.lookupTemplate("dataClassName");
     dataClassNameTemplate.setAttribute("class", info);
     final String outputDir = generateDestinationDirectory(the_options, the_unit);
-    if (new File(outputDir).mkdirs()) {
-      final FileWriter testClassWriter = new FileWriter(new File(outputDir + testClassNameTemplate.toString() + ".java"));
-      final FileWriter testDataClassWriter = new FileWriter(new File(outputDir + dataClassNameTemplate.toString() + ".java"));
-      generator.generateClasses(info, testClassWriter, testDataClassWriter);
-      testClassWriter.close();
-      testDataClassWriter.close();
-    } else {
-      System.err.println("Directory creation failed.");
+    final File outDirFile = new File(outputDir);
+    
+    if (!outDirFile.mkdirs() && !outDirFile.isDirectory()) {
+      System.err.println("Could not create destination directory " + outDirFile);
       System.exit(1);
     }
+
+    final FileWriter testClassWriter = 
+      new FileWriter(new File(outputDir + testClassNameTemplate.toString() + ".java"));
+    final FileWriter testDataClassWriter = 
+      new FileWriter(new File(outputDir + dataClassNameTemplate.toString() + ".java"));
+    generator.generateClasses(info, testClassWriter, testDataClassWriter);
+    testClassWriter.close();
+    testDataClassWriter.close();
   }
   
   /**

@@ -84,7 +84,7 @@ public class TypeInfo {
    * 
    * @return The name of the class
    */
-  public String shortName() {
+  public String getShortName() {
     return my_short_name;
   }
 
@@ -93,7 +93,7 @@ public class TypeInfo {
    * 
    * @return The name of the class
    */
-  public String fullyQualifiedName() {
+  public String getFullyQualifiedName() {
     return my_name;
   }
   
@@ -102,7 +102,7 @@ public class TypeInfo {
    * 
    * @return The generic component of the type.
    */
-  public String genericComponent() {
+  public String getGenericComponent() {
     return my_generic_comp;
   }
 
@@ -112,7 +112,7 @@ public class TypeInfo {
    * 
    * @return Formatted fully qualified name of the type.
    */
-  public String formattedName() {
+  public String getFormattedName() {
     return my_name.replace('.', '_').replaceAll("\\[\\]", "Array");
   }
 
@@ -121,7 +121,7 @@ public class TypeInfo {
    * 
    * @return The package name of the class
    */
-  public String packageName() {
+  public String getPackageName() {
     String result = "";
 
     if (my_name.length() > my_short_name.length()) {
@@ -175,6 +175,6 @@ public class TypeInfo {
    * @return The fully qualified name.
    */
   public String toString() {
-    return fullyQualifiedName();
+    return getFullyQualifiedName();
   }
 }

@@ -75,13 +75,13 @@ methodData(method) ::= <<
 paramData(the_method) ::= <<
 /**
  * For user definition. Supplies test values for:
- * Variable: <it.fullyQualifiedName> <it:varName()> 
+ * Variable: <it.type.fullyQualifiedName> <it:varName()> 
  * Method: <the_method>
  */
-public static class <strategyName(method=the_method, param=it)> extends <globalStrategyName(typeName=it.formattedName)> {
+public static class <strategyName(method=the_method, param=it)> extends <globalStrategyName(typeName=it.type.formattedName)> {
   public RepeatedAccessIterator\<?\> getCustomValues() {
-  	return new ObjectArrayIterator\<<type(typeInfo=it)>\>(new <type(typeInfo=it)>[] 
-  	{ /* add custom <it.fullyQualifiedName> values here */ });
+  	return new ObjectArrayIterator\<<type(typeInfo=it.type, paramInfo=it)>\>(new <type(typeInfo=it.type, paramInfo=it)>[] 
+  	{ /* add custom <it.type.fullyQualifiedName> values here */ });
   }
 }
 
@@ -157,7 +157,7 @@ iters.add(new InstantiationIterator\<<class.shortName>\>
 <endif>
 >>
 
-paramClasses() ::= "<method.parameterTypes:{<it:rawtype()>.class}; wrap=\"\n      \", separator=\", \">"
-strategyName(method, param) ::= "<param.parameterName>_<method.uniqueName>_Strategy"
+paramClasses() ::= "<method.parameterTypes:{<rawtype(typeInfo=it.type, paramInfo=it)>.class}; wrap=\"\n      \", separator=\", \">"
+strategyName(method, param) ::= "<param.name>_<method.uniqueName>_Strategy"
 classStrategyName() ::= "ClassObjectStrategy"
-globalStrategyName(typeName) ::= "<it.formattedName>_GlobalStrategy"
+globalStrategyName(typeName) ::= "<typeName>_GlobalStrategy"
