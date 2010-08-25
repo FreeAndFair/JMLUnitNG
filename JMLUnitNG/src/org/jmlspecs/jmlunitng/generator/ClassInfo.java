@@ -11,38 +11,65 @@
 package org.jmlspecs.jmlunitng.generator;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Information about a class under test.
  * 
+ * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version April 2010
+ * @version August 2010
  */
 public class ClassInfo extends TypeInfo {
-  /*@ invariant my_short_name.equals(
-    @   getFullyQualifiedName().substring(getFullyQualifiedName().lastIndexOf('.') + 1));
+  /**  
+   * True if the methods of this class have been initialized,
+   * false otherwise.
    */
+  private boolean my_initialized = false;
+  
   /**
    * The parent ClassInfo object.
    */
   private final ClassInfo my_parent;
+
   /**
    * The ProtectionLevel of this class.
    */
   private final ProtectionLevel my_protection_level;
+  
   /**
    * Is this class abstract?
    */
   private final boolean my_is_abstract;
-  /*@ invariant (\exists MethodInfo m; my_method_infos.contains(m);
-    @           m.isConstructor()); */
+    
   /**
-   * The MethodInfo objects or the methods of this class.
+   * The MethodInfo objects representing the methods of this class.
    */
-  private final List<MethodInfo> my_method_infos;
+  private final Set<MethodInfo> my_methods;
+  /*@ private invariant 
+    @    initialized ==> 
+    @      (\exists MethodInfo m; my_method_infos.contains(m);
+    @       m.isConstructor());
+    @*/
 
+  /**
+   * The MethodInfo objects representing the inherited methods of this class.
+   */
+  private final Set<MethodInfo> my_inherited_methods;
+  
+  /**
+   * The MethodInfo objects representing the overriding methods of this class.
+   */
+  private final Set<MethodInfo> my_overriding_methods;
+  
+  /**
+   * The MethodInfo objects representing the overridden methods of this class.
+   */
+  private final Set<MethodInfo> my_overridden_methods;
+  
   /**
    * Constructor for a ClassInfo object given the describing parameters. For use
    * by factory classes.
@@ -50,27 +77,82 @@ public class ClassInfo extends TypeInfo {
    * @param the_name The fully qualified name of the class.
    * @param the_protection_level The protection level of the class.
    * @param the_is_abstract Is this class abstract?
-   * @param the_method_infos The methods of this class.
    * @param the_parent The ClassInfo object for this class' parent. May be null
    *          only if the class name is java.lang.Object.
    */
   //@ requires the_parent == null ==> the_name.equals("java.lang.Object");
-  protected ClassInfo(final String the_name, final ProtectionLevel the_protection_level,
-                      final boolean the_is_abstract, final List<MethodInfo> the_method_infos,
-                      final/*@ nullable */ClassInfo the_parent) {
+  protected ClassInfo(final String the_name, 
+                      final ProtectionLevel the_protection_level,
+                      final boolean the_is_abstract, 
+                      final /*@ nullable @*/ ClassInfo the_parent) {
     super(the_name);
     my_protection_level = the_protection_level;
     my_is_abstract = the_is_abstract;
-    my_method_infos = Collections.unmodifiableList(the_method_infos);
+    my_methods = new HashSet<MethodInfo>();
+    my_inherited_methods = new HashSet<MethodInfo>();
+    my_overriding_methods = new HashSet<MethodInfo>();
+    my_overridden_methods = new HashSet<MethodInfo>();
     my_parent = the_parent;
   }
 
   /**
-   * Returns the ClassInfo for this ClassInfo's parent. Returns null if
-   * this ClassInfo represents java.lang.Object.
-   * @return This ClassInfo's parent.
+   * Initializes the methods of this ClassInfo. This method may only
+   * be called once.
    */
-  public/*@pure*/ClassInfo getParent() {
+  //@ requires !isInitialized();
+  /*@ requires (\exists MethodInfo m; the_methods.contains(m); 
+    @           m.isConstructor());
+    @*/
+  //@ ensures isInitialized();
+  public void initializeMethods(final Set<MethodInfo> the_methods) {
+    my_methods.clear();
+    my_methods.addAll(the_methods);
+    
+    // inherited methods
+    my_inherited_methods.clear();
+    for (MethodInfo m : my_methods) {
+      if (m.isInherited()) {
+        my_inherited_methods.add(m);
+      }
+    }
+      
+    // overriding methods
+    my_overriding_methods.clear();
+    final Set<String> signatures = new HashSet<String>();
+    final Set<MethodInfo> non_inherited = new HashSet<MethodInfo>(my_methods);
+    non_inherited.removeAll(my_inherited_methods);
+    
+    for (MethodInfo m : my_inherited_methods) {
+      signatures.add(m.toString());
+    }
+    for (MethodInfo m : non_inherited) {
+      if (signatures.contains(m.toString())) {
+        // m overrides an inherited method
+        my_overriding_methods.add(m);
+      }
+    }
+    
+    // overridden methods
+    my_overridden_methods.clear();
+    signatures.clear();
+    for (MethodInfo m : my_overriding_methods) {
+      signatures.add(m.toString());
+    }
+    for (MethodInfo m : my_inherited_methods) {
+      if (signatures.contains(m.toString())) {
+        // m is overridden by another method
+        my_overridden_methods.add(m);
+      }
+    }
+    
+    my_initialized = true;
+  }
+  
+  /**
+   * @return the ClassInfo for this class's parent, or null if
+   * this ClassInfo represents java.lang.Object.
+   */
+  public /*@pure*/ ClassInfo getParent() {
     return my_parent;
   }
 
@@ -83,16 +165,6 @@ public class ClassInfo extends TypeInfo {
     return my_protection_level;
   }
 
-  // "What is the info for the class's Superclass?",
-  /**
-   * Returns the ClassInfo object for the class' Superclass.
-   * 
-   * @return The ClassInfo for the class' Superclass.
-   */
-  public/*@pure */ClassInfo getSuperclassInfo() {
-    return my_parent;
-  }
-
   /**
    * Returns true if the class is abstract, false otherwise.
    * 
@@ -102,18 +174,23 @@ public class ClassInfo extends TypeInfo {
     return my_is_abstract;
   }
   
-  // "What are the constructors?",
-  // "What are the factory methods?",
   /**
-   * Returns a List of MethodInfo objects that represent the factory methods of
-   * the class.
-   * 
-   * @return A List of MethodInfo objects.
+   * @returns true if the methods have been initialized, 
+   * false otherwise.
    */
+  public /*@ pure @*/ boolean isInitialized() {
+    return my_initialized;
+  }
+  
+  /**
+   * Returns a Set of MethodInfo objects that represent the factory methods of
+   * the class.
+   */
+  //@ requires isInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isFactory()); */
-  public List<MethodInfo> getFactoryMethods() {
-    final List<MethodInfo> result = new LinkedList<MethodInfo>();
-    for (MethodInfo m : my_method_infos) {
+  public /*@ pure @*/  Set<MethodInfo> getFactoryMethods() {
+    final Set<MethodInfo> result = new HashSet<MethodInfo>();
+    for (MethodInfo m : my_methods) {
       if (m.isFactory()) {
         result.add(m);
       }
@@ -121,18 +198,16 @@ public class ClassInfo extends TypeInfo {
     return result;
   }
 
-  // "What are the non-factory static methods?",
   /**
-   * Returns a List of MethodInfo objects that represent the non-factory static
+   * @return a Set of MethodInfo objects that represent the non-factory static
    * methods of the class.
-   * 
-   * @return A List of MethodInfo objects.
    */
+  //@ requires isInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m);
     @           m.isStatic() && !m.isFactory()); */
-  public List<MethodInfo> getNonFactoryStaticMethods() {
-    final List<MethodInfo> result = new LinkedList<MethodInfo>();
-    for (MethodInfo m : my_method_infos) {
+  public /*@ pure @*/ Set<MethodInfo> getNonFactoryStaticMethods() {
+    final Set<MethodInfo> result = new HashSet<MethodInfo>();
+    for (MethodInfo m : my_methods) {
       if (m.isStatic() && !m.isFactory()) {
         result.add(m);
       }
@@ -140,54 +215,64 @@ public class ClassInfo extends TypeInfo {
     return result;
   }
 
-  // "What are the inherited instance methods?",
   /**
-   * Returns a List of MethodInfo objects that represent the inherited methods
+   * @return a Set of MethodInfo objects that represent the inherited methods
    * of the class.
-   * 
-   * @return A List of MethodInfo objects.
    */
+  //@ requires isInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
-  public List<MethodInfo> getInheritedMethods() {
-    final List<MethodInfo> result = new LinkedList<MethodInfo>();
-    for (MethodInfo m : my_method_infos) {
-      if (m.isInherited()) {
-        result.add(m);
-      }
-    }
-    return result;
+  public /*@ pure @*/ Set<MethodInfo> getInheritedMethods() {
+    return Collections.unmodifiableSet(my_inherited_methods);
   }
 
-  // "What are the non-inherited instance methods?",
   /**
-   * Returns a List of MethodInfo objects that represent the non-inherited
+   * @return a Set of MethodInfo objects that represent the non-inherited
    * methods of the class.
    * 
-   * @return A List of MethodInfo objects.
+   * @return A Set of MethodInfo objects.
    */
+  //@ requires isInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
-  public List<MethodInfo> getNonInheritedMethods() {
-    final List<MethodInfo> result = new LinkedList<MethodInfo>();
-    for (MethodInfo m : my_method_infos) {
-      if (!m.isInherited()) {
-        result.add(m);
-      }
-    }
-    return result;
+  public /*@ pure @*/ Set<MethodInfo> getNonInheritedMethods() {
+    final Set<MethodInfo> result = new HashSet<MethodInfo>(my_methods);
+    result.removeAll(my_inherited_methods);
+    return Collections.unmodifiableSet(result);
+  }
+
+  /**
+   * @return a Set of MethodInfo objects that represent the methods of
+   * the class that override inherited methods.
+   */
+  //@ requires isInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
+  public /*@ pure @*/ Set<MethodInfo> getOverridingMethods() {
+    return Collections.unmodifiableSet(my_overriding_methods);
+  }
+
+  /**
+   * @return a Set of MethodInfo objects that represent the inherited 
+   * methods of the class that are overridden.
+   */
+  //@ requires isInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
+  public /*@ pure @*/ Set<MethodInfo> getOverriddenMethods() {
+    return Collections.unmodifiableSet(my_overridden_methods);
   }
 
   // "What are the testable methods?"
   /**
-   * Returns a List of MethodInfo objects that represent the testable methods of
+   * Returns a Set of MethodInfo objects that represent the testable methods of
    * the class. For a definition of testable, see MethodInfo.isTestable().
    * 
-   * @return A List of MethodInfo objects.
+   * @return A Set of MethodInfo objects.
    */
-  /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
-  public List<MethodInfo> getTestableMethods() {
-    final List<MethodInfo> result = new LinkedList<MethodInfo>();
-    for (MethodInfo m : my_method_infos) {
-      if (m.isTestable()) {
+  //@ requires isInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isTestable()); */
+  public /*@ pure @*/ Set<MethodInfo> getTestableMethods() {
+    final Set<MethodInfo> result = new HashSet<MethodInfo>();
+    for (MethodInfo m : my_methods) {
+      if (m.isTestable() && !my_overridden_methods.contains(m)) {
+        // we don't add overridden methods to the testable set
         result.add(m);
       }
     }
@@ -195,12 +280,11 @@ public class ClassInfo extends TypeInfo {
   }
 
   /**
-   * Returns a List of all the MethodInfo objects that represent the 
+   * @return a Set of MethodInfo objects that represent the 
    * methods of the class.
-   * 
-   * @return A List of MethodInfo objects.
    */
-  public List<MethodInfo> getAllMethods() {
-    return new LinkedList<MethodInfo>(my_method_infos);
+  //@ requires isInitialized();
+  public /*@ pure @*/ Set<MethodInfo> getMethods() {
+    return Collections.unmodifiableSet(my_methods);
   }
 }

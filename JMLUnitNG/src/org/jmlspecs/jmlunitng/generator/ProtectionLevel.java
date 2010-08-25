@@ -42,4 +42,15 @@ public enum ProtectionLevel {
   {
     return ordinal() <= the_level.ordinal();
   }
+  
+  /**
+   * @return the String representation of this protection level
+   */
+  public String toString() {
+    String result = this.name().toLowerCase();
+    if (this == NO_LEVEL) {
+      result = "(package)";
+    }
+    return result;
+  }
 }

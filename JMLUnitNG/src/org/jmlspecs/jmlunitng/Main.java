@@ -233,19 +233,17 @@ public final class Main {
     final ClassInfo info = InfoFactory.getClassInfo(the_unit);
     //debug output
     System.out.println("Name: " + info.getShortName());
-    System.out.println("Parent Name: " + info.getSuperclassInfo().getShortName());
+    if (info.getParent() != null) {
+      System.out.println("Parent Name: " + info.getParent().getShortName());
+    }
     System.out.println("Prot Level: " + info.getProtectionLevel().toString());
     System.out.println("Testable Methods:");
     for (MethodInfo m : info.getTestableMethods()) {
-      System.out.println("Method Name: " + m.getName() + " Ret Type: " +
-                         m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
-                         m.getProtectionLevel().toString());
+      System.out.println(m.getProtectionLevel() + " " + m);
     }
     System.out.println("Inherited Methods:");
     for (MethodInfo m : info.getInheritedMethods()) {
-      System.out.println("Method Name: " + m.getName() + " Ret Type: " +
-                         m.getReturnType().getFullyQualifiedName() + " Prot Level: " +
-                         m.getProtectionLevel().toString());      
+      System.out.println(m.getProtectionLevel() + " " + m);      
     }
     if (info.isAbstract())
     {

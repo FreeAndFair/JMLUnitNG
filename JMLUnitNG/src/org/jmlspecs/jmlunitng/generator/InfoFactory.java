@@ -16,6 +16,7 @@ package org.jmlspecs.jmlunitng.generator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,17 +26,17 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
 import com.sun.tools.javac.code.Scope;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.TypeTags;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
+import com.sun.tools.javac.code.TypeTags;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.TreeScanner;
 
 /**
  * Factory class that generates CLASS_INFO and METHOD_INFO objects.
@@ -46,10 +47,10 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
  */
 public final class InfoFactory {
   /**
-   * Cache of already created ClassInfo objects. TODO: Move InfoFactory to
-   * non-static for multiple-run tool instances.
+   * Cache of already created ClassInfo objects. 
    */
-  private static final Map<String, ClassInfo> CLASS_CACHE = new HashMap<String, ClassInfo>();
+  private static final Map<String, ClassInfo> CLASS_CACHE = 
+    new HashMap<String, ClassInfo>();
 
   /**
    * Private constructor to prevent initialization.
@@ -98,7 +99,7 @@ public final class InfoFactory {
     @             \result.getProtectionLevel().equals(getLevel(the_class.getModifiers())) &&
     @             \result.isAbstract() == the_class.getModifiers().contains(Modifier.ABSTRACT));
    */
-  public static ClassInfo getClassInfo(final ClassSymbol the_class) {
+  public synchronized static ClassInfo getClassInfo(final ClassSymbol the_class) {
     if (CLASS_CACHE.containsKey(the_class.getQualifiedName().toString())) {
       return CLASS_CACHE.get(the_class.getQualifiedName().toString());
     }
@@ -110,10 +111,10 @@ public final class InfoFactory {
     if (the_class.getSuperclass() instanceof ClassType) {
       parent = getClassInfo((ClassSymbol) the_class.getSuperclass().tsym);
     }
-    final List<MethodInfo> method_infos = new LinkedList<MethodInfo>();
+    final Set<MethodInfo> method_infos = new HashSet<MethodInfo>();
     final Scope members = the_class.members();
     final ClassInfo result =
-        new ClassInfo(name, getLevel(flags), is_abstract, method_infos, parent);
+        new ClassInfo(name, getLevel(flags), is_abstract, parent);
     // ensure this ClassInfo object is cached before creating methods
     CLASS_CACHE.put(name, result);
     // add methods after ClassInfo creation.
@@ -126,11 +127,16 @@ public final class InfoFactory {
     // add inherited methods from the parent class
     if (parent != null)
     {
-      for (MethodInfo pm : parent.getAllMethods())
+      final Set<MethodInfo> parent_methods = 
+        new HashSet<MethodInfo>(parent.getMethods());
+      // we do not inherit methods that were already overridden by the parent class
+      parent_methods.removeAll(parent.getOverriddenMethods());
+      for (MethodInfo pm : parent_methods)
       {
         if (!pm.isConstructor() && !pm.isStatic() &&
             !pm.getProtectionLevel().equals(ProtectionLevel.PRIVATE))
         {
+          // we do not inherit constructors or static/private methods
           boolean duplicate = false;
           for (MethodInfo m : method_infos)
           {
@@ -147,6 +153,7 @@ public final class InfoFactory {
         }
       }
     }
+    result.initializeMethods(method_infos);
     return result;
   }
 

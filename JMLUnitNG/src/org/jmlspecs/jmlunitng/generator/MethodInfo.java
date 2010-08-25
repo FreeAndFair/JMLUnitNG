@@ -236,7 +236,7 @@ public class MethodInfo {
     //decide if factory
     ClassInfo cur = my_declaring_class;
     while (cur != null && my_name.equals(cur.getShortName())) {
-      cur = cur.getSuperclassInfo();
+      cur = cur.getParent();
     }
     return my_is_static && cur != null;
   }
@@ -256,8 +256,6 @@ public class MethodInfo {
     while (paramIter.hasNext()) {
       final ParameterInfo param = paramIter.next();
       sb.append(param.getType().getFullyQualifiedName());
-      sb.append(" ");
-      sb.append(param.getName());
       if (param.isArray()) {
         sb.append("[]");
       }
@@ -267,5 +265,12 @@ public class MethodInfo {
     }
     sb.append(")");
     return sb.toString();
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public /*@ pure @*/ int hashCode() {
+    return toString().hashCode();
   }
 }
