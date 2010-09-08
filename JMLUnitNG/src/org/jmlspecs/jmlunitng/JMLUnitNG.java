@@ -49,9 +49,9 @@ import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
  */
 public final class JMLUnitNG implements Runnable {
   /**
-   * The version string.
+   * The string to be prepended to the reported version.
    */
-  public static final String VERSION = "";
+  private static final String VERSION_STRING = "1.0a1";
   
   /**
    * The default output directory.
@@ -77,6 +77,19 @@ public final class JMLUnitNG implements Runnable {
     my_opts = the_opts;
   }
 
+  /**
+   * The version string, generated from SVN properties.
+   */
+  public static final String version() {
+    final String rawSVNRev = "$Rev$";
+    final String rawSVNDate = "$Date$";
+    
+    final String svnRev = rawSVNRev.substring(6, rawSVNRev.length() - 2);
+    final String svnDate = rawSVNDate.substring(7, rawSVNDate.length() - 2);
+    
+    return VERSION_STRING + " (" + svnRev + ", " + svnDate + ")";
+  }
+  
   /**
    * The main method. Parses the command line arguments and runs
    * the tool.
@@ -357,7 +370,7 @@ public final class JMLUnitNG implements Runnable {
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("help");
     final StringTemplate t = group.getInstanceOf("help_msg");
-    t.setAttribute("version", VERSION);
+    t.setAttribute("version", version());
     System.out.println(t.toString());
   }
 }
