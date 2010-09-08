@@ -82,12 +82,10 @@ public final class JMLUnitNG implements Runnable {
    */
   public static final String version() {
     final String rawSVNRev = "$Rev$";
-    final String rawSVNDate = "$Date$";
     
     final String svnRev = rawSVNRev.substring(6, rawSVNRev.length() - 2);
-    final String svnDate = rawSVNDate.substring(7, rawSVNDate.length() - 2);
     
-    return VERSION_STRING + " (" + svnRev + ", " + svnDate + ")";
+    return VERSION_STRING + " (" + svnRev + ")";
   }
   
   /**
