@@ -54,6 +54,11 @@ public final class JMLUnitNG implements Runnable {
   private static final String VERSION_STRING = "1.0a1";
   
   /**
+   * The raw SVN revision string.
+   */
+  private static final String RAW_SVN_REV = "$Rev$";
+  
+  /**
    * The default output directory.
    */
   private static final String DEF_OUTPUT_DIR = "";
@@ -80,10 +85,8 @@ public final class JMLUnitNG implements Runnable {
   /**
    * The version string, generated from SVN properties.
    */
-  public static final String version() {
-    final String rawSVNRev = "$Rev$";
-    
-    final String svnRev = rawSVNRev.substring(6, rawSVNRev.length() - 2);
+  public static String version() {
+    final String svnRev = RAW_SVN_REV.substring(6, RAW_SVN_REV.length() - 2);
     
     return VERSION_STRING + " (" + svnRev + ")";
   }
