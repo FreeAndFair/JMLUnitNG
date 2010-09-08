@@ -24,7 +24,7 @@ import org.jmlspecs.jml4.rac.runtime.JMLEvaluationError;
 import org.jmlspecs.jml4.rac.runtime.JMLAssertionError;
 
 <if (packaged)>
-import <packageName>.<test class name goes here>_data
+import <packageName>.<test class name goes here>_jml_data
 <else>
 import <test class name goes here>_data
 <endif>

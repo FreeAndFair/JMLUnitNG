@@ -1,38 +1,40 @@
 group help;
 
-help_msg() ::= <<
+help_msg(version) ::= <<
 
 JMLUnitNG - Generate TestNG Classes for JML-Annotated Java
 
 jmlunitng [OPTION] ... path-list
 
 Generates unit tests for all Java source files listed in,  
-or contained in directories listed in, path-list. 
+or recursively contained in directories listed in, path-list. 
 
 -d, --dest [DIRECTORY] : Specify the output directory for 
   generated classes.
---rac-version \<version-string\> : Generate RAC handling code 
-  for the specified JML RAC version; currently supported values 
-  are 'jml2' for the original jmlc and 'jml4' for jml4c (the default).
---reflection : Generate test data reflectively (disabled by default).
---deprecation : Generate tests for deprecated methods (disabled by default).
---inherited : Generate tests for inherited methods (disabled by default).
---public : Generate tests only for public methods (default).
---protected : Generate tests for protected methods (disabled by default).
---package : Generate tests for package (no protection modifier) and 
-  protected methods (disabled by default).
---clean : Remove all old JMLUnitNG-generated files from the destination 
-  path, including any manual modifications (disabled by default).
---prune : Remove old JMLUnitNG-generated files from the destination path 
-  that do not conform to the current API of the classes under test 
-  (disabled by default).
 -cp \<directory-list\>, --classpath \<directory-list\> : Use the given 
   colon-separated list of directories and Jar files as the classpath 
   during compilation (CLASSPATH environment variable, by default).
 -sp \<directory-list\>, --specspath \<directory-list\> : Use the given 
   colon-separated list of directories and Jar files as the specspath 
   during compilation. (SPECSPATH environment variable, by default).
+--rac-version \<version-string\> : Generate RAC handling code 
+  for the specified JML RAC version; the default, and only currently-
+  supported, value is 'jml4' for jml4c.
+--reflection : Generate test data reflectively.
+--deprecation : Generate tests for deprecated methods.
+--inherited : Generate tests for inherited methods.
+--public : Generate tests only for public methods (default).
+--protected : Generate tests for protected and public methods.
+--package : Generate tests for package (no protection modifier), 
+  protected and public methods.
+--clean : Remove from the destination path all old JMLUnitNG-
+  generated files for path-list, including any manual modifications.
+--prune : Remove from the destination path any old JMLUnitNG-
+  generated files for path-list that do not conform to the current 
+  API of the classes under test.
 -v, --verbose : Display verbose information during test generation.
 -h, --help : Display this message.
+
+Version: <version>
 
 >>

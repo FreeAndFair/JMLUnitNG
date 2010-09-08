@@ -44,26 +44,42 @@ import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
  * The main executable.
  * 
  * @author Jonathan Hogins
- * @version April 2010
+ * @author Daniel M. Zimmerman
+ * @version September 2010
  */
-public final class Main {
+public final class JMLUnitNG implements Runnable {
+  /**
+   * The version string.
+   */
+  public static final String VERSION = "";
+  
   /**
    * The default output directory.
    */
   private static final String DEF_OUTPUT_DIR = "";
+  
   /**
-   * The extention for java source files.
+   * The extension for java source files.
    */
   private static final String JAVA_EXT = ".java";
 
   /**
-   * Private constructor to prevent initialization.
+   * The command line options store to be used.
    */
-  private Main() {
+  private final JMLUnitNGOptionStore my_opts;
+  
+  /**
+   * Private constructor to prevent initialization.
+   * 
+   * @param the_opts The command line options store to be used.
+   */
+  public JMLUnitNG(final JMLUnitNGOptionStore the_opts) {
+    my_opts = the_opts;
   }
 
   /**
-   * Tool entry point. Test bed for now.
+   * The main method. Parses the command line arguments and runs
+   * the tool.
    * 
    * @param the_args Arguments from the command line.
    */
@@ -72,28 +88,48 @@ public final class Main {
     try {
       clops = new JMLUnitNGParser();
       clops.parse(the_args);
-      final JMLUnitNGOptionStore opts = clops.getOptionStore();
-      if (opts.isHelpSet() || opts.getFiles().size() == 0) {
-        printHelp();
-        System.exit(0);
-      }
-      if (opts.isRACVersionSet()) {
-        // see if a valid RAC version was chosen
-        if (!TestClassGenerator.VALID_RAC_VERSIONS.contains
-            (opts.getRACVersion())) {
-          System.err.println("Invalid RAC version specified. Valid versions are: ");
-          for (String s : TestClassGenerator.VALID_RAC_VERSIONS) {
-            System.err.println(s + " ");
-          }
-          System.exit(1);
+      (new JMLUnitNG(clops.getOptionStore())).run();
+    }
+    catch (final InvalidOptionPropertyValueException e1) {
+      System.err.println("Invalid CLOPS option file.");
+      e1.printStackTrace();
+    } catch (final AutomatonException e) {
+      System.err.println("Automaton Exception: " + e.getLocalizedMessage());
+      e.printStackTrace();
+    } catch (final InvalidOptionValueException e) {
+      System.err.println(e.getLocalizedMessage());
+    }
+  }
+  
+  /**
+   * The run method. Handles the entire execution of JMLUnitNG, once
+   * command line arguments have been parsed; JMLUnitNG can be run
+   * programmatically by using CLOPS to parse a command line into
+   * a suitable JMLUnitNGOptionStore.
+   */
+  public void run() {
+    if (my_opts.isHelpSet() || my_opts.getFiles().size() == 0) {
+      printHelp();
+      System.exit(0);
+    }
+    if (my_opts.isRACVersionSet()) {
+      // see if a valid RAC version was chosen
+      if (!TestClassGenerator.VALID_RAC_VERSIONS.contains
+          (my_opts.getRACVersion())) {
+        System.err.println("Invalid RAC version specified. Valid versions are: ");
+        for (String s : TestClassGenerator.VALID_RAC_VERSIONS) {
+          System.err.println(s + " ");
         }
+        Runtime.getRuntime().exit(1);
       }
-      final List<File> file_list = filesToProcess(opts);
-      final String classpath = generateClasspath(opts);
-      final String specspath = generateSpecspath(opts);
-      final String[] arg =
-          new String[] {"-noPurityCheck", "-noInternalSpecs", 
-                        "-cp", classpath, "-specspath", specspath};
+    }
+    final List<File> file_list = filesToProcess();
+    final String classpath = generateClasspath();
+    final String specspath = generateSpecspath();
+    final String[] arg =
+        new String[] {"-noPurityCheck", "-noInternalSpecs", 
+                      "-cp", classpath, "-specspath", specspath};
+    try {
       final API api = new API(arg);
       final List<JmlCompilationUnit> units = 
         api.parseFiles(file_list.toArray(new File[0]));
@@ -101,35 +137,31 @@ public final class Main {
       if (numOfErrors > 0) {
         System.err.println("Encountered " + numOfErrors + " errors.");
       } else {
+        // TODO: take care of clearing out all the existing JMLUnitNG files, if necessary
+        
         for (JmlCompilationUnit unit : units) {
-          processCompilationUnit(opts, unit);
+          processCompilationUnit(unit);
         }
       }
-    } catch (final InvalidOptionPropertyValueException e1) {
-      System.err.println("Invalid clops option file.");
-      e1.printStackTrace();
-    } catch (final AutomatonException e) {
-      System.err.println("Automation Exception: " + e.getLocalizedMessage());
+    } catch (IOException e) {
+      System.err.println("I/O exception occurred.");
       e.printStackTrace();
-    } catch (final InvalidOptionValueException e) {
-      System.err.println(e.getLocalizedMessage());
-    } catch (final IOException e) {
-      System.err.println("IO Error while parsing file: " + e.getLocalizedMessage());
+      Runtime.getRuntime().exit(1);
     }
   }
   
   /**
    * Returns a list of files from the given set of options
-   * @param the_options The command-line options.
+   *
    * @return A list of files to be processed.
    */
-  private static List<File> filesToProcess(final JMLUnitNGOptionStore the_options) {
+  private List<File> filesToProcess() {
     final Set<File> file_set = new HashSet<File>();
-    if (the_options.isFilesSet()) {
-      addFilesToSet(the_options.getFiles(), file_set);
+    if (my_opts.isFilesSet()) {
+      addFilesToSet(my_opts.getFiles(), file_set);
     }
-    if (the_options.isDashFilesSet()) {
-      addFilesToSet(the_options.getDashFiles(), file_set);
+    if (my_opts.isDashFilesSet()) {
+      addFilesToSet(my_opts.getDashFiles(), file_set);
     }
     if (file_set.isEmpty()) {
       System.err.println("Error: no Java files specified.");
@@ -146,8 +178,8 @@ public final class Main {
    * @param the_search_list The list to search.
    * @param the_add_set The set to add found files to.
    */
-  private static void addFilesToSet(final List<File> the_search_list, 
-                                     final Set<File> the_add_set) {
+  private void addFilesToSet(final List<File> the_search_list, 
+                             final Set<File> the_add_set) {
     for (File f : the_search_list) {
       if (f.isDirectory()) {
         the_add_set.addAll(findJavaFiles(f));
@@ -156,13 +188,14 @@ public final class Main {
       } // don't add non-java files to the list
     }
   }
+  
   /**
    * Returns a list of files in all subdirectories of the given folder.
    * @param A File object representing the directory to parse.
    * @param A List of Java files.
    */
   //@ requires the_directory.isDirectory();
-  private static List<File> findJavaFiles(final File the_directory) {
+  private List<File> findJavaFiles(final File the_directory) {
     final List<File> result = new LinkedList<File>();
     final File[] all_packed_files = the_directory.listFiles();
     for (int k = 0; k < all_packed_files.length; k++) {
@@ -177,13 +210,13 @@ public final class Main {
   
   /**
    * Extracts the classpath from the command line options.
-   * @param the_options The command-line options.
+   *
    * @return The final classpath.
    */
-  private static String generateClasspath(final JMLUnitNGOptionStore the_options) {
+  private String generateClasspath() {
     String classpath;
-    if (the_options.isClasspathSet()) {
-      final List<File> path_list = the_options.getClasspath();
+    if (my_opts.isClasspathSet()) {
+      final List<File> path_list = my_opts.getClasspath();
       final StringBuffer sb = new StringBuffer();
       for (File f : path_list) {
         sb.append(f.getAbsolutePath());
@@ -200,14 +233,14 @@ public final class Main {
   }
   
   /**
-   * Extracts the specpath from the command line options.
-   * @param the_options The command-line options.
-   * @return The final specpath.
+   * Extracts the specspath from the command line options.
+   *
+   * @return The final specspath.
    */
-  private static String generateSpecspath(final JMLUnitNGOptionStore the_options) {
+  private String generateSpecspath() {
     String specspath;
-    if (the_options.isSpecspathSet()) {
-      final List<File> path_list = the_options.getSpecspath();
+    if (my_opts.isSpecspathSet()) {
+      final List<File> path_list = my_opts.getSpecspath();
       final StringBuffer sb = new StringBuffer();
       for (File f : path_list) {
         sb.append(f.getAbsolutePath());
@@ -225,11 +258,12 @@ public final class Main {
   
   /**
    * Performs all source processing of the given compilation unit.
-   * @param the_options The command-line options.
+   *
    * @param the_unit The compilation unit to process.
    * @throws IOException Thrown if source output fails.
    */
-  private static void processCompilationUnit(final JMLUnitNGOptionStore the_options, final JmlCompilationUnit the_unit) throws IOException {
+  private void processCompilationUnit(final JmlCompilationUnit the_unit) 
+  throws IOException {
     final ClassInfo info = InfoFactory.getClassInfo(the_unit);
     //debug output
     System.out.println("Name: " + info.getShortName());
@@ -252,23 +286,23 @@ public final class Main {
     }
     //file generation
     ProtectionLevel level_to_test = ProtectionLevel.PUBLIC;
-    if (the_options.isProtectedSet())
+    if (my_opts.isProtectedSet())
     {
       level_to_test = ProtectionLevel.PROTECTED;
     }
-    if (the_options.isPackageSet())
+    if (my_opts.isPackageSet())
     {
       level_to_test = ProtectionLevel.NO_LEVEL;
     }
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;
-    if (the_options.isRACVersionSet()) {
-      rac_version = the_options.getRACVersion();
+    if (my_opts.isRACVersionSet()) {
+      rac_version = my_opts.getRACVersion();
     }
     final TestClassGenerator generator = 
       new TestClassGenerator(level_to_test, 
-                             the_options.isInheritedSet(),
-                             the_options.isDeprecationSet(),
-                             the_options.isReflectionSet(),
+                             my_opts.isInheritedSet(),
+                             my_opts.isDeprecationSet(),
+                             my_opts.isReflectionSet(),
                              rac_version);
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
@@ -276,7 +310,7 @@ public final class Main {
     testClassNameTemplate.setAttribute("class", info);
     final StringTemplate dataClassNameTemplate = group.lookupTemplate("dataClassName");
     dataClassNameTemplate.setAttribute("class", info);
-    final String outputDir = generateDestinationDirectory(the_options, the_unit);
+    final String outputDir = generateDestinationDirectory(the_unit);
     final File outDirFile = new File(outputDir);
     
     if (!outDirFile.mkdirs() && !outDirFile.isDirectory()) {
@@ -295,13 +329,13 @@ public final class Main {
   
   /**
    * Generates the destination filename of the given JmlCompilationUnit for the given options.
-   * @param the_options The command-line options.
+   *   
    * @param the_unit The JmlCompilationUnit for which to generate a filename
    */
-  private static String generateDestinationDirectory(final JMLUnitNGOptionStore the_options, final JmlCompilationUnit the_unit) {
+  private String generateDestinationDirectory(final JmlCompilationUnit the_unit) {
     String outputDir = DEF_OUTPUT_DIR;
-    if (the_options.isDestinationSet()) {
-      final StringBuilder sb = new StringBuilder(the_options.getDestination());
+    if (my_opts.isDestinationSet()) {
+      final StringBuilder sb = new StringBuilder(my_opts.getDestination());
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
         sb.append("/");
       }
@@ -319,10 +353,11 @@ public final class Main {
   /**
    * Print usage to standard out.
    */
-  protected static void printHelp() {
+  private void printHelp() {
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("help");
     final StringTemplate t = group.getInstanceOf("help_msg");
+    t.setAttribute("version", VERSION);
     System.out.println(t.toString());
   }
 }

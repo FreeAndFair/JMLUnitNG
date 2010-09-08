@@ -37,7 +37,8 @@ import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
  * Generator for classes that contain unit tests.
  * 
  * @author Jonathan Hogins
- * @version "April 2010"
+ * @author Daniel M. Zimmerman
+ * @version September 2010
  */
 public class TestClassGenerator {
   /**
@@ -47,7 +48,6 @@ public class TestClassGenerator {
   
   static {
     final List<String> temp = new ArrayList<String>();
-    temp.add("jml2");
     temp.add("jml4");
     VALID_RAC_VERSIONS = Collections.unmodifiableList(temp);
   }
