@@ -17,6 +17,9 @@ or recursively contained in directories listed in, path-list.
 -sp \<directory-list\>, --specspath \<directory-list\> : Use the given 
   colon-separated list of directories and Jar files as the specspath 
   during compilation. (SPECSPATH environment variable, by default).
+--test-package \<package-name\> : Generate tests in the given package
+  rather than in the package(s) of the class(es) under test; this 
+  does not work with --protected or --package.
 --rac-version \<version-string\> : Generate RAC handling code 
   for the specified JML RAC version; the default, and only currently-
   supported, value is 'jml4' for jml4c.

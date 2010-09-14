@@ -124,18 +124,16 @@ public final class JMLUnitNG implements Runnable {
   public void run() {
     if (my_opts.isHelpSet() || my_opts.getFiles().size() == 0) {
       printHelp();
-      System.exit(0);
+      Runtime.getRuntime().exit(0);
     }
-    if (my_opts.isRACVersionSet()) {
-      // see if a valid RAC version was chosen
-      if (!TestClassGenerator.VALID_RAC_VERSIONS.contains
+    if (my_opts.isRACVersionSet() && 
+        !TestClassGenerator.VALID_RAC_VERSIONS.contains
           (my_opts.getRACVersion())) {
         System.err.println("Invalid RAC version specified. Valid versions are: ");
         for (String s : TestClassGenerator.VALID_RAC_VERSIONS) {
           System.err.println(s + " ");
         }
         Runtime.getRuntime().exit(1);
-      }
     }
     final List<File> file_list = filesToProcess();
     final String classpath = generateClasspath();
@@ -205,6 +203,7 @@ public final class JMLUnitNG implements Runnable {
   
   /**
    * Returns a list of files in all subdirectories of the given folder.
+   * 
    * @param A File object representing the directory to parse.
    * @param A List of Java files.
    */
