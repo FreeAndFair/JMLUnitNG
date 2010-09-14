@@ -53,6 +53,15 @@ public class <testClassName(class)> {
     testng_runner.run();
   }
   
+  /** Checks to see if RAC is enabled. */
+  @Test
+  public void test_racEnabled() {
+    Assert.assertTrue
+    (JMLChecker.isRACCompiled
+      (<class.fullyQualifiedName>.class),
+     "JMLUnitNG tests can only run on RAC-compiled code.");
+  } 
+  
   <methods:methodTest(); separator="\n">
   <methods:methodProvider(); separator="\n">
   <if(!class.abstract)>
@@ -72,14 +81,14 @@ methodTest(method) ::= <<
 <method.parameterTypes:varJavaDocLine(); separator="\n">
  */
 <if(method.parameterTypes)>
-@Test(dataProvider = "<dataProviderName()>")
+@Test(dependsOnMethods = { "test_racEnabled" }, dataProvider = "<dataProviderName()>")
 
 <else>
 <if(!method.constructor)>
-@Test(dataProvider = "<classOnlyDataProviderName()>")
+@Test(dependsOnMethods = { "test_racEnabled" }, dataProvider = "<classOnlyDataProviderName()>")
 
 <else>
-@Test
+@Test(dependsOnMethods = { "test_racEnabled" })
 
 <endif>
 <endif>

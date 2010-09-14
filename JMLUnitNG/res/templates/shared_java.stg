@@ -11,7 +11,7 @@ test_<method.uniqueName>
 >>
 
 varJavaDocLine() ::= <<
- * @param <it:varName()> The <it> to be passed.
+ * @param <it:varName()> The <it.shortName> to be passed.
 >>
 
 classVarJavaDocLine() ::= <<

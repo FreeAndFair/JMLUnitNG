@@ -278,41 +278,19 @@ public final class JMLUnitNG implements Runnable {
   private void processCompilationUnit(final JmlCompilationUnit the_unit) 
   throws IOException {
     final ClassInfo info = InfoFactory.getClassInfo(the_unit);
-    //debug output
-    System.out.println("Name: " + info.getShortName());
-    if (info.getParent() != null) {
-      System.out.println("Parent Name: " + info.getParent().getShortName());
+    
+    if (my_opts.isVerboseSet()) {
+      classInfoVerbose(info);
     }
-    System.out.println("Prot Level: " + info.getProtectionLevel().toString());
-    System.out.println("Testable Methods:");
-    for (MethodInfo m : info.getTestableMethods()) {
-      System.out.println(m.getProtectionLevel() + " " + m);
-    }
-    System.out.println("Inherited Methods:");
-    for (MethodInfo m : info.getInheritedMethods()) {
-      System.out.println(m.getProtectionLevel() + " " + m);      
-    }
-    if (info.isAbstract())
-    {
-      System.out.println("Abstract class, no test class generated");
-      return;
-    }
+  
     //file generation
-    ProtectionLevel level_to_test = ProtectionLevel.PUBLIC;
-    if (my_opts.isProtectedSet())
-    {
-      level_to_test = ProtectionLevel.PROTECTED;
-    }
-    if (my_opts.isPackageSet())
-    {
-      level_to_test = ProtectionLevel.NO_LEVEL;
-    }
+
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;
     if (my_opts.isRACVersionSet()) {
       rac_version = my_opts.getRACVersion();
     }
     final TestClassGenerator generator = 
-      new TestClassGenerator(level_to_test, 
+      new TestClassGenerator(levelToTest(), 
                              my_opts.isInheritedSet(),
                              my_opts.isDeprecationSet(),
                              my_opts.isReflectionSet(),
@@ -328,7 +306,7 @@ public final class JMLUnitNG implements Runnable {
     
     if (!outDirFile.mkdirs() && !outDirFile.isDirectory()) {
       System.err.println("Could not create destination directory " + outDirFile);
-      System.exit(1);
+      Runtime.getRuntime().exit(1);
     }
 
     final FileWriter testClassWriter = 
@@ -338,6 +316,48 @@ public final class JMLUnitNG implements Runnable {
     generator.generateClasses(info, testClassWriter, testDataClassWriter);
     testClassWriter.close();
     testDataClassWriter.close();
+  }
+  
+  /**
+   * @return the protection level to test, based on the command line options.
+   */
+  private ProtectionLevel levelToTest() {
+    ProtectionLevel level = ProtectionLevel.PUBLIC;
+    if (my_opts.isProtectedSet())
+    {
+      level = ProtectionLevel.PROTECTED;
+    }
+    if (my_opts.isPackageSet())
+    {
+      level = ProtectionLevel.NO_LEVEL;
+    }
+    return level;
+  }
+  
+  /**
+   * Outputs verbose information for a class's test generation stage.
+   * 
+   * @param the_class_info The class info.
+   */
+  private void classInfoVerbose(final ClassInfo the_class_info) {
+    System.out.println("Name: " + the_class_info.getShortName());
+    if (the_class_info.getParent() != null) {
+      System.out.println("Parent Name: " + the_class_info.getParent().getShortName());
+    }
+    System.out.println("Prot Level: " + the_class_info.getProtectionLevel().toString());
+    System.out.println("Testable Methods:");
+    for (MethodInfo m : the_class_info.getTestableMethods()) {
+      System.out.println(m.getProtectionLevel() + " " + m);
+    }
+    System.out.println("Inherited Methods:");
+    for (MethodInfo m : the_class_info.getInheritedMethods()) {
+      System.out.println(m.getProtectionLevel() + " " + m);      
+    }
+    if (the_class_info.isAbstract())
+    {
+      System.out.println("Abstract class, no test class generated");
+      return;
+    }
   }
   
   /**

@@ -156,7 +156,10 @@ public class BasicTestListener extends TestListenerAdapter {
       // we have to print parameter 0, if any, as the first parameter
       sb.append("Constructor " + trunc_name + "(");
     }
-    else {
+    else if (params.length == 0) {
+      sb.append(trunc_name + "(");
+    }
+    else if (params.length > 0) {
       // this is a regular method test, so we have to print the object
       sb.append("<<" + params[0] + ">>." + trunc_name + "(");
       start_index = 1;
