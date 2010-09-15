@@ -1,21 +1,21 @@
 group shared_java;
 
 classOnlyDataProviderName() ::= "p_class_only"
-dataProviderName() ::= "p_<method.uniqueName>"
+dataProviderName() ::= "p_<method.detailedName>"
 
 testClassName(class) ::= "<class.shortName>_JML_Test"
 dataClassName(class) ::= "<class.shortName>_JML_Test_Data"
 
 testName() ::= <<
-test_<method.uniqueName>
+test_<method.detailedName>
 >>
 
 varJavaDocLine() ::= <<
- * @param <it:varName()> The <it.shortName> to be passed.
+ * @param <it:varName()> The <it.type.shortName> to be passed.
 >>
 
 classVarJavaDocLine() ::= <<
- * @param <it:varName()> The <it.shortName> instance to be tested.
+ * @param <it:varName()> The <it.type.shortName> instance to be tested.
 >>
 
 varDecList(list) ::= <<

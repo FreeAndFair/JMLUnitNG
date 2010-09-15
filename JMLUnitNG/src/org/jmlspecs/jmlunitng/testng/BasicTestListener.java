@@ -34,6 +34,16 @@ public class BasicTestListener extends TestListenerAdapter {
   private static final String NEWLINE = System.getProperty("line.separator");
 
   /**
+   * The test prefix.
+   */
+  private static final String TEST_PREFIX = "test_";
+  
+  /**
+   * The test parameter separator.
+   */
+  private static final String TEST_PARAM_SEPARATOR = "__";
+  
+  /**
    * The writer to use for output.
    */
   private Writer my_writer;
@@ -143,8 +153,7 @@ public class BasicTestListener extends TestListenerAdapter {
    */
   private final String testString(final ITestResult the_test_result) {
     final StringBuilder sb = new StringBuilder();
-    final String trunc_name = 
-      the_test_result.getMethod().getMethodName().replace("test_", "");
+    final String trunc_name = getOriginalMethodName(the_test_result);
     final Object[] params = the_test_result.getParameters();
     int start_index = 0;
     
@@ -173,5 +182,29 @@ public class BasicTestListener extends TestListenerAdapter {
     sb.append(")");
     
     return sb.toString();
+  }
+  
+  /**
+   * @param the_test_result A test result.
+   * @return the original name of the method being tested, as a String.
+   */
+  private final String getOriginalMethodName
+  (final ITestResult the_test_result) {
+    // if the method name contains the String TEST_PARAM_SEPARATOR, and the test had
+    // more than one parameter, we extended the method name; otherwise
+    // it was a no-parameter method name that we left alone
+    String orig_name = the_test_result.getName();
+    
+    if (orig_name.startsWith(TEST_PREFIX)) {
+      orig_name = orig_name.substring(TEST_PREFIX.length());
+    }
+    if (orig_name.contains(TEST_PARAM_SEPARATOR) && 
+        the_test_result.getParameters().length > 0) {
+      // find the _last_ occurrence of TEST_PARAM_SEPARATOR, and remove it and everything
+      // that follows
+      orig_name = orig_name.substring(0, orig_name.lastIndexOf(TEST_PARAM_SEPARATOR));
+    }
+    
+    return orig_name;
   }
 }

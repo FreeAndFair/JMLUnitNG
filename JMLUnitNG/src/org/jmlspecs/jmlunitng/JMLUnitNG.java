@@ -66,7 +66,7 @@ public final class JMLUnitNG implements Runnable {
   /**
    * The extension for java source files.
    */
-  private static final String JAVA_EXT = ".java";
+  public static final String JAVA_SUFFIX = ".java";
 
   /**
    * The command line options store to be used.
@@ -195,7 +195,7 @@ public final class JMLUnitNG implements Runnable {
     for (File f : the_search_list) {
       if (f.isDirectory()) {
         the_add_set.addAll(findJavaFiles(f));
-      } else if (f.getPath().endsWith(JAVA_EXT)) {
+      } else if (f.getPath().endsWith(JAVA_SUFFIX)) {
         the_add_set.add(f);
       } // don't add non-java files to the list
     }
@@ -214,7 +214,7 @@ public final class JMLUnitNG implements Runnable {
     for (int k = 0; k < all_packed_files.length; k++) {
       if (all_packed_files[k].isDirectory()) {
         result.addAll(findJavaFiles(all_packed_files[k]));
-      } else if (all_packed_files[k].getPath().endsWith(JAVA_EXT)) {
+      } else if (all_packed_files[k].getPath().endsWith(JAVA_SUFFIX)) {
         result.add(all_packed_files[k]);
       }
     }
@@ -283,8 +283,10 @@ public final class JMLUnitNG implements Runnable {
       classInfoVerbose(info);
     }
   
-    //file generation
-
+    if (info.isAbstract()) {
+      return;
+    }
+    
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;
     if (my_opts.isRACVersionSet()) {
       rac_version = my_opts.getRACVersion();
@@ -313,7 +315,7 @@ public final class JMLUnitNG implements Runnable {
       new FileWriter(new File(outputDir + testClassNameTemplate.toString() + ".java"));
     final FileWriter testDataClassWriter = 
       new FileWriter(new File(outputDir + dataClassNameTemplate.toString() + ".java"));
-    generator.generateClasses(info, testClassWriter, testDataClassWriter);
+    generator.generateClasses(info, outputDir);
     testClassWriter.close();
     testDataClassWriter.close();
   }
@@ -356,7 +358,6 @@ public final class JMLUnitNG implements Runnable {
     if (the_class_info.isAbstract())
     {
       System.out.println("Abstract class, no test class generated");
-      return;
     }
   }
   
@@ -376,9 +377,12 @@ public final class JMLUnitNG implements Runnable {
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
         sb.append("/");
       }
-      outputDir = sb.toString();
+      
+      outputDir = sb.toString().replace("\\", File.separator);
+      outputDir = outputDir.replace("/", File.separator);
     } else {
-      outputDir = new File(the_unit.getSourceFile().toUri().getPath()).getParent() + "/";
+      outputDir = new File(the_unit.getSourceFile().toUri().getPath()).getParent() +
+                  File.separator;
     }
     return outputDir;
   }

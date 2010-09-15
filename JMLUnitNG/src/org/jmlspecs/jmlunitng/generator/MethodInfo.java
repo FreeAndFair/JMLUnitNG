@@ -44,6 +44,11 @@ public class MethodInfo {
   private final /*@ non_null @*/ String my_name;
   
   /**
+   * The "unique" name of the method (includes signature details).
+   */
+  private final /*@ non_null @*/ String my_detailed_name;
+  
+  /**
    * The protection level of the method.
    */
   private final /*@ non_null @*/ ProtectionLevel my_protection_level;
@@ -135,8 +140,28 @@ public class MethodInfo {
         !(my_is_constructor && my_declaring_class.isAbstract()) &&
         !my_protection_level.equals(ProtectionLevel.PRIVATE) &&
         !UNTESTABLE_METHOD_NAMES.contains(my_name);
+    my_detailed_name = generateDetailedName();
   }
 
+  /**
+   * Generates the detailed name of the method.
+   */
+  private /*@ pure non_null @*/ String generateDetailedName() {
+    StringBuffer sb = new StringBuffer(my_name);
+    boolean first = true;
+    if (my_parameter_types.size() > 0) {
+      for (ParameterInfo p : my_parameter_types) {
+        if (first) {
+          sb.append("_");
+          first = false;
+        }
+        sb.append("_");
+        sb.append(p.getType().getFormattedName());
+      }
+    }
+    return sb.toString();
+  }
+  
   /**
    * @return The name of the method
    */
@@ -144,6 +169,14 @@ public class MethodInfo {
     return my_name;
   }
 
+  /**
+   * @return The "unique" name of the method, for use in generated
+   * code; this name includes details about the method signature.
+   */
+  public /*@ pure non_null @*/ String getDetailedName() {
+    return my_detailed_name;
+  }
+  
   /**
    * @return The ClassInfo object for the class that owns this method.
    */
