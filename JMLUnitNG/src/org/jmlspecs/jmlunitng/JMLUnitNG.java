@@ -277,13 +277,17 @@ public final class JMLUnitNG implements Runnable {
    */
   private void processCompilationUnit(final JmlCompilationUnit the_unit) 
   throws IOException {
-    final ClassInfo info = InfoFactory.getClassInfo(the_unit);
+    final ClassInfo class_info = InfoFactory.getClassInfo(the_unit);
+    
+    if (class_info == null) {
+      return;
+    }
     
     if (my_opts.isVerboseSet()) {
-      classInfoVerbose(info);
+      classInfoVerbose(class_info);
     }
   
-    if (info.isAbstract()) {
+    if (class_info.isAbstract()) {
       return;
     }
     
@@ -299,25 +303,21 @@ public final class JMLUnitNG implements Runnable {
                              rac_version);
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
-    final StringTemplate testClassNameTemplate = group.lookupTemplate("testClassName");
-    testClassNameTemplate.setAttribute("class", info);
-    final StringTemplate dataClassNameTemplate = group.lookupTemplate("dataClassName");
-    dataClassNameTemplate.setAttribute("class", info);
-    final String outputDir = generateDestinationDirectory(the_unit);
-    final File outDirFile = new File(outputDir);
-    
-    if (!outDirFile.mkdirs() && !outDirFile.isDirectory()) {
-      System.err.println("Could not create destination directory " + outDirFile);
-      Runtime.getRuntime().exit(1);
-    }
+    final StringTemplate spNameTemplate = group.lookupTemplate("strategyPackageName");
+    spNameTemplate.setAttribute("classInfo", class_info);
 
-    final FileWriter testClassWriter = 
-      new FileWriter(new File(outputDir + testClassNameTemplate.toString() + ".java"));
-    final FileWriter testDataClassWriter = 
-      new FileWriter(new File(outputDir + dataClassNameTemplate.toString() + ".java"));
-    generator.generateClasses(info, outputDir);
-    testClassWriter.close();
-    testDataClassWriter.close();
+    final String outputDir = generateDestinationDirectory(the_unit);
+    final String strategyOutputDir = 
+      outputDir + spNameTemplate.toString() + File.separator;
+    final File[] dirs = new File[] { new File(outputDir), new File(strategyOutputDir) };
+    for (File f : dirs) {
+      System.err.println("creating directory " + f);
+      if (!f.mkdirs() && !f.isDirectory()) {
+        System.err.println("Could not create destination directory " + f);
+        Runtime.getRuntime().exit(1);
+      }
+    }
+    generator.generateClasses(class_info, outputDir);
   }
   
   /**
@@ -371,11 +371,11 @@ public final class JMLUnitNG implements Runnable {
     if (my_opts.isDestinationSet()) {
       final StringBuilder sb = new StringBuilder(my_opts.getDestination());
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
-        sb.append("/");
+        sb.append(File.separator);
       }
       sb.append(the_unit.getPackageName().toString().replace('.', '/'));
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
-        sb.append("/");
+        sb.append(File.separator);
       }
       
       outputDir = sb.toString().replace("\\", File.separator);

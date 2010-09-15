@@ -3,8 +3,7 @@ group shared_java;
 classOnlyDataProviderName() ::= "p_class_only"
 dataProviderName() ::= "p_<method.detailedName>"
 
-testClassName(class) ::= "<class.shortName>_JML_Test"
-dataClassName(class) ::= "<class.shortName>_JML_Test_Data"
+testClassName(classInfo) ::= "<classInfo.shortName>_JML_Test"
 
 testName() ::= <<
 test_<method.detailedName>
@@ -30,8 +29,8 @@ varNameList(list) ::= <<
 
 varName() ::= "<it.name>"
 
-type(typeInfo, paramInfo) ::= "<typeTransMap.(typeInfo.fullyQualifiedName)><if(paramInfo.array)>[]<endif>"
-rawtype(typeInfo, paramInfo) ::= "<typeInfo.fullyQualifiedName><if(paramInfo.array)>[]<endif>"
+type(paramInfo) ::= "<typeTransMap.(paramInfo.type.fullyQualifiedName)><if(paramInfo.array)>[]<endif>"
+rawtype(paramInfo) ::= "<paramInfo.type.fullyQualifiedName><if(paramInfo.array)>[]<endif>"
 
 baseStrategyMap ::= [
         "int":"IntStrategy",
@@ -57,3 +56,8 @@ typeTransMap ::= [
         "char":"Character",
         default:key // anything other than an atomic type
 ]
+
+strategyPackageName(classInfo) ::= "<classInfo.shortName>_JML_Data"
+strategyName(methodInfo, paramInfo) ::= "<methodInfo.detailedName>__<paramInfo.name>"
+classStrategyName() ::= "ClassObjectStrategy"
+globalStrategyName(typeName) ::= "GlobalStrategy_<typeName>"

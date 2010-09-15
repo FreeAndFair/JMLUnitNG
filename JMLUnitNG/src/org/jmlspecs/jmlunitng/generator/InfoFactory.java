@@ -142,12 +142,12 @@ public final class InfoFactory {
           {
             duplicate = duplicate || 
                         (m.getName().equals(pm.getName()) &&
-                         m.getParameterTypes().equals(pm.getParameterTypes()));
+                         m.getParameters().equals(pm.getParameters()));
           }
           if (!duplicate)
           {
             method_infos.add(new MethodInfo(pm.getName(), result, pm.getDeclaringClass(),
-                                            pm.getProtectionLevel(), pm.getParameterTypes(),
+                                            pm.getProtectionLevel(), pm.getParameters(),
                                             pm.getReturnType(), false, false));
           }
         }

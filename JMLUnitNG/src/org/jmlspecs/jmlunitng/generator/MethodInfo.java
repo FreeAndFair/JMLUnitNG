@@ -199,10 +199,10 @@ public class MethodInfo {
   }
 
   /**
-   * @return an unmodifiable list of the parameter types of the method,
+   * @return an unmodifiable list of the parameters of the method,
    *  in the order they are declared in the parameter list.
    */
-  public /*@ pure non_null @*/ List<ParameterInfo> getParameterTypes() {
+  public /*@ pure non_null @*/ List<ParameterInfo> getParameters() {
     return my_parameter_types;
   }
 

@@ -21,14 +21,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.antlr.stringtemplate.StringTemplate;
@@ -149,7 +148,7 @@ public class TestClassGenerator {
   /**
    * Generates a test data class for the_class and writes it to the_writer. 
    * 
-   * @param the_class The ClassInfo to generate test data for.
+   * @param the_class The class to generate test data for.
    * @param the_methods The methods to generate test data for. 
    * @param the_writer The writer to write the test data class to.
    * @throws IOException if an IOException occurs while writing the class.
@@ -164,19 +163,78 @@ public class TestClassGenerator {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("test_data_class_java");
     final StringTemplate t = group.getInstanceOf("main");
     t.setAttribute("class", the_class);
-    t.setAttribute("date",
-                   DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
+    t.setAttribute("date", getFormattedDate());
     t.setAttribute("methods", getMethodsToTest(the_class));
     t.setAttribute("types", getUniqueParameterTypes(the_methods));
     t.setAttribute("packageName", the_class.getPackageName());
     t.setAttribute("packaged", !the_class.getPackageName().equals(""));
+    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
     the_writer.write(t.toString(LINE_WIDTH));
   }
 
   /**
+   * Generates a strategy class for the specified method parameter.
+   * 
+   * @param the_class The class to generate a strategy class for.
+   * @param the_method The method to generate a strategy class for.
+   * @param the_param The parameter to generate a strategy class for.
+   * @param the_writer The writer to write the strategy class to.
+   * @throws IOException if an IOException occurs while writing the class.
+   */
+  //@ requires the_class.getMethods().contains(the_method);
+  //@ requires the_method.getParameters().contains(the_param);
+  public void generateMethodParamStrategyClass
+  (final /*@ non_null @*/ ClassInfo the_class,
+   final /*@ non_null @*/ MethodInfo the_method,
+   final /*@ non_null @*/ ParameterInfo the_param, 
+   final /*@ non_null @*/ Writer the_writer)
+  throws IOException {
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_method_param");
+    final StringTemplate t = group.getInstanceOf("main");
+    t.setAttribute("class", the_class);
+    t.setAttribute("date", getFormattedDate());
+    t.setAttribute("method", the_method);
+    t.setAttribute("param", the_param);
+    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
+    the_writer.write(t.toString(LINE_WIDTH));
+  }
+  
+  /**
+   * Generates a global strategy class for the specified type.
+   * 
+   * @param the_class The class to generate a strategy class for.
+   * @param the_type The type to generate a strategy class for.
+   * @param the_writer The writer to write the strategy class to.
+   * @throws IOException if an IOException occurs while writing the class.
+   */
+  //@ requires the_class.getMethods().contains(the_method);
+  //@ requires the_method.getParameters().contains(the_param);
+  public void generateGlobalStrategyClass
+  (final /*@ non_null @*/ ClassInfo the_class,
+   final /*@ non_null @*/ TypeInfo the_type,
+   final /*@ non_null @*/ Writer the_writer)
+  throws IOException {
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_global");
+    final StringTemplate t = group.getInstanceOf("main");
+    t.setAttribute("class", the_class);
+    t.setAttribute("date", getFormattedDate());
+    t.setAttribute("type", the_type);
+    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
+    the_writer.write(t.toString(LINE_WIDTH));
+  }
+  
+  /**
+   * @return a formatted version of the current date and time.
+   */
+  private String getFormattedDate() {
+    final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm Z");
+    return df.format(new Date());
+  }
+  
+  /**
    * Generates a test class for the_class and writes it to the_writer. 
    * 
-   * @param the_class The ClassInfo to generate a test class for.
+   * @param the_class The class to generate a test class for.
    * @param the_methods The methods to generate tests for. 
    * @param the_writer The writer to write the test class to.
    * @throws IOException if an IOException occurs while writing the class.
@@ -188,14 +246,15 @@ public class TestClassGenerator {
                                 final /*@ non_null @*/ Set<MethodInfo> the_methods,
                                 final /*@ non_null @*/ Writer the_writer)
   throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("test_class_java_" + my_rac_version);
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("test_class_" + my_rac_version);
     final StringTemplate t = group.getInstanceOf("main");
     t.setAttribute("class", the_class);
     t.setAttribute("date",
                    DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
     t.setAttribute("methods", the_methods);
-    t.setAttribute("packageName", the_class.getPackageName());
+    t.setAttribute("package_name", the_class.getPackageName());
     t.setAttribute("packaged", !the_class.getPackageName().equals(""));
+    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
     the_writer.write(t.toString(LINE_WIDTH));
   }
 
@@ -237,7 +296,7 @@ public class TestClassGenerator {
   private Set<TypeInfo> getUniqueParameterTypes(final Set<MethodInfo> the_methods) {
     final Set<TypeInfo> classes = new HashSet<TypeInfo>();
     for (MethodInfo m : the_methods) {
-      for (ParameterInfo p : m.getParameterTypes()) {
+      for (ParameterInfo p : m.getParameters()) {
         classes.add(p.getType());
       }
     }
@@ -259,12 +318,15 @@ public class TestClassGenerator {
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
     final StringTemplate tcNameTemplate = group.lookupTemplate("testClassName");
-    final StringTemplate dcNameTemplate = group.lookupTemplate("dataClassName");
+    final StringTemplate msNameTemplate = group.lookupTemplate("strategyName");
+    final StringTemplate csNameTemplate = group.lookupTemplate("classStrategyName");
+    final StringTemplate gsNameTemplate = group.lookupTemplate("globalStrategyName");
+    final StringTemplate pkgNameTemplate = group.lookupTemplate("strategyPackageName");
     final Set<MethodInfo> methods_to_test = getMethodsToTest(the_class);
     
     // initialize name templates
-    tcNameTemplate.setAttribute("class", the_class);
-    dcNameTemplate.setAttribute("class", the_class);
+    tcNameTemplate.setAttribute("classInfo", the_class);
+    pkgNameTemplate.setAttribute("classInfo", the_class);
     
     // generate the (single) test class
     final FileWriter tcWriter = 
@@ -272,10 +334,32 @@ public class TestClassGenerator {
     generateTestClass(the_class, methods_to_test, tcWriter);
     tcWriter.close();
     
-    // generate the (multiple) data classes
-    final FileWriter dcWriter = 
-      new FileWriter(new File(the_dir + dcNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX));
-    generateTestDataClass(the_class, methods_to_test, dcWriter);
-    dcWriter.close();
+    // generate the strategy classes - there are four stages here
+    
+    // first: individual method parameter strategy classes
+    for (MethodInfo m : methods_to_test) {
+      for (ParameterInfo p : m.getParameters()) {
+        msNameTemplate.reset();
+        msNameTemplate.setAttribute("methodInfo", m);
+        msNameTemplate.setAttribute("paramInfo", p);
+        final FileWriter msWriter = 
+          new FileWriter(new File(the_dir + pkgNameTemplate.toString() + File.separator +
+                                  msNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX));
+        generateMethodParamStrategyClass(the_class, m, p, msWriter);
+        msWriter.close(); 
+      }
+    }
+    
+    // second: global strategy classes for all data types
+    
+    for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
+      gsNameTemplate.reset();
+      gsNameTemplate.setAttribute("typeName", t);
+      final FileWriter gsWriter = 
+        new FileWriter(new File(the_dir + pkgNameTemplate.toString() + File.separator + 
+                                gsNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX));
+      generateGlobalStrategyClass(the_class, t, gsWriter);
+      gsWriter.close();
+    }
   }
 }
