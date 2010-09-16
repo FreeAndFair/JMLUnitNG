@@ -35,14 +35,6 @@ public class JMLUnitNGRuleStore extends RuleStore {
     addOverrideRule(rule3);
     rule3.addAction(new Action<Boolean>("Package", new Rule3Expression3()));
 
-    Expression<Boolean> rule4Condition = new Rule4Condition();
-    ValidityRule rule4 = new ValidityRule(rule4Condition);
-    rule4.addAction(new Action<List<String>>("CLOPSERROROPTION", new Rule4Expression()));
-    addValidityRule(rule4);
-    Expression<Boolean> rule5Condition = new Rule5Condition();
-    ValidityRule rule5 = new ValidityRule(rule5Condition);
-    rule5.addAction(new Action<List<String>>("CLOPSERROROPTION", new Rule5Expression()));
-    addValidityRule(rule5);
   }
 
   public static class Rule1Condition implements Expression<Boolean> {
@@ -99,42 +91,6 @@ public class JMLUnitNGRuleStore extends RuleStore {
     }
   }
 
-  public static class Rule4Condition implements Expression<Boolean> {
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean evaluate(final OptionStore optionStore) {
-      return ((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Package")).hasValue() && ((ie.ucd.clops.runtime.options.StringOption)optionStore.getOptionByIdentifier("TestPackage")).hasValue();
-    }
-  }
-    
-  public static class Rule4Expression implements Expression<List<String>> {
-    /**
-     * {@inheritDoc}
-     */
-    public List<String> evaluate(final OptionStore optionStore) {
-      return Arrays.asList("You cannot specify a test package when testing package-level methods.");
-    }
-  }
-  
-  public static class Rule5Condition implements Expression<Boolean> {
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean evaluate(final OptionStore optionStore) {
-      return ((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Protected")).hasValue() && ((ie.ucd.clops.runtime.options.StringOption)optionStore.getOptionByIdentifier("TestPackage")).hasValue();
-    }
-  }
-    
-  public static class Rule5Expression implements Expression<List<String>> {
-    /**
-     * {@inheritDoc}
-     */
-    public List<String> evaluate(final OptionStore optionStore) {
-      return Arrays.asList("You cannot specify a test package when testing protected methods.");
-    }
-  }
-  
 
   protected final boolean shouldApplyFlyRulesTransitively() {
     return false;

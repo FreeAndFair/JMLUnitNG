@@ -26,23 +26,6 @@ public interface JMLUnitNGOptionsInterface {
   String getDestination();
   
 
-// Option TestPackage. 
-// Aliases: [--test-package]
-
-  /**
-   * @return true if the option TestPackage has been used
-   * in the command line.
-   */
-  boolean isTestPackageSet();
-
-  /**
-   * Get the value of {@code Option} TestPackage.
-   * @return the value of the option TestPackage if it has been set
-   * using the arguments. Throws an {@code IllegalStateException} otherwise.
-   */ 
-  String getTestPackage();
-  
-
 // Option RACVersion. 
 // Aliases: [--rac-version]
 
@@ -313,5 +296,22 @@ public interface JMLUnitNGOptionsInterface {
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
   List<java.io.File> getSpecspath();
+  
+
+// Option DryRun. 
+// Aliases: [--dry-run]
+
+  /**
+   * @return true if the option DryRun has been used
+   * in the command line.
+   */
+  boolean isDryRunSet();
+
+  /**
+   * Get the value of {@code Option} DryRun.
+   * @return the value of the option DryRun if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getDryRun();
   
 }

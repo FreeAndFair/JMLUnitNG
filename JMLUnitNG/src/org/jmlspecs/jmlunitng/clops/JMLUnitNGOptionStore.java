@@ -12,7 +12,6 @@ import ie.ucd.clops.runtime.options.FileListOption;
 public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOptionsInterface {
 
   private final StringOption ogDestination;
-  private final StringOption ogTestPackage;
   private final StringOption ogRACVersion;
   private final FileListOption ogFiles;
   private final BooleanOption ogDashDash;
@@ -29,6 +28,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   private final BooleanOption ogPrune;
   private final FileListOption ogClasspath;
   private final FileListOption ogSpecspath;
+  private final BooleanOption ogDryRun;
   private final CLOPSErrorOption CLOPSERROROPTION;
 
   public JMLUnitNGOptionStore() throws InvalidOptionPropertyValueException {
@@ -37,9 +37,6 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogDestination = new StringOption("Destination", "(?:-d)|(?:--dest)");
     addOption(ogDestination);
     ogDestination.setProperty("aliases", "-d,--dest");
-    ogTestPackage = new StringOption("TestPackage", "(?:--test-package)");
-    addOption(ogTestPackage);
-    ogTestPackage.setProperty("aliases", "--test-package");
     ogRACVersion = new StringOption("RACVersion", "(?:--rac-version)");
     addOption(ogRACVersion);
     ogRACVersion.setProperty("aliases", "--rac-version");
@@ -104,6 +101,9 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogSpecspath.setProperty("mustexist", "true");
     ogSpecspath.setProperty("mustbedir", "true");
     ogSpecspath.setProperty("aliases", "-sp,--specspath");
+    ogDryRun = new BooleanOption("DryRun", "(?:--dry-run)");
+    addOption(ogDryRun);
+    ogDryRun.setProperty("aliases", "--dry-run");
   
     CLOPSERROROPTION = new ie.ucd.clops.runtime.options.CLOPSErrorOption();
     addOption(CLOPSERROROPTION);
@@ -125,14 +125,13 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogSpecspath);
     ogOption.addOptionOrGroup(ogReflection);
     ogOption.addOptionOrGroup(ogPackage);
-    ogOption.addOptionOrGroup(ogTestPackage);
+    ogOption.addOptionOrGroup(ogDryRun);
     ogOption.addOptionOrGroup(ogDestination);
-    ogOption.addOptionOrGroup(ogPublic);
     ogOption.addOptionOrGroup(ogInherited);
+    ogOption.addOptionOrGroup(ogPublic);
     ogOption.addOptionOrGroup(ogRACVersion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogDestination);
-    ogAllOptions.addOptionOrGroup(ogTestPackage);
     ogAllOptions.addOptionOrGroup(ogRACVersion);
     ogAllOptions.addOptionOrGroup(ogFiles);
     ogAllOptions.addOptionOrGroup(ogDashDash);
@@ -149,6 +148,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogAllOptions.addOptionOrGroup(ogPrune);
     ogAllOptions.addOptionOrGroup(ogClasspath);
     ogAllOptions.addOptionOrGroup(ogSpecspath);
+    ogAllOptions.addOptionOrGroup(ogDryRun);
   }
   
 // Option Destination.
@@ -173,30 +173,6 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   
   public StringOption getDestinationOption() {
     return ogDestination;
-  }
-  
-// Option TestPackage.
-// Aliases: [--test-package]
-  
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isTestPackageSet() {
-    return ogTestPackage.hasValue();
-  }
-  
-  /** {@inheritDoc} */
-  public String getTestPackage() {
-    return ogTestPackage.getValue();
-  }
-
-  /** {@inheritDoc} */
-  public String getRawTestPackage() {
-    return ogTestPackage.getRawValue();
-  }
-  
-  public StringOption getTestPackageOption() {
-    return ogTestPackage;
   }
   
 // Option RACVersion.
@@ -581,6 +557,30 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   
   public FileListOption getSpecspathOption() {
     return ogSpecspath;
+  }
+  
+// Option DryRun.
+// Aliases: [--dry-run]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isDryRunSet() {
+    return ogDryRun.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getDryRun() {
+    return ogDryRun.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawDryRun() {
+    return ogDryRun.getRawValue();
+  }
+  
+  public BooleanOption getDryRunOption() {
+    return ogDryRun;
   }
   
 }
