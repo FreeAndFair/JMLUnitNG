@@ -10,13 +10,12 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
-
 /**
  * A repeated access iterator that iterates over an array of objects.
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version March 2010
+ * @version September 2010
  */
 public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
   /**
@@ -27,41 +26,38 @@ public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
   /**
    * The current element.
    */
-  // @ invariant my_element <= my_array.length && my_element >= 0;
+  // @ private invariant my_element <= my_array.length && my_element >= 0;
   private int my_element;
 
   /**
-   * Creates a new ObjectArrayIterator that iterates over the given array
+   * Creates a new ObjectArrayIterator that iterates over the given array.
+   * The array is <i>not</i> copied, so subsequent modifications to it will
+   * affect the iteration.
+   * 
    * @param the_array The array of objects to iterate over.
    */
-  /*@ ensures my_element == 0;
-   */
-  public ObjectArrayIterator(final T[] the_array) {
+  public ObjectArrayIterator(final /*@ non_null @*/ T[] the_array) {
     my_array = the_array;
     my_element = 0;
   }
 
   /**
-   * Advances the iterator to the next value.
+   * {@inheritDoc}
    */
-  //@ requires hasElement();
   public void advance() {
     my_element++;
   }
 
   /**
-   * Returns the current element.
+   * {@inheritDoc}
    */
-  //@ requires hasElement();
   public T element() {
     return my_array[my_element];
   }
 
   /**
-   * Returns true if there are more elements in this iterator. False if not.
-   * @return True if there are more elements in this iterator. False if not.
+   * {@inheritDoc}
    */
-  //@ ensures \result == my_element < my_array.length;
   public boolean hasElement() {
   	return my_element < my_array.length;
   }

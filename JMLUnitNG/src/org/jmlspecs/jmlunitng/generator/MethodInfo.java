@@ -61,7 +61,7 @@ public class MethodInfo {
   /**
    * The parameter types of the method in order.
    */
-  private final /*@ non_null @*/ List<ParameterInfo> my_parameter_types;
+  private final /*@ non_null @*/ List<ParameterInfo> my_parameters;
 
   /**
    * The ClassInfo for the class this method belongs to.
@@ -77,6 +77,11 @@ public class MethodInfo {
    * Is the method static?
    */
   private final boolean my_is_static;
+
+  /**
+   * Is the method deprecated?
+   */
+  private final boolean my_is_deprecated;
 
   /**
    * Is the method a constructor?
@@ -116,6 +121,7 @@ public class MethodInfo {
    * @param the_return_type The name of the return type of the method.
    * @param the_is_constructor Is the method a constructor?
    * @param the_is_static Is the method static?
+   * @param the_is_deprecated Is the method deprecated?
    */
   //@ requires !the_is_constructor || !the_is_static;
   public MethodInfo(final /*@ non_null @*/ String the_name, 
@@ -124,16 +130,18 @@ public class MethodInfo {
                     final /*@ non_null @*/ ProtectionLevel the_protection_level,
                     final /*@ non_null @*/ List<ParameterInfo> the_parameter_types, 
                     final /*@ non_null @*/ TypeInfo the_return_type,
-                    final boolean the_is_constructor, final boolean the_is_static) {
+                    final boolean the_is_constructor, final boolean the_is_static,
+                    final boolean the_is_deprecated) {
     my_name = the_name;
     my_parent_class = the_parent_class;
     my_declaring_class = the_declaring_class;
     my_protection_level = the_protection_level;
-    my_parameter_types = Collections.unmodifiableList(the_parameter_types);
+    my_parameters = Collections.unmodifiableList(the_parameter_types);
     my_return_type = the_return_type;
     my_is_static = the_is_static;
     my_is_constructor = the_is_constructor;
-
+    my_is_deprecated = the_is_deprecated;
+    
     my_is_inherited = !the_parent_class.equals(the_declaring_class);
     my_is_factory = determineIsFactory();
     my_is_testable =
@@ -149,8 +157,8 @@ public class MethodInfo {
   private /*@ pure non_null @*/ String generateDetailedName() {
     StringBuffer sb = new StringBuffer(my_name);
     boolean first = true;
-    if (my_parameter_types.size() > 0) {
-      for (ParameterInfo p : my_parameter_types) {
+    if (my_parameters.size() > 0) {
+      for (ParameterInfo p : my_parameters) {
         if (first) {
           sb.append("_");
           first = false;
@@ -203,7 +211,7 @@ public class MethodInfo {
    *  in the order they are declared in the parameter list.
    */
   public /*@ pure non_null @*/ List<ParameterInfo> getParameters() {
-    return my_parameter_types;
+    return my_parameters;
   }
 
   /**
@@ -241,6 +249,13 @@ public class MethodInfo {
     return my_is_static;
   }
 
+  /**
+   * @return Is this method deprecated?
+   */
+  public /*@ pure @*/ boolean isDeprecated() {
+    return my_is_deprecated;
+  }
+  
   /**
    * Returns whether or not this method is testable. A method is testable if and
    * only if it a) is not a constructor of an abstract class, 
@@ -285,13 +300,14 @@ public class MethodInfo {
     }
     sb.append(my_name);
     sb.append("(");
-    final Iterator<ParameterInfo> paramIter = my_parameter_types.iterator();
+    final Iterator<ParameterInfo> paramIter = my_parameters.iterator();
     while (paramIter.hasNext()) {
       final ParameterInfo param = paramIter.next();
-      sb.append(param.getType().getFullyQualifiedName());
+      sb.append(param.getType().getShortName());
       if (param.isArray()) {
         sb.append("[]");
       }
+      sb.append(" " + param.getName());
       if (paramIter.hasNext()) {
         sb.append(", ");
       }

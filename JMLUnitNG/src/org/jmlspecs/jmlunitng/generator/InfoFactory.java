@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
+import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -148,7 +149,8 @@ public final class InfoFactory {
           {
             method_infos.add(new MethodInfo(pm.getName(), result, pm.getDeclaringClass(),
                                             pm.getProtectionLevel(), pm.getParameters(),
-                                            pm.getReturnType(), false, false));
+                                            pm.getReturnType(), false, false,
+                                            pm.isDeprecated()));
           }
         }
       }
@@ -211,12 +213,22 @@ public final class InfoFactory {
     }
     final ProtectionLevel level = getLevel(the_sym.getModifiers());
     String name = the_sym.getSimpleName().toString();
+    
+    // is the method a constructor?
     if ("<init>".equals(name)) {
       name = the_parent_class.getShortName();
     }
+    
+    // is the method deprecated? this is crude but functional
+    boolean deprecated = false;
+    final List<Attribute.Compound> annotations = the_sym.getAnnotationMirrors();
+    for (Attribute.Compound a : annotations) {
+      deprecated |= "@java.lang.Deprecated".equals(a.toString());
+    }
+    
     return new MethodInfo(name, parent_class, declaring_class,
                           level, params, new TypeInfo(the_sym.getReturnType().toString()),
-                          the_sym.isConstructor(), the_sym.isStatic());
+                          the_sym.isConstructor(), the_sym.isStatic(), deprecated);
   }
   
   /**

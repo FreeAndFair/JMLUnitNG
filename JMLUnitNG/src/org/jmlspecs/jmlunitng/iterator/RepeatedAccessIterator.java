@@ -20,19 +20,18 @@ package org.jmlspecs.jmlunitng.iterator;
  */
 public interface RepeatedAccessIterator<T> {
   /** 
-   * @return True if the current element is valid, false if the iterator 
-   * is past the end of the sequence.
+   * @return Does the iterator have a current element?
    */
   boolean hasElement();
   
   /**
-   * @return The current element of the iterator
+   * @return What is the iterator's current element?
    */
   //@ requires hasElement();
   T element();
   
   /**
-   * Advances the iterator to the next element.
+   * Advance the iterator to the next element!
    */
   //@ requires hasElement();
   void advance();

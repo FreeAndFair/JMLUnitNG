@@ -24,42 +24,42 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * The basic framework of a test data generation strategy.
  * 
  * @author Jonathan Hogins
- * @version April 2010
+ * @author Daniel M. Zimmerman
+ * @version September 2010
  */
 public abstract class BasicStrategy {
-
-  // query
   /**
-   * To be implemented by subclasses. Returns the iterator over default values.
+   * To be implemented by subclasses. Returns the iterator over default values
+   * for this type.
    * 
-   * @return An Iterator over default values.
+   * @return What are your default values?
    */
   public abstract RepeatedAccessIterator<?> getDefaultValues();
 
   // "What is your custom set of values?",
   /**
-   * To be implemented by users. Returns an iterator over the custom values.
+   * To be implemented by users. Returns an iterator over the custom values
+   * for this type.
    * 
-   * @return An Iterator over custom values.
+   * @return What are your custom values?
    */
   public abstract RepeatedAccessIterator<?> getCustomValues();
 
-  // "What is your global set of values?",
   /**
    * To be implemented by users. Returns an iterator over the global values for
    * this type.
    * 
-   * @return An Iterator over global values.
+   * @return What are your global values?
    */
   public abstract RepeatedAccessIterator<?> getGlobalValues();
 
-  // "What is an iterator over all your sets of values?"
   /**
    * Returns a RepeatedAccessIterator over all values in the order: default
    * values, custom values, global values.
    * 
-   * @return Iterator over all values.
+   * @return What are all your values?
    */
+  @SuppressWarnings("unchecked")
   public RepeatedAccessIterator<?> iterator() {
     final List<RepeatedAccessIterator<?>> iterators = new ArrayList<RepeatedAccessIterator<?>>(3);
     iterators.add(getDefaultValues());

@@ -23,7 +23,8 @@ import java.util.NoSuchElementException;
  * Wraps a RepeatedAccessIterator in a standard Iterator.
  * 
  * @author Jonathan Hogins
- * @version April 2010
+ * @author Daniel M. Zimmerman
+ * @version September 2010
  * @param <T> The type of object returned
  */
 public class IteratorWrapper<T> implements Iterator<T> {
@@ -34,23 +35,23 @@ public class IteratorWrapper<T> implements Iterator<T> {
   
   /**
    * Creates a new IteratorWrapper for the_iterator.
-   * @param the_iterator The iterator to iterate over.
+   * 
+   * @param the_iterator The iterator to wrap.
    */
-  /*@ ensures my_iterator == the_iterator;
-   */
-  public IteratorWrapper(final RepeatedAccessIterator<T> the_iterator) {
+  public IteratorWrapper(final /*@ non_null @*/ RepeatedAccessIterator<T> the_iterator) {
     my_iterator = the_iterator;
   }
   
-  
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean hasNext() {
     return my_iterator.hasElement();
   }
 
   /**
-   * Returns the current element and increments the iterator.
-   * @return The current element.
+   * {@inheritDoc}
    */
   @Override
   public T next() {
@@ -64,12 +65,14 @@ public class IteratorWrapper<T> implements Iterator<T> {
 
   /**
    * Unsupported operation.
-   * @throws UnsupportedOperationExcepton Always thrown.
+   * 
+   * @throws UnsupportedOperationExcepton always.
    */
-  /*@ signals (UnsupportedOperationException e) (true); */
+  //@ signals UnsupportedOperationException true;
+  //@ signals_only UnsupportedOperationException;
   @Override
   public void remove() throws UnsupportedOperationException {
-    throw new UnsupportedOperationException("No remove in RepeatedAccessIterator");
+    throw new UnsupportedOperationException
+    ("RepeatedAccessIterator does not support the remove operation.");
   }
-
 }

@@ -10,23 +10,29 @@ main(date, class, methods, package_name, packaged, jmlunitng_version) ::= <<
  
 <if (packaged)>
 package <package_name>;
+
 <endif>
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 
-import org.jmlspecs.openjmlunit.testng.BasicTestListener;
-import org.jmlspecs.openjmlunit.testng.PreconditionSkipException;
+import org.jmlspecs.jmlunitng.iterator.IteratorWrapper;
+import org.jmlspecs.jmlunitng.iterator.ParameterArrayIterator;
+import org.jmlspecs.jmlunitng.testng.BasicTestListener;
+import org.jmlspecs.jmlunitng.testng.PreconditionSkipException;
 import org.testng.Assert;
 import org.testng.TestException;
 import org.testng.TestNG;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import org.jmlspecs.jml4.rac.runtime.JMLAssertionError;
+import org.jmlspecs.jml4.rac.runtime.JMLChecker;
 import org.jmlspecs.jml4.rac.runtime.JMLEntryPreconditionError;
 import org.jmlspecs.jml4.rac.runtime.JMLEvaluationError;
-import org.jmlspecs.jml4.rac.runtime.JMLAssertionError;
 
 <if (packaged)>
-import <package_name>.<strategyPackageName(classInfo=class)>.*;
+import <strategyPackageName(classInfo=class)>.*;
 
 <else>
 import <strategyPackageName(classInfo=class)>.*;
@@ -51,7 +57,8 @@ public class <testClassName(class)> {
   public static void main(String[] the_args) {
     final TestNG testng_runner = new TestNG();
     final Class\<?\>[] classes = {<testClassName(class)>.class};
-    final BasicTestListener listener = new BasicTestListener(new PrintWriter(System.out));
+    final BasicTestListener listener =
+      new BasicTestListener(new PrintWriter(System.out));
     testng_runner.setTestClasses(classes);
     testng_runner.addListener(listener);
     testng_runner.run();
@@ -63,15 +70,14 @@ public class <testClassName(class)> {
   @Test
   public void test_racEnabled() {
     Assert.assertTrue
-    (JMLChecker.isRACCompiled
-      (<class.fullyQualifiedName>.class),
+    (JMLChecker.isRACCompiled(<class.shortName>.class),
      "JMLUnitNG tests can only run on RAC-compiled code.");
   } 
   
   <methods:methodTest(); separator="\n">
   <methods:methodProvider(); separator="\n">
   <if(!class.abstract)>
-  <classOnlyDataProvider()>
+  <instanceDataProvider()>
   <endif>
 }
 >>
@@ -86,21 +92,26 @@ methodTest(method) ::= <<
 <method.parameters:varJavaDocLine(); separator="\n">
  */
 <if(method.parameters)>
-@Test(dependsOnMethods = { "test_racEnabled" }, dataProvider = "<dataProviderName()>")
+@Test(dependsOnMethods = { "test_racEnabled" }, 
+      dataProvider = "<dataProviderName()>")
 
 <else>
 <if(!method.constructor)>
-@Test(dependsOnMethods = { "test_racEnabled" }, dataProvider = "<classOnlyDataProviderName()>")
+@Test(dependsOnMethods = { "test_racEnabled" }, 
+      dataProvider = "<instanceDataProviderName()>")
 
 <else>
 @Test(dependsOnMethods = { "test_racEnabled" })
 
 <endif>
 <endif>
-public void <testName()>(<if(!method.constructor)>final <method.declaringClass.fullyQualifiedName> the_test_object<if(method.parameters)>, <endif><endif><varDecList(method.parameters)>) {
+public void <testName()>
+(<if(!method.constructor)>final <method.declaringClass.shortName> the_test_object<if(method.parameters)>, 
+<endif><endif><varDecList(method.parameters)>) {
   <if(!method.constructor)>
   if (the_test_object == null) {
-    throw new PreconditionSkipException("could not construct an object to test");
+    throw new PreconditionSkipException
+    ("could not construct an object to test");
   }
   <endif>
   try {
@@ -143,21 +154,27 @@ methodProvider(method) ::= <<
 @SuppressWarnings({"unchecked"})
 @DataProvider(name = "<dataProviderName()>")
 public static Iterator\<Object[]\> <dataProviderName()>() {
-  return new ParameterArrayIterator(<if(!method.constructor)><classStrategyName()>.class, <endif><method.parameters:{<strategyName(methodInfo=method, paramInfo=it)>.class}; wrap="\n    ", separator=", ">);
+  return new IteratorWrapper\<Object[]\>
+  (new ParameterArrayIterator
+       (<if(!method.constructor)><instanceStrategyName()>.class, 
+
+        <endif><method.parameters:{<strategyName(methodInfo=method, paramInfo=it)>.class}; separator=", 
+">));
 }
+
 <endif>
 
 >>
 
-classOnlyDataProvider() ::= <<
+instanceDataProvider() ::= <<
 /**
  * Data provider for methods with no parameters.
  * @return An iterator over the main class strategy.
  */
 @SuppressWarnings({"unchecked"})
-@DataProvider(name = "<classOnlyDataProviderName()>")
-public static Iterator\<Object[]\> <classOnlyDataProviderName()>() {
-  return new ParameterArrayIterator(<classStrategyName()>.class);
+@DataProvider(name = "<instanceDataProviderName()>")
+public static Iterator\<Object[]\> <instanceDataProviderName()>() {
+  return new IteratorWrapper\<Object[]\>
+  (new ParameterArrayIterator(<instanceStrategyName()>.class));
 }
-
 >>

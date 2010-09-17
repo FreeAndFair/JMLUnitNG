@@ -24,7 +24,7 @@ import java.util.Iterator;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version April 2010
+ * @version September 2010
  * @param <T> The type of the returned elements.
  */
 public class IteratorAdapter<T> implements RepeatedAccessIterator<T> {
@@ -48,8 +48,7 @@ public class IteratorAdapter<T> implements RepeatedAccessIterator<T> {
    * 
    * @param the_java_util_iterator The iterator to embed.
    */
-  // @constraint "The embedded iterator must be non-null."
-  public IteratorAdapter(final/*@ non_null @*/Iterator<T> the_java_util_iterator) {
+  public IteratorAdapter(final /*@ non_null @*/ Iterator<T> the_java_util_iterator) {
     my_iterator = the_java_util_iterator;
     if (my_iterator.hasNext()) {
       my_current = my_iterator.next();
@@ -62,21 +61,21 @@ public class IteratorAdapter<T> implements RepeatedAccessIterator<T> {
   // Interface Methods
 
   /**
-   * @return Does the iterator have any elements remaining?
+   * {@inheritDoc}
    */
   public boolean hasElement() {
     return my_is_valid;
   }
 
   /**
-   * @return What is the current element of the iterator?
+   * {@inheritDoc}
    */
   public T element() {
     return my_current;
   }
 
   /**
-   * Advance the iterator to the next element!
+   * {@inheritDoc}
    */
   public void advance() {
     if (my_iterator.hasNext()) {

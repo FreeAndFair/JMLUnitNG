@@ -8,19 +8,22 @@ main(date, class, method, param, jmlunitng_version) ::= <<
  
 package <strategyPackageName(classInfo=class)>;
 
-import org.jmlspecs.jmlunitng.iterator.*;
-import org.jmlspecs.jmlunitng.strategy.*;
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
+import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
  * Test data strategy for <class.fullyQualifiedName>. Provides
- * test values for parameter <param.type.fullyQualifiedName> <param.name>
- * of method <method>. 
+ * test values for parameter "<param.type.shortName> <param.name>" of method
+ * "<method>". 
  * 
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
  */
 public class <strategyName(methodInfo=method, paramInfo=param)>
-  extends <globalStrategyName(typeName=param.type.formattedName)> {
+  extends <globalStrategyName(typeInfo=param.type)> {
+  /**
+   * @return custom values for parameter "<param.type.shortName> <param.name>".
+   */
   public RepeatedAccessIterator\<?\> getCustomValues() {
   	return new ObjectArrayIterator\<<type(paramInfo=param)>\>
   	(new <type(paramInfo=param)>[] 

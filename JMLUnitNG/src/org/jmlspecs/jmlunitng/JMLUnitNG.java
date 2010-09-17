@@ -303,7 +303,7 @@ public final class JMLUnitNG implements Runnable {
                              rac_version);
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
-    final StringTemplate spNameTemplate = group.lookupTemplate("strategyPackageName");
+    final StringTemplate spNameTemplate = group.lookupTemplate("strategyPackageShortName");
     spNameTemplate.setAttribute("classInfo", class_info);
 
     final String outputDir = generateDestinationDirectory(the_unit);

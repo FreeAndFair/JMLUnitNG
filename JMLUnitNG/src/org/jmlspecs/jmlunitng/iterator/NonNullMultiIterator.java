@@ -15,23 +15,12 @@ import java.util.List;
 /**
  * A repeated access iterator that combines one or more other iterators, 
  * and eliminates as many <code>null</code> values as it can (the last
- * value read may be null).
+ * value read may still be null).
  * 
  * @author Daniel M. Zimmerman
- * @version July 2010
+ * @version September 2010
  */
 public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
-  // Commands
-
-  // @command "Embed the_list_of_iterators into a single iterator!"
-
-  // Constraints
-
-  // @constraint "The sequence of elements returned is exactly the
-  //              concatenation of the sequences of elements returned by
-  //              the iterators in the iterator list, in the order they
-  //              appear in the list."
-
   /**
    * The Iterator over concatenated iterators.
    */
@@ -54,7 +43,6 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
   /**
    * Advances the multi-iterator to the next non-null value, if one exists.
    */
-  //@ requires hasElement();
   @Override
   public final void advance() {
     advanceCurrentIterator();
@@ -66,18 +54,15 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
   }
 
   /**
-   * Returns the current element in the sequence.
-   * 
-   * @return The current element.
+   * {@inheritDoc}
    */
-  //@ requires hasElement();
   @Override
   public /*@ pure */ T element() {
     return my_iterators.element().element();
   }
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   @Override
   public /*@ pure */ boolean hasElement() {

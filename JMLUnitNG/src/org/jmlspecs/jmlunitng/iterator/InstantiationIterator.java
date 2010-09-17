@@ -18,7 +18,7 @@ import java.lang.reflect.Constructor;
  * specific class using an iterator of parameter lists and signatures.
  * 
  * @author Daniel M. Zimmerman
- * @version July 2010
+ * @version September 2010
  */
 public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
   /**
@@ -53,9 +53,8 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
   }
 
   /**
-   * Advances the iterator to the next value.
+   * {@inheritDoc}
    */
-  //@ requires hasElement();
   public void advance() {
     // since not all parameter lists will in fact give valid
     // values, we advance to the next valid value by checking
@@ -67,9 +66,8 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
   }
 
   /**
-   * Returns the current element.
+   * {@inheritDoc}
    */
-  //@ requires hasElement();
   public T element() {
     // for whatever the current parameter list is, we attempt
     // to find a constructor
@@ -90,8 +88,7 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
   }
 
   /**
-   * Returns true if there are more elements in this iterator. False if not.
-   * @return True if there are more elements in this iterator. False if not.
+   * {@inheritDoc}
    */
   public boolean hasElement() {
   	return my_params.hasElement();

@@ -146,33 +146,6 @@ public class TestClassGenerator {
   }
 
   /**
-   * Generates a test data class for the_class and writes it to the_writer. 
-   * 
-   * @param the_class The class to generate test data for.
-   * @param the_methods The methods to generate test data for. 
-   * @param the_writer The writer to write the test data class to.
-   * @throws IOException if an IOException occurs while writing the class.
-   */
-  /*@ requires (\forall MethodInfo m; the_methods.contains(m); 
-    @           the_class.getMethods().contains(m));
-    @*/
-  public void generateTestDataClass(final /*@ non_null @*/ ClassInfo the_class, 
-                                    final /*@ non_null @*/ Set<MethodInfo> the_methods,
-                                    final /*@ non_null @*/ Writer the_writer)
-  throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("test_data_class_java");
-    final StringTemplate t = group.getInstanceOf("main");
-    t.setAttribute("class", the_class);
-    t.setAttribute("date", getFormattedDate());
-    t.setAttribute("methods", getMethodsToTest(the_class));
-    t.setAttribute("types", getUniqueParameterTypes(the_methods));
-    t.setAttribute("packageName", the_class.getPackageName());
-    t.setAttribute("packaged", !the_class.getPackageName().equals(""));
-    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    the_writer.write(t.toString(LINE_WIDTH));
-  }
-
-  /**
    * Generates a strategy class for the specified method parameter.
    * 
    * @param the_class The class to generate a strategy class for.
@@ -220,9 +193,31 @@ public class TestClassGenerator {
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("type", the_type);
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
+    t.setAttribute("use_reflection", my_use_reflection);
     the_writer.write(t.toString(LINE_WIDTH));
   }
   
+  /**
+   * Generates the instance strategy class for the specified class.
+   * 
+   * @param the_class The class to generate a strategy class for.
+   * @param the_writer The writer to write the strategy class to.
+   * @throws IOException if an IOException occurs while writing the class.
+   */
+  //@ requires the_class.getMethods().contains(the_method);
+  //@ requires the_method.getParameters().contains(the_param);
+  public void generateInstanceStrategyClass
+  (final /*@ non_null @*/ ClassInfo the_class,
+   final /*@ non_null @*/ Writer the_writer)
+  throws IOException {
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_instance");
+    final StringTemplate t = group.getInstanceOf("main");
+    t.setAttribute("class", the_class);
+    t.setAttribute("date", getFormattedDate());
+    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
+    t.setAttribute("use_reflection", my_use_reflection);
+    the_writer.write(t.toString(LINE_WIDTH));
+  }
   /**
    * @return a formatted version of the current date and time.
    */
@@ -267,13 +262,16 @@ public class TestClassGenerator {
    */
   /*@ ensures (\forall MethodInfo m; \result.contains(m); 
     @   m.isTestable() && 
-    @   ((m.isInherited() && my_test_inherited_methods) || !m.isInherited()));
+    @   ((m.isInherited() && my_test_inherited_methods) || !m.isInherited()) &&
+    @   ((m.isDeprecated() && my_test_deprecated_methods) || !m.isDeprecated()));
    */
-  private Set<MethodInfo> getMethodsToTest(final ClassInfo the_class) {
+  private /*@ pure non_null @*/ Set<MethodInfo> getMethodsToTest
+  (final /*@ non_null @*/ ClassInfo the_class) {
     final Set<MethodInfo> methods = new HashSet<MethodInfo>();
     for (MethodInfo m : the_class.getTestableMethods()) {
       if (m.getProtectionLevel().weakerThanOrEqualTo(my_level) &&
-          (my_test_inherited_methods || !m.isInherited()))
+          (my_test_inherited_methods || !m.isInherited()) &&
+          (my_test_deprecated_methods || !m.isDeprecated()))
       {
         methods.add(m);
       }
@@ -287,13 +285,8 @@ public class TestClassGenerator {
    * @param the_methods The methods for which to find parameter basic types.
    * @return A list of basic types.
    */
-  /*@ ensures (\forall String c; \result.contains(c); 
-    @   (\exists MethodInfo m; the_methods.contains(m); 
-    @     (\exists String s; m.getParameterTypes().contains(s); s.equals(c))
-    @   )
-    @ );
-   */
-  private Set<TypeInfo> getUniqueParameterTypes(final Set<MethodInfo> the_methods) {
+  private /*@ pure non_null @*/ Set<TypeInfo> getUniqueParameterTypes
+  (final /*@ non_null @*/ Set<MethodInfo> the_methods) {
     final Set<TypeInfo> classes = new HashSet<TypeInfo>();
     for (MethodInfo m : the_methods) {
       for (ParameterInfo p : m.getParameters()) {
@@ -319,9 +312,9 @@ public class TestClassGenerator {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
     final StringTemplate tcNameTemplate = group.lookupTemplate("testClassName");
     final StringTemplate msNameTemplate = group.lookupTemplate("strategyName");
-    final StringTemplate csNameTemplate = group.lookupTemplate("classStrategyName");
+    final StringTemplate isNameTemplate = group.lookupTemplate("instanceStrategyName");
     final StringTemplate gsNameTemplate = group.lookupTemplate("globalStrategyName");
-    final StringTemplate pkgNameTemplate = group.lookupTemplate("strategyPackageName");
+    final StringTemplate pkgNameTemplate = group.lookupTemplate("strategyPackageShortName");
     final Set<MethodInfo> methods_to_test = getMethodsToTest(the_class);
     
     // initialize name templates
@@ -334,7 +327,7 @@ public class TestClassGenerator {
     generateTestClass(the_class, methods_to_test, tcWriter);
     tcWriter.close();
     
-    // generate the strategy classes - there are four stages here
+    // generate the strategy classes - there are three stages here
     
     // first: individual method parameter strategy classes
     for (MethodInfo m : methods_to_test) {
@@ -354,12 +347,20 @@ public class TestClassGenerator {
     
     for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
       gsNameTemplate.reset();
-      gsNameTemplate.setAttribute("typeName", t);
+      gsNameTemplate.setAttribute("typeInfo", t);
       final FileWriter gsWriter = 
         new FileWriter(new File(the_dir + pkgNameTemplate.toString() + File.separator + 
                                 gsNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX));
       generateGlobalStrategyClass(the_class, t, gsWriter);
       gsWriter.close();
     }
+    
+    // third: instance strategy class for this class
+    
+    final FileWriter isWriter = 
+      new FileWriter(new File(the_dir + pkgNameTemplate.toString() + File.separator + 
+                              isNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX));
+    generateInstanceStrategyClass(the_class, isWriter);
+    isWriter.close();
   }
 }

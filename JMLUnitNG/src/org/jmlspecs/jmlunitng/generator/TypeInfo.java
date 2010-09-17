@@ -80,26 +80,20 @@ public class TypeInfo {
   }
 
   /**
-   * Returns the unqualified name of the class.
-   * 
-   * @return The name of the class
+   * @return The unqualified name of the class.
    */
   public String getShortName() {
     return my_short_name;
   }
 
   /**
-   * Returns the fully qualified name of the class. Does not include generics information.
-   * 
-   * @return The name of the class
+   * @return The fully qualified name of the class, without generic information.
    */
   public String getFullyQualifiedName() {
     return my_name;
   }
   
   /**
-   * Returns the generic component of the type or the empty string if one does not exist.
-   * 
    * @return The generic component of the type.
    */
   public String getGenericComponent() {
@@ -107,18 +101,21 @@ public class TypeInfo {
   }
 
   /**
-   * Returns the fully qualified name of the type with '.' characters replaced
-   * by '_' and [] replaced with "Array".
-   * 
-   * @return Formatted fully qualified name of the type.
+   * @return A formatted fully qualified name of the type, with '.' characters
+   * replaced by '_' and [] replaced by "Array".
    */
   public String getFormattedName() {
     return my_name.replace('.', '_').replaceAll("\\[\\]", "Array");
   }
 
   /**
-   * Returns the package name of the class.
-   * 
+   * @return true if this class is in a package, false otherwise.
+   */
+  public boolean isPackaged() {
+    return my_name.length() > my_short_name.length();
+  }
+  
+  /**
    * @return The package name of the class
    */
   public String getPackageName() {
@@ -132,10 +129,6 @@ public class TypeInfo {
   }
 
   /**
-   * Returns true if the type is a primitive, false otherwise. Primitive types
-   * are "boolean", "int", "long", "float", "double", "byte", "short", "char",
-   * and "java.lang.String".
-   * 
    * @return true if the type is a primitive, false otherwise.
    */
   // @ensures \result == PRIMITIVE_TYPES.contains(my_name);
@@ -144,8 +137,8 @@ public class TypeInfo {
   }
 
   /**
-   * Compares with object for equality. To ClassInfo objects are equal if they
-   * have the same fully qualified names.
+   * Compares with object for equality. Two ClassInfo objects are equal if they
+   * have the same fully qualified name.
    * 
    * @param the_o The object to compare.
    * @return true if qualified names are equal. false otherwise.
@@ -161,17 +154,13 @@ public class TypeInfo {
   }
 
   /**
-   * Returns a hash of this object.
-   * 
-   * @return The hash code of this object.
+   * @return A hash code for this object.
    */
   public int hashCode() {
     return my_name.hashCode();
   }
 
   /**
-   * Returns the fully qualified name as the string representation of the type.
-   * 
    * @return The fully qualified name.
    */
   public String toString() {

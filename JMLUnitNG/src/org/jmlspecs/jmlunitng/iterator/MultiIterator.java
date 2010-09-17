@@ -10,26 +10,16 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * A repeated access iterator that combines one or more other iterators.
  * 
  * @author Daniel M. Zimmerman
- * @version July 2010
+ * @version September 2010
  */
 public class MultiIterator<T> implements RepeatedAccessIterator<T> {
-  // Commands
-
-  // @command "Embed the_list_of_iterators into a single iterator!"
-
-  // Constraints
-
-  // @constraint "The sequence of elements returned is exactly the
-  //              concatenation of the sequences of elements returned by
-  //              the iterators in the iterator list, in the order they
-  //              appear in the list."
-
   /**
    * The Iterator over concatenated iterators.
    */
@@ -42,39 +32,45 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    * @param iterators The list of iterators to iterate over.
    */
   public MultiIterator(final List<RepeatedAccessIterator<T>> the_iterators) {
+    // only keep non-empty iterators
+    final List<RepeatedAccessIterator<T>> non_empties = 
+      new LinkedList<RepeatedAccessIterator<T>>();
+    for (RepeatedAccessIterator<T> i : the_iterators) {
+      if (i.hasElement()) {
+        non_empties.add(i);
+      }
+    }
     my_iterators = 
-      new IteratorAdapter<RepeatedAccessIterator<T>>(the_iterators.iterator());
-    advance();
+      new IteratorAdapter<RepeatedAccessIterator<T>>(non_empties.iterator());
+    // at this point, the iterator either has an element or is completely empty
   }
 
   /**
-   * Advances the MultiIterator to the next value in the sequence.
+   * {@inheritDoc}
    */
-  //@ requires hasElement();
   @Override
   public final void advance() {
-    if (my_iterators.hasElement()) {
+    if (my_iterators.hasElement() && my_iterators.element().hasElement()) {
       my_iterators.element().advance();
     }
     while (my_iterators.hasElement() && 
            !my_iterators.element().hasElement()) {
       my_iterators.advance();
     }
+    // at this point, the iterator either has an element or is completely empty, 
+    // as all the individual iterators are non-empty.
   }
 
   /**
-   * Returns the current element in the sequence.
-   * 
-   * @return The current element.
+   * {@inheritDoc}
    */
-  //@ requires hasElement();
   @Override
   public /*@ pure */ T element() {
     return my_iterators.element().element();
   }
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   @Override
   public /*@ pure */ boolean hasElement() {
