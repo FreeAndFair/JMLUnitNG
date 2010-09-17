@@ -85,11 +85,6 @@ public class TestClassGenerator {
   public static final int LINE_WIDTH = 120;
   
   /**
-   * The maximum name level for which to generate unique names.
-   */
-  private static final int MAX_NAME_LEVEL = 3;
-  
-  /**
    * The max protection level for which to generate tests.
    */
   private final ProtectionLevel my_level;

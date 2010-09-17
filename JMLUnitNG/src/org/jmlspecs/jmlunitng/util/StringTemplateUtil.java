@@ -26,7 +26,8 @@ import org.antlr.stringtemplate.StringTemplateGroupLoader;
  * Handles initialization of StringTemplate.
  * 
  * @author Jonathan Hogins
- * @version April 2010
+ * @author Daniel M. Zimmerman
+ * @version September 2010
  */
 public final class StringTemplateUtil {
   /**
@@ -37,7 +38,7 @@ public final class StringTemplateUtil {
   /**
    * Has StringTemplate been instantiated?
    */
-  private static boolean my_is_initialized;
+  private static boolean my_initialized;
   
   /**
    * Private constructor to prevent initialization.
@@ -48,13 +49,13 @@ public final class StringTemplateUtil {
   /**
    * Initialize StringTemplates if it not already initialized.
    */
-  //@ ensures my_is_initialized == true;
+  //@ ensures isInitialized();
   public synchronized static void initialize() {
-    if (!my_is_initialized) {
+    if (!my_initialized) {
       final StringTemplateGroupLoader loader =
         new CommonGroupLoader(TEMPLATE_PATH, null);
       StringTemplateGroup.registerGroupLoader(loader);
-      my_is_initialized = true;
+      my_initialized = true;
     }
   }
   /**
@@ -62,8 +63,8 @@ public final class StringTemplateUtil {
    * StringTemplateUtil.initialize().
    * @return True if initialized. False if not.
    */
-  //@ ensures \result == my_is_initialized;
-  public static boolean isInitialized() {
-    return my_is_initialized;
+  //@ constraint \old(isInitialized()) ==> isInitialized();
+  public synchronized static boolean isInitialized() {
+    return my_initialized;
   }
 }

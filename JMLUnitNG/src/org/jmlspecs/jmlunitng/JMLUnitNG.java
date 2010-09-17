@@ -18,8 +18,9 @@ import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,6 +37,7 @@ import org.jmlspecs.jmlunitng.generator.InfoFactory;
 import org.jmlspecs.jmlunitng.generator.MethodInfo;
 import org.jmlspecs.jmlunitng.generator.ProtectionLevel;
 import org.jmlspecs.jmlunitng.generator.TestClassGenerator;
+import org.jmlspecs.jmlunitng.util.JavaSuffixFilter;
 import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
 import org.jmlspecs.openjml.API;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
@@ -74,6 +76,11 @@ public final class JMLUnitNG implements Runnable {
   private final JMLUnitNGOptionStore my_opts;
   
   /**
+   * The set of files/directories we have cleaned on this run.
+   */
+  private final Set<String> my_cleaned_files = new HashSet<String>();
+  
+  /**
    * Private constructor to prevent initialization.
    * 
    * @param the_opts The command line options store to be used.
@@ -98,15 +105,14 @@ public final class JMLUnitNG implements Runnable {
    * @param the_args Arguments from the command line.
    */
   public static void main(final String[] the_args) {
-    JMLUnitNGParser clops;
     try {
-      clops = new JMLUnitNGParser();
+      final JMLUnitNGParser clops = new JMLUnitNGParser();
       clops.parse(the_args);
       (new JMLUnitNG(clops.getOptionStore())).run();
     }
-    catch (final InvalidOptionPropertyValueException e1) {
+    catch (final InvalidOptionPropertyValueException e) {
       System.err.println("Invalid CLOPS option file.");
-      e1.printStackTrace();
+      e.printStackTrace();
     } catch (final AutomatonException e) {
       System.err.println("Automaton Exception: " + e.getLocalizedMessage());
       e.printStackTrace();
@@ -135,22 +141,33 @@ public final class JMLUnitNG implements Runnable {
         }
         Runtime.getRuntime().exit(1);
     }
+    if (my_opts.isCleanSet()) {
+      final List<File> files_to_clean = new LinkedList<File>(my_opts.getFiles());
+      files_to_clean.addAll(my_opts.getDashFiles());
+      for (File f : files_to_clean) {
+        try {
+          cleanFile(f);
+        } catch (IOException e) {
+          System.err.println("Error occurred while cleaning files.");
+          e.printStackTrace();
+          Runtime.getRuntime().exit(1);
+        }
+      }
+    }
     final List<File> file_list = filesToProcess();
     final String classpath = generateClasspath();
     final String specspath = generateSpecspath();
-    final String[] arg =
+    final String[] openjml_args =
         new String[] {"-noPurityCheck", "-noInternalSpecs", 
                       "-cp", classpath, "-specspath", specspath};
     try {
-      final API api = new API(arg);
+      final API api = new API(openjml_args);
       final List<JmlCompilationUnit> units = 
         api.parseFiles(file_list.toArray(new File[0]));
       final int numOfErrors = api.enterAndCheck(units);
       if (numOfErrors > 0) {
         System.err.println("Encountered " + numOfErrors + " errors.");
       } else {
-        // TODO: take care of clearing out all the existing JMLUnitNG files, if necessary
-        
         for (JmlCompilationUnit unit : units) {
           processCompilationUnit(unit);
         }
@@ -177,9 +194,9 @@ public final class JMLUnitNG implements Runnable {
     }
     if (file_set.isEmpty()) {
       System.err.println("Error: no Java files specified.");
-      System.exit(1);
+      Runtime.getRuntime().exit(1);
     }
-    // TODO: we don't properly de-dupe files with "." in the path
+    
     return new ArrayList<File>(file_set);
   }
   
@@ -196,7 +213,14 @@ public final class JMLUnitNG implements Runnable {
       if (f.isDirectory()) {
         the_add_set.addAll(findJavaFiles(f));
       } else if (f.getPath().endsWith(JAVA_SUFFIX)) {
-        the_add_set.add(f);
+        try {
+          the_add_set.add(f.getCanonicalFile());
+        } catch (IOException e) {
+          // this should never happen
+          System.err.println("I/O exception while finding files.");
+          e.printStackTrace();
+          Runtime.getRuntime().exit(1);
+        }
       } // don't add non-java files to the list
     }
   }
@@ -210,15 +234,40 @@ public final class JMLUnitNG implements Runnable {
   //@ requires the_directory.isDirectory();
   private List<File> findJavaFiles(final File the_directory) {
     final List<File> result = new LinkedList<File>();
-    final File[] all_packed_files = the_directory.listFiles();
+    final File[] all_packed_files = the_directory.listFiles(JavaSuffixFilter.instance());
     for (int k = 0; k < all_packed_files.length; k++) {
       if (all_packed_files[k].isDirectory()) {
         result.addAll(findJavaFiles(all_packed_files[k]));
-      } else if (all_packed_files[k].getPath().endsWith(JAVA_SUFFIX)) {
-        result.add(all_packed_files[k]);
+      } else if (isJavaSourcePath(all_packed_files[k].getPath())) {
+        try {
+          result.add(all_packed_files[k].getCanonicalFile());
+        } catch (IOException e) {
+          // this should never happen
+          System.err.println("I/O exception while finding files.");
+          e.printStackTrace();
+          Runtime.getRuntime().exit(1);
+        }
       }
     }
     return result;
+  }
+  
+  /**
+   * @return true if the specified pathname represents a Java file
+   * that was not generated by JMLUnitNG.
+   */
+  private boolean isJavaSourcePath(final String the_path) {
+    StringTemplateUtil.initialize();
+    final StringTemplateGroup group = 
+      StringTemplateGroup.loadGroup("shared_java");
+    final String testSuffix = 
+      group.lookupTemplate("testClassSuffix").toString();
+    final String packageSuffix = 
+      group.lookupTemplate("strategyPackageSuffix").toString();
+
+    return the_path.endsWith(JAVA_SUFFIX) &&
+           !the_path.endsWith(testSuffix + JAVA_SUFFIX) &&
+           !the_path.contains(packageSuffix + File.separator);
   }
   
   /**
@@ -310,14 +359,67 @@ public final class JMLUnitNG implements Runnable {
     final String strategyOutputDir = 
       outputDir + spNameTemplate.toString() + File.separator;
     final File[] dirs = new File[] { new File(outputDir), new File(strategyOutputDir) };
-    for (File f : dirs) {
-      System.err.println("creating directory " + f);
-      if (!f.mkdirs() && !f.isDirectory()) {
-        System.err.println("Could not create destination directory " + f);
-        Runtime.getRuntime().exit(1);
+
+    if (!my_opts.isNoGenSet()) {
+      for (File f : dirs) {
+        System.err.println("Creating directory " + f);
+        if (!f.mkdirs() && !f.isDirectory()) {
+          System.err.println("Could not create destination directory " + f);
+          Runtime.getRuntime().exit(1);
+        }
+      }
+    
+      generator.generateClasses(class_info, outputDir);
+    }
+  }
+  
+  /**
+   * Clean the specified file/directory (recursively), by removing any 
+   * JMLUnitNG-generated files and directories.
+   * 
+   * @param the_dir The directory to clean.
+   */
+  private void cleanFile(final File the_file) throws IOException {
+    StringTemplateUtil.initialize();
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
+    final String genString = group.lookupTemplate("generatedString").toString();
+    final String dnmString = group.lookupTemplate("doNotModifyString").toString();
+    final String spSuffix = group.lookupTemplate("strategyPackageSuffix").toString();
+
+    if (my_cleaned_files.add(the_file.getCanonicalPath())) {
+      if (the_file.isDirectory()) {
+        for (File f : the_file.listFiles(JavaSuffixFilter.instance())) {
+          cleanFile(f);
+        }
+      } else {
+        // for each file, we will delete it if it has a JMLUnitNG-generated
+        // comment at the top
+        final BufferedReader br = new BufferedReader(new FileReader(the_file));
+        boolean genStringFound = false;
+        boolean dnmStringFound = false;
+        String line = br.readLine();
+        while (line != null && (!genStringFound || !dnmStringFound)) {
+          genStringFound |= line.contains(genString);
+          dnmStringFound |= line.contains(dnmString);
+          line = br.readLine();
+        }
+        // if we found both strings, delete the file
+        if (genStringFound && dnmStringFound) {
+          System.err.println("Deleting " + the_file);
+          if (!the_file.delete()) {
+            System.err.println("Unable to delete " + the_file + ", check permissions.");
+          }
+        }
+      }
+      // if the directory is a JMLUnitNG-created directory, delete it too
+      // (it should be empty by now)
+      if (the_file.getCanonicalPath().endsWith(spSuffix)) {
+        System.err.println("Deleting directory " + the_file);
+        if (!the_file.delete()) {
+          System.err.println("Unable to delete " + the_file + ", check permissions.");
+        }
       }
     }
-    generator.generateClasses(class_info, outputDir);
   }
   
   /**

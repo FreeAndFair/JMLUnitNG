@@ -157,15 +157,13 @@ public class MethodInfo {
   private /*@ pure non_null @*/ String generateDetailedName() {
     StringBuffer sb = new StringBuffer(my_name);
     boolean first = true;
-    if (my_parameters.size() > 0) {
-      for (ParameterInfo p : my_parameters) {
-        if (first) {
-          sb.append("_");
-          first = false;
-        }
+    for (ParameterInfo p : my_parameters) {
+      if (first) {
         sb.append("_");
-        sb.append(p.getType().getFormattedName());
+        first = false;
       }
+      sb.append("_");
+      sb.append(p.getType().getFormattedName());
     }
     return sb.toString();
   }

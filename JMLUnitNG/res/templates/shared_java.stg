@@ -3,7 +3,7 @@ group shared_java;
 instanceDataProviderName() ::= "p_instance_only"
 dataProviderName() ::= "p_<method.detailedName>"
 
-testClassName(classInfo) ::= "<classInfo.shortName>_JML_Test"
+testClassName(classInfo) ::= "<classInfo.shortName><testClassSuffix()>"
 
 testName() ::= <<
 test_<method.detailedName>
@@ -57,8 +57,10 @@ typeTransMap ::= [
         default:key // anything other than an atomic type
 ]
 
-strategyPackageShortName(classInfo) ::= "<classInfo.shortName>_JML_Data"
-strategyPackageName(classInfo) ::= "<if(classInfo.packaged)><classInfo.packageName>.<endif><classInfo.shortName>_JML_Data"
+testClassSuffix() ::= "_JML_Test"
+strategyPackageSuffix() ::= "_JML_Data"
+strategyPackageShortName(classInfo) ::= "<classInfo.shortName><strategyPackageSuffix()>"
+strategyPackageName(classInfo) ::= "<if(classInfo.packaged)><classInfo.packageName>.<endif><strategyPackageShortName(classInfo=classInfo)>"
 strategyName(methodInfo, paramInfo) ::= "<methodInfo.detailedName>__<paramInfo.name>"
 instanceStrategyName() ::= "InstanceStrategy"
 globalStrategyName(typeInfo) ::= "GlobalStrategy_<typeInfo.formattedName>"
