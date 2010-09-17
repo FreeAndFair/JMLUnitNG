@@ -40,11 +40,11 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.TreeScanner;
 
 /**
- * Factory class that generates CLASS_INFO and METHOD_INFO objects.
+ * Factory class that generates ClassInfo and MethodInfo objects.
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version March 2010
+ * @version September 2010
  */
 public final class InfoFactory {
   /**
@@ -73,32 +73,11 @@ public final class InfoFactory {
   }
 
   /**
-   * Creates a ClassInfo object for the given Class. Returns a cached version if
-   * one exists for the class's qualified name.
-   * 
-   * @param the_class The Class generate a ClassInfo object for.
-   * @return A ClassInfo object representing the class.
-   */
-  public static ClassInfo getClassInfo(final Class<?> the_class) {
-    // TODO: Implement.
-    return null;
-  }
-
-  /**
    * Creates a ClassInfo object for the given ClassSymbol. Returns a cached
    * version if one exists for the class's qualified name.
    * 
    * @param the_class The Class generate a ClassInfo object for.
    * @return A ClassInfo object representing the class.
-   */
-  /*@ ensures \result.equals(CLASS_CACHE.get(the_class.getQualifiedName().toString())) &&
-    @         !\old (CLASS_CACHE).containsKey(the_class.getQualifiedName().toString()) ==>
-    @           (\result.getFullyQualifiedName().equals(the_class.getQualifiedName().toString()) &&
-    @             \result.getParent() == null <==> the_class.getSuperclass() == null &&
-    @             \result.getParent() != null ==> 
-    @               \result.getParent().equals(getClassInfo((ClassSymbol) the_class.getSuperclass().tsym)) &&
-    @             \result.getProtectionLevel().equals(getLevel(the_class.getModifiers())) &&
-    @             \result.isAbstract() == the_class.getModifiers().contains(Modifier.ABSTRACT));
    */
   public synchronized static ClassInfo getClassInfo(final ClassSymbol the_class) {
     if (CLASS_CACHE.containsKey(the_class.getQualifiedName().toString())) {

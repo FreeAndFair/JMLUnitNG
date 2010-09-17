@@ -28,6 +28,7 @@ ARGS::
     [allowmultiple="true", splitter=":", mustexist="true",
      mustbedir="true"]
   DryRun: {"--dry-run"}
+  NoGen: {"--no-gen"}
 
 FORMAT::
   (Option | Files)* (DashDash DashFiles*)?;  
@@ -36,7 +37,7 @@ WHERE::
   Option:  
     Destination|RACVersion|Reflection|Help|Package|
     Deprecation|Verbose|Inherited|Public|Package|Protected|
-    Clean|Prune|Classpath|Specspath|DryRun;
+    Clean|Prune|Classpath|Specspath|DryRun|NoGen;
 
 FLY::
 

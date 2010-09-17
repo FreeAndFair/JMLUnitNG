@@ -314,4 +314,21 @@ public interface JMLUnitNGOptionsInterface {
    */ 
   boolean getDryRun();
   
+
+// Option NoGen. 
+// Aliases: [--no-gen]
+
+  /**
+   * @return true if the option NoGen has been used
+   * in the command line.
+   */
+  boolean isNoGenSet();
+
+  /**
+   * Get the value of {@code Option} NoGen.
+   * @return the value of the option NoGen if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getNoGen();
+  
 }

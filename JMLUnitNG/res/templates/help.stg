@@ -31,7 +31,9 @@ or recursively contained in directories listed in, path-list.
   generated files for path-list, including any manual modifications.
 --prune : Remove from the destination path any old JMLUnitNG-
   generated files for path-list that do not conform to the current 
-  API of the classes under test.
+  API of the classes under test and the current JMLUnitNG options.
+--no-gen : Do not generate tests, use in conjunction with --clean
+  or --prune to remove unwanted JMLUnitNG-generated files.
 --dry-run : Display status/progress information about the operations 
   that would be performed but do not modify the filesystem.
 -v, --verbose : Display status/progress information during test 

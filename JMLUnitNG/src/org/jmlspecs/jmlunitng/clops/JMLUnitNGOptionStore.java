@@ -29,6 +29,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   private final FileListOption ogClasspath;
   private final FileListOption ogSpecspath;
   private final BooleanOption ogDryRun;
+  private final BooleanOption ogNoGen;
   private final CLOPSErrorOption CLOPSERROROPTION;
 
   public JMLUnitNGOptionStore() throws InvalidOptionPropertyValueException {
@@ -104,6 +105,9 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogDryRun = new BooleanOption("DryRun", "(?:--dry-run)");
     addOption(ogDryRun);
     ogDryRun.setProperty("aliases", "--dry-run");
+    ogNoGen = new BooleanOption("NoGen", "(?:--no-gen)");
+    addOption(ogNoGen);
+    ogNoGen.setProperty("aliases", "--no-gen");
   
     CLOPSERROROPTION = new ie.ucd.clops.runtime.options.CLOPSErrorOption();
     addOption(CLOPSERROROPTION);
@@ -119,6 +123,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogPrune);
     ogOption.addOptionOrGroup(ogClasspath);
     ogOption.addOptionOrGroup(ogDeprecation);
+    ogOption.addOptionOrGroup(ogNoGen);
     ogOption.addOptionOrGroup(ogClean);
     ogOption.addOptionOrGroup(ogProtected);
     ogOption.addOptionOrGroup(ogHelp);
@@ -127,8 +132,8 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogPackage);
     ogOption.addOptionOrGroup(ogDryRun);
     ogOption.addOptionOrGroup(ogDestination);
-    ogOption.addOptionOrGroup(ogInherited);
     ogOption.addOptionOrGroup(ogPublic);
+    ogOption.addOptionOrGroup(ogInherited);
     ogOption.addOptionOrGroup(ogRACVersion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogDestination);
@@ -149,6 +154,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogAllOptions.addOptionOrGroup(ogClasspath);
     ogAllOptions.addOptionOrGroup(ogSpecspath);
     ogAllOptions.addOptionOrGroup(ogDryRun);
+    ogAllOptions.addOptionOrGroup(ogNoGen);
   }
   
 // Option Destination.
@@ -581,6 +587,30 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   
   public BooleanOption getDryRunOption() {
     return ogDryRun;
+  }
+  
+// Option NoGen.
+// Aliases: [--no-gen]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isNoGenSet() {
+    return ogNoGen.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getNoGen() {
+    return ogNoGen.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawNoGen() {
+    return ogNoGen.getRawValue();
+  }
+  
+  public BooleanOption getNoGenOption() {
+    return ogNoGen;
   }
   
 }

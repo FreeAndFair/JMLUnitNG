@@ -325,12 +325,10 @@ public final class JMLUnitNG implements Runnable {
    */
   private ProtectionLevel levelToTest() {
     ProtectionLevel level = ProtectionLevel.PUBLIC;
-    if (my_opts.isProtectedSet())
-    {
+    if (my_opts.isProtectedSet()) {
       level = ProtectionLevel.PROTECTED;
     }
-    if (my_opts.isPackageSet())
-    {
+    if (my_opts.isPackageSet()) {
       level = ProtectionLevel.NO_LEVEL;
     }
     return level;
