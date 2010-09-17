@@ -11,11 +11,11 @@ ARGS::
   DashFiles:{}:{file-list}:
     [allowmultiple="false", between="", mustexist="true",
      canbedir="true", allowdash="true"]
-  Reflection:{"-r", "--reflection"}
+  Reflection:{"--reflection"}
   Help:{"-h", "--help"} 
-  Deprecation:{"-d", "--deprecation"}
+  Deprecation:{"--deprecation"}
   Verbose: {"-v", "--verbose"}
-  Inherited: {"-i", "--inherited"}
+  Inherited: {"--inherited"}
   Public: {"--public"}
   Protected: {"--protected"}
   Package: {"--package"}

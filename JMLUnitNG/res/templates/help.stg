@@ -28,10 +28,14 @@ or recursively contained in directories listed in, path-list.
 --package : Generate tests for package (no protection modifier), 
   protected and public methods.
 --clean : Remove from the destination path all old JMLUnitNG-
-  generated files for path-list, including any manual modifications.
+  generated files, including any manual modifications. If no 
+  destination path is set, all files and directories in path-list
+  are cleaned.
 --prune : Remove from the destination path any old JMLUnitNG-
   generated files for path-list that do not conform to the current 
   API of the classes under test and the current JMLUnitNG options.
+  If no destination path is set, all files and directories in 
+  path-list are pruned.
 --no-gen : Do not generate tests, use in conjunction with --clean
   or --prune to remove unwanted JMLUnitNG-generated files.
 --dry-run : Display status/progress information about the operations 

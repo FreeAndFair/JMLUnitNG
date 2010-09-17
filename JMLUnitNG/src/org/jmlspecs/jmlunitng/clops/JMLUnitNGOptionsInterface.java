@@ -95,7 +95,7 @@ public interface JMLUnitNGOptionsInterface {
   
 
 // Option Reflection. 
-// Aliases: [-r, --reflection]
+// Aliases: [--reflection]
 
   /**
    * @return true if the option Reflection has been used
@@ -129,7 +129,7 @@ public interface JMLUnitNGOptionsInterface {
   
 
 // Option Deprecation. 
-// Aliases: [-d, --deprecation]
+// Aliases: [--deprecation]
 
   /**
    * @return true if the option Deprecation has been used
@@ -163,7 +163,7 @@ public interface JMLUnitNGOptionsInterface {
   
 
 // Option Inherited. 
-// Aliases: [-i, --inherited]
+// Aliases: [--inherited]
 
   /**
    * @return true if the option Inherited has been used

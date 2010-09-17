@@ -58,21 +58,21 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogDashFiles.setProperty("mustexist", "true");
     ogDashFiles.setProperty("canbedir", "true");
     ogDashFiles.setProperty("allowdash", "true");
-    ogReflection = new BooleanOption("Reflection", "(?:-r)|(?:--reflection)");
+    ogReflection = new BooleanOption("Reflection", "(?:--reflection)");
     addOption(ogReflection);
-    ogReflection.setProperty("aliases", "-r,--reflection");
+    ogReflection.setProperty("aliases", "--reflection");
     ogHelp = new BooleanOption("Help", "(?:-h)|(?:--help)");
     addOption(ogHelp);
     ogHelp.setProperty("aliases", "-h,--help");
-    ogDeprecation = new BooleanOption("Deprecation", "(?:-d)|(?:--deprecation)");
+    ogDeprecation = new BooleanOption("Deprecation", "(?:--deprecation)");
     addOption(ogDeprecation);
-    ogDeprecation.setProperty("aliases", "-d,--deprecation");
+    ogDeprecation.setProperty("aliases", "--deprecation");
     ogVerbose = new BooleanOption("Verbose", "(?:-v)|(?:--verbose)");
     addOption(ogVerbose);
     ogVerbose.setProperty("aliases", "-v,--verbose");
-    ogInherited = new BooleanOption("Inherited", "(?:-i)|(?:--inherited)");
+    ogInherited = new BooleanOption("Inherited", "(?:--inherited)");
     addOption(ogInherited);
-    ogInherited.setProperty("aliases", "-i,--inherited");
+    ogInherited.setProperty("aliases", "--inherited");
     ogPublic = new BooleanOption("Public", "(?:--public)");
     addOption(ogPublic);
     ogPublic.setProperty("aliases", "--public");
@@ -129,12 +129,12 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogHelp);
     ogOption.addOptionOrGroup(ogSpecspath);
     ogOption.addOptionOrGroup(ogReflection);
-    ogOption.addOptionOrGroup(ogPackage);
     ogOption.addOptionOrGroup(ogDryRun);
+    ogOption.addOptionOrGroup(ogPackage);
     ogOption.addOptionOrGroup(ogDestination);
+    ogOption.addOptionOrGroup(ogRACVersion);
     ogOption.addOptionOrGroup(ogPublic);
     ogOption.addOptionOrGroup(ogInherited);
-    ogOption.addOptionOrGroup(ogRACVersion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogDestination);
     ogAllOptions.addOptionOrGroup(ogRACVersion);
@@ -278,7 +278,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   }
   
 // Option Reflection.
-// Aliases: [-r, --reflection]
+// Aliases: [--reflection]
   
   /**
    * {@inheritDoc}
@@ -326,7 +326,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   }
   
 // Option Deprecation.
-// Aliases: [-d, --deprecation]
+// Aliases: [--deprecation]
   
   /**
    * {@inheritDoc}
@@ -374,7 +374,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   }
   
 // Option Inherited.
-// Aliases: [-i, --inherited]
+// Aliases: [--inherited]
   
   /**
    * {@inheritDoc}
