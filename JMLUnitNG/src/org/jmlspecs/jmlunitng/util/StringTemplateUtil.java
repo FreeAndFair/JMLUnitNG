@@ -22,7 +22,9 @@ public final class StringTemplateUtil {
   /**
    * The path to all templates.
    */
-  private static final String TEMPLATE_PATH = "res" + File.separator + "templates";
+  private static final String TEMPLATE_PATH = 
+    "org" + File.separator + "jmlspecs" + File.separator + 
+    "jmlunitng" + File.separator + "templates";
   
   /**
    * A flag indicating whether StringTemplate has been initialized.
