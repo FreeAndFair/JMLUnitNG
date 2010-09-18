@@ -206,18 +206,8 @@ public class TestClassGenerator {
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
     
     if (!my_no_gen) {
-      my_logger.print("Generating strategy for parameter " + the_param.getName() + 
-                      " of "+ the_method.getName() + "(");
-      final List<ParameterInfo> parameters = the_method.getParameters();
-      for (int i = 0; i < parameters.size() - 1; i++) {
-        final ParameterInfo param = parameters.get(i);
-        my_logger.print(param.getType().getShortName() + " " + param.getName() + ", ");
-      }
-      if (!parameters.isEmpty()) {
-        final ParameterInfo param = parameters.get(parameters.size() - 1);
-        my_logger.print(param.getType().getShortName() + " " + param.getName());      
-      }
-      my_logger.println(")");
+      my_logger.println("Generating strategy for parameter " + the_param.getName() + 
+                        " of " + the_method);
     }
     
     the_writer.write(t.toString(LINE_WIDTH));
@@ -329,16 +319,17 @@ public class TestClassGenerator {
                               final /*@ non_null @*/ String the_dir) throws IOException {
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
-    final StringTemplate tcNameTemplate = group.lookupTemplate("testClassName");
-    final StringTemplate msNameTemplate = group.lookupTemplate("strategyName");
-    final StringTemplate isNameTemplate = group.lookupTemplate("instanceStrategyName");
-    final StringTemplate gsNameTemplate = group.lookupTemplate("globalStrategyName");
-    final StringTemplate pkgNameTemplate = group.lookupTemplate("strategyPackageShortName");
+    final StringTemplate tc_name = group.lookupTemplate("testClassName");
+    final StringTemplate ms_name = group.lookupTemplate("strategyName");
+    final StringTemplate is_name = group.lookupTemplate("instanceStrategyName");
+    final StringTemplate gs_name = group.lookupTemplate("globalStrategyName");
+    final StringTemplate pkg_name = group.lookupTemplate("strategyPackageShortName");
+ 
     final Set<MethodInfo> methods_to_test = getMethodsToTest(the_class);
     
     // initialize name templates
-    tcNameTemplate.setAttribute("classInfo", the_class);
-    pkgNameTemplate.setAttribute("classInfo", the_class);
+    tc_name.setAttribute("classInfo", the_class);
+    pkg_name.setAttribute("classInfo", the_class);
 
     // this stream is for writing to memory, in the case of a dry run
     
@@ -347,15 +338,15 @@ public class TestClassGenerator {
     
     // generate the (single) test class
     
-    File f = new File(the_dir + tcNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX);
+    File f = new File(the_dir + tc_name.toString() + JMLUnitNG.JAVA_SUFFIX);
     
     if (my_gen_files) {
-      generateTestClass(the_class, methods_to_test, bw);
-      baos.reset();
-    } else {;
       final FileWriter fw = new FileWriter(f);
       generateTestClass(the_class, methods_to_test, fw);
       fw.close();
+    } else {
+      generateTestClass(the_class, methods_to_test, bw);
+      baos.reset();
     }
     my_created_files.add(f.getCanonicalPath());
     
@@ -364,18 +355,21 @@ public class TestClassGenerator {
     // first: individual method parameter strategy classes
     for (MethodInfo m : methods_to_test) {
       for (ParameterInfo p : m.getParameters()) {
-        msNameTemplate.reset();
-        msNameTemplate.setAttribute("methodInfo", m);
-        msNameTemplate.setAttribute("paramInfo", p);
-        f = new File(the_dir + pkgNameTemplate.toString() + File.separator +
-                     msNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX);
-        if (my_gen_files) {
-          generateMethodParamStrategyClass(the_class, m, p, bw);
-          baos.reset();
-        } else {
+        ms_name.reset();
+        ms_name.setAttribute("methodInfo", m);
+        ms_name.setAttribute("paramInfo", p);
+        f = new File(the_dir + pkg_name.toString() + File.separator +
+                     ms_name.toString() + JMLUnitNG.JAVA_SUFFIX);
+        if (my_gen_files && !f.exists()) {
           final FileWriter fw = new FileWriter(f);
           generateMethodParamStrategyClass(the_class, m, p, fw);
           fw.close(); 
+        } else if (my_gen_files) {
+          my_logger.println("Not overwriting existing strategy for parameter " + 
+                            p.getName() +  " of " + m); 
+        } else {
+          generateMethodParamStrategyClass(the_class, m, p, bw);
+          baos.reset();
         }
         my_created_files.add(f.getCanonicalPath());
       }
@@ -384,32 +378,38 @@ public class TestClassGenerator {
     // second: global strategy classes for all data types
     
     for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
-      gsNameTemplate.reset();
-      gsNameTemplate.setAttribute("typeInfo", t);
-      f = new File(the_dir + pkgNameTemplate.toString() + File.separator + 
-                   gsNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX);
-      if (my_gen_files) {
-        generateGlobalStrategyClass(the_class, t, bw);
-        baos.reset();
-      } else {
+      gs_name.reset();
+      gs_name.setAttribute("typeInfo", t);
+      f = new File(the_dir + pkg_name.toString() + File.separator + 
+                   gs_name.toString() + JMLUnitNG.JAVA_SUFFIX);
+      if (my_gen_files && !f.exists()) {
         final FileWriter fw = new FileWriter(f);
         generateGlobalStrategyClass(the_class, t, fw);
         fw.close();
+      } else if (my_gen_files) {
+        my_logger.println("Not overwriting existing global strategy " + 
+                          "for type " + t.getFullyQualifiedName());
+      } else {
+        generateGlobalStrategyClass(the_class, t, bw);
+        baos.reset();
       }
       my_created_files.add(f.getCanonicalPath());
     }
     
     // third: instance strategy class for this class
     
-    f = new File(the_dir + pkgNameTemplate.toString() + File.separator + 
-                 isNameTemplate.toString() + JMLUnitNG.JAVA_SUFFIX);
-    if (my_gen_files) {
-      generateInstanceStrategyClass(the_class, bw);
-      baos.reset();
-    } else {
+    f = new File(the_dir + pkg_name.toString() + File.separator + 
+                 is_name.toString() + JMLUnitNG.JAVA_SUFFIX);
+    if (my_gen_files && !f.exists()) {
       final FileWriter fw = new FileWriter(f);
       generateInstanceStrategyClass(the_class, fw);
       fw.close();
+    } else if (my_gen_files) {
+      my_logger.println("Not overwriting existing instance strategy " + 
+                        "for class " + the_class.getFullyQualifiedName());
+    } else {
+      generateInstanceStrategyClass(the_class, bw);
+      baos.reset();
     }
     my_created_files.add(f.getCanonicalPath());
   }

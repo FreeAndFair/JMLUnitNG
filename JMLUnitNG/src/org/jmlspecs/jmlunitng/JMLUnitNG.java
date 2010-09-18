@@ -110,7 +110,14 @@ public final class JMLUnitNG implements Runnable {
   private final Logger my_logger;
   
   /**
-   * Private constructor to prevent initialization.
+   * The time at which this instance was created.
+   */
+  private final long my_start_time = System.currentTimeMillis();
+  
+  
+  /**
+   * Constructs a JMLUnitNG instance with the specified command line
+   * options.
    * 
    * @param the_opts The command line options store to be used.
    */
@@ -187,6 +194,15 @@ public final class JMLUnitNG implements Runnable {
     if (my_opts.isPruneSet()) {
       pruneAllFiles();
     }
+   
+    my_logger.println();
+    my_logger.print("Elapsed time ");
+    final long end_time = (System.currentTimeMillis() - my_start_time) / 1000;
+    if (end_time / 60 > 0) {
+      my_logger.print((end_time / 60) + " min ");
+    }
+    my_logger.println((end_time % 60) + " sec");
+    my_logger.println();
   }
   
   /**
@@ -333,7 +349,6 @@ public final class JMLUnitNG implements Runnable {
    * @exception IOException if there is a problem processing compilation units.
    */
   private void processAllCompilationUnits() throws IOException {
-    final long start_time = System.currentTimeMillis();
     if (!my_opts.isNoGenSet()) {
       my_logger.println("Starting test generation");
       my_logger.println();
@@ -358,16 +373,6 @@ public final class JMLUnitNG implements Runnable {
           my_logger.println();
         }
       }
-      if (!my_opts.isNoGenSet()) {
-        my_logger.println();
-        my_logger.print("Test generation completed, elapsed time ");
-        final long end_time = (System.currentTimeMillis() - start_time) / 1000;
-        if (end_time / 60 > 0) {
-          my_logger.print((end_time / 60) + " min ");
-        }
-        my_logger.println((end_time % 60) + " sec");
-        my_logger.println();
-      }
     }
   }
   
@@ -384,10 +389,10 @@ public final class JMLUnitNG implements Runnable {
   throws IOException {
     my_logger.print("Processing ");
     if (the_info.isAbstract()) {
-      my_logger.print("abstract class " + the_info.getFullyQualifiedName());
+      my_logger.println("abstract class " + the_info.getFullyQualifiedName());
       return;
     } else {
-      my_logger.print("class " + the_info.getFullyQualifiedName());
+      my_logger.println("class " + the_info.getFullyQualifiedName());
     }
     
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;

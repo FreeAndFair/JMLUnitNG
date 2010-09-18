@@ -38,7 +38,7 @@ public class <instanceStrategyName()> extends ObjectStrategy {
   public RepeatedAccessIterator\<<class.shortName>\> getCustomValues() {
     return new ObjectArrayIterator\<<class.shortName>\>
     (new <class.shortName>[]
-     { /* add custom <class.fullyQualifiedName> values here */ });
+     <instanceStrategyFillIn(classInfo=class)>);
   }
   
   /**

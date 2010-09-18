@@ -29,7 +29,7 @@ public abstract class <globalStrategyName(typeInfo=type)>
   public RepeatedAccessIterator\<?\> getGlobalValues() {
     return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
     (new <typeTransMap.(type.fullyQualifiedName)>[] 
-    { /* add global <type.fullyQualifiedName> values here */ });
+    <globalStrategyFillIn(typeInfo=type)>);
   }
   <if(!type.primitive)>
   
@@ -43,3 +43,4 @@ public abstract class <globalStrategyName(typeInfo=type)>
 }
 
 >>
+

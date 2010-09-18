@@ -29,7 +29,7 @@ public class <strategyName(methodInfo=method, paramInfo=param)>
   public RepeatedAccessIterator\<?\> getCustomValues() {
   	return new ObjectArrayIterator\<<type(paramInfo=param)>\>
   	(new <type(paramInfo=param)>[] 
-  	{ /* add custom <param.type.fullyQualifiedName> values here */ });
+  	<strategyFillIn(typeInfo=param.type)>);
   }
 }
 
