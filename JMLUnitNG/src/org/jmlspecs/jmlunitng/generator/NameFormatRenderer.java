@@ -1,3 +1,8 @@
+/*
+ * JMLUnitNG 
+ * Copyright (C) 2010
+ */
+
 package org.jmlspecs.jmlunitng.generator;
 
 import org.antlr.stringtemplate.AttributeRenderer;
@@ -8,7 +13,7 @@ import org.antlr.stringtemplate.AttributeRenderer;
  * in code generation.
  * 
  * @author Daniel M. Zimmerman
- * @version August 2010
+ * @version September 2010
  */
 public class NameFormatRenderer implements AttributeRenderer {
   /**

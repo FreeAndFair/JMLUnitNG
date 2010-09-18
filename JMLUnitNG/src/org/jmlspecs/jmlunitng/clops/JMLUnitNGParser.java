@@ -1,3 +1,8 @@
+/*
+ * JMLUnitNG 
+ * Copyright (C) 2010
+ */
+
 package org.jmlspecs.jmlunitng.clops;
 
 import ie.ucd.clops.runtime.parser.AbstractSpecificCLParser;

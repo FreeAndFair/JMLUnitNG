@@ -1,17 +1,6 @@
 /*
- * OpenJMLUnit
- * 
- * @author "Daniel M. Zimmerman (dmz@acm.org)"
- * 
- * @author Jonathan Hogins
- * 
- * @module "OpenJML"
- * 
- * @creation_date "April 2010"
- * 
- * @last_updated_date "April 2010"
- * 
- * @keywords "unit testing", "JML"
+ * JMLUnitNG 
+ * Copyright (C) 2010
  */
 
 package org.jmlspecs.jmlunitng.util;
@@ -36,18 +25,19 @@ public final class StringTemplateUtil {
   private static final String TEMPLATE_PATH = "res" + File.separator + "templates";
   
   /**
-   * Has StringTemplate been instantiated?
+   * A flag indicating whether StringTemplate has been initialized.
    */
   private static boolean my_initialized;
   
   /**
-   * Private constructor to prevent initialization.
+   * Private constructor to prevent instantiation of this class.
    */
   private StringTemplateUtil() {
+    // do nothing
   }
 
   /**
-   * Initialize StringTemplates if it not already initialized.
+   * Initialize StringTemplate if it is not already initialized!
    */
   //@ ensures isInitialized();
   public synchronized static void initialize() {
@@ -58,10 +48,9 @@ public final class StringTemplateUtil {
       my_initialized = true;
     }
   }
+  
   /**
-   * Returns true if StringTemplate has been initialized with 
-   * StringTemplateUtil.initialize().
-   * @return True if initialized. False if not.
+   * @return Has StringTemplate been initialized?
    */
   //@ constraint \old(isInitialized()) ==> isInitialized();
   public synchronized static boolean isInitialized() {

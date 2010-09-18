@@ -1,12 +1,8 @@
 /*
- * OpenJMLUnit
- * 
- * @author "Jonathan Hogins (jon.hogins@gmail.com)"
- * @module "OpenJML"
- * @creation_date "April 2010"
- * @last_updated_date "April 2010"
- * @keywords "unit testing", "JML"
+ * JMLUnitNG 
+ * Copyright (C) 2010
  */
+
 package org.jmlspecs.jmlunitng.strategy;
 
 import java.util.ArrayList;

@@ -1,11 +1,6 @@
 /*
- * OpenJMLUnit
- * 
- * @author "Jonathan Hogins (jon.hogins@gmail.com)"
- * @module "OpenJML"
- * @creation_date "May 2010"
- * @last_updated_date "May 2010"
- * @keywords "unit testing", "JML"
+ * JMLUnitNG 
+ * Copyright (C) 2010
  */
 
 package org.jmlspecs.jmlunitng.generator;

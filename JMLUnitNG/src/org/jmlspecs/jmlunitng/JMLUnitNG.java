@@ -1,15 +1,6 @@
 /*
- * OpenJMLUnit
- * 
- * @author "Daniel M. Zimmerman (dmz@acm.org)"
- * 
- * @module "OpenJML"
- * 
- * @creation_date "April 2010"
- * 
- * @last_updated_date "April 2010"
- * 
- * @keywords "unit testing", "JML"
+ * JMLUnitNG 
+ * Copyright (C) 2010
  */
 
 package org.jmlspecs.jmlunitng;
@@ -34,7 +25,6 @@ import org.jmlspecs.jmlunitng.clops.JMLUnitNGOptionStore;
 import org.jmlspecs.jmlunitng.clops.JMLUnitNGParser;
 import org.jmlspecs.jmlunitng.generator.ClassInfo;
 import org.jmlspecs.jmlunitng.generator.InfoFactory;
-import org.jmlspecs.jmlunitng.generator.MethodInfo;
 import org.jmlspecs.jmlunitng.generator.ProtectionLevel;
 import org.jmlspecs.jmlunitng.generator.TestClassGenerator;
 import org.jmlspecs.jmlunitng.util.JavaSuffixFilter;

@@ -1,11 +1,6 @@
 /*
- * OpenJMLUnit
- *
- * @author "Daniel M. Zimmerman (dmz@acm.org)"
- * @module "OpenJML"
- * @creation_date "March 2010"
- * @last_updated_date "March 2010"
- * @keywords "unit testing", "JML"
+ * JMLUnitNG 
+ * Copyright (C) 2010
  */
 
 package org.jmlspecs.jmlunitng.iterator;
