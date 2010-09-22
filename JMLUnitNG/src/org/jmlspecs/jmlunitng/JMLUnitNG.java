@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -185,7 +186,6 @@ public final class JMLUnitNG implements Runnable {
       pruneAllFiles();
     }
    
-    my_logger.println();
     my_logger.print("Elapsed time ");
     final long end_time = (System.currentTimeMillis() - my_start_time) / 1000;
     if (end_time / 60 > 0) {
@@ -343,24 +343,32 @@ public final class JMLUnitNG implements Runnable {
       my_logger.println("Starting test generation");
       my_logger.println();
     }
-    final List<File> file_list = filesToProcess();
-    final String classpath = generateClasspath();
-    final String specspath = generateSpecspath();
-    final String[] openjml_args =
-        new String[] {"-noPurityCheck", "-noInternalSpecs", 
-                      "-cp", classpath, "-specspath", specspath};
-    final API api = new API(openjml_args);
-    final List<JmlCompilationUnit> units = 
-      api.parseFiles(file_list.toArray(new File[file_list.size()]));
-    final int numOfErrors = api.enterAndCheck(units);
-    if (numOfErrors > 0) {
-      System.err.println("Encountered " + numOfErrors + " errors.");
-    } else {
-      for (JmlCompilationUnit unit : units) {
-        final ClassInfo info = InfoFactory.getClassInfo(unit);
-        if (info != null) {
-          processCompilationUnit(unit, info);
-          my_logger.println();
+    
+    // the only reason to go to this effort if --no-gen is set is if
+    // --prune is also set, so we need to find out what files to prune
+    
+    if (!my_opts.isNoGenSet() || my_opts.isPruneSet()) {
+      final List<File> file_list = filesToProcess();
+      final String classpath = generateClasspath();
+      final String specspath = generateSpecspath();
+      final String[] openjml_args =
+          new String[] {"-noPurityCheck", "-noInternalSpecs",
+                        "-cp", classpath, "-specspath", specspath};
+      final API api = new API(new PrintWriter(System.err), null, openjml_args);
+      final List<JmlCompilationUnit> units = 
+        api.parseFiles(file_list.toArray(new File[file_list.size()]));
+      final int numOfErrors = api.enterAndCheck(units);
+      if (numOfErrors > 0) {
+        System.err.println("Encountered " + numOfErrors + " errors.");
+      } else {
+        for (JmlCompilationUnit unit : units) {
+          final ClassInfo info = InfoFactory.getClassInfo(unit);
+          if (info != null) {
+            processCompilationUnit(unit, info);
+            if (!my_opts.isNoGenSet()) {
+             my_logger.println();
+            }
+          }
         }
       }
     }
@@ -377,14 +385,17 @@ public final class JMLUnitNG implements Runnable {
   private void processCompilationUnit(final JmlCompilationUnit the_unit, 
                                       final ClassInfo the_info) 
   throws IOException {
-    my_logger.print("Processing ");
-    if (the_info.isAbstract()) {
-      my_logger.println("abstract class " + the_info.getFullyQualifiedName());
-      return;
-    } else {
-      my_logger.println("class " + the_info.getFullyQualifiedName());
+    if (!my_opts.isNoGenSet()) {
+      my_logger.print("Processing ");
+      if (the_info.isAbstract()) {
+        my_logger.println("abstract class " + the_info.getFullyQualifiedName());
+      } else {
+        my_logger.println("class " + the_info.getFullyQualifiedName());
+      }
     }
-    
+    if (the_info.isAbstract()) {
+      return;
+    }
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;
     if (my_opts.isRACVersionSet()) {
       rac_version = my_opts.getRACVersion();
