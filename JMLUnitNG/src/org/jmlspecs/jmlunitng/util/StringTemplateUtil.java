@@ -23,8 +23,9 @@ public final class StringTemplateUtil {
    * The path to all templates.
    */
   private static final String TEMPLATE_PATH = 
-    "org" + File.separator + "jmlspecs" + File.separator + 
-    "jmlunitng" + File.separator + "templates";
+    "org/jmlspecs/jmlunitng/templates:org" + File.separator + 
+    "jmlspecs" + File.separator + "jmlunitng" + File.separator + 
+    "templates";
   
   /**
    * A flag indicating whether StringTemplate has been initialized.
@@ -47,6 +48,7 @@ public final class StringTemplateUtil {
       final StringTemplateGroupLoader loader =
         new CommonGroupLoader(TEMPLATE_PATH, null);
       StringTemplateGroup.registerGroupLoader(loader);
+
       my_initialized = true;
     }
   }

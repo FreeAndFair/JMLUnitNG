@@ -568,13 +568,15 @@ public final class JMLUnitNG implements Runnable {
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
         sb.append(File.separator);
       }
-      sb.append(the_unit.getPackageName().toString().replace('.', '/'));
+      if (the_unit.getPackageName() != null) {
+        sb.append(the_unit.getPackageName().toString().replace('.', File.separatorChar));
+      }
       if (!(outputDir.endsWith("\\") || outputDir.endsWith("/"))) {
         sb.append(File.separator);
       }
       
-      outputDir = sb.toString().replace("\\", File.separator);
-      outputDir = outputDir.replace("/", File.separator);
+      outputDir = sb.toString().replace('\\', File.separatorChar);
+      outputDir = outputDir.replace('/', File.separatorChar);
     } else {
       outputDir = new File(the_unit.getSourceFile().toUri().getPath()).getParent() +
                   File.separator;
