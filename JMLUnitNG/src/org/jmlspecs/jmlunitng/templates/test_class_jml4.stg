@@ -35,9 +35,6 @@ import org.jmlspecs.jml4.rac.runtime.JMLEvaluationError;
 <if (packaged)>
 import <strategyPackageName(classInfo=class)>.*;
 
-<else>
-import <strategyPackageName(classInfo=class)>.*;
-
 <endif>
 
 /**

@@ -409,17 +409,11 @@ public final class JMLUnitNG implements Runnable {
                              my_opts.isDeprecationSet(),
                              my_opts.isReflectionSet(),
                              rac_version);
-    StringTemplateUtil.initialize();
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
-    final StringTemplate spNameTemplate = group.lookupTemplate("strategyPackageShortName");
-    spNameTemplate.setAttribute("classInfo", the_info);
 
-    final String outputDir = generateDestinationDirectory(the_unit);
-    final String strategyOutputDir = 
-      outputDir + spNameTemplate.toString() + File.separator;
-    final File[] dirs = new File[] { new File(outputDir), new File(strategyOutputDir) };
-
-    for (File f : dirs) {
+    final String[] dirs = getDirectories(the_unit, the_info);
+    String strategy_dir = dirs[0];
+    for (String s : dirs) {
+      final File f = new File(s);
       if (!my_opts.isNoGenSet()) {
         my_logger.println("Creating directory " + f);
         if (!my_opts.isDryRunSet() && !f.mkdirs() && !f.isDirectory()) {
@@ -428,10 +422,35 @@ public final class JMLUnitNG implements Runnable {
         }
       }
       my_created_files.add(f.getCanonicalPath());
+      strategy_dir = s;
     }
     
-    generator.generateClasses(the_info, outputDir);
+    generator.generateClasses(the_info, dirs[0], strategy_dir);
     my_created_files.addAll(generator.getCreatedFiles());
+  }
+  
+  /**
+   * @param the_unit the unit being processed.
+   * @return An array of directory names to create/use for the specified unit.
+   */
+  private String[] getDirectories(final JmlCompilationUnit the_unit,
+                                  final ClassInfo the_info) {
+    String[] result;
+    StringTemplateUtil.initialize();
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
+    final StringTemplate sp_template = group.lookupTemplate("strategyPackageShortName");
+    sp_template.setAttribute("classInfo", the_info);
+
+    final String output_dir = generateDestinationDirectory(the_unit);
+    if (the_info.isPackaged()) {
+      final String strategy_dir =  
+        output_dir + sp_template.toString() + File.separator;
+      result = new String[] { output_dir, strategy_dir };
+    } else {
+      result = new String[] { output_dir };
+    }
+    
+    return result;
   }
   
   /**

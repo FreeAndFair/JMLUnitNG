@@ -30,9 +30,10 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
   public NonNullMultiIterator(final List<RepeatedAccessIterator<T>> the_iterators) {
     my_iterators =
       new IteratorAdapter<RepeatedAccessIterator<T>>(the_iterators.iterator());
-   
     // advance to the first non-null element
-    advance();
+    if (!hasElement()) {
+      advance();
+    }
   }
 
   /**
@@ -62,7 +63,8 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
   @Override
   public /*@ pure */ boolean hasElement() {
     return my_iterators.hasElement() && 
-           my_iterators.element().hasElement();
+           my_iterators.element().hasElement() &&
+           my_iterators.element().element() != null;
   }
 
   /**

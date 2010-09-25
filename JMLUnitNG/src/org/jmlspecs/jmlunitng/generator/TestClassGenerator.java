@@ -299,26 +299,27 @@ public class TestClassGenerator {
    * directory.
    * 
    * @param the_class The class for which to generate test classes.
-   * @param the_dir The directory in which to generate test classes.
+   * @param the_test_dir The directory in which to generate test classes.
+   * @param the_strategy_dir The directory in which to generate strategies.
    * @throws IOException Thrown if an IOException occurs while generating the classes.
    */
   //@ requires VALID_RAC_VERSIONS.contains(the_rac);
   //@ requires (new File(the_dir)).isDirectory();
   public void generateClasses(final /*@ non_null @*/ ClassInfo the_class, 
-                              final /*@ non_null @*/ String the_dir) throws IOException {
+                              final /*@ non_null @*/ String the_test_dir,
+                              final /*@ non_null @*/ String the_strategy_dir) 
+  throws IOException {
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
     final StringTemplate tc_name = group.lookupTemplate("testClassName");
     final StringTemplate ms_name = group.lookupTemplate("strategyName");
     final StringTemplate is_name = group.lookupTemplate("instanceStrategyName");
     final StringTemplate gs_name = group.lookupTemplate("globalStrategyName");
-    final StringTemplate pkg_name = group.lookupTemplate("strategyPackageShortName");
  
     final Set<MethodInfo> methods_to_test = getMethodsToTest(the_class);
     
     // initialize name templates
     tc_name.setAttribute("classInfo", the_class);
-    pkg_name.setAttribute("classInfo", the_class);
 
     // this stream is for writing to memory, in the case of a dry run
     
@@ -327,7 +328,7 @@ public class TestClassGenerator {
     
     // generate the (single) test class
     
-    File f = new File(the_dir + tc_name.toString() + JMLUnitNG.JAVA_SUFFIX);
+    File f = new File(the_test_dir + tc_name.toString() + JMLUnitNG.JAVA_SUFFIX);
     
     if (my_gen_files) {
       final FileWriter fw = new FileWriter(f);
@@ -347,8 +348,8 @@ public class TestClassGenerator {
         ms_name.reset();
         ms_name.setAttribute("methodInfo", m);
         ms_name.setAttribute("paramInfo", p);
-        f = new File(the_dir + pkg_name.toString() + File.separator +
-                     ms_name.toString() + JMLUnitNG.JAVA_SUFFIX);
+        f = new File(the_strategy_dir + ms_name.toString() + 
+                     JMLUnitNG.JAVA_SUFFIX);
         if (my_gen_files && !f.exists()) {
           final FileWriter fw = new FileWriter(f);
           generateMethodParamStrategyClass(the_class, m, p, fw);
@@ -369,8 +370,8 @@ public class TestClassGenerator {
     for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
       gs_name.reset();
       gs_name.setAttribute("typeInfo", t);
-      f = new File(the_dir + pkg_name.toString() + File.separator + 
-                   gs_name.toString() + JMLUnitNG.JAVA_SUFFIX);
+      f = new File(the_strategy_dir + gs_name.toString() + 
+                   JMLUnitNG.JAVA_SUFFIX);
       if (my_gen_files && !f.exists()) {
         final FileWriter fw = new FileWriter(f);
         generateGlobalStrategyClass(the_class, t, fw);
@@ -387,8 +388,8 @@ public class TestClassGenerator {
     
     // third: instance strategy class for this class
     
-    f = new File(the_dir + pkg_name.toString() + File.separator + 
-                 is_name.toString() + JMLUnitNG.JAVA_SUFFIX);
+    f = new File(the_strategy_dir + is_name.toString() + 
+                 JMLUnitNG.JAVA_SUFFIX);
     if (my_gen_files && !f.exists()) {
       final FileWriter fw = new FileWriter(f);
       generateInstanceStrategyClass(the_class, fw);

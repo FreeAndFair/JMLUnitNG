@@ -7,9 +7,11 @@ main(date, class, method, param, jmlunitng_version) ::= <<
  * <generatedLine(versionString=jmlunitng_version, dateString=date)>
  * <doNotModifyString()>
  */
- 
+
+<if(class.packaged)> 
 package <strategyPackageName(classInfo=class)>;
 
+<endif>
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 

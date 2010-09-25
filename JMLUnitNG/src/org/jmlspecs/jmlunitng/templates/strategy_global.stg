@@ -8,8 +8,10 @@ main(date, class, type, jmlunitng_version, use_reflection) ::= <<
  * <doNotModifyString()>
  */
  
+<if(class.packaged)>
 package <strategyPackageName(classInfo=class)>;
 
+<endif>
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 import org.jmlspecs.jmlunitng.strategy.<baseStrategyMap.(type.fullyQualifiedName)>;
