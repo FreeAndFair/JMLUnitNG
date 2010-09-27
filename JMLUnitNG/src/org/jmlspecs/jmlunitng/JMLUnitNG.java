@@ -360,14 +360,14 @@ public final class JMLUnitNG implements Runnable {
       final int numOfErrors = api.enterAndCheck(units);
       if (numOfErrors > 0) {
         System.err.println("Encountered " + numOfErrors + " errors.");
-      } else {
-        for (JmlCompilationUnit unit : units) {
-          final ClassInfo info = InfoFactory.getClassInfo(unit);
-          if (info != null) {
-            processCompilationUnit(unit, info);
-            if (!my_opts.isNoGenSet()) {
-             my_logger.println();
-            }
+        Runtime.getRuntime().exit(1);
+      } 
+      for (JmlCompilationUnit unit : units) {
+        final ClassInfo info = InfoFactory.getClassInfo(unit);
+        if (info != null) {
+          processCompilationUnit(unit, info);
+          if (!my_opts.isNoGenSet()) {
+            my_logger.println();
           }
         }
       }

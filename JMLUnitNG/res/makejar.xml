@@ -9,11 +9,11 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/clops-runtime.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/stringtemplate-3.2.1.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/antlr-2.7.7.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/testng-5.14.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/jml4rt.jar"/>
+            <fileset dir="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/res" includes="LICENSES/"/>
+            <zipfileset excludes="LICENSE META-INF/*" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/clops-runtime.jar"/>
+            <zipfileset excludes="META-INF/*" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/stringtemplate-3.2.1.jar"/>
+            <zipfileset excludes="META-INF/*" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/antlr-2.7.7.jar"/>
+            <zipfileset excludes="LICENSE NOTICE META-INF/*" src="/Volumes/Anlashok/Users/dmz/Workspaces/JMLUnitNG-New/JMLUnitNG/lib/testng-5.14.jar"/>
         </jar>
     </target>
 </project>
