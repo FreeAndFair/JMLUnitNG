@@ -172,6 +172,9 @@ public final class JMLUnitNG implements Runnable {
       printInvalidRACError();
       Runtime.getRuntime().exit(1);
     }
+    if (my_opts.isDryRunSet()) {
+      my_logger.println(">>> DRY RUN <<<");
+    }
     if (my_opts.isCleanSet()) {
       cleanAllFiles();
     }

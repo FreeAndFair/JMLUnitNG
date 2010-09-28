@@ -13,12 +13,10 @@ or recursively contained in directories listed in, path-list.
   generated classes.
 -cp \<directory-list\>, --classpath \<directory-list\> : Use the given 
   list of directories and Jar files (formatted as for javac) as the  
-  classpath during compilation (CLASSPATH environment variable, 
-  by default).
+  classpath during parsing (CLASSPATH environment variable, by default).
 -sp \<directory-list\>, --specspath \<directory-list\> : Use the given 
   list of directories and Jar files (formatted as for javac) as the 
-  specspath for compilation. (SPECSPATH environment variable, 
-  by default).
+  specspath during parsing. (SPECSPATH environment variable, by default).
 --rac-version \<version-string\> : Generate RAC handling code 
   for the specified JML RAC version; the default value is 'jml4'
   for JML4 RAC. The only other value currently supported is 'jml2'
@@ -43,8 +41,7 @@ or recursively contained in directories listed in, path-list.
   or --prune to remove unwanted JMLUnitNG-generated files.
 --dry-run : Display status/progress information about the operations 
   that would be performed but do not modify the filesystem.
--v, --verbose : Display status/progress information during test 
-  generation.
+-v, --verbose : Display status/progress information.
 -h, --help : Display this message.
 
 Version: <version>
