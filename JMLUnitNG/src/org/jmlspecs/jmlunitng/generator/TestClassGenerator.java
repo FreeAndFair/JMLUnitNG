@@ -45,6 +45,7 @@ public class TestClassGenerator {
   static {
     final List<String> temp = new ArrayList<String>();
     temp.add("jml4");
+    temp.add("jml2");
     VALID_RAC_VERSIONS = Collections.unmodifiableList(temp);
   }
     

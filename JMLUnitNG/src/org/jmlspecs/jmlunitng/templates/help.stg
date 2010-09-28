@@ -18,8 +18,8 @@ or recursively contained in directories listed in, path-list.
   colon-separated list of directories and Jar files as the specspath 
   during compilation. (SPECSPATH environment variable, by default).
 --rac-version \<version-string\> : Generate RAC handling code 
-  for the specified JML RAC version; the default, and only currently-
-  supported, value is 'jml4' for jml4c.
+  for the specified JML RAC version; the default value is 'jml4'
+  for JML4 RAC. JML2 RAC is supported as well with value 'jml2'.
 --reflection : Generate test data reflectively.
 --deprecation : Generate tests for deprecated methods.
 --inherited : Generate tests for inherited methods.
