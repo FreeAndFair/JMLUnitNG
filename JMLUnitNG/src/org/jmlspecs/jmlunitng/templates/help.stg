@@ -12,11 +12,13 @@ or recursively contained in directories listed in, path-list.
 -d, --dest [DIRECTORY] : Use DIRECTORY as the output directory for 
   generated classes.
 -cp \<directory-list\>, --classpath \<directory-list\> : Use the given 
-  colon-separated list of directories and Jar files as the classpath 
-  during compilation (CLASSPATH environment variable, by default).
+  list of directories and Jar files (formatted as for javac) as the  
+  classpath during compilation (CLASSPATH environment variable, 
+  by default).
 -sp \<directory-list\>, --specspath \<directory-list\> : Use the given 
-  colon-separated list of directories and Jar files as the specspath 
-  during compilation. (SPECSPATH environment variable, by default).
+  list of directories and Jar files (formatted as for javac) as the 
+  specspath for compilation. (SPECSPATH environment variable, 
+  by default).
 --rac-version \<version-string\> : Generate RAC handling code 
   for the specified JML RAC version; the default value is 'jml4'
   for JML4 RAC. The only other value currently supported is 'jml2'
