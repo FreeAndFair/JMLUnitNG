@@ -9,7 +9,7 @@ java -jar jmlunitng,jar [OPTION] ... path-list
 Generates unit tests for all Java source files listed in,  
 or recursively contained in directories listed in, path-list. 
 
--d, --dest [DIRECTORY] : Specify the output directory for 
+-d, --dest [DIRECTORY] : Use DIRECTORY as the output directory for 
   generated classes.
 -cp \<directory-list\>, --classpath \<directory-list\> : Use the given 
   colon-separated list of directories and Jar files as the classpath 
@@ -19,7 +19,8 @@ or recursively contained in directories listed in, path-list.
   during compilation. (SPECSPATH environment variable, by default).
 --rac-version \<version-string\> : Generate RAC handling code 
   for the specified JML RAC version; the default value is 'jml4'
-  for JML4 RAC. JML2 RAC is supported as well with value 'jml2'.
+  for JML4 RAC. The only other value currently supported is 'jml2'
+  for JML2 RAC.
 --reflection : Generate test data reflectively.
 --deprecation : Generate tests for deprecated methods.
 --inherited : Generate tests for inherited methods.
