@@ -530,7 +530,7 @@ public final class JMLUnitNG implements Runnable {
       } 
       if (one_of_ours) {
         my_logger.println("Deleting " + the_file);
-        if (!the_file.delete()) {
+        if (!my_opts.isDryRunSet() && !the_file.delete()) {
           System.err.println("Unable to delete " + the_file + ", check permissions.");
         }
       }
