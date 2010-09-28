@@ -4,7 +4,7 @@ help_msg(version) ::= <<
 
 JMLUnitNG - Generate TestNG Classes for JML-Annotated Java
 
-jmlunitng [OPTION] ... path-list
+java -jar jmlunitng,jar [OPTION] ... path-list
 
 Generates unit tests for all Java source files listed in,  
 or recursively contained in directories listed in, path-list. 
