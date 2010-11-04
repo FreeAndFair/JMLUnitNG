@@ -11,20 +11,21 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
+import org.jmlspecs.jmlunitng.iterator.MultiIterator;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
- * Strategy for all non-primitive types. For Enums, it always
+ * The strategy for all non-primitive types. For Enums, it always
  * provides all values of the enum unless the default values are
  * overridden. For other types of object, it attempts to find
  * test data generators for the default values.
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version September 2010
+ * @version November 2010
  */
-public abstract class ObjectStrategy extends BasicStrategy {  
+public abstract class ObjectStrategy implements Strategy {  
   /**
    * The class for which this strategy was made.
    */
@@ -67,7 +68,7 @@ public abstract class ObjectStrategy extends BasicStrategy {
       } catch (ClassNotFoundException e) {
         my_test_data = null;
       }
-    } else if (the_reflective) {
+    } else if (the_class.getEnumConstants() != null) {
       // it is an enum
       my_enum_constants = the_class.getEnumConstants();
     }
@@ -131,5 +132,20 @@ public abstract class ObjectStrategy extends BasicStrategy {
   public RepeatedAccessIterator<?> getCustomValues() {
     return new ObjectArrayIterator<Object>
     ((Object[]) Array.newInstance(my_class, 0));
+  }
+  
+  /**
+   * Returns a RepeatedAccessIterator over all values in the order: default
+   * values, custom values, global values.
+   * 
+   * @return What are all your values?
+   */
+  @SuppressWarnings("unchecked")
+  public RepeatedAccessIterator<?> iterator() {
+    final List<RepeatedAccessIterator<?>> iterators = new ArrayList<RepeatedAccessIterator<?>>(3);
+    iterators.add(getDefaultValues());
+    iterators.add(getCustomValues());
+    iterators.add(getGlobalValues());
+    return new MultiIterator(iterators);
   }
 }

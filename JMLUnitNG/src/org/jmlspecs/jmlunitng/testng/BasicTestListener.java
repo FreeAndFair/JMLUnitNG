@@ -166,7 +166,7 @@ public class BasicTestListener extends TestListenerAdapter {
       sb.append(params[i] + ", ");
     }
     if (params.length > 1) {
-      sb.append(String.valueOf(params[params.length - 1]));
+      sb.append(params[params.length - 1]);
     }
     sb.append(")");
     
@@ -189,9 +189,9 @@ public class BasicTestListener extends TestListenerAdapter {
     }
     if (orig_name.contains(TEST_PARAM_SEPARATOR) && 
         the_test_result.getParameters().length > 0) {
-      // find the _last_ occurrence of TEST_PARAM_SEPARATOR, and remove it and everything
+      // find the first occurrence of TEST_PARAM_SEPARATOR, and remove it and everything
       // that follows
-      orig_name = orig_name.substring(0, orig_name.lastIndexOf(TEST_PARAM_SEPARATOR));
+      orig_name = orig_name.substring(0, orig_name.indexOf(TEST_PARAM_SEPARATOR));
     }
     
     return orig_name;

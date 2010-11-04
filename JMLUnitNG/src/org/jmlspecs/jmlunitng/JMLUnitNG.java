@@ -58,10 +58,15 @@ public final class JMLUnitNG implements Runnable {
   private static final String DEF_OUTPUT_DIR = "";
   
   /**
-   * The extension for java source files.
+   * The extension for Java source files.
    */
   public static final String JAVA_SUFFIX = ".java";
 
+  /**
+   * The extension for Java class files.
+   */
+  public static final String CLASS_SUFFIX = ".class";
+  
   /**
    * The command line options store to be used.
    */
@@ -394,11 +399,13 @@ public final class JMLUnitNG implements Runnable {
       my_logger.print("Processing ");
       if (the_info.isAbstract()) {
         my_logger.println("abstract class " + the_info.getFullyQualifiedName());
-      } else {
+      } else if (the_info.isEnumeration()){
+        my_logger.println("enumeration " + the_info.getFullyQualifiedName());
+      } else { // normal class
         my_logger.println("class " + the_info.getFullyQualifiedName());
       }
     }
-    if (the_info.isAbstract()) {
+    if (the_info.isAbstract() || the_info.isEnumeration()) {
       return;
     }
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;
@@ -532,6 +539,18 @@ public final class JMLUnitNG implements Runnable {
         my_logger.println("Deleting " + the_file);
         if (!my_opts.isDryRunSet() && !the_file.delete()) {
           System.err.println("Unable to delete " + the_file + ", check permissions.");
+        }
+        // if there's a corresponding .class file, delete that too
+        if (the_file.getAbsolutePath().contains(".java"))
+        {
+          final File class_file = 
+            new File(the_file.getAbsolutePath().replace(JAVA_SUFFIX, CLASS_SUFFIX));
+          if (class_file.exists()) {
+            my_logger.println("Deleting " + class_file);
+            if (!my_opts.isDryRunSet() && !class_file.delete()) {
+              System.err.println("Unable to delete " + the_file + ", check permissions.");
+            }
+          }
         }
       }
     }

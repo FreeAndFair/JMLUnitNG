@@ -16,7 +16,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * @author Jonathan Hogins
  * @version April 2010
  */
-public abstract class DoubleStrategy extends BasicStrategy {
+public abstract class DoubleStrategy extends PrimitiveStrategy {
   /**
    * The default values for this strategy.
    */

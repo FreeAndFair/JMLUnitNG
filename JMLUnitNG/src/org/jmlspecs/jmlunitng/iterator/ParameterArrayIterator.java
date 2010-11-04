@@ -5,7 +5,8 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
-import org.jmlspecs.jmlunitng.strategy.BasicStrategy;
+import org.jmlspecs.jmlunitng.strategy.PrimitiveStrategy;
+import org.jmlspecs.jmlunitng.strategy.Strategy;
 
 /**
  * A repeated access iterator that generates arrays of objects by reflectively
@@ -19,7 +20,7 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
   /**
    * The list of iterator generation methods
    */
-  private final Class<? extends BasicStrategy>[] my_strategy_classes;
+  private final Class<? extends Strategy>[] my_strategy_classes;
   
   /**
    * The current strategies being used.
@@ -49,7 +50,7 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
   /*@ requires (\forall int i; i >= 0 && i < the_strategy_classes.length; 
     @		the_strategy_classes[i].newInstance().iterator().hasElement());
     @*/
-  public ParameterArrayIterator(final Class<? extends BasicStrategy>... the_strategy_classes) {
+  public ParameterArrayIterator(final Class<? extends Strategy>... the_strategy_classes) {
   	my_strategy_classes = the_strategy_classes;
   	my_strategies = new RepeatedAccessIterator<?>[the_strategy_classes.length];
   	my_is_finished = the_strategy_classes.length == 0;

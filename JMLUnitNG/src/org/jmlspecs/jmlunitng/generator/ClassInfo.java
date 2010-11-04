@@ -41,6 +41,11 @@ public class ClassInfo extends TypeInfo {
   private final boolean my_is_abstract;
     
   /**
+   * Is this class an enum?
+   */
+  private final boolean my_is_enumeration;
+  
+  /**
    * The MethodInfo objects representing the methods of this class.
    */
   private final Set<MethodInfo> my_methods;
@@ -79,10 +84,12 @@ public class ClassInfo extends TypeInfo {
   protected ClassInfo(final String the_name, 
                       final ProtectionLevel the_protection_level,
                       final boolean the_is_abstract, 
+                      final boolean the_is_enumeration,
                       final /*@ nullable @*/ ClassInfo the_parent) {
     super(the_name);
     my_protection_level = the_protection_level;
     my_is_abstract = the_is_abstract;
+    my_is_enumeration = the_is_enumeration;
     my_methods = new HashSet<MethodInfo>();
     my_inherited_methods = new HashSet<MethodInfo>();
     my_overriding_methods = new HashSet<MethodInfo>();
@@ -167,6 +174,13 @@ public class ClassInfo extends TypeInfo {
    */
   public/*@ pure */boolean isAbstract() {
     return my_is_abstract;
+  }
+  
+  /**
+   * @return true if the class is an enumeration, false otherwise.
+   */
+  public /*@ pure @*/ boolean isEnumeration() {
+    return my_is_enumeration;
   }
   
   /**

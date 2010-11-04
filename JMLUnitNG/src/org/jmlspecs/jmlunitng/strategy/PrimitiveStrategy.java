@@ -5,20 +5,22 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import org.jmlspecs.jmlunitng.iterator.MultiIterator;
+import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
- * The basic framework of a test data generation strategy.
+ * The basic framework of a primitive test data generation strategy. 
+ * Primitive data strategies deduplicate the test data elements to save
+ * on test executions, since they are all in memory anyway.
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version September 2010
+ * @version November 2010
  */
-public abstract class BasicStrategy {
+public abstract class PrimitiveStrategy implements Strategy {
   /**
    * To be implemented by subclasses. Returns the iterator over default values
    * for this type.
@@ -51,11 +53,20 @@ public abstract class BasicStrategy {
    * @return What are all your values?
    */
   @SuppressWarnings("unchecked")
-  public RepeatedAccessIterator<?> iterator() {
-    final List<RepeatedAccessIterator<?>> iterators = new ArrayList<RepeatedAccessIterator<?>>(3);
-    iterators.add(getDefaultValues());
-    iterators.add(getCustomValues());
-    iterators.add(getGlobalValues());
-    return new MultiIterator(iterators);
+  public RepeatedAccessIterator<Comparable<?>> iterator() {
+    // deduplicate the primitive data, because we can easily keep it all in memory
+    // at once and this saves test executions; note that all primitive types,
+    // including String, are Comparable, so we sort them too so that tests end
+    // up being executed in a reasonable order.
+    
+    final SortedSet<Comparable<?>> set = new TreeSet<Comparable<?>>();
+    RepeatedAccessIterator<?>[] values = { getDefaultValues(), getCustomValues(), getGlobalValues() };
+    for (RepeatedAccessIterator<?> r : values) {
+      while (r.hasElement()) {
+        set.add((Comparable<?>) r.element());
+        r.advance();
+      }
+    }
+    return new IteratorAdapter<Comparable<?>>(set.iterator());
   }
 }

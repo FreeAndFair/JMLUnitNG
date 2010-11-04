@@ -82,10 +82,12 @@ public final class InfoFactory {
     if (the_class.getSuperclass() instanceof ClassType) {
       parent = getClassInfo((ClassSymbol) the_class.getSuperclass().tsym);
     }
+    final boolean is_enumeration =
+      parent != null && parent.getFullyQualifiedName().equals("java.lang.Enum");
     final Set<MethodInfo> method_infos = new HashSet<MethodInfo>();
     final Scope members = the_class.members();
     final ClassInfo result =
-        new ClassInfo(name, getLevel(flags), is_abstract, parent);
+        new ClassInfo(name, getLevel(flags), is_abstract, is_enumeration, parent);
     // ensure this ClassInfo object is cached before creating methods
     CLASS_CACHE.put(name, result);
     // add methods after ClassInfo creation.
