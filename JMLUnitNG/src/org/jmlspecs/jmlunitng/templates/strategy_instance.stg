@@ -53,14 +53,16 @@ public class <instanceStrategyName()> extends ObjectStrategy {
   public RepeatedAccessIterator\<<class.shortName>\> getDefaultValues() {
     final List\<RepeatedAccessIterator\<<class.shortName>\>\> iters = 
       new LinkedList\<RepeatedAccessIterator\<<class.shortName>\>\>();
-    
-    // always add an instantiation iterator for the empty constructor
+
+    // an instantiation iterator for the default constructor
+    // (if there isn't one, it will fail silently)
     iters.add(new InstantiationIterator\<<class.shortName>\>
       (<class.shortName>.class, 
        new Class\<?\>[0], 
        new ObjectArrayIterator\<Object[]\>(new Object[][]{{}})));
     
     <class.methods:{<instanceStrategyConstructorData(method=it)>}>
+
     return new NonNullMultiIterator\<<class.shortName>\>(iters);
   }
   

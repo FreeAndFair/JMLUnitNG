@@ -12,6 +12,7 @@ ARGS::
     [allowmultiple="false", between="", mustexist="true",
      canbedir="true", allowdash="true"]
   Reflection:{"--reflection"}
+  Children:{"--children"}
   Help:{"-h", "--help"} 
   Deprecation:{"--deprecation"}
   Verbose: {"-v", "--verbose"}
@@ -35,7 +36,7 @@ FORMAT::
 
 WHERE::
   Option:  
-    Destination|RACVersion|Reflection|Help|Package|
+    Destination|RACVersion|Reflection|Children|Enum|Help|Package|
     Deprecation|Verbose|Inherited|Public|Package|Protected|
     Clean|Prune|Classpath|Specspath|DryRun|NoGen;
 

@@ -21,13 +21,19 @@ or recursively contained in directories listed in, path-list.
   for the specified JML RAC version; the default value is 'jml4'
   for JML4 RAC. The only other value currently supported is 'jml2'
   for JML2 RAC.
---reflection : Generate test data reflectively.
 --deprecation : Generate tests for deprecated methods.
 --inherited : Generate tests for inherited methods.
 --public : Generate tests only for public methods (default).
 --protected : Generate tests for protected and public methods.
 --package : Generate tests for package (no protection modifier), 
   protected and public methods.
+--reflection : Generate test data reflectively.
+--children : For all parameters, generate test data using not only the 
+  parameter class but also any children of that class that are explored 
+  when generating the tests. This allows many methods that take 
+  interface/abstract class parameters to be tested automatically.
+--enum : Generate test data for enum classes (by default, test data is
+  not generated for enum classes).
 --clean : Remove from the destination path all old JMLUnitNG-
   generated files, including any manual modifications. If no 
   destination path is set, all files and directories in path-list

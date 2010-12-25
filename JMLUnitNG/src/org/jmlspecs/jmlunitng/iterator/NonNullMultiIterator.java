@@ -5,6 +5,7 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -25,11 +26,19 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
    * Creates a new MultiIterator that iterates over all given iterators in
    * sequence.
    * 
-   * @param iterators The list of iterators to iterate over.
+   * @param the_iterators The list of iterators to iterate over.
    */
   public NonNullMultiIterator(final List<RepeatedAccessIterator<T>> the_iterators) {
-    my_iterators =
-      new IteratorAdapter<RepeatedAccessIterator<T>>(the_iterators.iterator());
+    // only keep non-empty iterators
+    final List<RepeatedAccessIterator<T>> non_empties = 
+      new LinkedList<RepeatedAccessIterator<T>>();
+    for (RepeatedAccessIterator<T> i : the_iterators) {
+      if (i.hasElement()) {
+        non_empties.add(i);
+      }
+    }
+    my_iterators = 
+      new IteratorAdapter<RepeatedAccessIterator<T>>(non_empties.iterator());
     // advance to the first non-null element
     if (!hasElement()) {
       advance();
@@ -45,7 +54,9 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
     while (my_iterators.hasElement() && !my_iterators.element().hasElement()) {
       // we ran out of elements in current iterator, so go on to next one
       my_iterators.advance();
-      advanceCurrentIterator();
+      if (!hasElement()) {
+        advanceCurrentIterator();
+      }
     }
   }
 
@@ -61,7 +72,7 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
    * {@inheritDoc}
    */
   @Override
-  public /*@ pure */ boolean hasElement() {
+  public final /*@ pure */ boolean hasElement() {
     return my_iterators.hasElement() && 
            my_iterators.element().hasElement() &&
            my_iterators.element().element() != null;
@@ -76,7 +87,7 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
         my_iterators.element().hasElement()) {
       do {
         my_iterators.element().advance();
-      }
+      } 
       while (my_iterators.element().hasElement() &&
              my_iterators.element().element() == null);
     }

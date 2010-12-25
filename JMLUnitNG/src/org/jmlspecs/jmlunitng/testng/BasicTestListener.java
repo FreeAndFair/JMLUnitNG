@@ -9,14 +9,17 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+import org.testng.ITestContext;
+import org.testng.ITestListener;
 import org.testng.ITestResult;
-import org.testng.TestListenerAdapter;
+
 /**
  * A listener used by TestNG to gather basic data about test runs.
- * @author Jonathan Hogins
- * @version April 2010
+ * 
+ * @author Daniel M. Zimmerman
+ * @version November 2010
  */
-public class BasicTestListener extends TestListenerAdapter {
+public class BasicTestListener implements ITestListener {
   /**
    * The newline string.
    */
@@ -48,7 +51,6 @@ public class BasicTestListener extends TestListenerAdapter {
    */
   // @ ensures my_writer == the_writer
   public BasicTestListener(final Writer the_writer) {
-    super();
     my_writer = the_writer;
   }
 
@@ -59,17 +61,31 @@ public class BasicTestListener extends TestListenerAdapter {
     this(new OutputStreamWriter(System.out));  
   }
   
+  @Override
+  public void onTestStart(final ITestResult result) {
+    // do nothing
+  }
+
+  @Override
+  public void onStart(final ITestContext context) {
+    // do nothing
+  }
+
+  @Override
+  public void onFinish(final ITestContext context) {
+    // do nothing
+  }
+  
   /**
    * Writes test success info to my_writer.
    * 
    * @param the_tr The test result info.
    */
-  public void onTestSuccess(final ITestResult the_tr) {
+  public synchronized void onTestSuccess(final ITestResult the_tr) {
     try {
       my_writer.write("Passed: ");
       my_writer.write(testString(the_tr));
       my_writer.write(NEWLINE);
-      super.onTestSuccess(the_tr);
       my_writer.flush();
     } catch (final IOException e) {
       System.err.println("Could not write to supplied Writer in BasicTestListener.");
@@ -82,12 +98,11 @@ public class BasicTestListener extends TestListenerAdapter {
    * 
    * @param the_tr The test result info.
    */
-  public void onTestFailure(final ITestResult the_tr) {
+  public synchronized void onTestFailure(final ITestResult the_tr) {
     try {
       my_writer.write("Failed: ");
       my_writer.write(testString(the_tr));
       my_writer.write(NEWLINE);
-      super.onTestFailure(the_tr);
       my_writer.flush();
     } catch (final IOException e) {
       System.err.println("onTestFailure: Could not write to supplied Writer " +
@@ -101,12 +116,11 @@ public class BasicTestListener extends TestListenerAdapter {
    * 
    * @param the_tr The test result info.
    */
-  public void onTestSkipped(final ITestResult the_tr) {
+  public synchronized void onTestSkipped(final ITestResult the_tr) {
     try {
       my_writer.write("Skipped: ");
       my_writer.write(testString(the_tr));
       my_writer.write(NEWLINE);
-      super.onTestSkipped(the_tr);
       my_writer.flush();
     } catch (final IOException e) {
       System.err.println("onTestSkipped: Could not write to supplied Writer " +
@@ -120,13 +134,12 @@ public class BasicTestListener extends TestListenerAdapter {
    * 
    * @param the_tr The test result info.
    */
-  public void onTestFailedButWithinSuccessPercentage(final ITestResult the_tr) {
+  public synchronized void onTestFailedButWithinSuccessPercentage(final ITestResult the_tr) {
     try {
-      my_writer.write("Test Failed, but was within success percentage\n");
+      my_writer.write("Failed Within Success Percentage: ");
       my_writer.write(testString(the_tr));
       my_writer.write("   " + the_tr.getThrowable());
       my_writer.write(NEWLINE);
-      super.onTestFailedButWithinSuccessPercentage(the_tr);
       my_writer.flush();
     } catch (final IOException e) {
       System.err.println("onTestFailedButWithinSuccessPercentage: Could not write " + 

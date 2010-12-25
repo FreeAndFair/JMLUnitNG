@@ -131,15 +131,20 @@ public class TypeInfo {
    * Compares with object for equality. Two ClassInfo objects are equal if they
    * have the same fully qualified name.
    * 
-   * @param the_o The object to compare.
+   * @param the_other The object to compare.
    * @return true if qualified names are equal. false otherwise.
    */
-  public boolean equals(final Object the_o) {
+  public boolean equals(final /*@ nullable @*/ Object the_other) {
     boolean result = false;
     
-    if (the_o instanceof TypeInfo) {
-      result = ((TypeInfo) the_o).my_name.equals(my_name);
-    } 
+    if (the_other != this && the_other != null && the_other.getClass() == getClass()) {
+      final TypeInfo type = (TypeInfo) the_other;
+      result = my_name.equals(type.my_name);
+      result &= my_short_name.equals(type.my_short_name);
+      result &= my_generic_comp.equals(type.my_generic_comp);
+    } else if (the_other == this) {
+      result = true;
+    }
 
     return result;
   }

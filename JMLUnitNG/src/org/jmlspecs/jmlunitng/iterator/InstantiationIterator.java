@@ -37,7 +37,8 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
    * using a constructor for each set of parameters.
    * 
    * @param the_class The class to instantiate.
-   * @param the_param_lists The iterator of parameter lists.
+   * @param the_param_types The types of the parameters.
+   * @param the_params The iterator of parameter lists.
    */
   public InstantiationIterator(final Class<T> the_class, 
                                final Class<?>[] the_param_types,
@@ -54,10 +55,10 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
     // since not all parameter lists will in fact give valid
     // values, we advance to the next valid value by checking
     // element(), at least until we hit the end
-    
+    int i = 1;
     do {
       my_params.advance();
-    } while (element() == null && hasElement());
+    } while (hasElement() && element() == null);
   }
 
   /**

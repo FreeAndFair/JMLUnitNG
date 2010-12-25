@@ -24,7 +24,7 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    * Creates a new MultiIterator that iterates over all given iterators in
    * sequence.
    * 
-   * @param iterators The list of iterators to iterate over.
+   * @param the_iterators The list of iterators to iterate over.
    */
   public MultiIterator(final List<RepeatedAccessIterator<T>> the_iterators) {
     // only keep non-empty iterators

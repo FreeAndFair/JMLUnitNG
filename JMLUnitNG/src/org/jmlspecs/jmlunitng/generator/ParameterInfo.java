@@ -64,4 +64,26 @@ public class ParameterInfo {
     return my_is_array;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public boolean equals(final /*@ nullable @*/ Object the_other) {
+    boolean result = false;
+    
+    if (the_other != this && the_other != null && the_other.getClass() == getClass()) {
+      final ParameterInfo param = (ParameterInfo) the_other;
+      result = my_type.equals(param.my_type);
+      result &= my_name.equals(param.my_name);
+      result &= my_is_array == param.my_is_array;
+    }
+    
+    return result;
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public int hashCode() {
+    return my_type.hashCode() + my_name.hashCode();
+  }
 }

@@ -5,7 +5,6 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
-import org.jmlspecs.jmlunitng.strategy.PrimitiveStrategy;
 import org.jmlspecs.jmlunitng.strategy.Strategy;
 
 /**

@@ -5,6 +5,7 @@
 
 package org.jmlspecs.jmlunitng.generator;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,7 +19,7 @@ import java.util.Set;
  * @author Jonathan Hogins
  * @version August 2010
  */
-public class MethodInfo {
+public class MethodInfo implements Comparable<MethodInfo> { 
   /**
    * The static set of untestable method names.
    */
@@ -49,19 +50,24 @@ public class MethodInfo {
   private final /*@ non_null @*/ ProtectionLevel my_protection_level;
 
   /**
-   * The name of the return type of the method.
-   */
-  private final /*@ non_null @*/ TypeInfo my_return_type;
-
-  /**
    * The parameter types of the method in order.
    */
   private final /*@ non_null @*/ List<ParameterInfo> my_parameters;
 
   /**
+   * The name of the return type of the method.
+   */
+  private final /*@ non_null @*/ TypeInfo my_return_type;
+
+  /**
+   * The exception types that this method has signals clauses for.
+   */
+  private final /*@ non_null @*/ List<ClassInfo> my_signals;
+
+  /**
    * The ClassInfo for the class this method belongs to.
    */
-  private final /*@ non_null @*/ ClassInfo my_parent_class;
+  private final /*@ non_null @*/ ClassInfo my_enclosing_class;
 
   /**
    * The ClassInfo for the class this method is declared in.
@@ -108,7 +114,7 @@ public class MethodInfo {
    * parameters.
    * 
    * @param the_name The name of the method.
-   * @param the_parent_class The ClassInfo for the class this method belongs to.
+   * @param the_enclosing_class The ClassInfo for the class this method belongs to.
    * @param the_declaring_class The ClassInfo for the class this method is
    *          declared in.
    * @param the_protection_level The protection level of the method.
@@ -120,24 +126,26 @@ public class MethodInfo {
    */
   //@ requires !the_is_constructor || !the_is_static;
   public MethodInfo(final /*@ non_null @*/ String the_name, 
-                    final /*@ non_null @*/ ClassInfo the_parent_class,
+                    final /*@ non_null @*/ ClassInfo the_enclosing_class,
                     final /*@ non_null @*/ ClassInfo the_declaring_class,
                     final /*@ non_null @*/ ProtectionLevel the_protection_level,
                     final /*@ non_null @*/ List<ParameterInfo> the_parameter_types, 
                     final /*@ non_null @*/ TypeInfo the_return_type,
+                    final /*@ non_null @*/ List<ClassInfo> the_signals,
                     final boolean the_is_constructor, final boolean the_is_static,
                     final boolean the_is_deprecated) {
     my_name = the_name;
-    my_parent_class = the_parent_class;
+    my_enclosing_class = the_enclosing_class;
     my_declaring_class = the_declaring_class;
     my_protection_level = the_protection_level;
-    my_parameters = Collections.unmodifiableList(the_parameter_types);
+    my_parameters = new ArrayList<ParameterInfo>(the_parameter_types);
+    my_signals = new ArrayList<ClassInfo>(the_signals);
     my_return_type = the_return_type;
     my_is_static = the_is_static;
     my_is_constructor = the_is_constructor;
     my_is_deprecated = the_is_deprecated;
     
-    my_is_inherited = !the_parent_class.equals(the_declaring_class);
+    my_is_inherited = !the_enclosing_class.equals(the_declaring_class);
     my_is_factory = determineIsFactory();
     my_is_testable =
         !(my_is_constructor && my_declaring_class.isAbstract()) &&
@@ -150,7 +158,7 @@ public class MethodInfo {
    * Generates the detailed name of the method.
    */
   private /*@ pure non_null @*/ String generateDetailedName() {
-    StringBuffer sb = new StringBuffer(my_name);
+    final StringBuffer sb = new StringBuffer(my_name);
     for (ParameterInfo p : my_parameters) {
       sb.append("__");
       sb.append(p.getType().getFormattedName());
@@ -178,8 +186,8 @@ public class MethodInfo {
   /**
    * @return The ClassInfo object for the class that owns this method.
    */
-  public /*@ pure non_null @*/ ClassInfo getParentClass() {
-    return my_parent_class;
+  public /*@ pure non_null @*/ ClassInfo getEnclosingClass() {
+    return my_enclosing_class;
   }
 
   /**
@@ -201,7 +209,7 @@ public class MethodInfo {
    *  in the order they are declared in the parameter list.
    */
   public /*@ pure non_null @*/ List<ParameterInfo> getParameters() {
-    return my_parameters;
+    return Collections.unmodifiableList(my_parameters);
   }
 
   /**
@@ -209,6 +217,13 @@ public class MethodInfo {
    */
   public /*@ pure @*/ TypeInfo getReturnType() {
     return my_return_type;
+  }
+
+  /**
+   * @return an unmodifiable list of the signals of this method.
+   */
+  public /*@ pure non_null @*/ List<ClassInfo> getSignals() {
+    return Collections.unmodifiableList(my_signals);
   }
 
   /**
@@ -284,7 +299,7 @@ public class MethodInfo {
    */
   public /*@ pure non_null @*/ String toString() {
     final StringBuilder sb = new StringBuilder();
-    if (my_return_type != null) {
+    if (my_return_type != null && !my_is_constructor) {
       sb.append(my_return_type.getFullyQualifiedName());
       sb.append(" ");
     }
@@ -297,7 +312,6 @@ public class MethodInfo {
       if (param.isArray()) {
         sb.append("[]");
       }
-      sb.append(" " + param.getName());
       if (paramIter.hasNext()) {
         sb.append(", ");
       }
@@ -309,7 +323,66 @@ public class MethodInfo {
   /**
    * {@inheritDoc}
    */
+  public /*@ pure @*/ boolean equals(final /*@ nullable @*/ Object the_other) {
+    boolean result = false;
+    
+    if (the_other != this && the_other != null && the_other.getClass() == getClass()) {
+      final MethodInfo method = (MethodInfo) the_other;
+      result = equalsExceptSignals(method);
+      result &= my_signals.equals(method.my_signals);
+    } else if (the_other == this) {
+      result = true;
+    }
+    
+    return result;
+  }
+  
+  /**
+   * Compare two methods for equivalence modulo signals.
+   * 
+   * @param the_other The other method.
+   * @return true if these methods are identical aside from the signals
+   * they generate.
+   */
+  /*@ pure @*/ boolean equalsExceptSignals(final MethodInfo the_other) {
+    boolean result = my_name.equals(the_other.my_name);
+    result &= my_detailed_name.equals(the_other.my_detailed_name);
+    result &= my_protection_level.equals(the_other.my_protection_level);
+    result &= my_return_type.equals(the_other.my_return_type);
+    result &= my_parameters.equals(the_other.my_parameters);
+    result &= my_enclosing_class.equals(the_other.my_enclosing_class);
+    result &= my_declaring_class.equals(the_other.my_declaring_class);
+    result &= my_is_static == the_other.my_is_static;
+    result &= my_is_deprecated == the_other.my_is_deprecated;
+    result &= my_is_constructor == the_other.my_is_constructor;
+    result &= my_is_inherited == the_other.my_is_inherited;
+    result &= my_is_factory == the_other.my_is_factory;
+    result &= my_is_testable == the_other.my_is_testable;
+    return result;
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
   public /*@ pure @*/ int hashCode() {
     return toString().hashCode();
+  }
+  
+  /**
+   * Compares this MethodInfo to the_other; MethodInfos are compared based on their
+   * String representations and their enclosing classes.
+   * 
+   * @param the_other The other MethodInfo.
+   * @return -1, 0 or 1 as this MethodInfo is less than, equivalent to, or greater 
+   * than the_other respectively.
+   */
+  public int compareTo(final MethodInfo the_other) {
+    final String my_string = 
+      getDeclaringClass().toString() + getEnclosingClass().toString() + toString();
+    final String other_string = 
+      the_other.getDeclaringClass().toString() + 
+      the_other.getEnclosingClass().toString() + 
+      the_other.toString();
+    return my_string.compareTo(other_string);
   }
 }

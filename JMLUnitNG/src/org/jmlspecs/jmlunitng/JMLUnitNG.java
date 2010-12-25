@@ -18,7 +18,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
@@ -26,6 +29,7 @@ import org.jmlspecs.jmlunitng.clops.JMLUnitNGOptionStore;
 import org.jmlspecs.jmlunitng.clops.JMLUnitNGParser;
 import org.jmlspecs.jmlunitng.generator.ClassInfo;
 import org.jmlspecs.jmlunitng.generator.InfoFactory;
+import org.jmlspecs.jmlunitng.generator.MethodInfo;
 import org.jmlspecs.jmlunitng.generator.ProtectionLevel;
 import org.jmlspecs.jmlunitng.generator.TestClassGenerator;
 import org.jmlspecs.jmlunitng.util.JavaSuffixFilter;
@@ -39,13 +43,13 @@ import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version September 2010
+ * @version December 2010
  */
 public final class JMLUnitNG implements Runnable {
   /**
    * The string to be prepended to the reported version.
    */
-  private static final String VERSION_STRING = "1.0a2pre";
+  private static final String VERSION_STRING = "1.0a2";
   
   /**
    * The raw SVN revision string.
@@ -371,14 +375,16 @@ public final class JMLUnitNG implements Runnable {
       if (numOfErrors > 0) {
         System.err.println("Encountered " + numOfErrors + " errors.");
         Runtime.getRuntime().exit(1);
-      } 
-      for (JmlCompilationUnit unit : units) {
-        final ClassInfo info = InfoFactory.getClassInfo(unit);
-        if (info != null) {
-          processCompilationUnit(unit, info);
-          if (!my_opts.isNoGenSet()) {
-            my_logger.println();
-          }
+      }
+      
+      // get class info for all classes before generating tests for any,
+      // to enable reflective generation of child classes
+      
+      InfoFactory.generateInfos(units, api);
+      for (JmlCompilationUnit u : units) {
+        processCompilationUnit(u, InfoFactory.getClassInfo(u));
+        if (!my_opts.isNoGenSet()) {  
+          my_logger.println();
         }
       }
     }
@@ -397,15 +403,19 @@ public final class JMLUnitNG implements Runnable {
   throws IOException {
     if (!my_opts.isNoGenSet()) {
       my_logger.print("Processing ");
-      if (the_info.isAbstract()) {
+
+      if (the_info.isInterface()) {
+        my_logger.println("interface " + the_info.getFullyQualifiedName());
+      } else if (the_info.isAbstract()) {
         my_logger.println("abstract class " + the_info.getFullyQualifiedName());
-      } else if (the_info.isEnumeration()){
+      } else if (the_info.isEnumeration()) {
         my_logger.println("enumeration " + the_info.getFullyQualifiedName());
       } else { // normal class
         my_logger.println("class " + the_info.getFullyQualifiedName());
       }
     }
-    if (the_info.isAbstract() || the_info.isEnumeration()) {
+    if (the_info.isAbstract() && the_info.getNestedClasses().isEmpty() || 
+        the_info.isEnumeration()) {
       return;
     }
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;
@@ -420,13 +430,14 @@ public final class JMLUnitNG implements Runnable {
                              my_opts.isInheritedSet(),
                              my_opts.isDeprecationSet(),
                              my_opts.isReflectionSet(),
+                             my_opts.isChildrenSet(),
                              rac_version);
 
     final String[] dirs = getDirectories(the_unit, the_info);
     String strategy_dir = dirs[0];
     for (String s : dirs) {
       final File f = new File(s);
-      if (!my_opts.isNoGenSet()) {
+      if (!my_opts.isNoGenSet() && !the_info.isAbstract()) { // don't create dirs for abstract classes for now
         my_logger.println("Creating directory " + f);
         if (!my_opts.isDryRunSet() && !f.mkdirs() && !f.isDirectory()) {
           System.err.println("Could not create destination directory " + f);

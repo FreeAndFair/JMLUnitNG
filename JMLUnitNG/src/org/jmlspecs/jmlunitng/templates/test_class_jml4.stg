@@ -15,6 +15,7 @@ package <package_name>;
 <endif>
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.jmlspecs.jmlunitng.iterator.IteratorWrapper;
@@ -26,6 +27,7 @@ import org.testng.TestException;
 import org.testng.TestNG;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.testng.xml.XmlSuite;
 
 import org.jmlspecs.jml4.rac.runtime.JMLAssertionError;
 import org.jmlspecs.jml4.rac.runtime.JMLChecker;
@@ -57,6 +59,8 @@ public class <testClassName(class)> {
     final Class\<?\>[] classes = {<testClassName(class)>.class};
     final BasicTestListener listener =
       new BasicTestListener(new PrintWriter(System.out));
+    testng_runner.setUseDefaultListeners(false);
+    testng_runner.setXmlSuites(new ArrayList\<XmlSuite\>());
     testng_runner.setTestClasses(classes);
     testng_runner.addListener(listener);
     testng_runner.run();
@@ -84,7 +88,7 @@ methodTest(method) ::= <<
 /**
  * A test for <if(method.constructor)>a constructor<else>method <method.name><endif>.<if(!method.constructor)>
  
- * @param the_test_object The <method.declaringClass.shortName> to call the test method on.
+ * @param the_test_object The <method.enclosingClass.shortName> to call the test method on.
 <endif>
 
 <method.parameters:varJavaDocLine(); separator="\n">
@@ -104,7 +108,7 @@ methodTest(method) ::= <<
 <endif>
 <endif>
 public void <testName()>
-(<if(!method.constructor)>final <method.declaringClass.shortName> the_test_object<if(method.parameters)>, 
+(<if(!method.constructor)>final <method.enclosingClass.shortName> the_test_object<if(method.parameters)>, 
 <endif><endif><varDecList(method.parameters)>) {
   <if(!method.constructor)>
   if (the_test_object == null) {
@@ -119,26 +123,27 @@ public void <testName()>
     the_test_object.<method.name>(<varNameList(method.parameters)>);
     <endif>
   }
-  catch (final JMLEntryPreconditionError the_exp) {
+  <if(method.signals)>
+  <method.signals:catchClause()><endif>  catch (final JMLEntryPreconditionError e) {
     // meaningless test
-    throw new PreconditionSkipException(the_exp.getMessage());
+    throw new PreconditionSkipException(e.getMessage());
   }
-  catch (final JMLEvaluationError the_exp) {
-    if (the_exp.getCause() instanceof JMLEntryPreconditionError) {
+  catch (final JMLEvaluationError e) {
+    if (e.getCause() instanceof JMLEntryPreconditionError) {
       // meaningless test
-      throw new PreconditionSkipException(the_exp.getCause().getMessage());
+      throw new PreconditionSkipException(e.getCause().getMessage());
     } else {
       // failed test
-      throw new TestException(the_exp.getCause().getMessage());
+      throw new TestException(e.getCause().getMessage());
     }
   }
-  catch (final JMLAssertionError the_exp) {
+  catch (final JMLAssertionError e) {
     // test failure
-    throw new TestException(the_exp.getMessage());
+    throw new TestException(e.getMessage());
   }
-  catch (final Exception the_exp) {
+  catch (final Throwable e) {
     // test failure for some reason other than assertion violation
-    throw new TestException(the_exp.getMessage());
+    throw new TestException(e.getMessage());
   }
 }
 
@@ -175,4 +180,12 @@ public static Iterator\<Object[]\> <instanceDataProviderName()>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator(<instanceStrategyName()>.class));
 }
+>>
+
+catchClause() ::= <<
+catch (final <it.fullyQualifiedName> e) {
+  // passed test because of successful signals clause
+  return;
+}
+
 >>

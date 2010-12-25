@@ -7,9 +7,9 @@ package org.jmlspecs.jmlunitng.generator;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Information about a class under test.
@@ -18,7 +18,7 @@ import java.util.Set;
  * @author Jonathan Hogins
  * @version August 2010
  */
-public class ClassInfo extends TypeInfo {
+public class ClassInfo extends TypeInfo implements Comparable<ClassInfo> {
   /**  
    * True if the methods of this class have been initialized,
    * false otherwise.
@@ -31,19 +31,45 @@ public class ClassInfo extends TypeInfo {
   private final ClassInfo my_parent;
 
   /**
+   * The ClassInfo objects for the interfaces.
+   */
+  private final SortedSet<ClassInfo> my_interfaces;
+  
+  /**
    * The ProtectionLevel of this class.
    */
   private final ProtectionLevel my_protection_level;
   
   /**
-   * Is this class abstract?
+   * Is this class abstract (an abstract class or interface)?
    */
   private final boolean my_is_abstract;
     
   /**
+   * Is this class an interface?
+   */
+  private final boolean my_is_interface;
+  
+  
+  /**
    * Is this class an enum?
    */
   private final boolean my_is_enumeration;
+  
+  /**
+   * Is this class static?
+   */
+  private final boolean my_is_static;
+  
+  /**
+   * Is this class inner?
+   */
+  private final boolean my_is_inner;
+  
+  /**
+   * The ClassInfo objects representing the inner classes of this class.
+   */
+  private final Set<ClassInfo> my_nested_classes;
   
   /**
    * The MethodInfo objects representing the methods of this class.
@@ -84,19 +110,37 @@ public class ClassInfo extends TypeInfo {
   protected ClassInfo(final String the_name, 
                       final ProtectionLevel the_protection_level,
                       final boolean the_is_abstract, 
+                      final boolean the_is_interface,
                       final boolean the_is_enumeration,
-                      final /*@ nullable @*/ ClassInfo the_parent) {
+                      final boolean the_is_static,
+                      final boolean the_is_inner,
+                      final /*@ nullable @*/ ClassInfo the_parent,
+                      final SortedSet<ClassInfo> the_interfaces) {
     super(the_name);
     my_protection_level = the_protection_level;
     my_is_abstract = the_is_abstract;
+    my_is_interface = the_is_interface;
     my_is_enumeration = the_is_enumeration;
+    my_is_static = the_is_static;
+    my_is_inner = the_is_inner;
+    my_nested_classes = new HashSet<ClassInfo>();
     my_methods = new HashSet<MethodInfo>();
     my_inherited_methods = new HashSet<MethodInfo>();
     my_overriding_methods = new HashSet<MethodInfo>();
     my_overridden_methods = new HashSet<MethodInfo>();
     my_parent = the_parent;
+    my_interfaces = new TreeSet<ClassInfo>(the_interfaces);
   }
 
+  /**
+   * Initializes the nested classes of this ClassInfo.
+   * 
+   * @param the_classes The nested classes.
+   */
+  public void initializeNestedClasses(final Set<ClassInfo> the_classes) {
+    my_nested_classes.addAll(the_classes);
+  }
+  
   /**
    * Initializes the methods of this ClassInfo. This method may only
    * be called once.
@@ -154,16 +198,23 @@ public class ClassInfo extends TypeInfo {
    * @return the ClassInfo for this class's parent, or null if
    * this ClassInfo represents java.lang.Object.
    */
-  public /*@pure*/ ClassInfo getParent() {
+  public /* @pure */ ClassInfo getParent() {
     return my_parent;
   }
 
+  /**
+   * @return the set of ClassInfos for this class's interfaces.
+   */
+  public /*@ pure @*/ SortedSet<ClassInfo> getInterfaces() {
+    return Collections.unmodifiableSortedSet(my_interfaces);
+  }
+  
   /**
    * Returns the protection level of the class.
    * 
    * @return The protection level of the class.
    */
-  public/*@pure */ProtectionLevel getProtectionLevel() {
+  public /* @pure */ ProtectionLevel getProtectionLevel() {
     return my_protection_level;
   }
 
@@ -179,12 +230,33 @@ public class ClassInfo extends TypeInfo {
   /**
    * @return true if the class is an enumeration, false otherwise.
    */
+  public /*@ pure @*/ boolean isInterface() {
+    return my_is_interface;
+  }
+  
+  /**
+   * @return true if the class is an enumeration, false otherwise.
+   */
   public /*@ pure @*/ boolean isEnumeration() {
     return my_is_enumeration;
   }
   
   /**
-   * @returns true if the methods have been initialized, 
+   * @return true if the class is a static class, false otherwise.
+   */
+  public /*@ pure @*/ boolean isStatic() {
+    return my_is_static;
+  }
+  
+  /**
+   * @return true if the class is an inner class, false otherwise.
+   */
+  public /*@ pure @*/ boolean isInner() {
+    return my_is_inner;
+  }
+  
+  /**
+   * @return true if the methods have been initialized, 
    * false otherwise.
    */
   public /*@ pure @*/ boolean isInitialized() {
@@ -295,5 +367,58 @@ public class ClassInfo extends TypeInfo {
   //@ requires isInitialized();
   public /*@ pure @*/ Set<MethodInfo> getMethods() {
     return Collections.unmodifiableSet(my_methods);
+  }
+  
+  /**
+   * @return a set of ClassInfo objects that represent the
+   * nested classes of this class.
+   */
+  public /*@ pure @*/ Set<ClassInfo> getNestedClasses() {
+    return Collections.unmodifiableSet(my_nested_classes);
+  }
+  
+  // Comparable interface
+  
+  /**
+   * Compares this ClassInfo to the_other; ClassInfos are compared based on their
+   * fully qualified names.
+   * 
+   * @param the_other The other ClassInfo.
+   * @return -1, 0 or 1 as this ClassInfo is less than, equivalent to, or greater 
+   * than the_other respectively.
+   */
+  public int compareTo(final ClassInfo the_other) {
+    return getFullyQualifiedName().compareTo(the_other.getFullyQualifiedName());
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean equals(final /*@ nullable @*/ Object the_other) {
+    boolean result = super.equals(the_other);
+
+    if (result && the_other != this) {
+      final ClassInfo cls = (ClassInfo) the_other;
+      result &= my_initialized == cls.my_initialized;
+      result &= my_interfaces.equals(cls.my_interfaces);
+      result &= my_protection_level.equals(cls.my_protection_level);
+      result &= my_is_abstract == cls.my_is_abstract;
+      result &= my_is_interface == cls.my_is_interface;
+      result &= my_is_enumeration == cls.my_is_enumeration;
+      result &= my_nested_classes.equals(cls.my_nested_classes);
+      result &= my_methods.equals(cls.my_methods);
+      result &= my_inherited_methods.equals(cls.my_inherited_methods);
+      result &= my_overriding_methods.equals(cls.my_overriding_methods);
+      result &= my_overridden_methods.equals(cls.my_overridden_methods);
+    }
+
+    return result;
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public int hashCode() {
+    return toString().hashCode();
   }
 }

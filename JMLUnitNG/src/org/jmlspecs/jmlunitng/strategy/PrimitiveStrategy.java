@@ -52,7 +52,6 @@ public abstract class PrimitiveStrategy implements Strategy {
    * 
    * @return What are all your values?
    */
-  @SuppressWarnings("unchecked")
   public RepeatedAccessIterator<Comparable<?>> iterator() {
     // deduplicate the primitive data, because we can easily keep it all in memory
     // at once and this saves test executions; note that all primitive types,
@@ -60,7 +59,8 @@ public abstract class PrimitiveStrategy implements Strategy {
     // up being executed in a reasonable order.
     
     final SortedSet<Comparable<?>> set = new TreeSet<Comparable<?>>();
-    RepeatedAccessIterator<?>[] values = { getDefaultValues(), getCustomValues(), getGlobalValues() };
+    final RepeatedAccessIterator<?>[] values = 
+      { getDefaultValues(), getCustomValues(), getGlobalValues() };
     for (RepeatedAccessIterator<?> r : values) {
       while (r.hasElement()) {
         set.add((Comparable<?>) r.element());

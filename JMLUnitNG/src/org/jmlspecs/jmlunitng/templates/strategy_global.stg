@@ -1,17 +1,18 @@
 group strategy_global : shared_java;
 
-main(date, class, type, jmlunitng_version, use_reflection) ::= <<
+main(date, class, type, jmlunitng_version, use_reflection, children) ::= <<
 /*
  * Test data strategy for <class.fullyQualifiedName>.
  *
  * <generatedLine(versionString=jmlunitng_version, dateString=date)>
  * <doNotModifyString()>
  */
- 
-<if(class.packaged)>
+ <if(class.packaged)>
+
 package <strategyPackageName(classInfo=class)>;
 
 <endif>
+
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 import org.jmlspecs.jmlunitng.strategy.<baseStrategyMap.(type.fullyQualifiedName)>;
@@ -40,9 +41,16 @@ public abstract class <globalStrategyName(typeInfo=type)>
    */
   public <globalStrategyName(typeInfo=type)>() {
     super(<type.fullyQualifiedName>.class, <if(use_reflection)>true<else>false<endif>);
-  }
+    <if(children)>
+    
+    <children:addDataClassLine()><endif>  }
   <endif>
 }
+
+>>
+
+addDataClassLine() ::= <<
+addDataClass(<it.fullyQualifiedName>.class);
 
 >>
 

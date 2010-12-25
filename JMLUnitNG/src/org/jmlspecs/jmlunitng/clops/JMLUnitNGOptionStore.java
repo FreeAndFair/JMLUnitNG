@@ -1,8 +1,3 @@
-/*
- * JMLUnitNG 
- * Copyright (C) 2010
- */
-
 package org.jmlspecs.jmlunitng.clops;
 
 import ie.ucd.clops.runtime.options.CLOPSErrorOption;
@@ -22,6 +17,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   private final BooleanOption ogDashDash;
   private final FileListOption ogDashFiles;
   private final BooleanOption ogReflection;
+  private final BooleanOption ogChildren;
   private final BooleanOption ogHelp;
   private final BooleanOption ogDeprecation;
   private final BooleanOption ogVerbose;
@@ -66,6 +62,9 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogReflection = new BooleanOption("Reflection", "(?:--reflection)");
     addOption(ogReflection);
     ogReflection.setProperty("aliases", "--reflection");
+    ogChildren = new BooleanOption("Children", "(?:--children)");
+    addOption(ogChildren);
+    ogChildren.setProperty("aliases", "--children");
     ogHelp = new BooleanOption("Help", "(?:-h)|(?:--help)");
     addOption(ogHelp);
     ogHelp.setProperty("aliases", "-h,--help");
@@ -131,15 +130,16 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogNoGen);
     ogOption.addOptionOrGroup(ogClean);
     ogOption.addOptionOrGroup(ogProtected);
+    ogOption.addOptionOrGroup(ogChildren);
     ogOption.addOptionOrGroup(ogHelp);
     ogOption.addOptionOrGroup(ogSpecspath);
     ogOption.addOptionOrGroup(ogReflection);
-    ogOption.addOptionOrGroup(ogDryRun);
     ogOption.addOptionOrGroup(ogPackage);
+    ogOption.addOptionOrGroup(ogDryRun);
     ogOption.addOptionOrGroup(ogDestination);
-    ogOption.addOptionOrGroup(ogRACVersion);
     ogOption.addOptionOrGroup(ogPublic);
     ogOption.addOptionOrGroup(ogInherited);
+    ogOption.addOptionOrGroup(ogRACVersion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogDestination);
     ogAllOptions.addOptionOrGroup(ogRACVersion);
@@ -147,6 +147,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogAllOptions.addOptionOrGroup(ogDashDash);
     ogAllOptions.addOptionOrGroup(ogDashFiles);
     ogAllOptions.addOptionOrGroup(ogReflection);
+    ogAllOptions.addOptionOrGroup(ogChildren);
     ogAllOptions.addOptionOrGroup(ogHelp);
     ogAllOptions.addOptionOrGroup(ogDeprecation);
     ogAllOptions.addOptionOrGroup(ogVerbose);
@@ -304,6 +305,30 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   
   public BooleanOption getReflectionOption() {
     return ogReflection;
+  }
+  
+// Option Children.
+// Aliases: [--children]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isChildrenSet() {
+    return ogChildren.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getChildren() {
+    return ogChildren.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawChildren() {
+    return ogChildren.getRawValue();
+  }
+  
+  public BooleanOption getChildrenOption() {
+    return ogChildren;
   }
   
 // Option Help.

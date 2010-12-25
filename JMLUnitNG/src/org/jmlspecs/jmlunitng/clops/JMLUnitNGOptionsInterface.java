@@ -1,8 +1,3 @@
-/*
- * JMLUnitNG 
- * Copyright (C) 2010
- */
-
 package org.jmlspecs.jmlunitng.clops;
 
 import java.util.List;
@@ -114,6 +109,23 @@ public interface JMLUnitNGOptionsInterface {
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
   boolean getReflection();
+  
+
+// Option Children. 
+// Aliases: [--children]
+
+  /**
+   * @return true if the option Children has been used
+   * in the command line.
+   */
+  boolean isChildrenSet();
+
+  /**
+   * Get the value of {@code Option} Children.
+   * @return the value of the option Children if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getChildren();
   
 
 // Option Help. 

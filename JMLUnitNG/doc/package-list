@@ -1,0 +1,6 @@
+org.jmlspecs.jmlunitng
+org.jmlspecs.jmlunitng.generator
+org.jmlspecs.jmlunitng.iterator
+org.jmlspecs.jmlunitng.strategy
+org.jmlspecs.jmlunitng.testng
+org.jmlspecs.jmlunitng.util

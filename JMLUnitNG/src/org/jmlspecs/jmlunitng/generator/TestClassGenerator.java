@@ -19,9 +19,11 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
@@ -34,7 +36,7 @@ import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version September 2010
+ * @version November 2010
  */
 public class TestClassGenerator {
   /**
@@ -68,6 +70,11 @@ public class TestClassGenerator {
    * Do test data classes use reflection by default?
    */
   public static final boolean DEF_USE_REFLECTION = true;
+
+  /**
+   * Do test data classes use children by default?
+   */
+  public static final boolean DEF_USE_CHILDREN = true;
   
   /**
    * The default RAC version to generate tests for.
@@ -115,6 +122,11 @@ public class TestClassGenerator {
   private final boolean my_use_reflection;
 
   /**
+   * Do I use children to get method parameters?
+   */
+  private final boolean my_use_children;
+  
+  /**
    * The RAC version to generate test classes for.
    */
   private final String my_rac_version;
@@ -130,7 +142,7 @@ public class TestClassGenerator {
   public TestClassGenerator() {
     this(false, false, new Logger(false), DEF_PROTECTION_LEVEL, 
          DEF_TEST_INHERITED_METHODS, DEF_TEST_DEPRECATED_METHODS, 
-         DEF_USE_REFLECTION, DEF_RAC_VERSION);
+         DEF_USE_REFLECTION, DEF_USE_CHILDREN, DEF_RAC_VERSION);
   }
 
   /**
@@ -159,6 +171,7 @@ public class TestClassGenerator {
                             final boolean the_test_inherited_methods,
                             final boolean the_test_deprecated_methods,
                             final boolean the_use_reflection,
+                            final boolean the_use_children,
                             final String the_rac_version) {
     my_no_gen = the_no_gen;
     my_gen_files = !the_dry_run && !the_no_gen;
@@ -167,6 +180,7 @@ public class TestClassGenerator {
     my_test_inherited_methods = the_test_inherited_methods;
     my_test_deprecated_methods = the_test_deprecated_methods;
     my_use_reflection = the_use_reflection;
+    my_use_children = the_use_children;
     my_rac_version = the_rac_version;
   }
 
@@ -220,12 +234,27 @@ public class TestClassGenerator {
   throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_global");
     final StringTemplate t = group.getInstanceOf("main");
+    SortedSet<ClassInfo> children = null;
+    final ClassInfo type_class_info = 
+      InfoFactory.getClassInfo(the_type.getFullyQualifiedName());
+    if (my_use_children && type_class_info != null) {
+      children = InfoFactory.getConcreteChildren(type_class_info);
+      // remove non-public children so we don't try to generate them
+      final Iterator<ClassInfo> ci = children.iterator();
+      while (ci.hasNext()) {
+        if (ci.next().getProtectionLevel() != ProtectionLevel.PUBLIC) {
+          ci.remove();
+        }
+      }
+    }
+    
     t.setAttribute("class", the_class);
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("type", the_type);
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
     t.setAttribute("use_reflection", my_use_reflection);
-    
+    t.setAttribute("children", children);
+
     if (!my_no_gen) {
       my_logger.println("Generating global strategy for type " +
                         the_type.getFullyQualifiedName());
@@ -249,6 +278,7 @@ public class TestClassGenerator {
   throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_instance");
     final StringTemplate t = group.getInstanceOf("main");
+    
     t.setAttribute("class", the_class);
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
@@ -318,6 +348,17 @@ public class TestClassGenerator {
     final StringTemplate gs_name = group.lookupTemplate("globalStrategyName");
  
     final Set<MethodInfo> methods_to_test = getMethodsToTest(the_class);
+    final Set<ClassInfo> classes_to_test = getClassesToTest(the_class);
+    
+    // we don't test nested classes yet but we can say something
+    for (ClassInfo c : classes_to_test) {
+      my_logger.println("No test generation yet for nested class " + 
+                        c.getFullyQualifiedName());
+    }
+    
+    if (the_class.isAbstract()) {
+      return;
+    }
     
     // initialize name templates
     tc_name.setAttribute("classInfo", the_class);
@@ -326,11 +367,12 @@ public class TestClassGenerator {
     
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
     final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(baos));
+
+    File f;
     
-    // generate the (single) test class
-    
-    File f = new File(the_test_dir + tc_name.toString() + JMLUnitNG.JAVA_SUFFIX);
-    
+    // generate the (single) test class, if necessary
+
+    f = new File(the_test_dir + tc_name.toString() + JMLUnitNG.JAVA_SUFFIX);
     if (my_gen_files) {
       final FileWriter fw = new FileWriter(f);
       generateTestClass(the_class, methods_to_test, fw);
@@ -340,10 +382,10 @@ public class TestClassGenerator {
       baos.reset();
     }
     my_created_files.add(f.getCanonicalPath());
-    
-    // generate the strategy classes - there are three stages here
-    
-    // first: individual method parameter strategy classes
+
+    // generate the strategy classes - there are three stages here 
+    // first: individual method parameter strategy classes, only if concrete
+
     for (MethodInfo m : methods_to_test) {
       for (ParameterInfo p : m.getParameters()) {
         ms_name.reset();
@@ -365,9 +407,9 @@ public class TestClassGenerator {
         my_created_files.add(f.getCanonicalPath());
       }
     }
-    
-    // second: global strategy classes for all data types
-    
+
+    // second: global strategy classes for all data types, only if concrete
+
     for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
       gs_name.reset();
       gs_name.setAttribute("typeInfo", t);
@@ -448,6 +490,24 @@ public class TestClassGenerator {
     return methods;
   }
 
+  /**
+   * Returns the nested classes from the given class to test based on 
+   * generator settings.
+   * 
+   * @param the_class The class for which to find testable nested classes.
+   * @return A list of nested classes in the_class to test.
+   */
+  private /*@ pure non_null @*/ Set<ClassInfo> getClassesToTest
+  (final /*@ non_null @*/ ClassInfo the_class) {
+    final Set<ClassInfo> classes = new HashSet<ClassInfo>();
+    for (ClassInfo c : the_class.getNestedClasses()) {
+      if (!c.isInner() && c.getProtectionLevel().weakerThanOrEqualTo(my_level)) {
+        classes.add(c);
+      }
+    }
+    return classes;
+  }
+  
   /**
    * Returns the basic types present in the parameters of the given methods.
    * 
