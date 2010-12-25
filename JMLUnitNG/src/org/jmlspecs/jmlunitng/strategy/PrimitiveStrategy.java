@@ -14,7 +14,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
  * The basic framework of a primitive test data generation strategy. 
  * Primitive data strategies deduplicate the test data elements to save
- * on test executions, since they are all in memory anyway.
+ * on redundant test executions.
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman

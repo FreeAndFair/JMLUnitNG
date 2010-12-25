@@ -47,7 +47,7 @@ public class BasicTestListener implements ITestListener {
    * Creates a new BasicTestListener that sends test results to the given
    * writer.
    * 
-   * @param the_writer The writer for which to send.err.ut.
+   * @param the_writer The writer to use for streaming test results.
    */
   // @ ensures my_writer == the_writer
   public BasicTestListener(final Writer the_writer) {

@@ -12,9 +12,12 @@ import java.util.List;
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
- * All values in all sets of values are assignable to Java type 'double'.
+ * The default strategy for the <code>double</code> type. The default values are 
+ * -1.0, 0.0 and 1.0.
+ *
  * @author Jonathan Hogins
- * @version April 2010
+ * @author Daniel M. Zimmerman
+ * @version December 2010
  */
 public abstract class DoubleStrategy extends PrimitiveStrategy {
   /**

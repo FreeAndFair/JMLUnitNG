@@ -12,9 +12,13 @@ import java.util.List;
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
- * All values in all sets of values are assignable to Java type 'String'.
+ * The default strategy for type <code>java.lang.String</code>, which - although an
+ * object - is treated as primitive by JMLUnitNG. The default values are <code>null</code>
+ * and <code>""</code> (the empty string).
+ * 
  * @author Jonathan Hogins
- * @version April 2010
+ * @author Daniel M. Zimmerman
+ * @version December 2010
  */
 public abstract class StringStrategy extends PrimitiveStrategy {
   /**

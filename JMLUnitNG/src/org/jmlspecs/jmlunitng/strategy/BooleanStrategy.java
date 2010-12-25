@@ -12,9 +12,12 @@ import java.util.List;
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
- * All values in all sets of values are assignable to Java type 'boolean'.
+ * The default strategy for the <code>boolean</code> type. The default 
+ * (and only possible) values are <code>true</code> and <code>false</code>.
+ *
  * @author Jonathan Hogins
- * @version April 2010
+ * @author Daniel M. Zimmerman
+ * @version December 2010
  */
 public abstract class BooleanStrategy extends PrimitiveStrategy {
   /**

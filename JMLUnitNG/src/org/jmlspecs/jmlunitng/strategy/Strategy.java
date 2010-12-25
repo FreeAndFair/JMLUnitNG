@@ -8,10 +8,10 @@ package org.jmlspecs.jmlunitng.strategy;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
- * A test data generation strategy.
+ * The interface for all test data generation strategies.
  * 
  * @author Daniel M. Zimmerman
- * @version November 2010
+ * @version December 2010
  */
 public interface Strategy {
   /**
