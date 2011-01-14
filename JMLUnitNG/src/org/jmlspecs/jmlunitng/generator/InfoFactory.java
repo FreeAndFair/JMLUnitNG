@@ -28,6 +28,7 @@ import org.jmlspecs.openjml.JmlSpecs.MethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
+import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignalsOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTreeScanner;
 
@@ -40,6 +41,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.TypeTags;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 
 /**
  * Factory class that generates ClassInfo and MethodInfo objects.
@@ -546,8 +548,19 @@ public final class InfoFactory {
     }
   }
   
+  /**
+   * JCTree scanner that scans specifically for signals/signals_only clause
+   * information to generate a list of exception types.
+   */
   private static class SignalsParser extends JmlTreeScanner {
+    /**
+     * The list of exception types.
+     */
     private final List<ClassInfo> my_exception_types = new LinkedList<ClassInfo>();
+    
+    /**
+     * The comparator used to order the exception types in inheritance order.
+     */
     private final InheritanceComparator my_comparator = new InheritanceComparator();
     
     /**
@@ -559,14 +572,36 @@ public final class InfoFactory {
       addInOrder(createClassInfo((ClassSymbol) the_tree.vardef.type.tsym));
     }
     
+    /**
+     * Extracts information about a signals_only clause for a method.
+     * 
+     * @param the_tree THe signals_only clause node.
+     */
+    public void visitJmlMethodClauseSigOnly(final JmlMethodClauseSignalsOnly the_tree) {
+      // for a signals_only clause, we have to add all the exceptions in the list
+      for (JCExpression exception_type : the_tree.list) {
+        addInOrder(createClassInfo((ClassSymbol) exception_type.type.tsym));
+      }
+    }
+    
+    /**
+     * @return the exception types found in the methods signals/signals_only clauses.
+     */
     public List<ClassInfo> getExceptionTypes() {
       return my_exception_types;
     }
     
+    /**
+     * Adds the specified class (which should be an exception type) to the list, 
+     * in inheritance order.
+     * 
+     * @param the_class The class to add to the list.
+     */
     private void addInOrder(final ClassInfo the_class) {
       if (my_exception_types.isEmpty()) {
         my_exception_types.add(the_class);
-      } else {
+      } else if (!my_exception_types.contains(the_class)) {
+        // we have not previously added this exception type
         boolean added = false;
         for (int i = 0; i < my_exception_types.size(); i++) {
           ClassInfo c = my_exception_types.get(i);
