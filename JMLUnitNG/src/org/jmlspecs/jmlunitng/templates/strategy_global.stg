@@ -19,7 +19,7 @@ import org.jmlspecs.jmlunitng.strategy.<baseStrategyMap.(type.fullyQualifiedName
  
 /**
  * Test data strategy for <class.fullyQualifiedName>. Provides
- * global test values for type <type.fullyQualifiedName>.
+ * class-scope test values for type <type.fullyQualifiedName>.
  * 
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
@@ -27,12 +27,20 @@ import org.jmlspecs.jmlunitng.strategy.<baseStrategyMap.(type.fullyQualifiedName
 public abstract class <globalStrategyName(typeInfo=type)> 
   extends <baseStrategyMap.(type.fullyQualifiedName)> {
   /**
-   * @return global values for type <type.fullyQualifiedName>.
+   * @return class-scope values for type <type.fullyQualifiedName>.
    */
-  public RepeatedAccessIterator\<?\> getGlobalValues() {
+  public RepeatedAccessIterator\<?\> getClassValues() {
     return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
     (new <typeTransMap.(type.fullyQualifiedName)>[] 
     <globalStrategyFillIn(typeInfo=type)>);
+  }
+  
+  /**
+   * temporary until I figure out the right way to deal with this
+   */
+  public RepeatedAccessIterator\<?\> getPackageValues() {
+    return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
+    (new <typeTransMap.(type.fullyQualifiedName)>[]{});
   }
   <if(!type.primitive)>
   

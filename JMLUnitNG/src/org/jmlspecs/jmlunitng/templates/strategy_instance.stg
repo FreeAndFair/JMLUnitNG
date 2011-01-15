@@ -38,9 +38,9 @@ import <class.packageName>.<testClassName(class)>;
  */
 public class <instanceStrategyName()> extends ObjectStrategy {
   /**
-   * @return custom instances of <class.fullyQualifiedName>.
+   * @return local-scope instances of <class.fullyQualifiedName>.
    */
-  public RepeatedAccessIterator\<<class.shortName>\> getCustomValues() {
+  public RepeatedAccessIterator\<<class.shortName>\> getLocalValues() {
     return new ObjectArrayIterator\<<class.shortName>\>
     (new <class.shortName>[]
      <instanceStrategyFillIn(classInfo=class)>);

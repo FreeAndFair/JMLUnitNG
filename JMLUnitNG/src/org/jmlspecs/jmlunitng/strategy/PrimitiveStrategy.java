@@ -22,33 +22,39 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  */
 public abstract class PrimitiveStrategy implements Strategy {
   /**
-   * To be implemented by subclasses. Returns the iterator over default values
-   * for this type.
+   * To be implemented by users. Returns an iterator over the local-scope
+   * values for this type.
+   * 
+   * @return What are your local-scope values?
+   */
+  public abstract RepeatedAccessIterator<?> getLocalValues();
+
+  /**
+   * To be implemented by automatically-generated strategy classes. 
+   * Returns an iterator over the class-scope values for this type.
+   * 
+   * @return What are your class-scope values?
+   */
+  public abstract RepeatedAccessIterator<?> getClassValues();
+
+  /**
+   * To be implemented by automatically-generated strategy classes. 
+   * Returns an iterator over the package-scope values for this type.
+   * 
+   * @return What are your package-scope values?
+   */
+  public abstract RepeatedAccessIterator<?> getPackageValues();
+  
+  /**
+   * To be implemented by subclasses. Returns the iterator over default 
+   * values for this type.
    * 
    * @return What are your default values?
    */
   public abstract RepeatedAccessIterator<?> getDefaultValues();
 
-  // "What is your custom set of values?",
   /**
-   * To be implemented by users. Returns an iterator over the custom values
-   * for this type.
-   * 
-   * @return What are your custom values?
-   */
-  public abstract RepeatedAccessIterator<?> getCustomValues();
-
-  /**
-   * To be implemented by users. Returns an iterator over the global values for
-   * this type.
-   * 
-   * @return What are your global values?
-   */
-  public abstract RepeatedAccessIterator<?> getGlobalValues();
-
-  /**
-   * Returns a RepeatedAccessIterator over all values in the order: default
-   * values, custom values, global values.
+   * Returns a RepeatedAccessIterator over all values.
    * 
    * @return What are all your values?
    */
@@ -60,7 +66,7 @@ public abstract class PrimitiveStrategy implements Strategy {
     
     final SortedSet<Comparable<?>> set = new TreeSet<Comparable<?>>();
     final RepeatedAccessIterator<?>[] values = 
-      { getDefaultValues(), getCustomValues(), getGlobalValues() };
+      { getLocalValues(), getClassValues(), getPackageValues(), getDefaultValues() };
     for (RepeatedAccessIterator<?> r : values) {
       while (r.hasElement()) {
         set.add((Comparable<?>) r.element());

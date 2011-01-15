@@ -119,9 +119,11 @@ public void <testName()>
   try {
     <if(method.constructor)>
     new <method.name>(<varNameList(method.parameters)>);
+    <else><if(method.static)>
+    <method.enclosingClass.shortName>.<method.name>(<varNameList(method.parameters)>);
     <else>
     the_test_object.<method.name>(<varNameList(method.parameters)>);
-    <endif>
+    <endif><endif>
   }
   <if(method.signals)>
   <method.signals:catchClause()><endif>  catch (final JMLEntryPreconditionError e) {
@@ -159,9 +161,9 @@ methodProvider(method) ::= <<
 public static Iterator\<Object[]\> <dataProviderName()>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator
-       (<if(!method.constructor)><instanceStrategyName()>.class, 
+       (<if(!method.constructor)><if(!method.static)><instanceStrategyName()>.class, 
 
-        <endif><method.parameters:{<strategyName(methodInfo=method, paramInfo=it)>.class}; separator=", 
+        <endif><endif><method.parameters:{<strategyName(methodInfo=method, paramInfo=it)>.class}; separator=", 
 ">));
 }
 

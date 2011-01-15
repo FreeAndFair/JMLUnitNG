@@ -97,6 +97,33 @@ public abstract class ObjectStrategy implements Strategy {
   }
   
   /**
+   * A default empty iterator, may be overridden by child classes.
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getLocalValues() {
+    return new ObjectArrayIterator<Object>
+    ((Object[]) Array.newInstance(my_class, 0));
+  }
+  
+  /**
+   * A default empty iterator, may be overridden by child classes.
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getClassValues() {
+    return new ObjectArrayIterator<Object>
+    ((Object[]) Array.newInstance(my_class, 0));
+  }
+
+  /**
+   * A default empty iterator, may be overridden by child classes.
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getPackageValues() {
+    return new ObjectArrayIterator<Object>
+    ((Object[]) Array.newInstance(my_class, 0));
+  }
+  
+  /**
    * Returns an iterator over the values defined in the class' test data
    * definition if it exists. Otherwise, returns an iterator over
    * DEFAULT_VALUES.
@@ -154,35 +181,18 @@ public abstract class ObjectStrategy implements Strategy {
   }
   
   /**
-   * A default empty iterator, may be overridden by child classes.
-   * @return An empty iterator.
-   */
-  public RepeatedAccessIterator<?> getGlobalValues() {
-    return new ObjectArrayIterator<Object>
-    ((Object[]) Array.newInstance(my_class, 0));
-  }
-
-  /**
-   * A default empty iterator, may be overridden by child classes.
-   * @return An empty iterator.
-   */
-  public RepeatedAccessIterator<?> getCustomValues() {
-    return new ObjectArrayIterator<Object>
-    ((Object[]) Array.newInstance(my_class, 0));
-  }
-  
-  /**
-   * Returns a RepeatedAccessIterator over all values in the order: default
-   * values, custom values, global values.
+   * Returns a RepeatedAccessIterator over all values in the order: local-scope
+   * values, class-scope values, package-scope values, default values.
    * 
    * @return What are all your values?
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RepeatedAccessIterator<?> iterator() {
     final List<RepeatedAccessIterator<?>> iterators = new ArrayList<RepeatedAccessIterator<?>>(3);
+    iterators.add(getLocalValues());
+    iterators.add(getClassValues());
+    iterators.add(getPackageValues());
     iterators.add(getDefaultValues());
-    iterators.add(getCustomValues());
-    iterators.add(getGlobalValues());
     return new MultiIterator(iterators);
   }
   

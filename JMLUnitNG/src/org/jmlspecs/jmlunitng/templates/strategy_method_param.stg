@@ -26,12 +26,20 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 public class <strategyName(methodInfo=method, paramInfo=param)>
   extends <globalStrategyName(typeInfo=param.type)> {
   /**
-   * @return custom values for parameter "<param.type.shortName> <param.name>".
+   * @return local-scope values for parameter "<param.type.shortName> <param.name>".
    */
-  public RepeatedAccessIterator\<?\> getCustomValues() {
+  public RepeatedAccessIterator\<?\> getLocalValues() {
   	return new ObjectArrayIterator\<<type(paramInfo=param)>\>
   	(new <type(paramInfo=param)>[] 
   	<strategyFillIn(typeInfo=param.type)>);
+  }
+    
+  /**
+   * temporary until I figure out the right way to deal with this
+   */
+  public RepeatedAccessIterator\<?\> getPackageValues() {
+    return new ObjectArrayIterator\<<type(paramInfo=param)>\>
+    (new <type(paramInfo=param)>[]{});
   }
 }
 
