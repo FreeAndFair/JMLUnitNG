@@ -6,7 +6,7 @@ dataProviderName() ::= "p_<method.detailedName>"
 testClassName(classInfo) ::= "<classInfo.shortName><testClassSuffix()>"
 
 testName() ::= <<
-test_<method.detailedName>
+test_<if(method.static)>static_<endif><method.detailedName>
 >>
 
 varJavaDocLine() ::= <<

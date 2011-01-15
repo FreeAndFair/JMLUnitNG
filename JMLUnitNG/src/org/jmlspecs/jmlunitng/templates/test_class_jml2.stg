@@ -108,8 +108,8 @@ methodTest(method) ::= <<
 <endif>
 <endif>
 public void <testName()>
-(<if(!method.constructor)>final <method.enclosingClass.shortName> the_test_object<if(method.parameters)>, 
-<endif><endif><varDecList(method.parameters)>) {
+(<if(!method.constructor)><if(!method.static)>final <method.enclosingClass.shortName> the_test_object<if(method.parameters)>, 
+<endif><endif><endif><varDecList(method.parameters)>) {
   <if(!method.constructor)>
   if (the_test_object == null) {
     throw new PreconditionSkipException

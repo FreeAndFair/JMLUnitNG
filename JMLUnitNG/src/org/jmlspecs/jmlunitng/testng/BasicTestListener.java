@@ -31,6 +31,11 @@ public class BasicTestListener implements ITestListener {
   private static final String TEST_PREFIX = "test_";
   
   /**
+   * The static prefix.
+   */
+  private static final String STATIC_PREFIX = "static_";
+  
+  /**
    * The test parameter separator.
    */
   private static final String TEST_PARAM_SEPARATOR = "__";
@@ -165,20 +170,30 @@ public class BasicTestListener implements ITestListener {
     if (class_name.startsWith(trunc_name + "_JML_Test")) {
       // this is a constructor test, so there is no object to print and
       // we have to print parameter 0, if any, as the first parameter
-      sb.append("Constructor " + trunc_name + "(");
-    }
+      sb.append("constructor " + trunc_name + "(");
+    } 
     else if (params.length == 0) {
+      if (isStaticTest(the_test_result)) {
+        // print that it's a static method
+        sb.append("static ");
+      }
       sb.append(trunc_name + "(");
     }
     else if (params.length > 0) {
-      // this is a regular method test, so we have to print the object
-      sb.append("<<" + params[0] + ">>." + trunc_name + "(");
-      start_index = 1;
+      if (isStaticTest(the_test_result)) {
+        // print that it's a static method
+        sb.append("static ");
+      } else {
+        // this is a regular method test, so we have to print the object
+        sb.append("<<" + params[0] + ">>.");        
+        start_index = 1;
+      }
+      sb.append(trunc_name + "(");
     }
     for (int i = start_index; i < params.length - 1; i++) {
       sb.append(params[i] + ", ");
     }
-    if (params.length > 1) {
+    if (params.length > 1 || (isStaticTest(the_test_result) && params.length == 1)) {
       sb.append(params[params.length - 1]);
     }
     sb.append(")");
@@ -190,8 +205,7 @@ public class BasicTestListener implements ITestListener {
    * @param the_test_result A test result.
    * @return the original name of the method being tested, as a String.
    */
-  private final String getOriginalMethodName
-  (final ITestResult the_test_result) {
+  private final String getOriginalMethodName(final ITestResult the_test_result) {
     // if the method name contains the String TEST_PARAM_SEPARATOR, and the test had
     // more than one parameter, we extended the method name; otherwise
     // it was a no-parameter method name that we left alone
@@ -200,13 +214,23 @@ public class BasicTestListener implements ITestListener {
     if (orig_name.startsWith(TEST_PREFIX)) {
       orig_name = orig_name.substring(TEST_PREFIX.length());
     }
-    if (orig_name.contains(TEST_PARAM_SEPARATOR) && 
-        the_test_result.getParameters().length > 0) {
+    if (orig_name.startsWith(STATIC_PREFIX)) {
+      orig_name = orig_name.substring(STATIC_PREFIX.length());
+    }
+    if (orig_name.contains(TEST_PARAM_SEPARATOR)) {
       // find the first occurrence of TEST_PARAM_SEPARATOR, and remove it and everything
       // that follows
       orig_name = orig_name.substring(0, orig_name.indexOf(TEST_PARAM_SEPARATOR));
     }
-    
     return orig_name;
+  }
+  
+  /**
+   * @param the_test_result The test result.
+   * @return true if the_test_result is a result for a static method, false
+   * otherwise.
+   */
+  private final boolean isStaticTest(final ITestResult the_test_result) {
+    return the_test_result.getName().startsWith(TEST_PREFIX + STATIC_PREFIX);
   }
 }
