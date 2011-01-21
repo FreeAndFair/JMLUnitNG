@@ -185,7 +185,7 @@ public class TestClassGenerator {
   }
 
   /**
-   * Generates a strategy class for the specified method parameter.
+   * Generates a local strategy class for the specified method parameter.
    * 
    * @param the_class The class to generate a strategy class for.
    * @param the_method The method to generate a strategy class for.
@@ -195,22 +195,39 @@ public class TestClassGenerator {
    */
   //@ requires the_class.getMethods().contains(the_method);
   //@ requires the_method.getParameters().contains(the_param);
-  public void generateMethodParamStrategyClass
+  public void generateLocalStrategyClass
   (final /*@ non_null @*/ ClassInfo the_class,
    final /*@ non_null @*/ MethodInfo the_method,
    final /*@ non_null @*/ ParameterInfo the_param, 
    final /*@ non_null @*/ Writer the_writer)
   throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_method_param");
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_local");
     final StringTemplate t = group.getInstanceOf("main");
+    SortedSet<ClassInfo> children = null;
+    
+    final ClassInfo type_class_info = 
+      InfoFactory.getClassInfo(the_param.getType().getFullyQualifiedName());
+    if (my_use_children && type_class_info != null) {
+      children = InfoFactory.getConcreteChildren(type_class_info);
+      // remove non-public children so we don't try to generate them
+      final Iterator<ClassInfo> ci = children.iterator();
+      while (ci.hasNext()) {
+        if (ci.next().getProtectionLevel() != ProtectionLevel.PUBLIC) {
+          ci.remove();
+        }
+      }
+    }
+
     t.setAttribute("class", the_class);
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("method", the_method);
     t.setAttribute("param", the_param);
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
+    t.setAttribute("use_reflection", my_use_reflection);
+    t.setAttribute("children", children);
     
     if (!my_no_gen) {
-      my_logger.println("Generating strategy for parameter " + the_param.getName() + 
+      my_logger.println("Generating local strategy for parameter " + the_param.getName() + 
                         " of " + the_method);
     }
     
@@ -218,7 +235,7 @@ public class TestClassGenerator {
   }
   
   /**
-   * Generates a global strategy class for the specified type.
+   * Generates a class-scope strategy class for the specified type.
    * 
    * @param the_class The class to generate a strategy class for.
    * @param the_type The type to generate a strategy class for.
@@ -227,14 +244,15 @@ public class TestClassGenerator {
    */
   //@ requires the_class.getMethods().contains(the_method);
   //@ requires the_method.getParameters().contains(the_param);
-  public void generateGlobalStrategyClass
+  public void generateClassStrategyClass
   (final /*@ non_null @*/ ClassInfo the_class,
    final /*@ non_null @*/ TypeInfo the_type,
    final /*@ non_null @*/ Writer the_writer)
   throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_global");
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_class");
     final StringTemplate t = group.getInstanceOf("main");
     SortedSet<ClassInfo> children = null;
+    
     final ClassInfo type_class_info = 
       InfoFactory.getClassInfo(the_type.getFullyQualifiedName());
     if (my_use_children && type_class_info != null) {
@@ -256,7 +274,58 @@ public class TestClassGenerator {
     t.setAttribute("children", children);
 
     if (!my_no_gen) {
-      my_logger.println("Generating global strategy for type " +
+      my_logger.println("Generating class strategy for type " +
+                        the_type.getFullyQualifiedName());
+    }
+    
+    the_writer.write(t.toString(LINE_WIDTH));
+  }
+  
+  /**
+   * Generates a package-scope strategy class for the specified type.
+   * 
+   * @param the_class The class to generate a strategy class for.
+   * @param the_type The type to generate a strategy class for.
+   * @param the_writer The writer to write the strategy class to.
+   * @throws IOException if an IOException occurs while writing the class.
+   */
+  //@ requires the_class.getMethods().contains(the_method);
+  //@ requires the_method.getParameters().contains(the_param);
+  public void generatePackageStrategyClass
+  (final /*@ non_null @*/ ClassInfo the_class,
+   final /*@ non_null @*/ TypeInfo the_type,
+   final /*@ non_null @*/ Writer the_writer)
+  throws IOException {
+    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_package");
+    final StringTemplate t = group.getInstanceOf("main");
+    SortedSet<ClassInfo> children = null;
+    
+    final ClassInfo type_class_info = 
+      InfoFactory.getClassInfo(the_type.getFullyQualifiedName());
+    if (my_use_children && type_class_info != null) {
+      children = InfoFactory.getConcreteChildren(type_class_info);
+      // remove non-public children so we don't try to generate them
+      final Iterator<ClassInfo> ci = children.iterator();
+      while (ci.hasNext()) {
+        if (ci.next().getProtectionLevel() != ProtectionLevel.PUBLIC) {
+          ci.remove();
+        }
+      }
+    }
+    
+    String pkg = null;
+    if (the_class.isPackaged()) {
+      pkg = the_class.getPackageName();
+    }
+    t.setAttribute("package", pkg);
+    t.setAttribute("date", getFormattedDate());
+    t.setAttribute("type", the_type);
+    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
+    t.setAttribute("use_reflection", my_use_reflection);
+    t.setAttribute("children", children);
+
+    if (!my_no_gen) {
+      my_logger.println("Generating package strategy for type " +
                         the_type.getFullyQualifiedName());
     }
     
@@ -343,10 +412,11 @@ public class TestClassGenerator {
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
     final StringTemplate tc_name = group.lookupTemplate("testClassName");
-    final StringTemplate ms_name = group.lookupTemplate("strategyName");
+    final StringTemplate ls_name = group.lookupTemplate("localStrategyName");
     final StringTemplate is_name = group.lookupTemplate("instanceStrategyName");
-    final StringTemplate gs_name = group.lookupTemplate("globalStrategyName");
- 
+    final StringTemplate gs_name = group.lookupTemplate("classStrategyName");
+    final StringTemplate ps_name = group.lookupTemplate("packageStrategyName");
+    
     final Set<MethodInfo> methods_to_test = getMethodsToTest(the_class);
     final Set<ClassInfo> classes_to_test = getClassesToTest(the_class);
     
@@ -372,7 +442,8 @@ public class TestClassGenerator {
     
     // generate the (single) test class, if necessary
 
-    f = new File(the_test_dir + tc_name.toString() + JMLUnitNG.JAVA_SUFFIX);
+    f = new File(the_test_dir + tc_name.toString() + 
+                 JMLUnitNG.JAVA_SUFFIX);
     if (my_gen_files) {
       final FileWriter fw = new FileWriter(f);
       generateTestClass(the_class, methods_to_test, fw);
@@ -384,53 +455,83 @@ public class TestClassGenerator {
     my_created_files.add(f.getCanonicalPath());
 
     // generate the strategy classes - there are three stages here 
-    // first: individual method parameter strategy classes, only if concrete
+    // first: local-scope method parameter strategy classes, only if concrete
 
     for (MethodInfo m : methods_to_test) {
       for (ParameterInfo p : m.getParameters()) {
-        ms_name.reset();
-        ms_name.setAttribute("methodInfo", m);
-        ms_name.setAttribute("paramInfo", p);
-        f = new File(the_strategy_dir + ms_name.toString() + 
+        ls_name.reset();
+        ls_name.setAttribute("classInfo", the_class);
+        ls_name.setAttribute("methodInfo", m);
+        ls_name.setAttribute("paramInfo", p);
+        f = new File(the_strategy_dir + ls_name.toString() + 
                      JMLUnitNG.JAVA_SUFFIX);
         if (my_gen_files && !f.exists()) {
           final FileWriter fw = new FileWriter(f);
-          generateMethodParamStrategyClass(the_class, m, p, fw);
+          generateLocalStrategyClass(the_class, m, p, fw);
           fw.close(); 
         } else if (my_gen_files) {
           my_logger.println("Not overwriting existing strategy for parameter " + 
                             p.getName() +  " of " + m); 
         } else {
-          generateMethodParamStrategyClass(the_class, m, p, bw);
+          generateLocalStrategyClass(the_class, m, p, bw);
           baos.reset();
         }
         my_created_files.add(f.getCanonicalPath());
       }
     }
 
-    // second: global strategy classes for all data types, only if concrete
+    // second: class-scope strategy classes for all data types, only if concrete
 
     for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
       gs_name.reset();
+      gs_name.setAttribute("classInfo", the_class);
       gs_name.setAttribute("typeInfo", t);
       f = new File(the_strategy_dir + gs_name.toString() + 
                    JMLUnitNG.JAVA_SUFFIX);
       if (my_gen_files && !f.exists()) {
         final FileWriter fw = new FileWriter(f);
-        generateGlobalStrategyClass(the_class, t, fw);
+        generateClassStrategyClass(the_class, t, fw);
         fw.close();
       } else if (my_gen_files) {
         my_logger.println("Not overwriting existing global strategy " + 
                           "for type " + t.getFullyQualifiedName());
       } else {
-        generateGlobalStrategyClass(the_class, t, bw);
+        generateClassStrategyClass(the_class, t, bw);
         baos.reset();
       }
       my_created_files.add(f.getCanonicalPath());
     }
     
-    // third: instance strategy class for this class
+    // third: package strategy classes for all types for which strategies
+    // were generated above (note that these may duplicate when we generate
+    // multiple sets of tests in the same package, but that's OK, as
+    // we won't overwrite them after the first one)
     
+    for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
+      ps_name.reset();
+      ps_name.setAttribute("typeInfo", t);
+
+      f = new File(the_test_dir + ps_name.toString() + 
+                   JMLUnitNG.JAVA_SUFFIX);
+      if (my_gen_files && !f.exists()) {
+        final FileWriter fw = new FileWriter(f);
+        generatePackageStrategyClass(the_class, t, fw);
+        fw.close();
+      } else if (my_gen_files) {
+        String pn = "<default>";
+        if (the_class.isPackaged()) {
+          pn = the_class.getPackageName();
+        }
+        my_logger.println("Not overwriting existing package strategy " +
+                          "for type " + t.getFullyQualifiedName() + 
+                          " in package " + pn);
+      }
+      my_created_files.add(f.getCanonicalPath());
+    }
+
+    // fourth: instance strategy class for this class
+    
+    is_name.setAttribute("classInfo", the_class);
     f = new File(the_strategy_dir + is_name.toString() + 
                  JMLUnitNG.JAVA_SUFFIX);
     if (my_gen_files && !f.exists()) {
@@ -445,6 +546,7 @@ public class TestClassGenerator {
       baos.reset();
     }
     my_created_files.add(f.getCanonicalPath());
+    
   }
   
   /**

@@ -35,8 +35,8 @@ public abstract class ObjectStrategy implements Strategy {
   /**
    * Should we use reflective data generation?
    */
-  private final boolean my_reflective;
-  
+  private boolean my_reflective;
+  // TODO consider making the following 3 collections into Sets
   /**
    * The test data generators found for this object strategy to use.
    */
@@ -57,20 +57,18 @@ public abstract class ObjectStrategy implements Strategy {
    * The enum constants for the given class, if it is an enum type.
    */
   private Object[] my_enum_constants; 
-  
+
   /**
-   * Creates a new ObjectStrategy for the given class. If the_reflective flag
-   * is true, then default values will be generated reflectively using the 
-   * data generator for the class, if it exists, or (in the case of enums) 
-   * will be all enum values. If the_reflective flag is false, there will 
-   * be no default values.
+   * Creates a new ObjectStrategy for the given class. Default values will be
+   * generated reflectively by the test data class for the_class if present;
+   * for enumerations, all enum constants will be used. This behavior can
+   * be subsequently changed with control methods.
    * 
-   * @param the_class The class to generate the strategy for.
-   * @param the_reflective The reflective flag.
+   * @param the_class The class for which to use test data from.
    */
-  public ObjectStrategy(final Class<?> the_class, final boolean the_reflective) {
+  public ObjectStrategy(final Class<?> the_class) {
     my_class = the_class;
-    my_reflective = the_reflective;
+    my_reflective = true;
     my_generators = new LinkedList<Class<? extends ObjectStrategy>>();
     my_generator_classes = new LinkedList<Class<?>>();
     my_non_generator_classes = new LinkedList<Class<?>>();
@@ -83,17 +81,6 @@ public abstract class ObjectStrategy implements Strategy {
       // it is an enum
       my_enum_constants = the_class.getEnumConstants();
     }
-  }
-
-  /**
-   * Creates a new ObjectStrategy for the given class. Default values will be
-   * generated reflectively by the test data class for the_class if present;
-   * for enumerations, all enum constants will be used.
-   * 
-   * @param the_class The class for which to use test data from.
-   */
-  public ObjectStrategy(final Class<?> the_class) {
-    this(the_class, true);
   }
   
   /**
@@ -197,18 +184,26 @@ public abstract class ObjectStrategy implements Strategy {
   }
   
   /**
-   * Adds a data class to be used by this iterator if reflection
+   * Adds a data class to be used by this strategy when reflection
    * is turned on.
    * 
    * @param the_class The new data class.
    */
   @SuppressWarnings("unchecked")
   public final void addDataClass(final Class<?> the_class) {
-    if (the_class.getEnumConstants() == null) {
-      // it's not an enum, so we can add it
+    if (the_class.getEnumConstants() == null &&
+        !my_generator_classes.contains(the_class) &&
+        !my_non_generator_classes.contains(the_class)) { 
+      // it's not an enum, or already added, so we can add it
       try {
-        final Class<?> generator_class = 
-          Class.forName(the_class.getName() + "_JML_Data.InstanceStrategy");
+        Class<?> generator_class = null; 
+        if (the_class.getPackage() == null) {
+          generator_class = 
+            Class.forName(the_class.getName() + "_InstanceStrategy");
+        } else {
+          generator_class = 
+            Class.forName(the_class.getName() + "_JML_Data.InstanceStrategy");
+        }
         if (ObjectStrategy.class.isAssignableFrom(generator_class)) {
           my_generators.add((Class<? extends ObjectStrategy>) generator_class);
           my_generator_classes.add(the_class);
@@ -219,5 +214,25 @@ public abstract class ObjectStrategy implements Strategy {
         my_non_generator_classes.add(the_class);
       }
     }
+  }
+  
+  /**
+   * Clears the list of data classes to be used by this strategy
+   * when reflection is turned on.
+   */
+  public final void clearDataClasses() {
+    my_generators.clear();
+    my_generator_classes.clear();
+    my_non_generator_classes.clear();
+  }
+  
+  /**
+   * Controls the use of reflection by this strategy.
+   * 
+   * @param the_reflective true to enable the use of reflection to
+   * generate objects, false otherwise.
+   */
+  public final void setReflective(final boolean the_reflective) {
+    my_reflective = the_reflective;
   }
 }

@@ -36,7 +36,7 @@ import <class.packageName>.<testClassName(class)>;
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
  */
-public class <instanceStrategyName()> extends ObjectStrategy {
+public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
   /**
    * @return local-scope instances of <class.fullyQualifiedName>.
    */
@@ -67,11 +67,15 @@ public class <instanceStrategyName()> extends ObjectStrategy {
   }
   
   /**
-   * Constructor. 
+   * Constructor. The boolean parameter to \<code\>setReflective\</code\>
+   * determines whether or not reflection will be used to generate
+   * test objects.
+   *
+   * @see setReflective(boolean)
    */
-  public <instanceStrategyName()>() {
-    // the boolean parameter in this call controls the use of reflection
-    super(<class.shortName>.class, <if(use_reflection)>true<else>false<endif>);
+  public <instanceStrategyName(classInfo=class)>() {
+    super(<class.shortName>.class);
+    setReflective(<if(use_reflection)>true<else>false<endif>);
   }
 }
 

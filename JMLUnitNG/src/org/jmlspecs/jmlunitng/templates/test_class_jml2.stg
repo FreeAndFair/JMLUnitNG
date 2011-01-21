@@ -110,12 +110,12 @@ methodTest(method) ::= <<
 public void <testName()>
 (<if(!method.constructor)><if(!method.static)>final <method.enclosingClass.shortName> the_test_object<if(method.parameters)>, 
 <endif><endif><endif><varDecList(method.parameters)>) {
-  <if(!method.constructor)>
+  <if(!method.constructor)><if(!method.static)>
   if (the_test_object == null) {
     throw new PreconditionSkipException
     ("could not construct an object to test");
   }
-  <endif>
+  <endif><endif>
   try {
     <if(method.constructor)>
     new <method.name>(<varNameList(method.parameters)>);
@@ -161,9 +161,9 @@ methodProvider(method) ::= <<
 public static Iterator\<Object[]\> <dataProviderName()>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator
-       (<if(!method.constructor)><if(!method.static)><instanceStrategyName()>.class, 
+       (<if(!method.constructor)><if(!method.static)><instanceStrategyName(classInfo=class)>.class, 
 
-        <endif><endif><method.parameters:{<strategyName(methodInfo=method, paramInfo=it)>.class}; separator=", 
+        <endif><endif><method.parameters:{<localStrategyName(classInfo=class, methodInfo=method, paramInfo=it)>.class}; separator=", 
 ">));
 }
 
@@ -180,7 +180,7 @@ instanceDataProvider() ::= <<
 @DataProvider(name = "<instanceDataProviderName()>")
 public static Iterator\<Object[]\> <instanceDataProviderName()>() {
   return new IteratorWrapper\<Object[]\>
-  (new ParameterArrayIterator(<instanceStrategyName()>.class));
+  (new ParameterArrayIterator(<instanceStrategyName(classInfo=class)>.class));
 }
 >>
 
