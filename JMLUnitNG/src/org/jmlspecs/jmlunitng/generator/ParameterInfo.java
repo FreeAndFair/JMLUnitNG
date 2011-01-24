@@ -24,11 +24,6 @@ public class ParameterInfo {
   private final /*@ non_null @*/ String my_name;
   
   /**
-   * Is this parameter an array?
-   */
-  private final boolean my_is_array;
-  
-  /**
    * Create a new ParameterInfo with the given fully qualified name and parameter name.
    * 
    * @param the_type The fully qualified name of the type.
@@ -36,11 +31,9 @@ public class ParameterInfo {
    * @param the_is_array true if the parameter type is an array type, false otherwise.
    */
   public ParameterInfo(final /*@ non_null @*/ String the_type, 
-                       final /*@ non_null @*/ String the_name, 
-                       final boolean the_is_array) {
+                       final /*@ non_null @*/ String the_name) {
     my_type = new TypeInfo(the_type);
     my_name = the_name;
-    my_is_array = the_is_array;
   }
   
   /**
@@ -58,13 +51,6 @@ public class ParameterInfo {
   }
   
   /**
-   * @return True if this parameter is an array. False otherwise.
-   */
-  public final boolean isArray() {
-    return my_is_array;
-  }
-
-  /**
    * {@inheritDoc}
    */
   public boolean equals(final /*@ nullable @*/ Object the_other) {
@@ -74,7 +60,6 @@ public class ParameterInfo {
       final ParameterInfo param = (ParameterInfo) the_other;
       result = my_type.equals(param.my_type);
       result &= my_name.equals(param.my_name);
-      result &= my_is_array == param.my_is_array;
     }
     
     return result;

@@ -37,20 +37,25 @@ public class TypeInfo {
   }
 
   /**
-   * The fully qualified name of this class.
+   * The fully qualified name of the class.
    */
   protected final String my_name;
+
   /**
    * The unqualified name of the class.
    */
   protected final String my_short_name;
+
   /**
    * The generic component of the class.
    */
   protected final String my_generic_comp;
 
-  // @ invariant my_short_name.equals(my_name.substring(my_name.lastIndexOf('.') + 1));
-  
+  /**
+   * The array dimension of the class.
+   */
+  protected final int my_array_dimension;
+    
   /**
    * Create a new Type with the given fully qualified name. 
    * If the given fully qualified name has a generic portion, it is removed.
@@ -60,14 +65,22 @@ public class TypeInfo {
   // @ ensures my_generic_comp != null <==> the_name.indexOf('<') != the_name.length;
   public TypeInfo(final String the_name) {
     int generic_start = the_name.indexOf('<');
+    int generic_end = the_name.indexOf('[');
+    String array_part = "";
+    if (generic_end == -1) {
+      generic_end = the_name.length();
+    } else {
+      array_part = the_name.substring(generic_end, the_name.length());
+    }
     if (generic_start == -1) {
-      generic_start = the_name.length();
+      generic_start = Math.min(generic_end, the_name.length());
       my_generic_comp = "";
     } else {
-      my_generic_comp = the_name.substring(generic_start, the_name.length());
+      my_generic_comp = the_name.substring(generic_start, generic_end);
     }
-    my_name = the_name.substring(0, generic_start);
+    my_name = the_name.substring(0, generic_start) + array_part;
     my_short_name = my_name.substring(my_name.lastIndexOf('.') + 1);
+    my_array_dimension = array_part.length() / 2;
   }
 
   /**
@@ -93,10 +106,18 @@ public class TypeInfo {
 
   /**
    * @return A formatted fully qualified name of the type, with '.' characters
-   * replaced by '_' and [] replaced by "Array".
+   * replaced by '_' and array brackets replaced with a notation of the array
+   * dimension.
    */
   public String getFormattedName() {
-    return my_name.replace('.', '_').replaceAll("\\[\\]", "Array");
+    final StringBuilder formatted = new StringBuilder(my_name.replace('.', '_'));
+   
+    if (isArray()) {
+      formatted.delete(formatted.indexOf("[]"), formatted.length());
+      formatted.append(arrayDimension() + "DArray");
+    }
+    
+    return formatted.toString();
   }
 
   /**
@@ -127,6 +148,22 @@ public class TypeInfo {
     return PRIMITIVE_TYPES.contains(my_name);
   }
 
+  /**
+   * @return true if the type is an array type, false otherwise.
+   */
+  //@ ensures \result == arrayDimension() > 0;
+  public boolean isArray() {
+    return my_array_dimension > 0;
+  }
+  
+  /**
+   * @return the array dimension, 0 if not an array.
+   */
+  //@ ensures \result >= 0;
+  public int arrayDimension() {
+    return my_array_dimension;
+  }
+  
   /**
    * Compares with object for equality. Two ClassInfo objects are equal if they
    * have the same fully qualified name.

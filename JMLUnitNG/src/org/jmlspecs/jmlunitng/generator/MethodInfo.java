@@ -309,9 +309,6 @@ public class MethodInfo implements Comparable<MethodInfo> {
     while (paramIter.hasNext()) {
       final ParameterInfo param = paramIter.next();
       sb.append(param.getType().getShortName());
-      if (param.isArray()) {
-        sb.append("[]");
-      }
       if (paramIter.hasNext()) {
         sb.append(", ");
       }

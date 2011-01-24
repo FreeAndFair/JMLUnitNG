@@ -429,16 +429,16 @@ public final class InfoFactory {
    */
   private static ParameterInfo createParameterInfo(final VarSymbol the_var_sym) {
     Type t = the_var_sym.type;
-    boolean is_array = false;
+/*    boolean is_array = false;
     if (t.tag == TypeTags.ARRAY) {
       is_array = true;
       t = ((ArrayType)t).getComponentType();
-    }
+    } */
     //remove any generic elements
     while (t.tag == TypeTags.TYPEVAR) {
       t = t.getUpperBound().tsym.asType();
     }
-    return new ParameterInfo(t.toString(), the_var_sym.name.toString(), is_array);
+    return new ParameterInfo(t.toString(), the_var_sym.name.toString());
   }
 
   /**
