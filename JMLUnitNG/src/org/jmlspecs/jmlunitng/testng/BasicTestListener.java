@@ -165,7 +165,9 @@ public class BasicTestListener implements ITestListener {
     int start_index = 0;
     
     String class_name = the_test_result.getTestClass().getName();
-    class_name = class_name.substring(class_name.lastIndexOf('.') + 1);
+    if (class_name.contains(".")) {
+      class_name = class_name.substring(class_name.lastIndexOf('.') + 1);
+    }
     
     if (class_name.startsWith(trunc_name + "_JML_Test")) {
       // this is a constructor test, so there is no object to print and
@@ -210,7 +212,6 @@ public class BasicTestListener implements ITestListener {
     // more than one parameter, we extended the method name; otherwise
     // it was a no-parameter method name that we left alone
     String orig_name = the_test_result.getName();
-    
     if (orig_name.startsWith(TEST_PREFIX)) {
       orig_name = orig_name.substring(TEST_PREFIX.length());
     }

@@ -5,6 +5,8 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -62,17 +64,29 @@ public abstract class PrimitiveStrategy implements Strategy {
     // deduplicate the primitive data, because we can easily keep it all in memory
     // at once and this saves test executions; note that all primitive types,
     // including String, are Comparable, so we sort them too so that tests end
-    // up being executed in a reasonable order.
+    // up being executed in a reasonable order - being careful to correctly handle
+    // the null string so it doesn't get compared and cause an exception.
     
-    final SortedSet<Comparable<?>> set = new TreeSet<Comparable<?>>();
+    boolean add_null = false;
+    final SortedSet<Comparable<?>> data_set = new TreeSet<Comparable<?>>();
     final RepeatedAccessIterator<?>[] values = 
       { getLocalValues(), getClassValues(), getPackageValues(), getDefaultValues() };
     for (RepeatedAccessIterator<?> r : values) {
       while (r.hasElement()) {
-        set.add((Comparable<?>) r.element());
+        Comparable<?> element = (Comparable<?>) r.element();
+        if (element == null) {
+          add_null = true; 
+        } else {
+          data_set.add(element);
+        }
         r.advance();
       }
     }
-    return new IteratorAdapter<Comparable<?>>(set.iterator());
+    final List<Comparable<?>> data_list = new ArrayList<Comparable<?>>();
+    if (add_null) {
+      data_list.add(null);
+    }
+    data_list.addAll(data_set);
+    return new IteratorAdapter<Comparable<?>>(data_list.iterator());
   }
 }
