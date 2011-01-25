@@ -37,7 +37,7 @@ import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version November 2010
+ * @version January 2011
  */
 public class TestClassGenerator {
   /**

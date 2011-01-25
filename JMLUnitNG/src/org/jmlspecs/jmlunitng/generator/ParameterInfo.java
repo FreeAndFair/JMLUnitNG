@@ -10,7 +10,7 @@ package org.jmlspecs.jmlunitng.generator;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version August 2010
+ * @version January 2011
  */
 public class ParameterInfo {
   /**

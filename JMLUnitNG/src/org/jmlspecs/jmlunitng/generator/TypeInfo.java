@@ -14,7 +14,7 @@ import java.util.Set;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version August 2010
+ * @version January 2011
  */
 public class TypeInfo implements Comparable<TypeInfo> {
   /**
@@ -91,17 +91,27 @@ public class TypeInfo implements Comparable<TypeInfo> {
     my_name = the_name.substring(0, generic_start) + array_part;
     my_short_name = my_name.substring(my_name.lastIndexOf('.') + 1);
     my_array_dimension = array_part.length() / 2;
-    final StringBuilder formatted = new StringBuilder(my_name.replace('.', '_'));
     if (isArray()) {
-      formatted.delete(formatted.indexOf("[]"), formatted.length());
-      formatted.append(arrayDimension() + "DArray");
       my_array_comp = my_name.substring(0, my_name.lastIndexOf('['));
     } else {
       my_array_comp = null;
     }
-    my_formatted_name = formatted.toString();
+    my_formatted_name = formatName(my_name);
   }
 
+  /**
+   * @return the formatted name corresponding to the specified class name; 
+   * this replaces all "." with "_" and changes array delimiters to "nDArray".
+   */
+  private String formatName(final String the_name) {
+    final StringBuilder formatted = new StringBuilder(the_name.replace('.', '_'));
+    if (isArray()) {
+      formatted.delete(formatted.indexOf("[]"), formatted.length());
+      formatted.append(my_array_dimension + "DArray");
+    } 
+    return formatted.toString();
+  }
+  
   /**
    * @return The unqualified name of the class.
    */
