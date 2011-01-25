@@ -18,7 +18,7 @@ import java.util.TreeSet;
  * @author Jonathan Hogins
  * @version August 2010
  */
-public class ClassInfo extends TypeInfo implements Comparable<ClassInfo> {
+public class ClassInfo extends TypeInfo {
   /**  
    * True if the methods of this class have been initialized,
    * false otherwise.
@@ -375,20 +375,6 @@ public class ClassInfo extends TypeInfo implements Comparable<ClassInfo> {
    */
   public /*@ pure @*/ Set<ClassInfo> getNestedClasses() {
     return Collections.unmodifiableSet(my_nested_classes);
-  }
-  
-  // Comparable interface
-  
-  /**
-   * Compares this ClassInfo to the_other; ClassInfos are compared based on their
-   * fully qualified names.
-   * 
-   * @param the_other The other ClassInfo.
-   * @return -1, 0 or 1 as this ClassInfo is less than, equivalent to, or greater 
-   * than the_other respectively.
-   */
-  public int compareTo(final ClassInfo the_other) {
-    return getFullyQualifiedName().compareTo(the_other.getFullyQualifiedName());
   }
   
   /**

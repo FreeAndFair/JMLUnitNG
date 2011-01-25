@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Jonathan Hogins
  * @version August 2010
  */
-public class TypeInfo {
+public class TypeInfo implements Comparable<TypeInfo> {
   /**
    * The set of primitive types.
    */
@@ -47,6 +47,11 @@ public class TypeInfo {
   protected final String my_short_name;
 
   /**
+   * The formatted name of this class.
+   */
+  protected final String my_formatted_name;
+  
+  /**
    * The generic component of the class.
    */
   protected final String my_generic_comp;
@@ -56,6 +61,11 @@ public class TypeInfo {
    */
   protected final int my_array_dimension;
     
+  /**
+   * The array component of the class.
+   */
+  protected final String my_array_comp;
+  
   /**
    * Create a new Type with the given fully qualified name. 
    * If the given fully qualified name has a generic portion, it is removed.
@@ -81,6 +91,15 @@ public class TypeInfo {
     my_name = the_name.substring(0, generic_start) + array_part;
     my_short_name = my_name.substring(my_name.lastIndexOf('.') + 1);
     my_array_dimension = array_part.length() / 2;
+    final StringBuilder formatted = new StringBuilder(my_name.replace('.', '_'));
+    if (isArray()) {
+      formatted.delete(formatted.indexOf("[]"), formatted.length());
+      formatted.append(arrayDimension() + "DArray");
+      my_array_comp = my_name.substring(0, my_name.lastIndexOf('['));
+    } else {
+      my_array_comp = null;
+    }
+    my_formatted_name = formatted.toString();
   }
 
   /**
@@ -109,28 +128,21 @@ public class TypeInfo {
    * replaced by '_' and array brackets replaced with a notation of the array
    * dimension.
    */
-  public String getFormattedName() {
-    final StringBuilder formatted = new StringBuilder(my_name.replace('.', '_'));
-   
-    if (isArray()) {
-      formatted.delete(formatted.indexOf("[]"), formatted.length());
-      formatted.append(arrayDimension() + "DArray");
-    }
-    
-    return formatted.toString();
+  public final String getFormattedName() {
+    return my_formatted_name;
   }
 
   /**
    * @return true if this class is in a package, false otherwise.
    */
-  public boolean isPackaged() {
+  public final boolean isPackaged() {
     return my_name.length() > my_short_name.length();
   }
   
   /**
    * @return The package name of the class
    */
-  public String getPackageName() {
+  public final String getPackageName() {
     String result = "";
 
     if (my_name.length() > my_short_name.length()) {
@@ -144,7 +156,7 @@ public class TypeInfo {
    * @return true if the type is a primitive, false otherwise.
    */
   // @ensures \result == PRIMITIVE_TYPES.contains(my_name);
-  public boolean isPrimitive() {
+  public final boolean isPrimitive() {
     return PRIMITIVE_TYPES.contains(my_name);
   }
 
@@ -152,7 +164,7 @@ public class TypeInfo {
    * @return true if the type is an array type, false otherwise.
    */
   //@ ensures \result == arrayDimension() > 0;
-  public boolean isArray() {
+  public final boolean isArray() {
     return my_array_dimension > 0;
   }
   
@@ -160,8 +172,15 @@ public class TypeInfo {
    * @return the array dimension, 0 if not an array.
    */
   //@ ensures \result >= 0;
-  public int arrayDimension() {
+  public final int arrayDimension() {
     return my_array_dimension;
+  }
+  
+  /**
+   * @return the array component type, or null if not an array.
+   */
+  public final String getArrayComponent() {
+    return my_array_comp;
   }
   
   /**
@@ -198,5 +217,17 @@ public class TypeInfo {
    */
   public String toString() {
     return getFullyQualifiedName();
+  }
+  
+  /**
+   * Compares this TypeInfo to the_other; TypeInfos are compared based on their
+   * fully qualified names.
+   * 
+   * @param the_other The other ClassInfo.
+   * @return -1, 0 or 1 as this ClassInfo is less than, equivalent to, or greater 
+   * than the_other respectively.
+   */
+  public int compareTo(final TypeInfo the_other) {
+    return getFullyQualifiedName().compareTo(the_other.getFullyQualifiedName());
   }
 }

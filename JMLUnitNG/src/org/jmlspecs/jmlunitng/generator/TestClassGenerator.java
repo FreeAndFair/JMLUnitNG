@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
@@ -482,7 +483,9 @@ public class TestClassGenerator {
 
     // second: class-scope strategy classes for all data types, only if concrete
 
-    for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
+    final Set<TypeInfo> parameter_types = getUniqueParameterTypes(methods_to_test);
+    
+    for (TypeInfo t : parameter_types) {
       gs_name.reset();
       gs_name.setAttribute("classInfo", the_class);
       gs_name.setAttribute("typeInfo", t);
@@ -507,7 +510,7 @@ public class TestClassGenerator {
     // multiple sets of tests in the same package, but that's OK, as
     // we won't overwrite them after the first one)
     
-    for (TypeInfo t : getUniqueParameterTypes(methods_to_test)) {
+    for (TypeInfo t : parameter_types) {
       ps_name.reset();
       ps_name.setAttribute("typeInfo", t);
 
@@ -618,12 +621,18 @@ public class TestClassGenerator {
    */
   private /*@ pure non_null @*/ Set<TypeInfo> getUniqueParameterTypes
   (final /*@ non_null @*/ Set<MethodInfo> the_methods) {
-    final Set<TypeInfo> classes = new HashSet<TypeInfo>();
+    final SortedSet<TypeInfo> classes = new TreeSet<TypeInfo>();
     for (MethodInfo m : the_methods) {
       for (ParameterInfo p : m.getParameters()) {
         classes.add(p.getType());
+        // make sure we add component types of arrays too
+        TypeInfo t = p.getType();
+        while (t.getArrayComponent() != null) {
+          t = new TypeInfo(t.getArrayComponent());
+          classes.add(t);
+        }
       }
     }
-    return new HashSet<TypeInfo>(classes);
+    return classes;
   }
 }

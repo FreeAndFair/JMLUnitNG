@@ -339,40 +339,6 @@ public final class InfoFactory {
         methods.add(createMethodInfo((MethodSymbol) e.sym, new ArrayList<ClassInfo>()));
       }
     }
-    /*
-    // add inherited methods from the parent class
-
-    if (result.getParent() != null)
-    {
-      final Set<MethodInfo> parent_methods = 
-        new HashSet<MethodInfo>(result.getParent().getMethods());
-      // we do not inherit methods that were already overridden by the parent class
-      parent_methods.removeAll(result.getParent().getOverriddenMethods());
-      for (MethodInfo pm : parent_methods)
-      {
-        if (!pm.isConstructor() && !pm.isStatic() &&
-            !pm.getProtectionLevel().equals(ProtectionLevel.PRIVATE))
-        {
-          // we do not inherit constructors or static/private methods
-          boolean duplicate = false;
-          for (MethodInfo m : methods)
-          {
-            duplicate = duplicate || 
-                        (m.getName().equals(pm.getName()) &&
-                         m.getParameters().equals(pm.getParameters()));
-          }
-          if (!duplicate)
-          {
-            methods.add(new MethodInfo(pm.getName(), result, pm.getDeclaringClass(),
-                                       pm.getProtectionLevel(), pm.getParameters(),
-                                       pm.getReturnType(), false, false,
-                                       pm.isDeprecated()));
-          }
-        }
-      }
-    }
-    result.initializeMethods(methods);
-*/    
     return result;
   }
 
@@ -429,11 +395,7 @@ public final class InfoFactory {
    */
   private static ParameterInfo createParameterInfo(final VarSymbol the_var_sym) {
     Type t = the_var_sym.type;
-/*    boolean is_array = false;
-    if (t.tag == TypeTags.ARRAY) {
-      is_array = true;
-      t = ((ArrayType)t).getComponentType();
-    } */
+
     //remove any generic elements
     while (t.tag == TypeTags.TYPEVAR) {
       t = t.getUpperBound().tsym.asType();
