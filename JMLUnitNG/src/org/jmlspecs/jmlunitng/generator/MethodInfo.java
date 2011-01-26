@@ -341,7 +341,7 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * @return true if these methods are identical aside from the signals
    * they generate.
    */
-  /*@ pure @*/ boolean equalsExceptSignals(final MethodInfo the_other) {
+  public /*@ pure @*/ boolean equalsExceptSignals(final MethodInfo the_other) {
     boolean result = my_name.equals(the_other.my_name);
     result &= my_detailed_name.equals(the_other.my_detailed_name);
     result &= my_protection_level.equals(the_other.my_protection_level);

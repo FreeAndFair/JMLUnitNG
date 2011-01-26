@@ -5,7 +5,6 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
+
 /**
  * The default strategy for the <code>short</code> type. The default values are 
  * -1, 0 and 1.

@@ -38,7 +38,6 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.TypeTags;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -48,7 +47,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version November 2010
+ * @version January 2011
  */
 public final class InfoFactory {
   /**
@@ -106,16 +105,16 @@ public final class InfoFactory {
       final SortedSet<MethodInfo> combined = new TreeSet<MethodInfo>();
       
       if (raw != null && signals != null) {
-        Iterator<MethodInfo> it_raw = raw.iterator();
-        Iterator<MethodInfo> it_signals = signals.iterator();
+        final Iterator<MethodInfo> it_raw = raw.iterator();
+        final Iterator<MethodInfo> it_signals = signals.iterator();
       
         // iterate over the sets to find the methods to include
       
         while (it_signals.hasNext()) {
-          MethodInfo next_signals = it_signals.next();
+          final MethodInfo next_signals = it_signals.next();
           boolean found = false;
           while (!found && it_raw.hasNext()) {
-            MethodInfo next_raw = it_raw.next();
+            final MethodInfo next_raw = it_raw.next();
             if (next_raw.equalsExceptSignals(next_signals)) {
               found = true;
               combined.add(next_signals);
@@ -235,7 +234,7 @@ public final class InfoFactory {
     // initialize the method sets for other classes
     
     do {
-      ClassInfo c = class_queue.poll();
+      final ClassInfo c = class_queue.poll();
       if (c.getParent().isInitialized()) {
         final SortedSet<MethodInfo> methods = METHOD_CACHE.get(c);
         // it's safe to add methods from the parent class
@@ -566,7 +565,7 @@ public final class InfoFactory {
         // we have not previously added this exception type
         boolean added = false;
         for (int i = 0; i < my_exception_types.size(); i++) {
-          ClassInfo c = my_exception_types.get(i);
+          final ClassInfo c = my_exception_types.get(i);
           if (my_comparator.compare(the_class, c) < 0) {
             my_exception_types.add(i, the_class);
             added = true;

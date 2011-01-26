@@ -48,7 +48,6 @@ public abstract class ArrayStrategy extends NonPrimitiveStrategy {
    * 
    * @return An Iterator over default values.
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
   public RepeatedAccessIterator<?> getDefaultValues() {
     return new DynamicArrayIterator(my_class.getComponentType(), 
                                     my_generators, my_max_length); 

@@ -5,14 +5,12 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
-import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
@@ -51,7 +49,7 @@ public abstract class PrimitiveStrategy implements Strategy {
       { getLocalValues(), getClassValues(), getPackageValues(), getDefaultValues() };
     for (RepeatedAccessIterator<?> r : values) {
       while (r.hasElement()) {
-        Comparable<?> element = (Comparable<?>) r.element();
+        final Comparable<?> element = (Comparable<?>) r.element();
         if (element == null) {
           add_null = true; 
         } else {

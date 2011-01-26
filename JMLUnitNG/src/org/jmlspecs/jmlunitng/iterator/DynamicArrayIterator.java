@@ -19,7 +19,6 @@ import org.jmlspecs.jmlunitng.strategy.Strategy;
  * 
  * @author Daniel M. Zimmerman
  * @version January 2011
- * @param <T> The component type of the returned arrays.
  */
 public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
   /**
@@ -70,9 +69,6 @@ public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
     my_component_type = the_component_type;
   	my_strategy_classes = 
   	  new ArrayList<Class<? extends Strategy>>(the_strategy_classes);
-  	System.err.print("Strategy classes for iterator: ");
-  	for (Class<? extends Strategy> c : my_strategy_classes) { System.err.print(c + ", "); }
-  	System.err.println();
   	my_max_length = the_max_length;
   	my_strategies = new RepeatedAccessIterator<?>[0];
   	my_element = Array.newInstance(the_component_type, 0);
@@ -108,43 +104,42 @@ public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
    * {@inheritDoc}
    */
   //@ requires hasElement();
-  @SuppressWarnings("unchecked")
   public void advance() {
     int p = 0;
     while (p < my_strategies.length) {
       // ensure each iterator is at a valid element
-      System.out.println("advancing iterator " + p + ", current element " + my_strategies[p].element());
       my_strategies[p].advance();
       if (my_strategies[p].hasElement()) {
         // no need to check the other iterators
-        System.out.println("new element " + my_strategies[p].element());
         break; 
-      } else if (p + 1 < my_strategies.length) {
-        // reset my_strategies[p] from all the other iterators
-        System.out.println("no more elements in iterator " + p);
-        my_strategies[p] = newStrategy();
+      } else {
+        // leave the strategy empty for later refilling
+        p++;
       }
-      p++;
     } 
     
-    my_element = 
-      Array.newInstance(my_component_type, my_strategies.length);
-    for (int i = 0; i < my_strategies.length; i++) {
-      if (my_strategies[i].hasElement()) {
-        Array.set(my_element, i, my_strategies[i].element());
-      } // else the element stays at its default value
-    }
+    my_is_finished = 
+      p == my_strategies.length && my_strategies.length == my_max_length;
     
-    if (strategiesAreEmpty() && my_strategies.length < my_max_length) {
+    if (strategiesAreEmpty() && !my_is_finished) {
       // bump up the array length
-      System.out.println("bumping array length to " + (my_strategies.length + 1));
       my_strategies = new RepeatedAccessIterator<?>[my_strategies.length + 1];
       for (int i = 0; i < my_strategies.length; i++) {
         my_strategies[i] = newStrategy();
       }
-    } else if (strategiesAreEmpty() && my_strategies.length == my_max_length) {
-      my_is_finished = true;
+    } else if (!my_is_finished) {
+      // refill all the strategies that need it
+      for (int i = 0; i < my_strategies.length; i++) {
+        if (!my_strategies[i].hasElement()) {
+          my_strategies[i] = newStrategy();
+        }
+      }
     }
+    
+    my_element = Array.newInstance(my_component_type, my_strategies.length);
+    for (int i = 0; i < my_strategies.length; i++) {
+      Array.set(my_element, i, my_strategies[i].element());
+    } // else the element stays at its default value
   }
   
   /**

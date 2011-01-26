@@ -8,6 +8,7 @@ package org.jmlspecs.jmlunitng.testng;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.Array;
 
 import org.testng.ITestContext;
 import org.testng.ITestListener;
@@ -237,14 +238,27 @@ public class BasicTestListener implements ITestListener {
   
   /**
    * @param the_parameter The parameter to format.
-   * @return a formatted version of the parameter, including deep displays
-   * of arrays.
+   * @return a formatted version of the parameter, including displaying
+   * the contents of arrays.
    */
   private final String formatParameter(final Object the_parameter) {
-    String result = the_parameter.toString();
-    
-    if (the_parameter.getClass().isArray()) {
-      
+    String result = "null";
+    if (the_parameter != null) {
+      result = the_parameter.toString();
+      if (the_parameter.getClass().isArray()) {
+        final StringBuilder sb = new StringBuilder();
+        final int length = Array.getLength(the_parameter);
+        sb.append('{');
+        for (int i = 0; i < length - 1; i++) {
+          sb.append(formatParameter(Array.get(the_parameter, i)));
+          sb.append(", ");
+        }
+        if (length > 0) {
+          sb.append(formatParameter(Array.get(the_parameter, length - 1)));
+        }
+        sb.append('}');
+        result = sb.toString();
+      }
     }
     
     return result;

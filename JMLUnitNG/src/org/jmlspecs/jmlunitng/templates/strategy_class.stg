@@ -64,7 +64,8 @@ public class <classStrategyName(classInfo=class, typeInfo=type)>
   public <classStrategyName(classInfo=class, typeInfo=type)>() {
     super();
     <if(type.array)>
-    setMaxLength(1); // controls the maximum array length, 1 by default
+    // uncomment to control the maximum array length, 1 by default
+    // setMaxLength(1); 
     <else>
     setReflective(<if(use_reflection)>true<else>false<endif>);
     <endif>

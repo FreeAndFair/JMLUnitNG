@@ -63,7 +63,8 @@ public class <packageStrategyName(typeInfo=type)>
   public <packageStrategyName(typeInfo=type)>() {
     super(<type.fullyQualifiedName>.class);
     <if(type.array)>
-    setMaxLength(1); // controls the maximum array length, 1 by default
+    // uncomment to control the maximum array length, 1 by default
+    // setMaxLength(1);
     <else>
     setReflective(<if(use_reflection)>true<else>false<endif>);
     <endif>

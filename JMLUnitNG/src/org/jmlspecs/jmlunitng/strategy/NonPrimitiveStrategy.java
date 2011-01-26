@@ -125,7 +125,6 @@ public abstract class NonPrimitiveStrategy implements Strategy {
   @SuppressWarnings("unchecked")
   protected final void addDataClass(final Class<?> the_class) {
     if (my_default_data_class == null) {
-      System.err.println(getClass() + " tried to add " + the_class + " to " + my_class + " strategy");
       throw new ClassCastException
       ("Cannot add a data class to strategy for " + my_class);
     } else if (!my_default_data_class.isAssignableFrom(the_class)) {
@@ -138,11 +137,9 @@ public abstract class NonPrimitiveStrategy implements Strategy {
       final Class<?> generator_class = findStrategyClass(the_class); 
       if (generator_class != null &&
           Strategy.class.isAssignableFrom(generator_class)) {
-        System.err.println(getClass() + " found generator " + generator_class + " for " + the_class);
         my_generators.add((Class<? extends Strategy>) generator_class);
         my_generator_classes.add(the_class);
       } else {
-        System.err.println(getClass() + " using defaults for " + the_class);
         my_non_generator_classes.add(the_class);
       }
     }
@@ -214,7 +211,9 @@ public abstract class NonPrimitiveStrategy implements Strategy {
     // try to instantiate the strategy we found to make sure it works, unless
     // it's this class, in which case we just throw it away
     
-    if (result != getClass()) {
+    if (result == getClass()) {
+      result = null;
+    } else {
       try {
         result.newInstance();
       } catch (InstantiationException e) {
@@ -222,8 +221,6 @@ public abstract class NonPrimitiveStrategy implements Strategy {
       } catch (IllegalAccessException e) {
         result = null;
       }
-    } else {
-      result = null;
     }
     
     // and that's it; if we didn't find anything, that's too bad, we return null

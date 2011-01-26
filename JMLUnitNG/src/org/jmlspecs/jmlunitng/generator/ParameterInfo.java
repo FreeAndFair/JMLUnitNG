@@ -28,7 +28,6 @@ public class ParameterInfo {
    * 
    * @param the_type The fully qualified name of the type.
    * @param the_name The name of the parameter.
-   * @param the_is_array true if the parameter type is an array type, false otherwise.
    */
   public ParameterInfo(final /*@ non_null @*/ String the_type, 
                        final /*@ non_null @*/ String the_name) {

@@ -55,7 +55,6 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
     // since not all parameter lists will in fact give valid
     // values, we advance to the next valid value by checking
     // element(), at least until we hit the end
-    int i = 1;
     do {
       my_params.advance();
     } while (hasElement() && element() == null);
