@@ -37,22 +37,37 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
   <if(!param.type.primitive)>
   
   /**
-   * Constructor. The use of reflection can be controlled here for parameter
-   * "<param.type.shortName> <param.name>" of method "<method>" by 
-   * changing the parameter to \<code\>setReflective\</code\>. In addition,
-   * the data classes used to generate such reflective parameters can be 
-   * changed by adding additional data class lines, or by removing some of 
-   * the generated ones. Since this is the lowest level of strategy, the 
+   * Constructor.
+   <if(param.type.array)>
+   * The maximum length of generated arrays can be controlled here for
+   * parameter "<param.type.shortName> <param.name>" of method "<method>"
+   * by changing the parameter to \<code\>setMaxLength\</code\>.
+   <else>
+   * The use of reflection can be controlled here for  
+   * "<param.type.shortName> <param.name>" of method "<method>" 
+   * by changing the parameter to \<code\>setReflective\</code\>. 
+   <endif>
+   * In addition, the data generators used can be changed by adding 
+   * additional data class lines, or by removing some of the automatically 
+   * generated ones. Since this is the lowest level of strategy, the 
    * behavior will be exactly as you specify here if you clear the existing 
-   * list of classes.
+   * list of classes first.
    *
-   * @see ObjectStrategy#addDataClass(Class\<?\>)
-   * @see ObjectStrategy#clearDataClasses()
+   * @see NonPrimitiveStrategy#addDataClass(Class\<?\>)
+   * @see NonPrimitiveStrategy#clearDataClasses()
+   <if(param.type.array)>
+   * @see ArrayStrategy#setMaxLength(int)
+   <else>
    * @see ObjectStrategy#setReflective(boolean)
+   <endif>
    */
   public <localStrategyName(classInfo=class, methodInfo=method, paramInfo=param)>() {
     super();
+    <if(param.type.array)>
+    setMaxLength(1); // controls the maximum array length, 1 by default
+    <else>
     setReflective(<if(use_reflection)>true<else>false<endif>);
+    <endif>
     <if(children)>
     
     <children:addDataClassLine()><endif>  }

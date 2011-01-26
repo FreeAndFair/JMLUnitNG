@@ -5,12 +5,14 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
@@ -23,30 +25,6 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * @version January 2011
  */
 public abstract class PrimitiveStrategy implements Strategy {
-  /**
-   * To be implemented by users. Returns an iterator over the local-scope
-   * values for this type.
-   * 
-   * @return What are your local-scope values?
-   */
-  public abstract RepeatedAccessIterator<?> getLocalValues();
-
-  /**
-   * To be implemented by automatically-generated strategy classes. 
-   * Returns an iterator over the class-scope values for this type.
-   * 
-   * @return What are your class-scope values?
-   */
-  public abstract RepeatedAccessIterator<?> getClassValues();
-
-  /**
-   * To be implemented by automatically-generated strategy classes. 
-   * Returns an iterator over the package-scope values for this type.
-   * 
-   * @return What are your package-scope values?
-   */
-  public abstract RepeatedAccessIterator<?> getPackageValues();
-  
   /**
    * To be implemented by subclasses. Returns the iterator over default 
    * values for this type.

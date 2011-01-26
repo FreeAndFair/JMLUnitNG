@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
  * The default strategy for the <code>boolean</code> type. The default 
@@ -17,7 +18,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  *
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version December 2010
+ * @version January 2011
  */
 public abstract class BooleanStrategy extends PrimitiveStrategy {
   /**
@@ -30,9 +31,36 @@ public abstract class BooleanStrategy extends PrimitiveStrategy {
     defs.add(false);
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
+  
   /**
-   * To be implemented by subclasses. Returns the iterator over default values.
-   * @return An Iterator over default values.
+   * A default empty iterator, to be overridden by child classes.
+   * 
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getLocalValues() {
+    return new ObjectArrayIterator<Boolean>(new Boolean[0]);
+  }
+  
+  /**
+   * A default empty iterator, to be overridden by child classes.
+   * 
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getClassValues() {
+    return new ObjectArrayIterator<Boolean>(new Boolean[0]);
+  }
+
+  /**
+   * A default empty iterator, to be overridden by child classes.
+   * 
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getPackageValues() {
+    return new ObjectArrayIterator<Boolean>(new Boolean[0]);
+  }
+  
+  /**
+   * @return an iterator over the default boolean values.
    */
   public RepeatedAccessIterator<?> getDefaultValues() {
     return new IteratorAdapter<Boolean>(DEFAULT_VALUES.iterator());

@@ -25,7 +25,7 @@ import <class.packageName>.<packageStrategyName(typeInfo=type)>;<endif>
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
  */
-public abstract class <classStrategyName(classInfo=class, typeInfo=type)> 
+public class <classStrategyName(classInfo=class, typeInfo=type)> 
   extends <packageStrategyName(typeInfo=type)> {
   /**
    * @return class-scope values for type <type.fullyQualifiedName>.
@@ -38,22 +38,36 @@ public abstract class <classStrategyName(classInfo=class, typeInfo=type)>
   <if(!type.primitive)>
   
   /**
-   * Constructor. The use of reflection can be controlled here for method 
+   <if(type.array)>
+   * The maximum length of generated arrays can be controlled here for
+   * parameters of type <type.fullyQualifiedName>
+   * in this class by changing the parameter to \<code\>setMaxLength\</code\>.
+   <else>
+   * The use of reflection can be controlled here for  
    * parameters of type <type.fullyQualifiedName>
    * in this class by changing the parameter to \<code\>setReflective\</code\>. 
-   * In addition, the data classes used to generate such reflective
-   * parameters can be changed by adding additional data class lines, or
-   * by removing some of the generated ones. Note that lower-level 
-   * strategies can override any behavior specified here by calling the
-   * same control methods in their own constructors.
+   <endif>
+   * In addition, the data generators used can be changed by adding 
+   * additional data class lines, or by removing some of the automatically 
+   * generated ones. Note that lower-level strategies can override any 
+   * behavior specified here by calling the same control methods in 
+   * their own constructors.
    *
-   * @see ObjectStrategy#addDataClass(Class\<?\>)
-   * @see ObjectStrategy#clearDataClasses()
+   * @see NonPrimitiveStrategy#addDataClass(Class\<?\>)
+   * @see NonPrimitiveStrategy#clearDataClasses()
+   <if(type.array)>
+   * @see ArrayStrategy#setMaxLength(int)
+   <else>
    * @see ObjectStrategy#setReflective(boolean)
+   <endif>
    */
   public <classStrategyName(classInfo=class, typeInfo=type)>() {
     super();
+    <if(type.array)>
+    setMaxLength(1); // controls the maximum array length, 1 by default
+    <else>
     setReflective(<if(use_reflection)>true<else>false<endif>);
+    <endif>
     <if(children)>
     
     <children:addDataClassLine()><endif>  }

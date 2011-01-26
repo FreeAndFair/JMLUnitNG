@@ -193,10 +193,10 @@ public class BasicTestListener implements ITestListener {
       sb.append(trunc_name + "(");
     }
     for (int i = start_index; i < params.length - 1; i++) {
-      sb.append(params[i] + ", ");
+      sb.append(formatParameter(params[i]) + ", ");
     }
     if (params.length > 1 || (isStaticTest(the_test_result) && params.length == 1)) {
-      sb.append(params[params.length - 1]);
+      sb.append(formatParameter(params[params.length - 1]));
     }
     sb.append(")");
     
@@ -233,5 +233,20 @@ public class BasicTestListener implements ITestListener {
    */
   private final boolean isStaticTest(final ITestResult the_test_result) {
     return the_test_result.getName().startsWith(TEST_PREFIX + STATIC_PREFIX);
+  }
+  
+  /**
+   * @param the_parameter The parameter to format.
+   * @return a formatted version of the parameter, including deep displays
+   * of arrays.
+   */
+  private final String formatParameter(final Object the_parameter) {
+    String result = the_parameter.toString();
+    
+    if (the_parameter.getClass().isArray()) {
+      
+    }
+    
+    return result;
   }
 }

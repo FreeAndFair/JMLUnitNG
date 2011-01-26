@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
  * The default strategy for type <code>java.lang.String</code>, which - although an
@@ -18,7 +19,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version December 2010
+ * @version January 2011
  */
 public abstract class StringStrategy extends PrimitiveStrategy {
   /**
@@ -31,9 +32,36 @@ public abstract class StringStrategy extends PrimitiveStrategy {
     defs.add("");
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
+  
   /**
-   * To be implemented by subclasses. Returns the iterator over default values.
-   * @return An Iterator over default values.
+   * A default empty iterator, to be overridden by child classes.
+   * 
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getLocalValues() {
+    return new ObjectArrayIterator<String>(new String[0]);
+  }
+  
+  /**
+   * A default empty iterator, to be overridden by child classes.
+   * 
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getClassValues() {
+    return new ObjectArrayIterator<String>(new String[0]);
+  }
+
+  /**
+   * A default empty iterator, to be overridden by child classes.
+   * 
+   * @return An empty iterator.
+   */
+  public RepeatedAccessIterator<?> getPackageValues() {
+    return new ObjectArrayIterator<String>(new String[0]);
+  }
+  
+  /**
+   * @return an iterator over the default String values.
    */
   public RepeatedAccessIterator<?> getDefaultValues() {
     return new IteratorAdapter<String>(DEFAULT_VALUES.iterator());

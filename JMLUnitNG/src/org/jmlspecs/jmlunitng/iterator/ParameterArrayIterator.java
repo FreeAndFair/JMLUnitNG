@@ -59,9 +59,7 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
 				my_strategies[i] = the_strategy_classes[i].newInstance().iterator();
 				if (my_strategies[i].hasElement()) {
 				  my_element[i] = my_strategies[i].element();
-				} else {
-				  my_element[i] = null;
-				}
+				} // else the element stays at its default value of null
 			} catch (InstantiationException e) {
 				throw new IllegalArgumentException(e);
 			} catch (IllegalAccessException e) {
