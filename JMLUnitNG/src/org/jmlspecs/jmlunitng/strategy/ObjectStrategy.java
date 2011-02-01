@@ -32,11 +32,6 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   private final Object[] my_enum_constants; 
 
   /**
-   * Should we use reflective data generation?
-   */
-  private boolean my_reflective;
-  
-  /**
    * Creates a new ObjectStrategy for the given class. If the class is an
    * enum, all enum constants will be used. By default, reflection will not
    * be used; this behavior can be subsequently changed with control methods.
@@ -46,7 +41,6 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   public ObjectStrategy(final /*@ non_null @*/ Class<?> the_class) {
     super(the_class, (the_class.getEnumConstants() == null) ? the_class : null);
     my_enum_constants = the_class.getEnumConstants();
-    my_reflective = false;
   }
   
   /**
@@ -95,23 +89,6 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
     }
     
     return result;
-  }
-  
-  /**
-   * Controls the use of reflection by this strategy.
-   * 
-   * @param the_reflective true to enable the use of reflection to
-   * generate objects, false otherwise.
-   */
-  public final void setReflective(final boolean the_reflective) {
-    my_reflective = the_reflective;
-  }
-  
-  /**
-   * @return true if this strategy is using reflection, false otherwise.
-   */
-  public final boolean isReflective() {
-    return my_reflective;
   }
   
   /**

@@ -72,7 +72,7 @@ public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
   	my_max_length = the_max_length;
   	my_strategies = new RepeatedAccessIterator<?>[0];
   	my_element = Array.newInstance(the_component_type, 0);
-  	my_is_finished = my_strategy_classes.isEmpty() || my_max_length == 0;
+  	my_is_finished = my_strategy_classes.isEmpty();
   	
   	// check the strategy classes to see that they all work
     for (Class<? extends Strategy> c : my_strategy_classes) {

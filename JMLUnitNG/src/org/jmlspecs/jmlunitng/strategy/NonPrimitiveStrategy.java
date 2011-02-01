@@ -34,6 +34,11 @@ public abstract class NonPrimitiveStrategy implements Strategy {
   protected final Class<?> my_default_data_class;
   
   /**
+   * Should we use reflective data generation?
+   */
+  private boolean my_reflective;
+  
+  /**
    * The test data generators found for this strategy to use.
    */
   protected final List<Class<? extends Strategy>> my_generators;
@@ -51,7 +56,7 @@ public abstract class NonPrimitiveStrategy implements Strategy {
   
   /**
    * Constructs a NonPrimitiveStrategy for the specified class
-   * and default data class.
+   * and default data class. By default, reflection will not be used.
    * 
    * @param the_class The class.
    * @param the_default_data_class The default data class.
@@ -60,6 +65,7 @@ public abstract class NonPrimitiveStrategy implements Strategy {
                               final Class<?> the_default_data_class) {
     my_class = the_class;
     my_default_data_class = the_default_data_class;
+    my_reflective = false;
     my_generators = new ArrayList<Class<? extends Strategy>>();
     my_generator_classes = new ArrayList<Class<?>>();
     my_non_generator_classes = new ArrayList<Class<?>>();
@@ -114,6 +120,23 @@ public abstract class NonPrimitiveStrategy implements Strategy {
     iterators.add(getDefaultValues());
     return new MultiIterator(iterators);
   } 
+  
+  /**
+   * Controls the use of reflection by this strategy.
+   * 
+   * @param the_reflective true to enable the use of reflection to
+   * generate objects, false otherwise.
+   */
+  public final void setReflective(final boolean the_reflective) {
+    my_reflective = the_reflective;
+  }
+  
+  /**
+   * @return true if this strategy is using reflection, false otherwise.
+   */
+  public final boolean isReflective() {
+    return my_reflective;
+  }
   
   /**
    * Adds a data class to be used by this strategy.

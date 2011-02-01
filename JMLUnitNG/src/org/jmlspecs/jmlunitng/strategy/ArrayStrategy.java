@@ -5,7 +5,12 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jmlspecs.jmlunitng.iterator.DynamicArrayIterator;
+import org.jmlspecs.jmlunitng.iterator.MultiIterator;
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
@@ -43,14 +48,28 @@ public abstract class ArrayStrategy extends NonPrimitiveStrategy {
   }
   
   /**
-   * Returns an iterator of arrays, with elements taken from the generators 
-   * found for the specified data classes.
+   * Returns an iterator of arrays. If reflection is turned on,
+   * all possible arrays up to the maximum array length will be
+   * generated using elements taken from the generators 
+   * found for the specified data classes; otherwise, only the
+   * null array and the empty array will be generated. 
    * 
    * @return An Iterator over default values.
    */
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public RepeatedAccessIterator<?> getDefaultValues() {
-    return new DynamicArrayIterator(my_class.getComponentType(), 
-                                    my_generators, my_max_length); 
+    int max = 0;
+    
+    if (isReflective()) {
+      max = my_max_length;
+    }
+    
+    final List<RepeatedAccessIterator<?>> list = 
+      new ArrayList<RepeatedAccessIterator<?>>();
+    list.add(new ObjectArrayIterator(new Object[] { null }));
+    list.add(new DynamicArrayIterator(my_class.getComponentType(), 
+                                      my_generators, max));
+    return new MultiIterator(list);
   }  
   
   /**

@@ -66,9 +66,8 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
     <if(param.type.array)>
     // uncomment to control the maximum array length, 1 by default
     // setMaxLength(1); 
-    <else>
-    setReflective(<if(use_reflection)>true<else>false<endif>);
     <endif>
+    setReflective(<if(use_reflection)>true<else>false<endif>);
     <if(children)>
     
     <children:addDataClassLine()><endif>  }
