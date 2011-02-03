@@ -18,10 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
@@ -29,7 +26,6 @@ import org.jmlspecs.jmlunitng.clops.JMLUnitNGOptionStore;
 import org.jmlspecs.jmlunitng.clops.JMLUnitNGParser;
 import org.jmlspecs.jmlunitng.generator.ClassInfo;
 import org.jmlspecs.jmlunitng.generator.InfoFactory;
-import org.jmlspecs.jmlunitng.generator.MethodInfo;
 import org.jmlspecs.jmlunitng.generator.ProtectionLevel;
 import org.jmlspecs.jmlunitng.generator.TestClassGenerator;
 import org.jmlspecs.jmlunitng.util.JavaSuffixFilter;
@@ -43,13 +39,13 @@ import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version December 2010
+ * @version February 2011
  */
 public final class JMLUnitNG implements Runnable {
   /**
    * The string to be prepended to the reported version.
    */
-  private static final String VERSION_STRING = "1.0a2";
+  private static final String VERSION_STRING = "1.0b1";
   
   /**
    * The raw SVN revision string.
