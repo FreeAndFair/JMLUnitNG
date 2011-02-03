@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -48,7 +48,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getLocalValues() {
+  public RepeatedAccessIterator<?> localValues() {
     return new ObjectArrayIterator<Object>
     ((Object[]) Array.newInstance(my_class, 0));
   }
@@ -58,7 +58,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getClassValues() {
+  public RepeatedAccessIterator<?> classValues() {
     return new ObjectArrayIterator<Object>
     ((Object[]) Array.newInstance(my_class, 0));
   }
@@ -68,7 +68,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getPackageValues() {
+  public RepeatedAccessIterator<?> packageValues() {
     return new ObjectArrayIterator<Object>
     ((Object[]) Array.newInstance(my_class, 0));
   }
@@ -79,7 +79,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
    * 
    * @return An iterator over default values.
    */
-  public RepeatedAccessIterator<?> getDefaultValues() {
+  public RepeatedAccessIterator<?> defaultValues() {
     RepeatedAccessIterator<?> result;
     
     if (my_enum_constants == null) {

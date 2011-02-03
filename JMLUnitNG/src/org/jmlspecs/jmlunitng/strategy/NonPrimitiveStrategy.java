@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -79,9 +79,8 @@ public abstract class NonPrimitiveStrategy implements Strategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getLocalValues() {
-    return new ObjectArrayIterator<Object>
-    ((Object[]) Array.newInstance(my_class, 0));
+  public RepeatedAccessIterator<?> localValues() {
+    return emptyIterator();
   }
 
   /**
@@ -89,9 +88,8 @@ public abstract class NonPrimitiveStrategy implements Strategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getClassValues() {
-    return new ObjectArrayIterator<Object>
-    ((Object[]) Array.newInstance(my_class, 0));
+  public RepeatedAccessIterator<?> classValues() {
+    return emptyIterator();
   }
 
   /**
@@ -99,9 +97,8 @@ public abstract class NonPrimitiveStrategy implements Strategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getPackageValues() {
-    return new ObjectArrayIterator<Object>
-    ((Object[]) Array.newInstance(my_class, 0));
+  public RepeatedAccessIterator<?> packageValues() {
+    return emptyIterator();
   }
   
   /**
@@ -114,10 +111,10 @@ public abstract class NonPrimitiveStrategy implements Strategy {
   public RepeatedAccessIterator<?> iterator() {
     final List<RepeatedAccessIterator<?>> iterators = 
       new ArrayList<RepeatedAccessIterator<?>>(3);
-    iterators.add(getLocalValues());
-    iterators.add(getClassValues());
-    iterators.add(getPackageValues());
-    iterators.add(getDefaultValues());
+    iterators.add(localValues());
+    iterators.add(classValues());
+    iterators.add(packageValues());
+    iterators.add(defaultValues());
     return new MultiIterator(iterators);
   } 
   
@@ -136,6 +133,14 @@ public abstract class NonPrimitiveStrategy implements Strategy {
    */
   public final boolean isReflective() {
     return my_reflective;
+  }
+  
+  /**
+   * @return an empty iterator of this strategy's data type.
+   */
+  public final ObjectArrayIterator<Object> emptyIterator() {
+    return new ObjectArrayIterator<Object>
+      ((Object[]) Array.newInstance(my_class, 0));
   }
   
   /**

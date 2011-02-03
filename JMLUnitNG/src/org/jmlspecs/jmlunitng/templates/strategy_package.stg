@@ -28,7 +28,7 @@ public class <packageStrategyName(typeInfo=type)>
   /**
    * @return package-scope values for type <type.fullyQualifiedName>.
    */
-  public RepeatedAccessIterator\<?\> getPackageValues() {
+  public RepeatedAccessIterator\<?\> packageValues() {
     return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
     (new <typeTransMap.(type.fullyQualifiedName)>[] 
     <packageStrategyFillIn(typeInfo=type)>);

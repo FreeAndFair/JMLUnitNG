@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -57,7 +57,7 @@ public abstract class ArrayStrategy extends NonPrimitiveStrategy {
    * @return An Iterator over default values.
    */
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public RepeatedAccessIterator<?> getDefaultValues() {
+  public RepeatedAccessIterator<?> defaultValues() {
     int max = 0;
     
     if (isReflective()) {

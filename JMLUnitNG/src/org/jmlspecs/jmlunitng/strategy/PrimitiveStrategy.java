@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -29,7 +29,7 @@ public abstract class PrimitiveStrategy implements Strategy {
    * 
    * @return What are your default values?
    */
-  public abstract RepeatedAccessIterator<?> getDefaultValues();
+  public abstract RepeatedAccessIterator<?> defaultValues();
 
   /**
    * Returns a RepeatedAccessIterator over all values.
@@ -46,7 +46,7 @@ public abstract class PrimitiveStrategy implements Strategy {
     boolean add_null = false;
     final SortedSet<Comparable<?>> data_set = new TreeSet<Comparable<?>>();
     final RepeatedAccessIterator<?>[] values = 
-      { getLocalValues(), getClassValues(), getPackageValues(), getDefaultValues() };
+      { localValues(), classValues(), packageValues(), defaultValues() };
     for (RepeatedAccessIterator<?> r : values) {
       while (r.hasElement()) {
         final Comparable<?> element = (Comparable<?>) r.element();

@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -37,7 +37,7 @@ public abstract class CharStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getLocalValues() {
+  public RepeatedAccessIterator<?> localValues() {
     return new ObjectArrayIterator<Character>(new Character[0]);
   }
   
@@ -46,7 +46,7 @@ public abstract class CharStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getClassValues() {
+  public RepeatedAccessIterator<?> classValues() {
     return new ObjectArrayIterator<Character>(new Character[0]);
   }
 
@@ -55,14 +55,14 @@ public abstract class CharStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getPackageValues() {
+  public RepeatedAccessIterator<?> packageValues() {
     return new ObjectArrayIterator<Character>(new Character[0]);
   }
   
   /**
    * @return an iterator over the default char values.
    */
-  public RepeatedAccessIterator<?> getDefaultValues() {
+  public RepeatedAccessIterator<?> defaultValues() {
     return new IteratorAdapter<Character>(DEFAULT_VALUES.iterator());
   }
 }

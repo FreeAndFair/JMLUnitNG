@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -39,7 +39,7 @@ public abstract class ShortStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getLocalValues() {
+  public RepeatedAccessIterator<?> localValues() {
     return new ObjectArrayIterator<Short>(new Short[0]);
   }
   
@@ -48,7 +48,7 @@ public abstract class ShortStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getClassValues() {
+  public RepeatedAccessIterator<?> classValues() {
     return new ObjectArrayIterator<Short>(new Short[0]);
   }
 
@@ -57,14 +57,14 @@ public abstract class ShortStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getPackageValues() {
+  public RepeatedAccessIterator<?> packageValues() {
     return new ObjectArrayIterator<Short>(new Short[0]);
   }
   
   /**
    * @return an iterator over the default short values.
    */
-  public RepeatedAccessIterator<?> getDefaultValues() {
+  public RepeatedAccessIterator<?> defaultValues() {
     return new IteratorAdapter<Short>(DEFAULT_VALUES.iterator());
   }
 }

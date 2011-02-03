@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -20,7 +20,7 @@ public interface Strategy {
    * 
    * @return What are your local-scope values?
    */
-  RepeatedAccessIterator<?> getLocalValues();
+  RepeatedAccessIterator<?> localValues();
 
   /**
    * To be implemented by users. Returns an iterator over the class-scope 
@@ -28,7 +28,7 @@ public interface Strategy {
    * 
    * @return What are your class-scope values?
    */
-  RepeatedAccessIterator<?> getClassValues();
+  RepeatedAccessIterator<?> classValues();
 
   /**
    * To be implemented by users. Returns an iterator over the package-scope
@@ -36,7 +36,7 @@ public interface Strategy {
    * 
    * @return What are your package-scope values?
    */
-  RepeatedAccessIterator<?> getPackageValues();
+  RepeatedAccessIterator<?> packageValues();
   
   /**
    * To be implemented by strategy classes. Returns the iterator over default 
@@ -44,7 +44,7 @@ public interface Strategy {
    * 
    * @return What are your default values?
    */
-  RepeatedAccessIterator<?> getDefaultValues();
+  RepeatedAccessIterator<?> defaultValues();
 
   /**
    * Returns a RepeatedAccessIterator over all values.

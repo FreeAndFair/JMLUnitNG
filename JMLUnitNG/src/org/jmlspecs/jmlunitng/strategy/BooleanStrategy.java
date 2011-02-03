@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -37,7 +37,7 @@ public abstract class BooleanStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getLocalValues() {
+  public RepeatedAccessIterator<?> localValues() {
     return new ObjectArrayIterator<Boolean>(new Boolean[0]);
   }
   
@@ -46,7 +46,7 @@ public abstract class BooleanStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getClassValues() {
+  public RepeatedAccessIterator<?> classValues() {
     return new ObjectArrayIterator<Boolean>(new Boolean[0]);
   }
 
@@ -55,14 +55,14 @@ public abstract class BooleanStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getPackageValues() {
+  public RepeatedAccessIterator<?> packageValues() {
     return new ObjectArrayIterator<Boolean>(new Boolean[0]);
   }
   
   /**
    * @return an iterator over the default boolean values.
    */
-  public RepeatedAccessIterator<?> getDefaultValues() {
+  public RepeatedAccessIterator<?> defaultValues() {
     return new IteratorAdapter<Boolean>(DEFAULT_VALUES.iterator());
   }
 }

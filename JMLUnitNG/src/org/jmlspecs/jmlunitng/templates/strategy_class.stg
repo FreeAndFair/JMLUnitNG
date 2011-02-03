@@ -30,7 +30,7 @@ public class <classStrategyName(classInfo=class, typeInfo=type)>
   /**
    * @return class-scope values for type <type.fullyQualifiedName>.
    */
-  public RepeatedAccessIterator\<?\> getClassValues() {
+  public RepeatedAccessIterator\<?\> classValues() {
     return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
     (new <typeTransMap.(type.fullyQualifiedName)>[] 
     <classStrategyFillIn(typeInfo=type)>);

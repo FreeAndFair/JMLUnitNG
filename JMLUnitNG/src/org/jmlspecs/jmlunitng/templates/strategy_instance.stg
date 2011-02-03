@@ -40,7 +40,7 @@ public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
   /**
    * @return local-scope instances of <class.fullyQualifiedName>.
    */
-  public RepeatedAccessIterator\<<class.shortName>\> getLocalValues() {
+  public RepeatedAccessIterator\<<class.shortName>\> localValues() {
     return new ObjectArrayIterator\<<class.shortName>\>
     (new <class.shortName>[]
      <instanceStrategyFillIn(classInfo=class)>);
@@ -50,7 +50,7 @@ public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
    * @return default instances of <class.fullyQualifiedName>, generated
    *  using constructor test parameters.
    */ 
-  public RepeatedAccessIterator\<<class.shortName>\> getDefaultValues() {
+  public RepeatedAccessIterator\<<class.shortName>\> defaultValues() {
     final List\<RepeatedAccessIterator\<<class.shortName>\>\> iters = 
       new LinkedList\<RepeatedAccessIterator\<<class.shortName>\>\>();
 

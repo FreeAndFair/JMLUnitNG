@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010
+ * Copyright (C) 2010-11
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -38,7 +38,7 @@ public abstract class IntStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getLocalValues() {
+  public RepeatedAccessIterator<?> localValues() {
     return new ObjectArrayIterator<Integer>(new Integer[0]);
   }
   
@@ -47,7 +47,7 @@ public abstract class IntStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getClassValues() {
+  public RepeatedAccessIterator<?> classValues() {
     return new ObjectArrayIterator<Integer>(new Integer[0]);
   }
 
@@ -56,14 +56,14 @@ public abstract class IntStrategy extends PrimitiveStrategy {
    * 
    * @return An empty iterator.
    */
-  public RepeatedAccessIterator<?> getPackageValues() {
+  public RepeatedAccessIterator<?> packageValues() {
     return new ObjectArrayIterator<Integer>(new Integer[0]);
   }
   
   /**
    * @return an iterator over the default int values.
    */
-  public RepeatedAccessIterator<?> getDefaultValues() {
+  public RepeatedAccessIterator<?> defaultValues() {
     return new IteratorAdapter<Integer>(DEFAULT_VALUES.iterator());
   }
 }
