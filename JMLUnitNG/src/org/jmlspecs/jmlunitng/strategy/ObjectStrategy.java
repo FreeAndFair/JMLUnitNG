@@ -6,8 +6,10 @@
 package org.jmlspecs.jmlunitng.strategy;
 
 import java.lang.reflect.Array;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.jmlspecs.jmlunitng.iterator.InstantiationIterator;
 import org.jmlspecs.jmlunitng.iterator.MultiIterator;
@@ -23,9 +25,15 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version January 2011
+ * @version February 2011
  */
 public abstract class ObjectStrategy extends NonPrimitiveStrategy {  
+  /**
+   * The ThreadLocal used for cycle detection.
+   */
+  private static final ThreadLocal<Set<Class<?>>> TRAVERSED_CLASSES = 
+    new ThreadLocal<Set<Class<?>>>();
+  
   /**
    * The enum constants for the given class, if it is an enum type.
    */
@@ -81,6 +89,15 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
    */
   public RepeatedAccessIterator<?> defaultValues() {
     RepeatedAccessIterator<?> result;
+    final boolean orig_reflective = isReflective();
+    boolean already_traversed = wasTraversed();
+    
+    if (already_traversed) {
+      // we don't do reflection if we've already been traversed
+      setReflective(false);
+    } else {
+      traverse();
+    }
     
     if (my_enum_constants == null) {
       result = nonEnumDefaultValues();
@@ -88,6 +105,10 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
       result = new ObjectArrayIterator<Object>(my_enum_constants);
     }
     
+    setReflective(orig_reflective);
+    if (!already_traversed) {
+      untraverse();
+    }
     return result;
   }
   
@@ -141,5 +162,40 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
     }
     
     return new MultiIterator(result);
+  }
+  
+  /**
+   * Detects cycles in reflective object instantiation.
+   * 
+   * @return true if this strategy's data class has already been traversed
+   * the currently-ongoing reflective object generation, false otherwise.
+   */
+  private boolean wasTraversed() {
+    boolean result = false;
+    
+    if (TRAVERSED_CLASSES.get() != null) {
+      result = TRAVERSED_CLASSES.get().contains(my_class);
+    }
+    
+    return result;
+  }
+    
+  /**
+   * Adds this strategy's data class to the set of traversed classes.
+   */
+  private void traverse() {
+    if (TRAVERSED_CLASSES.get() == null) {
+      TRAVERSED_CLASSES.set(new HashSet<Class<?>>());
+    }
+    TRAVERSED_CLASSES.get().add(my_class);
+  }
+  
+  /**
+   * Removes this strategy's data class from the set of traversed classes.
+   */
+  private void untraverse() {
+    if (TRAVERSED_CLASSES.get() != null) {
+      TRAVERSED_CLASSES.get().remove(my_class);
+    }
   }
 }

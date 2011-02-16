@@ -196,7 +196,7 @@ public class BasicTestListener implements ITestListener {
     for (int i = start_index; i < params.length - 1; i++) {
       sb.append(formatParameter(params[i]) + ", ");
     }
-    if (params.length > 1 || (isStaticTest(the_test_result) && params.length == 1)) {
+    if (params.length > 1 || (start_index == 0 && params.length == 1)) {
       sb.append(formatParameter(params[params.length - 1]));
     }
     sb.append(")");
