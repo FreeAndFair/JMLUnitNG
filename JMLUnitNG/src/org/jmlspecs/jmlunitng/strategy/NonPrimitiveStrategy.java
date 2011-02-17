@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jmlspecs.jmlunitng.iterator.IteratorSampler;
 import org.jmlspecs.jmlunitng.iterator.MultiIterator;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
@@ -17,9 +18,9 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * The parent strategy for all non-primitive types.
  * 
  * @author Daniel M. Zimmerman
- * @version January 2011
+ * @version February 2011
  */
-public abstract class NonPrimitiveStrategy implements Strategy {
+public abstract class NonPrimitiveStrategy extends AbstractStrategy {
   /**
    * The class for which this strategy was made.
    */
@@ -115,7 +116,11 @@ public abstract class NonPrimitiveStrategy implements Strategy {
     iterators.add(classValues());
     iterators.add(packageValues());
     iterators.add(defaultValues());
-    return new MultiIterator(iterators);
+    RepeatedAccessIterator<?> result = new MultiIterator(iterators);
+    if (fraction() < 1.0) {
+      result = new IteratorSampler(result, fraction(), seed());
+    }
+    return result;
   } 
   
   /**

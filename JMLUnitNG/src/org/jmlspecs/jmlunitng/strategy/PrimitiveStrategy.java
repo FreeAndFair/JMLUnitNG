@@ -11,18 +11,19 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
+import org.jmlspecs.jmlunitng.iterator.IteratorSampler;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
  * The basic framework of a primitive test data generation strategy. 
- * Primitive data strategies deduplicate the test data elements to save
+ * Primitive data strategies deduplicate the test data values to save
  * on redundant test executions.
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
  * @version January 2011
  */
-public abstract class PrimitiveStrategy implements Strategy {
+public abstract class PrimitiveStrategy extends AbstractStrategy {
   /**
    * To be implemented by subclasses. Returns the iterator over default 
    * values for this type.
@@ -30,11 +31,12 @@ public abstract class PrimitiveStrategy implements Strategy {
    * @return What are your default values?
    */
   public abstract RepeatedAccessIterator<?> defaultValues();
-
+  
   /**
-   * Returns a RepeatedAccessIterator over all values.
+   * Returns a RepeatedAccessIterator over a fraction of the strategy
+   * values, as specified by configuration methods.
    * 
-   * @return What are all your values?
+   * @return What are your values?
    */
   public RepeatedAccessIterator<Comparable<?>> iterator() {
     // deduplicate the primitive data, because we can easily keep it all in memory
@@ -63,6 +65,11 @@ public abstract class PrimitiveStrategy implements Strategy {
       data_list.add(null);
     }
     data_list.addAll(data_set);
-    return new IteratorAdapter<Comparable<?>>(data_list.iterator());
+    RepeatedAccessIterator<Comparable<?>> result = 
+      new IteratorAdapter<Comparable<?>>(data_list.iterator());
+    if (fraction() < 1.0) {
+      result = new IteratorSampler<Comparable<?>>(result, fraction(), seed());
+    }
+    return result;
   }
 }

@@ -39,17 +39,19 @@ public interface Strategy {
   RepeatedAccessIterator<?> packageValues();
   
   /**
-   * To be implemented by strategy classes. Returns the iterator over default 
-   * values for this type.
+   * To be implemented by strategy classes. Returns an iterator over the 
+   * default values for this type.
    * 
    * @return What are your default values?
    */
   RepeatedAccessIterator<?> defaultValues();
 
   /**
-   * Returns a RepeatedAccessIterator over all values.
+   * Returns a RepeatedAccessIterator over the strategy values. This
+   * iterator may contain all the various scoped values, or a fraction of
+   * them chosen uniformly at random, as specified by configuration options. 
    * 
-   * @return What are all your values?
+   * @return What are your values?
    */
   RepeatedAccessIterator<?> iterator();
 }
