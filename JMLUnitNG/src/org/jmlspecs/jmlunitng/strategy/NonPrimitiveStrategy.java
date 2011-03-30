@@ -220,7 +220,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
         // a class strategy name, in our package, looks like 
         // "ClassStrategy_formattedclassname"
         final String pkg_name = 
-          my_class.getName().substring(0, my_class.getName().lastIndexOf('.'));
+          getClass().getName().substring(0, getClass().getName().lastIndexOf('.'));
         result = loadClass(pkg_name + ".ClassStrategy_" + formatted_name);
       }
     }
