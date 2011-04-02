@@ -253,6 +253,8 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
         result = null;
       } catch (IllegalAccessException e) {
         result = null;
+      } catch (NullPointerException e) {
+        result = null;
       }
     }
     
