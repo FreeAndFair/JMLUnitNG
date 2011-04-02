@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="lib/stringtemplate-3.2.1.jar" sourcepath="D:/Documents/School/OpenJMLWorkspace/stringtemplate/src/org/antlr/stringtemplate/language"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/openjml.jar"/>
-	<classpathentry kind="lib" path="lib/testng-5.14.3beta.jar"/>
+	<classpathentry kind="lib" path="res/testng-5.11-jdk15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
