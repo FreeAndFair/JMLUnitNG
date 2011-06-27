@@ -97,14 +97,12 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogClasspath.setProperty("allowmultiple", "true");
     ogClasspath.setProperty("splitter", ":");
     ogClasspath.setProperty("mustexist", "true");
-    ogClasspath.setProperty("mustbedir", "true");
     ogClasspath.setProperty("aliases", "-cp,--classpath");
     ogSpecspath = new FileListOption("Specspath", "(?:-sp)|(?:--specspath)");
     addOption(ogSpecspath);
     ogSpecspath.setProperty("allowmultiple", "true");
     ogSpecspath.setProperty("splitter", ":");
     ogSpecspath.setProperty("mustexist", "true");
-    ogSpecspath.setProperty("mustbedir", "true");
     ogSpecspath.setProperty("aliases", "-sp,--specspath");
     ogDryRun = new BooleanOption("DryRun", "(?:--dry-run)");
     addOption(ogDryRun);

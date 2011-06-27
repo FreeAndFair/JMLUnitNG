@@ -23,11 +23,9 @@ ARGS::
   Clean: {"--clean"}
   Prune: {"--prune"}
   Classpath: {"-cp", "--classpath"}:{file-list}:
-    [allowmultiple="true", splitter=":", mustexist="true",
-     mustbedir="true"]
+    [allowmultiple="true", splitter=":", mustexist="true"]
   Specspath: {"-sp", "--specspath"}:{file-list}:
-    [allowmultiple="true", splitter=":", mustexist="true",
-     mustbedir="true"]
+    [allowmultiple="true", splitter=":", mustexist="true"]
   DryRun: {"--dry-run"}
   NoGen: {"--no-gen"}
 
