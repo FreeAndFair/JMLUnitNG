@@ -99,9 +99,14 @@ methodTest(method) ::= <<
 
 <else>
 <if(!method.constructor)>
+<if(!method.static)>
 @Test(dependsOnMethods = { "test_racEnabled" }, 
       dataProvider = "<instanceDataProviderName()>")
 
+<else>
+@Test(dependsOnMethods = { "test_racEnabled" })
+
+<endif>
 <else>
 @Test(dependsOnMethods = { "test_racEnabled" })
 
