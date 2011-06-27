@@ -352,8 +352,10 @@ public class ClassInfo extends TypeInfo {
   public /*@ pure @*/ Set<MethodInfo> getTestableMethods() {
     final Set<MethodInfo> result = new HashSet<MethodInfo>();
     for (MethodInfo m : my_methods) {
-      if (m.isTestable() && !my_overridden_methods.contains(m)) {
-        // we don't add overridden methods to the testable set
+      if (m.isTestable() && !my_overridden_methods.contains(m) &&
+          (!isAbstract() || m.isStatic())) {
+        // we don't add overridden methods, or instance methods of abstract classes,
+        // to the testable set
         result.add(m);
       }
     }

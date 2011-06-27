@@ -45,7 +45,7 @@ public final class JMLUnitNG implements Runnable {
   /**
    * The string to be prepended to the reported version.
    */
-  private static final String VERSION_STRING = "1.0"; 
+  private static final String VERSION_STRING = "1.0.1c1"; 
   
   /**
    * The raw SVN revision string.
@@ -410,7 +410,8 @@ public final class JMLUnitNG implements Runnable {
         my_logger.println("class " + the_info.getFullyQualifiedName());
       }
     }
-    if (the_info.isAbstract() && the_info.getNestedClasses().isEmpty() || 
+    if (the_info.isAbstract() && the_info.getNestedClasses().isEmpty() &&
+        the_info.getTestableMethods().isEmpty() || 
         the_info.isEnumeration()) {
       return;
     }
@@ -433,7 +434,9 @@ public final class JMLUnitNG implements Runnable {
     String strategy_dir = dirs[0];
     for (String s : dirs) {
       final File f = new File(s);
-      if (!my_opts.isNoGenSet() && !the_info.isAbstract()) { // don't create dirs for abstract classes for now
+      if (!my_opts.isNoGenSet() &&
+          !the_info.getTestableMethods().isEmpty()) { 
+        // don't create dirs for classes with no testable methods
         my_logger.println("Creating directory " + f);
         if (!my_opts.isDryRunSet() && !f.mkdirs() && !f.isDirectory()) {
           System.err.println("Could not create destination directory " + f);

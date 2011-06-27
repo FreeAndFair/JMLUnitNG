@@ -427,7 +427,8 @@ public class TestClassGenerator {
                         c.getFullyQualifiedName());
     }
     
-    if (the_class.isAbstract()) {
+    if (methods_to_test.isEmpty()) {
+      my_logger.println("No testable methods in class " + the_class.getFullyQualifiedName());
       return;
     }
     
