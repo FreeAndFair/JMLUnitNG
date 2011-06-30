@@ -9,7 +9,7 @@ main(date, class, jmlunitng_version, use_reflection) ::= <<
  */
  
 <if(class.packaged)>
-package <strategyPackageName(classInfo=class)>;
+package <class.packageName>;
 
 <endif>
 import java.util.LinkedList;
@@ -21,12 +21,6 @@ import org.jmlspecs.jmlunitng.iterator.NonNullMultiIterator;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 import org.jmlspecs.jmlunitng.strategy.ObjectStrategy;
-
-<if(class.packaged)>
-import <class.fullyQualifiedName>;
-import <class.packageName>.<testClassName(class)>;
-
-<endif>
 
 /**
  * Test data strategy for <class.fullyQualifiedName>. Provides

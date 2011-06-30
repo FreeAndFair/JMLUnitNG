@@ -63,7 +63,7 @@ strategyPackageShortName(classInfo) ::= "<classInfo.shortName><strategyPackageSu
 strategyPackageName(classInfo) ::= "<if(classInfo.packaged)><classInfo.packageName>.<endif><strategyPackageShortName(classInfo=classInfo)>"
 localStrategyName(classInfo, methodInfo, paramInfo) ::= "<if(!classInfo.packaged)><classInfo.fullyQualifiedName>_<endif><methodInfo.detailedName>__<paramInfo.name>"
 localStrategyFillIn(typeInfo) ::= "{ /* add local-scope <typeInfo.fullyQualifiedName> values here */ }"
-instanceStrategyName(classInfo) ::= "<if(!classInfo.packaged)><classInfo.fullyQualifiedName>_<endif>InstanceStrategy"
+instanceStrategyName(classInfo) ::= "<classInfo.shortName>_InstanceStrategy"
 instanceStrategyFillIn(classInfo) ::= "{ /* add <classInfo.fullyQualifiedName> values here */ }"
 classStrategyName(classInfo, typeInfo) ::= "<if(!classInfo.packaged)><classInfo.fullyQualifiedName>_<endif>ClassStrategy_<typeInfo.formattedName>"
 classStrategyFillIn(typeInfo) ::= "{ /* add class-scope <typeInfo.fullyQualifiedName> values here */ }"

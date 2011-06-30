@@ -44,7 +44,7 @@ public enum ProtectionLevel {
   public String toString() {
     String result = this.name().toLowerCase();
     if (this == NO_LEVEL) {
-      result = "(package)";
+      result = "package-protected";
     }
     return result;
   }

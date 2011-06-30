@@ -383,6 +383,13 @@ public class TestClassGenerator {
     t.setAttribute("date",
                    DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
     t.setAttribute("methods", the_methods);
+    
+    // if there are no methods with parameters to generate tests for, we don't need a data package
+    boolean params = false;
+    for (MethodInfo m : the_methods) {
+      params = params || !m.getParameters().isEmpty();
+    }
+    t.setAttribute("params", params);
     t.setAttribute("package_name", the_class.getPackageName());
     t.setAttribute("packaged", !the_class.getPackageName().equals(""));
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
@@ -400,8 +407,10 @@ public class TestClassGenerator {
    * directory.
    * 
    * @param the_class The class for which to generate test classes.
-   * @param the_test_dir The directory in which to generate test classes.
-   * @param the_strategy_dir The directory in which to generate strategies.
+   * @param the_test_dir The directory in which to generate test classes, as well
+   * as package and instance strategies.
+   * @param the_strategy_dir The directory in which to generate parameter and class
+   * strategies.
    * @throws IOException Thrown if an IOException occurs while generating the classes.
    */
   //@ requires VALID_RAC_VERSIONS.contains(the_rac);
@@ -536,7 +545,7 @@ public class TestClassGenerator {
     // fourth: instance strategy class for this class
     
     is_name.setAttribute("classInfo", the_class);
-    f = new File(the_strategy_dir + is_name.toString() + 
+    f = new File(the_test_dir + is_name.toString() + 
                  JMLUnitNG.JAVA_SUFFIX);
     if (my_gen_files && !f.exists()) {
       final FileWriter fw = new FileWriter(f);

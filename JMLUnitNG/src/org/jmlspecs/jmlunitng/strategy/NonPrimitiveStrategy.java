@@ -200,11 +200,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
   private final Class<?> findStrategyClass(final Class<?> the_class) {
     Class<?> result = null;
     final String class_name = the_class.getCanonicalName();
-    if (the_class.getPackage() == null) {
-      result = loadClass(class_name + "_InstanceStrategy");
-    } else {
-      result = loadClass(class_name + "_JML_Data.InstanceStrategy");
-    }
+    result = loadClass(class_name + "_InstanceStrategy");
     
     if (result == null) {
       final String formatted_name = formatClassName(class_name);

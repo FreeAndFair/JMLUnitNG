@@ -411,8 +411,18 @@ public final class JMLUnitNG implements Runnable {
       }
     }
     if (the_info.isAbstract() && the_info.getNestedClasses().isEmpty() &&
-        the_info.getTestableMethods().isEmpty() || 
-        the_info.isEnumeration()) {
+        the_info.getTestableMethods().isEmpty())
+    {
+      my_logger.println("Not generating tests for abstract class with no concrete static methods");
+      return;
+    }
+    if (the_info.isEnumeration()) {
+      my_logger.println("Not generating tests for enumeration");
+      return;
+    }
+    if (the_info.getProtectionLevel().strongerThan(levelToTest())) {
+      my_logger.println("Not generating tests for " + the_info.getProtectionLevel() +
+                        " class, configured for " + levelToTest());
       return;
     }
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;

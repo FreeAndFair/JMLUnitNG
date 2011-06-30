@@ -1,6 +1,6 @@
-group test_class_jml4 : shared_java;
+group test_class_jml2 : shared_java;
 
-main(date, class, methods, package_name, packaged, jmlunitng_version) ::= <<
+main(date, class, methods, params, package_name, packaged, jmlunitng_version) ::= <<
 /*
  * Test Oracle Class for <class.fullyQualifiedName>
  * For Use With JML2 RAC
@@ -35,8 +35,10 @@ import org.jmlspecs.jmlrac.runtime.JMLEntryPreconditionError;
 import org.jmlspecs.jmlrac.runtime.JMLEvaluationError;
 
 <if (packaged)>
+<if (params)>
 import <strategyPackageName(classInfo=class)>.*;
 
+<endif>
 <endif>
 
 /**
