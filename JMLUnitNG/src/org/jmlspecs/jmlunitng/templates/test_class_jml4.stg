@@ -131,26 +131,26 @@ public void <testName()>
     <endif><endif>
   }
   <if(method.signals)>
-  <method.signals:catchClause()><endif>  catch (final JMLEntryPreconditionError e) {
+  <method.signals:catchClause()><endif>  catch (final JMLEntryPreconditionError $e) {
     // meaningless test
-    throw new PreconditionSkipException(e.getMessage());
+    throw new PreconditionSkipException($e.getMessage());
   }
-  catch (final JMLEvaluationError e) {
-    if (e.getCause() instanceof JMLEntryPreconditionError) {
+  catch (final JMLEvaluationError $e) {
+    if ($e.getCause() instanceof JMLEntryPreconditionError) {
       // meaningless test
-      throw new PreconditionSkipException(e.getCause().getMessage());
+      throw new PreconditionSkipException($e.getCause().getMessage());
     } else {
       // failed test
-      throw new TestException(e.getCause().getMessage());
+      throw new TestException($e.getCause().getMessage());
     }
   }
-  catch (final JMLAssertionError e) {
+  catch (final JMLAssertionError $e) {
     // test failure
-    throw new TestException(e.getMessage());
+    throw new TestException($e.getMessage());
   }
-  catch (final Throwable e) {
+  catch (final Throwable $e) {
     // test failure for some reason other than assertion violation
-    throw new TestException(e.getMessage());
+    throw new TestException($e.getMessage());
   }
 }
 
@@ -190,7 +190,7 @@ public static Iterator\<Object[]\> <instanceDataProviderName()>() {
 >>
 
 catchClause() ::= <<
-catch (final <it.fullyQualifiedName> e) {
+catch (final <it.fullyQualifiedName> $e) {
   // passed test because of successful signals clause
   return;
 }
