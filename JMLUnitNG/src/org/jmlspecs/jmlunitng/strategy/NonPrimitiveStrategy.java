@@ -64,6 +64,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
    */
   public NonPrimitiveStrategy(final Class<?> the_class, 
                               final Class<?> the_default_data_class) {
+    super();
     my_class = the_class;
     my_default_data_class = the_default_data_class;
     my_reflective = false;

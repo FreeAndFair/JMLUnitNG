@@ -90,7 +90,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   public RepeatedAccessIterator<?> defaultValues() {
     RepeatedAccessIterator<?> result;
     final boolean orig_reflective = isReflective();
-    boolean already_traversed = wasTraversed();
+    final boolean already_traversed = wasTraversed();
     
     if (already_traversed) {
       // we don't do reflection if we've already been traversed

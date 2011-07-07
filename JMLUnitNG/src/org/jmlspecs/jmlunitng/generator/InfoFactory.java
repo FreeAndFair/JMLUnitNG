@@ -104,27 +104,29 @@ public final class InfoFactory {
       final SortedSet<MethodInfo> signals = signals_cache.get(c);
       final SortedSet<MethodInfo> combined = new TreeSet<MethodInfo>();
       
-      if (raw != null && signals != null) {
-        final Iterator<MethodInfo> it_raw = raw.iterator();
-        final Iterator<MethodInfo> it_signals = signals.iterator();
+      if (raw != null) {
+        if (signals == null) {
+          combined.addAll(raw);
+        } else {
+          final Iterator<MethodInfo> it_raw = raw.iterator();
+          final Iterator<MethodInfo> it_signals = signals.iterator();
       
-        // iterate over the sets to find the methods to include
+          // iterate over the sets to find the methods to include
       
-        while (it_signals.hasNext()) {
-          final MethodInfo next_signals = it_signals.next();
-          boolean found = false;
-          while (!found && it_raw.hasNext()) {
-            final MethodInfo next_raw = it_raw.next();
-            if (next_raw.equalsExceptSignals(next_signals)) {
-              found = true;
-              combined.add(next_signals);
-            } else {
-              combined.add(next_raw);
+          while (it_signals.hasNext()) {
+            final MethodInfo next_signals = it_signals.next();
+            boolean found = false;
+            while (!found && it_raw.hasNext()) {
+              final MethodInfo next_raw = it_raw.next();
+              if (next_raw.equalsExceptSignals(next_signals)) {
+                found = true;
+                combined.add(next_signals);
+              } else {
+                combined.add(next_raw);
+              }
             }
           }
         }
-      } else if (raw != null) {
-        combined.addAll(raw);
       }
       
       METHOD_CACHE.put(c, combined);
@@ -483,6 +485,7 @@ public final class InfoFactory {
      */
     public MethodInfoParser(final API the_api, 
                             final SortedMap<ClassInfo, SortedSet<MethodInfo>> the_cache) {
+      super();
       my_api = the_api;
       my_cache = the_cache;
     }

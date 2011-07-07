@@ -50,7 +50,6 @@ public class ClassInfo extends TypeInfo {
    */
   private final boolean my_is_interface;
   
-  
   /**
    * Is this class an enum?
    */
@@ -262,7 +261,7 @@ public class ClassInfo extends TypeInfo {
   public /*@ pure @*/ boolean isInitialized() {
     return my_initialized;
   }
-  
+
   /**
    * Returns a Set of MethodInfo objects that represent the factory methods of
    * the class.
@@ -369,6 +368,22 @@ public class ClassInfo extends TypeInfo {
   //@ requires isInitialized();
   public /*@ pure @*/ Set<MethodInfo> getMethods() {
     return Collections.unmodifiableSet(my_methods);
+  }
+  
+  /**
+   * @return a Set of MethodInfo objects that represent the
+   * constructors of this class.
+   */
+  //@ requires isInitialized();
+  //@ ensures (\forall MethodInfo m; \result.contains(m); m.isConstructor());
+  public /*@ pure @*/ Set<MethodInfo> getConstructors() {
+    final Set<MethodInfo> constructors = new HashSet<MethodInfo>();
+    for (MethodInfo m : my_methods) {
+      if (m.isConstructor()) {
+        constructors.add(m);
+      }
+    }
+    return Collections.unmodifiableSet(constructors);
   }
   
   /**

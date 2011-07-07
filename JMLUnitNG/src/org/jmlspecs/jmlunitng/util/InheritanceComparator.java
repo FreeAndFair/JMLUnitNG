@@ -18,7 +18,7 @@ import org.jmlspecs.jmlunitng.generator.ClassInfo;
  * @author Daniel M. Zimmerman
  * @version November 2010
  */
-public class InheritanceComparator implements Serializable, Comparator<ClassInfo> {
+public class InheritanceComparator implements Comparator<ClassInfo> {
   public int compare(final ClassInfo class_1, final ClassInfo class_2) {
     int result = 0;
     if (!class_1.equals(class_2)) {

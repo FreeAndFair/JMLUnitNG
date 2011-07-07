@@ -26,6 +26,7 @@ import org.jmlspecs.jmlunitng.clops.JMLUnitNGOptionStore;
 import org.jmlspecs.jmlunitng.clops.JMLUnitNGParser;
 import org.jmlspecs.jmlunitng.generator.ClassInfo;
 import org.jmlspecs.jmlunitng.generator.InfoFactory;
+import org.jmlspecs.jmlunitng.generator.MethodInfo;
 import org.jmlspecs.jmlunitng.generator.ProtectionLevel;
 import org.jmlspecs.jmlunitng.generator.TestClassGenerator;
 import org.jmlspecs.jmlunitng.util.JavaSuffixFilter;
@@ -156,6 +157,9 @@ public final class JMLUnitNG implements Runnable {
       e.printStackTrace();
     } catch (final InvalidOptionValueException e) {
       System.err.println(e.getLocalizedMessage());
+    } catch (final JMLUnitNGError e) {
+      System.err.println("JMLUnitNG exited because of an irrecoverable error: ");
+      e.printStackTrace();
     }
   }
   
@@ -186,9 +190,7 @@ public final class JMLUnitNG implements Runnable {
     try {
       processAllCompilationUnits();
     } catch (IOException e) {
-      System.err.println("I/O exception occurred.");
-      e.printStackTrace();
-      Runtime.getRuntime().exit(1);
+      throw new JMLUnitNGError(e);
     }
     if (my_opts.isPruneSet()) {
       pruneAllFiles();
@@ -241,8 +243,7 @@ public final class JMLUnitNG implements Runnable {
         } catch (IOException e) {
           // this should never happen
           System.err.println("I/O exception while finding files.");
-          e.printStackTrace();
-          Runtime.getRuntime().exit(1);
+          throw new JMLUnitNGError(e);
         }
       } // don't add non-java files to the list
     }
@@ -269,8 +270,7 @@ public final class JMLUnitNG implements Runnable {
         } catch (IOException e) {
           // this should never happen
           System.err.println("I/O exception while finding files.");
-          e.printStackTrace();
-          Runtime.getRuntime().exit(1);
+          throw new JMLUnitNGError(e);
         }
       }
     }
@@ -369,8 +369,8 @@ public final class JMLUnitNG implements Runnable {
         api.parseFiles(file_list.toArray(new File[file_list.size()]));
       final int numOfErrors = api.enterAndCheck(units);
       if (numOfErrors > 0) {
-        System.err.println("Encountered " + numOfErrors + " errors.");
-        Runtime.getRuntime().exit(1);
+        System.err.println("Encountered " + numOfErrors + " compilation errors.");
+        throw new JMLUnitNGError("Encountered " + numOfErrors + " compilation errors.");
       }
       
       // get class info for all classes before generating tests for any,
@@ -422,7 +422,16 @@ public final class JMLUnitNG implements Runnable {
     }
     if (the_info.getProtectionLevel().strongerThan(levelToTest())) {
       my_logger.println("Not generating tests for " + the_info.getProtectionLevel() +
-                        " class, configured for " + levelToTest());
+                        " " + the_info + ", configured for " + levelToTest());
+      return;
+    }
+    boolean usable_constructor = false;
+    for (MethodInfo m : the_info.getConstructors()) {
+      usable_constructor |= m.isConstructor() && m.getProtectionLevel().weakerThanOrEqualTo(levelToTest());
+    }
+    if (!usable_constructor) {
+      my_logger.println("Not generating tests for " + the_info + " with no " +
+                        levelToTest() + " (or weaker) constructors");
       return;
     }
     String rac_version = TestClassGenerator.DEF_RAC_VERSION;
@@ -450,7 +459,8 @@ public final class JMLUnitNG implements Runnable {
         my_logger.println("Creating directory " + f);
         if (!my_opts.isDryRunSet() && !f.mkdirs() && !f.isDirectory()) {
           System.err.println("Could not create destination directory " + f);
-          Runtime.getRuntime().exit(1);
+          throw new JMLUnitNGError("Could not create directory " + f + 
+                                   " for generated tests.");
         }
       }
       my_created_files.add(f.getCanonicalPath());
@@ -459,6 +469,18 @@ public final class JMLUnitNG implements Runnable {
     
     generator.generateClasses(the_info, dirs[0], strategy_dir);
     my_created_files.addAll(generator.getCreatedFiles());
+    
+    // if either of our directories ended up empty, delete it
+    for (String s : dirs) {
+      final File f = new File(s);
+      if (!my_opts.isNoGenSet() && f.isDirectory() && f.listFiles().length == 0) {
+        my_logger.println("Removing empty directory " + f);
+        if (!my_opts.isDryRunSet() && !f.delete()) {
+          System.err.println("Could not remove empty directory " + f);
+          // no Error because what's the harm in leaving a directory around?
+        }
+      }
+    }
   }
   
   /**
@@ -503,8 +525,7 @@ public final class JMLUnitNG implements Runnable {
         cleanOrPruneFile(f, true);
       } catch (IOException e) {
         System.err.println("Error occurred while pruning files.");
-        e.printStackTrace();
-        Runtime.getRuntime().exit(1);
+        throw new JMLUnitNGError(e);
       }
     }
     my_logger.println("Pruning complete");
@@ -528,8 +549,7 @@ public final class JMLUnitNG implements Runnable {
         cleanOrPruneFile(f, false);
       } catch (IOException e) {
         System.err.println("Error occurred while cleaning files.");
-        e.printStackTrace();
-        Runtime.getRuntime().exit(1);
+        throw new JMLUnitNGError(e);
       }
     }
     my_logger.println("Cleaning complete");
