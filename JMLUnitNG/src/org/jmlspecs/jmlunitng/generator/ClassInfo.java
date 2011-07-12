@@ -6,7 +6,9 @@
 package org.jmlspecs.jmlunitng.generator;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -23,7 +25,13 @@ public class ClassInfo extends TypeInfo {
    * True if the methods of this class have been initialized,
    * false otherwise.
    */
-  private boolean my_initialized = false;
+  private boolean my_methods_initialized = false;
+  
+  /**
+   * True if the literals of this class have been initialized,
+   * false otherwise.
+   */
+  private boolean my_literals_initialized = false;
   
   /**
    * The parent ClassInfo object.
@@ -96,6 +104,16 @@ public class ClassInfo extends TypeInfo {
   private final Set<MethodInfo> my_overridden_methods;
   
   /**
+   * The map from classes to literals declared in this class.
+   */
+  private final Map<Class<?>, SortedSet<Object>> my_literals;
+  
+  /**
+   * The map from classes to literals declared in the specs for this class.
+   */
+  private final Map<Class<?>, SortedSet<Object>> my_spec_literals;
+  
+  /**
    * Constructor for a ClassInfo object given the describing parameters. For use
    * by factory classes.
    * 
@@ -129,6 +147,8 @@ public class ClassInfo extends TypeInfo {
     my_overridden_methods = new HashSet<MethodInfo>();
     my_parent = the_parent;
     my_interfaces = new TreeSet<ClassInfo>(the_interfaces);
+    my_literals = new HashMap<Class<?>, SortedSet<Object>>();
+    my_spec_literals = new HashMap<Class<?>, SortedSet<Object>>();
   }
 
   /**
@@ -141,14 +161,41 @@ public class ClassInfo extends TypeInfo {
   }
   
   /**
+   * Initializes the literals of this ClassInfo (the literals declared
+   * in this class and in its specifications). This method may only
+   * be called once.
+   * 
+   * @param the_literals The literals to initialize this ClassInfo with.
+   * @param the_spec_literals The spec literals to initialize this ClassInfo
+   * with.
+   */
+  //@ requires !areLiteralsInitialized();
+  //@ ensures areLiteralsInitialized();
+  public void 
+  initializeLiterals(final Map<Class<?>, SortedSet<Object>> the_literals,
+                     final Map<Class<?>, SortedSet<Object>> the_spec_literals) {
+    for (Map.Entry<Class<?>, SortedSet<Object>> e : the_literals.entrySet()) {
+      final SortedSet<Object> new_set = new TreeSet<Object>(e.getValue());
+      my_literals.put(e.getKey(), Collections.unmodifiableSortedSet(new_set));
+    }
+    for (Map.Entry<Class<?>, SortedSet<Object>> e : the_spec_literals.entrySet()) {
+      final SortedSet<Object> new_set = new TreeSet<Object>(e.getValue());
+      my_spec_literals.put(e.getKey(), Collections.unmodifiableSortedSet(new_set));
+    }
+    my_literals_initialized = true;
+  }
+  
+  /**
    * Initializes the methods of this ClassInfo. This method may only
    * be called once.
+   * 
+   * @param the_methods The methods to initialize this ClassInfo with.
    */
-  //@ requires !isInitialized();
+  //@ requires !areMethodsInitialized();
   /*@ requires (\exists MethodInfo m; the_methods.contains(m); 
     @           m.isConstructor());
     @*/
-  //@ ensures isInitialized();
+  //@ ensures areMethodsInitialized();
   public void initializeMethods(final Set<MethodInfo> the_methods) {
     my_methods.clear();
     my_methods.addAll(the_methods);
@@ -190,7 +237,7 @@ public class ClassInfo extends TypeInfo {
       }
     }
     
-    my_initialized = true;
+    my_methods_initialized = true;
   }
   
   /**
@@ -255,11 +302,19 @@ public class ClassInfo extends TypeInfo {
   }
   
   /**
+   * @return true if the literals have been initialized, 
+   * false otherwise.
+   */
+  public /*@ pure @*/ boolean areLiteralsInitialized() {
+    return my_literals_initialized;
+  }
+  
+  /**
    * @return true if the methods have been initialized, 
    * false otherwise.
    */
-  public /*@ pure @*/ boolean isInitialized() {
-    return my_initialized;
+  public /*@ pure @*/ boolean areMethodsInitialized() {
+    return my_methods_initialized;
   }
 
   /**
@@ -395,6 +450,66 @@ public class ClassInfo extends TypeInfo {
   }
   
   /**
+   * Retrieve the literals of the specified class declared in 
+   * this class. Note that this does <i>not</i> include any literals 
+   * declared in methods or method specs within this class; those 
+   * must be retrieved from the appropriate MethodInfo objects.
+   *
+   * @param the_class The class for which to get the literals.
+   * @return A set of literals for the specified class, or null if
+   * no literals exist for the class.
+   */
+  //@ requires areLiteralsInitialized();
+  public /*@ pure @*/ SortedSet<Object> 
+  getLiterals(final Class<?> the_class) {
+    SortedSet<Object> result = null;  
+    if (my_literals.get(the_class) != null) {
+      result = new TreeSet<Object>(my_literals.get(the_class));
+    }
+    return result;
+  }
+  
+  /**
+   * Retrieve the literals of the specified class declared in 
+   * the specifications of this class. Note that this does <i>not</i> 
+   * include any literals declared in methods or method specs within 
+   * this class; those must be retrieved from the appropriate 
+   * MethodInfo objects.
+   *
+   * @param the_class The class for which to get the literals.
+   * @return A set of literals for the specified class, or null if
+   * no literals exist for the class.
+   */
+  //@ requires areLiteralsInitialized();
+  public /*@ pure @*/ SortedSet<Object> 
+  getSpecLiterals(final Class<?> the_class) {
+    SortedSet<Object> result = null;  
+    if (my_spec_literals.get(the_class) != null) {
+      result = new TreeSet<Object>(my_spec_literals.get(the_class));
+    }
+    return result;
+  }
+  
+  /**
+   * Retrieve the entire map of literals declared in this class.
+   * 
+   * @return An unmodifiable view of the map of literals.
+   */
+  public /*@ pure @*/ Map<Class<?>, SortedSet<Object>> getLiterals() {
+    return Collections.unmodifiableMap(my_literals);
+  }
+
+  /**
+   * Retrieve the entire map of literals declared in this class's
+   * specification.
+   * 
+   * @return An unmodifiable view of the map of literals.
+   */
+  public /*@ pure @*/ Map<Class<?>, SortedSet<Object>> getSpecLiterals() {
+    return Collections.unmodifiableMap(my_spec_literals);
+  }
+  
+  /**
    * {@inheritDoc}
    */
   public boolean equals(final /*@ nullable @*/ Object the_other) {
@@ -402,7 +517,7 @@ public class ClassInfo extends TypeInfo {
 
     if (result && the_other != this) {
       final ClassInfo cls = (ClassInfo) the_other;
-      result &= my_initialized == cls.my_initialized;
+      result &= my_methods_initialized == cls.my_methods_initialized;
       result &= my_interfaces.equals(cls.my_interfaces);
       result &= my_protection_level.equals(cls.my_protection_level);
       result &= my_is_abstract == cls.my_is_abstract;

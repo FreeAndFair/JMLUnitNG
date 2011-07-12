@@ -7,10 +7,14 @@ package org.jmlspecs.jmlunitng.generator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Information about a method under test.
@@ -64,6 +68,16 @@ public class MethodInfo implements Comparable<MethodInfo> {
    */
   private final /*@ non_null @*/ List<ClassInfo> my_signals;
 
+  /**
+   * The map from classes to literals declared in this class.
+   */
+  private final Map<Class<?>, SortedSet<Object>> my_literals;
+  
+  /**
+   * The map from classes to literals declared in the specs for this class.
+   */
+  private final Map<Class<?>, SortedSet<Object>> my_spec_literals;
+  
   /**
    * The ClassInfo for the class this method belongs to.
    */
@@ -132,6 +146,8 @@ public class MethodInfo implements Comparable<MethodInfo> {
                     final /*@ non_null @*/ List<ParameterInfo> the_parameter_types, 
                     final /*@ non_null @*/ TypeInfo the_return_type,
                     final /*@ non_null @*/ List<ClassInfo> the_signals,
+                    final /*@ non_null @*/ Map<Class<?>, SortedSet<Object>> the_literals,
+                    final /*@ non_null @*/ Map<Class<?>, SortedSet<Object>> the_spec_literals,                    
                     final boolean the_is_constructor, final boolean the_is_static,
                     final boolean the_is_deprecated) {
     my_name = the_name;
@@ -140,6 +156,8 @@ public class MethodInfo implements Comparable<MethodInfo> {
     my_protection_level = the_protection_level;
     my_parameters = new ArrayList<ParameterInfo>(the_parameter_types);
     my_signals = new ArrayList<ClassInfo>(the_signals);
+    my_literals = copyLiteralsMap(the_literals);
+    my_spec_literals = copyLiteralsMap(the_spec_literals);
     my_return_type = the_return_type;
     my_is_static = the_is_static;
     my_is_constructor = the_is_constructor;
@@ -155,7 +173,26 @@ public class MethodInfo implements Comparable<MethodInfo> {
   }
 
   /**
+   * Copies the specified literals map to a new map.
+   * 
+   * @param the_map The literals map to copy.
+   * @return The new map.
+   */
+  private static final Map<Class<?>, SortedSet<Object>> 
+  copyLiteralsMap(final Map<Class<?>, SortedSet<Object>> the_map) {
+    Map<Class<?>, SortedSet<Object>> result = 
+      new HashMap<Class<?>, SortedSet<Object>>();
+    for (Map.Entry<Class<?>, SortedSet<Object>> e : the_map.entrySet()) {
+      final SortedSet<Object> new_set = new TreeSet<Object>(e.getValue());
+      result.put(e.getKey(), Collections.unmodifiableSortedSet(new_set));
+    }  
+    return result;
+  }
+  
+  /**
    * Generates the detailed name of the method.
+   * 
+   * @return The detailed name.
    */
   private /*@ pure non_null @*/ String generateDetailedName() {
     final StringBuffer sb = new StringBuffer(my_name);
@@ -226,6 +263,61 @@ public class MethodInfo implements Comparable<MethodInfo> {
     return Collections.unmodifiableList(my_signals);
   }
 
+  /**
+   * Retrieve the literals of the specified class declared in 
+   * this method.
+   *
+   * @param the_class The class for which to get the literals.
+   * @return A set of literals for the specified class, or null if
+   * no literals exist for the class.
+   */
+  //@ requires areLiteralsInitialized();
+  public /*@ pure @*/ SortedSet<Object> 
+  getLiterals(final Class<?> the_class) {
+    SortedSet<Object> result = null;  
+    if (my_literals.get(the_class) != null) {
+      result = new TreeSet<Object>(my_literals.get(the_class));
+    }
+    return result;
+  }
+  
+  /**
+   * Retrieve the literals of the specified class declared in 
+   * the specifications of this method. 
+   *
+   * @param the_class The class for which to get the literals.
+   * @return A set of literals for the specified class, or null if
+   * no literals exist for the class.
+   */
+  //@ requires areLiteralsInitialized();
+  public /*@ pure @*/ SortedSet<Object> 
+  getSpecLiterals(final Class<?> the_class) {
+    SortedSet<Object> result = null;  
+    if (my_spec_literals.get(the_class) != null) {
+      result = new TreeSet<Object>(my_spec_literals.get(the_class));
+    }
+    return result;
+  }
+  
+  /**
+   * Retrieve the entire map of literals declared in this method.
+   * 
+   * @return An unmodifiable view of the map of literals.
+   */
+  public /*@ pure @*/ Map<Class<?>, SortedSet<Object>> getLiterals() {
+    return Collections.unmodifiableMap(my_literals);
+  }
+
+  /**
+   * Retrieve the entire map of literals declared in this method's
+   * specification.
+   * 
+   * @return An unmodifiable view of the map of literals.
+   */
+  public /*@ pure @*/ Map<Class<?>, SortedSet<Object>> getSpecLiterals() {
+    return Collections.unmodifiableMap(my_spec_literals);
+  }
+  
   /**
    * @return True if this method is a constructor. False if not.
    */

@@ -25,13 +25,26 @@ import javax.lang.model.element.Modifier;
 import org.jmlspecs.jmlunitng.util.InheritanceComparator;
 import org.jmlspecs.openjml.API;
 import org.jmlspecs.openjml.JmlSpecs.MethodSpecs;
+import org.jmlspecs.openjml.JmlSpecs.TypeSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignalsOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
+import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClause;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseConditional;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseConstraint;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseDecl;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseExpr;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseIn;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseInitializer;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseMaps;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseMonitorsFor;
+import org.jmlspecs.openjml.JmlTree.JmlTypeClauseRepresents;
 import org.jmlspecs.openjml.JmlTreeScanner;
 
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -41,6 +54,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.TypeTags;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
  * Factory class that generates ClassInfo and MethodInfo objects.
@@ -86,16 +100,16 @@ public final class InfoFactory {
     
     // first, generate ClassInfos and MethodInfos for each tree
     for (JmlCompilationUnit u : the_units) {
-      final ClassInfoParser cp = new ClassInfoParser();
+      final ClassInfoParser cp = new ClassInfoParser(api);
       u.accept(cp);
       COMPILATION_UNIT_CACHE.put(u, cp.getEnclosingClassInfo());
       final MethodInfoParser mp = new MethodInfoParser(api, signals_cache);
       u.accept(mp);
     }
     
-    // now we should have all the classes and methods, let's match them up
-    // the global method cache has those without signals, so let's replace
-    // them with those with signals, where applicable
+    // now we should have all the classes and methods, let's match them up;
+    // the global method cache has those without signals and literals, so 
+    // let's replace them with those with signals and literals, where applicable
     
     final SortedSet<ClassInfo> all_classes = getAllClassInfos();
     
@@ -133,6 +147,34 @@ public final class InfoFactory {
     }
     
     processInheritedMethods();
+    
+    /*
+    for (ClassInfo c : getAllClassInfos()) {
+      System.err.println("ClassInfo " + c);
+      System.err.println("  Literals");
+      for (Map.Entry e : c.getLiterals().entrySet()) {
+        System.err.println("    " + e.getKey() + " " + e.getValue());
+      }
+      System.err.println("  Spec Literals");
+      for (Map.Entry e : c.getSpecLiterals().entrySet()) {
+        System.err.println("    " + e.getKey() + " " + e.getValue());
+      }
+      System.err.println("  Methods");
+      for (MethodInfo m : c.getMethods()) {
+        System.err.println("    " + m);
+        System.err.println("      Literals");
+        for (Map.Entry e : m.getLiterals().entrySet()) {
+          System.err.println("      " + e.getKey() + " " + e.getValue());
+        }
+        System.err.println("      Spec Literals");
+        for (Map.Entry e : m.getSpecLiterals().entrySet()) {
+          System.err.println("      " + e.getKey() + " " + e.getValue());
+        }
+        System.err.println();
+      }
+      System.err.println();
+    }
+    */ // debugging info for literal finding
   }
   
   /**
@@ -237,7 +279,7 @@ public final class InfoFactory {
     
     do {
       final ClassInfo c = class_queue.poll();
-      if (c.getParent().isInitialized()) {
+      if (c.getParent().areMethodsInitialized()) {
         final SortedSet<MethodInfo> methods = METHOD_CACHE.get(c);
         // it's safe to add methods from the parent class
         if (c.getParent() != null)
@@ -264,6 +306,7 @@ public final class InfoFactory {
                 methods.add(new MethodInfo(pm.getName(), c, pm.getDeclaringClass(),
                                            pm.getProtectionLevel(), pm.getParameters(),
                                            pm.getReturnType(), pm.getSignals(), 
+                                           pm.getLiterals(), pm.getSpecLiterals(),
                                            pm.isConstructor(), pm.isStatic(),
                                            pm.isDeprecated()));
               }
@@ -337,7 +380,9 @@ public final class InfoFactory {
       if (e.sym != null && (e.sym.getKind().equals(ElementKind.METHOD) || 
           e.sym.getKind().equals(ElementKind.CONSTRUCTOR))) {
         
-        methods.add(createMethodInfo((MethodSymbol) e.sym, new ArrayList<ClassInfo>()));
+        methods.add(createMethodInfo((MethodSymbol) e.sym, new ArrayList<ClassInfo>(),
+                                     new HashMap<Class<?>, SortedSet<Object>>(),
+                                     new HashMap<Class<?>, SortedSet<Object>>()));
       }
     }
     return result;
@@ -363,7 +408,9 @@ public final class InfoFactory {
     @         \result.isStatic() == the_sym.isStatic();
    */
   private static MethodInfo createMethodInfo(final MethodSymbol the_sym, 
-                                             final List<ClassInfo> the_signals) {
+                                             final List<ClassInfo> the_signals,
+                                             final Map<Class<?>, SortedSet<Object>> the_literal_map,
+                                             final Map<Class<?>, SortedSet<Object>> the_spec_literal_map) {
     final List<ParameterInfo> params = new ArrayList<ParameterInfo>(the_sym.getParameters().size());
     for (VarSymbol v : the_sym.params) {
       params.add(createParameterInfo(v));
@@ -384,6 +431,7 @@ public final class InfoFactory {
     }
     return new MethodInfo(name, enclosing_class, enclosing_class, level, params, 
                           new TypeInfo(the_sym.getReturnType().toString()), the_signals, 
+                          the_literal_map, the_spec_literal_map,
                           the_sym.isConstructor(), the_sym.isStatic(), deprecated);
   }
 
@@ -439,9 +487,23 @@ public final class InfoFactory {
    */
   private static class ClassInfoParser extends JmlTreeScanner {
     /**
+     * The OpenJML API being used.
+     */
+    private API my_api;
+    
+    /**
      * The parsed enclosing ClassInfo object.
      */
     private ClassInfo my_class_info;
+    
+    /**
+     * Constructs a new ClassInfoParser with the specified OpenJML API.
+     * 
+     * @param the_api The API.
+     */
+    public ClassInfoParser(final API the_api) {
+      my_api = the_api;
+    }
     
     /**
      * Extracts information about a class.
@@ -450,6 +512,16 @@ public final class InfoFactory {
      */
     public void visitJmlClassDecl(final JmlClassDecl the_tree) {
       my_class_info = InfoFactory.createClassInfo(the_tree.sym);
+      if (!my_class_info.areLiteralsInitialized()) {
+        final LiteralsParser lp = new LiteralsParser(false, false);
+        the_tree.accept(lp);
+        final TypeSpecs specs = my_api.getSpecs(the_tree.sym);
+        final LiteralsParser slp = new LiteralsParser(false, true);
+        for (JmlTypeClause c : specs.clauses) {
+          c.accept(slp);
+        }
+        my_class_info.initializeLiterals(lp.getLiteralMap(), slp.getLiteralMap());
+      }
     }
     
     /**
@@ -501,7 +573,17 @@ public final class InfoFactory {
       final SignalsParser sp = new SignalsParser();
       final MethodSpecs specs = my_api.getSpecs(the_tree.sym);
       specs.cases.accept(sp);  
-      final MethodInfo method = createMethodInfo(the_tree.sym, sp.getExceptionTypes());
+      
+      // find the literals and add them to the existing method declaration
+      final LiteralsParser lp = new LiteralsParser(true, false);
+      the_tree.accept(lp);
+      final LiteralsParser slp = new LiteralsParser(false, true);
+      specs.cases.accept(slp);
+
+      final MethodInfo method = 
+        createMethodInfo(the_tree.sym, sp.getExceptionTypes(), 
+                         lp.getLiteralMap(), slp.getLiteralMap());
+
       SortedSet<MethodInfo> class_methods = my_cache.get(encl_class);
       if (class_methods == null) {
         class_methods = new TreeSet<MethodInfo>();
@@ -509,6 +591,222 @@ public final class InfoFactory {
       }
       class_methods.add(method); 
       super.visitJmlMethodDecl(the_tree);
+    }
+  }
+  
+  /**
+   * JCTree scanner that scans for literals to generate a map from primitive types
+   * to literals of those types in the tree.
+   */
+  private static class LiteralsParser extends JmlTreeScanner {
+    /**
+     * The map of literals.
+     */
+    private final Map<Class<?>, SortedSet<Object>> my_literals = 
+      new HashMap<Class<?>, SortedSet<Object>>();
+    
+    /**
+     * Do we visit methods?
+     */
+    private final boolean my_methods;
+    
+    /**
+     * Do we visit specs?
+     */
+    private final boolean my_specs;
+    
+    /**
+     * Constructs a new LiteralsParser.
+     * 
+     * @param the_methods true to visit (and find literals in) methods, false otherwise.
+     * @param the_specs true to visit (and find literals in) specs, false otherwise.
+     */
+    public LiteralsParser(final boolean the_methods, final boolean the_specs)
+    {
+      my_methods = the_methods;
+      my_specs = the_specs;
+    }
+    
+    /**
+     * Traverses, or not, a method node.
+     * 
+     * @param the_tree The method node.
+     */
+    public void visitJmlMethodDecl(final JmlMethodDecl the_tree) {
+      if (my_methods) {
+        super.visitJmlMethodDecl(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void visitJmlMethodSpecs(final JmlMethodSpecs the_tree) {
+      if (my_specs) {
+        super.visitJmlMethodSpecs(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseConditional(final JmlTypeClauseConditional the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseConditional(the_tree);
+      }
+    }
+
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseConstraint(final JmlTypeClauseConstraint the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseConstraint(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseDecl(final JmlTypeClauseDecl the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseDecl(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseExpr(final JmlTypeClauseExpr the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseExpr(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseIn(final JmlTypeClauseIn the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseIn(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseInitializer(final JmlTypeClauseInitializer the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseInitializer(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseMaps(final JmlTypeClauseMaps the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseMaps(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseMonitorsFor(final JmlTypeClauseMonitorsFor the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseMonitorsFor(the_tree);
+      }
+    }
+    
+    /**
+     * Traverses, or not, a specs node.
+     * 
+     * @param the_tree The specs node.
+     */
+    public void 
+    visitJmlTypeClauseRepresents(final JmlTypeClauseRepresents the_tree) {
+      if (my_specs) {
+        super.visitJmlTypeClauseRepresents(the_tree);
+      }
+    }
+    
+    /**
+     * Extracts information about a literal.
+     * 
+     * @param the_tree The literal declaration node.
+     */
+    public void visitLiteral(final JCLiteral the_tree) {
+      Class<?> literal_class = getClassForLiteralKind(the_tree.getKind());
+      if (literal_class != null) {
+        SortedSet<Object> literal_set = my_literals.get(literal_class);
+        if (literal_set == null) {
+          literal_set = new TreeSet<Object>();
+          my_literals.put(literal_class, literal_set);
+        }
+        literal_set.add(the_tree.getValue());
+      }
+      super.visitLiteral(the_tree);
+    }
+
+    /**
+     * @return the map of literal classes to literals in the tree.
+     */
+    public Map<Class<?>, SortedSet<Object>> getLiteralMap() {
+      return my_literals;
+    }
+    
+    /**
+     * @param the_kind A Kind to convert into a Class.
+     * @return the Class representing the primitive type for the specified Kind,
+     * or null if no such class exists.
+     */
+    private final Class<?> getClassForLiteralKind(final Kind the_kind)
+    {
+      Class<?> result = null;
+
+      // we ignore BOOLEAN_LITERAL and NULL_LITERAL since we already test those
+      if (the_kind == Kind.CHAR_LITERAL) {
+        result = char.class;
+      } else if (the_kind == Kind.INT_LITERAL) {
+        result = int.class;
+      } else if (the_kind == Kind.LONG_LITERAL) {
+        result = long.class;
+      } else if (the_kind == Kind.FLOAT_LITERAL) {
+        result = float.class;
+      } else if (the_kind == Kind.DOUBLE_LITERAL) {
+        result = double.class;
+      } else if (the_kind == Kind.STRING_LITERAL) {
+        result = String.class;
+      }
+      
+      return result;
     }
   }
   
