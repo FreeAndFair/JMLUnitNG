@@ -30,6 +30,7 @@ import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.jmlspecs.jmlunitng.JMLUnitNG;
 import org.jmlspecs.jmlunitng.util.Logger;
+import org.jmlspecs.jmlunitng.util.ProtectionLevel;
 import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
 
 /**

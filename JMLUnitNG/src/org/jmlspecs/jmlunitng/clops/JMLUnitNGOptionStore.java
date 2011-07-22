@@ -22,6 +22,8 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   private final BooleanOption ogDeprecation;
   private final BooleanOption ogVerbose;
   private final BooleanOption ogInherited;
+  private final BooleanOption ogLiterals;
+  private final BooleanOption ogSpecLiterals;
   private final BooleanOption ogPublic;
   private final BooleanOption ogProtected;
   private final BooleanOption ogPackage;
@@ -77,6 +79,12 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogInherited = new BooleanOption("Inherited", "(?:--inherited)");
     addOption(ogInherited);
     ogInherited.setProperty("aliases", "--inherited");
+    ogLiterals = new BooleanOption("Literals", "(?:--literals)");
+    addOption(ogLiterals);
+    ogLiterals.setProperty("aliases", "--literals");
+    ogSpecLiterals = new BooleanOption("SpecLiterals", "(?:--spec-literals)");
+    addOption(ogSpecLiterals);
+    ogSpecLiterals.setProperty("aliases", "--spec-literals");
     ogPublic = new BooleanOption("Public", "(?:--public)");
     addOption(ogPublic);
     ogPublic.setProperty("aliases", "--public");
@@ -124,6 +132,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogVerbose);
     ogOption.addOptionOrGroup(ogPrune);
     ogOption.addOptionOrGroup(ogClasspath);
+    ogOption.addOptionOrGroup(ogSpecLiterals);
     ogOption.addOptionOrGroup(ogDeprecation);
     ogOption.addOptionOrGroup(ogNoGen);
     ogOption.addOptionOrGroup(ogClean);
@@ -135,6 +144,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogPackage);
     ogOption.addOptionOrGroup(ogDryRun);
     ogOption.addOptionOrGroup(ogDestination);
+    ogOption.addOptionOrGroup(ogLiterals);
     ogOption.addOptionOrGroup(ogPublic);
     ogOption.addOptionOrGroup(ogInherited);
     ogOption.addOptionOrGroup(ogRACVersion);
@@ -150,6 +160,8 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogAllOptions.addOptionOrGroup(ogDeprecation);
     ogAllOptions.addOptionOrGroup(ogVerbose);
     ogAllOptions.addOptionOrGroup(ogInherited);
+    ogAllOptions.addOptionOrGroup(ogLiterals);
+    ogAllOptions.addOptionOrGroup(ogSpecLiterals);
     ogAllOptions.addOptionOrGroup(ogPublic);
     ogAllOptions.addOptionOrGroup(ogProtected);
     ogAllOptions.addOptionOrGroup(ogPackage);
@@ -423,6 +435,54 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   
   public BooleanOption getInheritedOption() {
     return ogInherited;
+  }
+  
+// Option Literals.
+// Aliases: [--literals]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isLiteralsSet() {
+    return ogLiterals.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getLiterals() {
+    return ogLiterals.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawLiterals() {
+    return ogLiterals.getRawValue();
+  }
+  
+  public BooleanOption getLiteralsOption() {
+    return ogLiterals;
+  }
+  
+// Option SpecLiterals.
+// Aliases: [--spec-literals]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isSpecLiteralsSet() {
+    return ogSpecLiterals.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getSpecLiterals() {
+    return ogSpecLiterals.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawSpecLiterals() {
+    return ogSpecLiterals.getRawValue();
+  }
+  
+  public BooleanOption getSpecLiteralsOption() {
+    return ogSpecLiterals;
   }
   
 // Option Public.

@@ -17,6 +17,8 @@ ARGS::
   Deprecation:{"--deprecation"}
   Verbose: {"-v", "--verbose"}
   Inherited: {"--inherited"}
+  Literals: {"--literals"}
+  SpecLiterals: {"--spec-literals"}
   Public: {"--public"}
   Protected: {"--protected"}
   Package: {"--package"}
@@ -34,8 +36,9 @@ FORMAT::
 
 WHERE::
   Option:  
-    Destination|RACVersion|Reflection|Children|Enum|Help|Package|
-    Deprecation|Verbose|Inherited|Public|Package|Protected|
+    Destination|RACVersion|Reflection|Children|Enum|Help|
+    Deprecation|Verbose|Inherited|Literals|SpecLiterals|
+    Public|Package|Protected|
     Clean|Prune|Classpath|Specspath|DryRun|NoGen;
 
 FLY::

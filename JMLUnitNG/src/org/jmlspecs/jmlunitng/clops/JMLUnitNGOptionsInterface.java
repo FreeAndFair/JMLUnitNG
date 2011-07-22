@@ -196,6 +196,40 @@ public interface JMLUnitNGOptionsInterface {
   boolean getInherited();
   
 
+// Option Literals. 
+// Aliases: [--literals]
+
+  /**
+   * @return true if the option Literals has been used
+   * in the command line.
+   */
+  boolean isLiteralsSet();
+
+  /**
+   * Get the value of {@code Option} Literals.
+   * @return the value of the option Literals if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getLiterals();
+  
+
+// Option SpecLiterals. 
+// Aliases: [--spec-literals]
+
+  /**
+   * @return true if the option SpecLiterals has been used
+   * in the command line.
+   */
+  boolean isSpecLiteralsSet();
+
+  /**
+   * Get the value of {@code Option} SpecLiterals.
+   * @return the value of the option SpecLiterals if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getSpecLiterals();
+  
+
 // Option Public. 
 // Aliases: [--public]
 

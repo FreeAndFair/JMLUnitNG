@@ -3,12 +3,13 @@
  * Copyright (C) 2010-11
  */
 
-package org.jmlspecs.jmlunitng.generator;
+package org.jmlspecs.jmlunitng.util;
 
 /**
  * An enumeration of Java protection levels.
  * @author Jonathan Hogins
- * @version April 2010
+ * @author Daniel M. Zimmerman
+ * @version July 2011
  */
 public enum ProtectionLevel {
   /** The public protection level. **/

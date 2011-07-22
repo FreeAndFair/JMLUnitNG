@@ -23,6 +23,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
 import org.jmlspecs.jmlunitng.util.InheritanceComparator;
+import org.jmlspecs.jmlunitng.util.ProtectionLevel;
 import org.jmlspecs.openjml.API;
 import org.jmlspecs.openjml.JmlSpecs.MethodSpecs;
 import org.jmlspecs.openjml.JmlSpecs.TypeSpecs;
@@ -626,6 +627,7 @@ public final class InfoFactory {
      */
     public LiteralsParser(final boolean the_methods, final boolean the_specs)
     {
+      super();
       my_methods = the_methods;
       my_specs = the_specs;
     }
@@ -640,7 +642,7 @@ public final class InfoFactory {
       if (the_tree instanceof JCInstanceOf) {
         final JCInstanceOf instance_of = (JCInstanceOf) the_tree;
         final JCIdent clazz = (JCIdent) instance_of.clazz;
-        getLiteralSet(Class.class).add(clazz.sym.getQualifiedName());
+        getLiteralSet(Class.class).add(clazz.sym.getQualifiedName().toString());
       }
       super.scan(the_tree);
     }
