@@ -53,7 +53,11 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.TypeTags;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
@@ -148,7 +152,7 @@ public final class InfoFactory {
     
     processInheritedMethods();
     
-    /*
+    
     for (ClassInfo c : getAllClassInfos()) {
       System.err.println("ClassInfo " + c);
       System.err.println("  Literals");
@@ -174,7 +178,7 @@ public final class InfoFactory {
       }
       System.err.println();
     }
-    */ // debugging info for literal finding
+    // debugging info for literal finding
   }
   
   /**
@@ -277,7 +281,7 @@ public final class InfoFactory {
     
     // initialize the method sets for other classes
     
-    do {
+    while (!class_queue.isEmpty()) {
       final ClassInfo c = class_queue.poll();
       if (c.getParent().areMethodsInitialized()) {
         final SortedSet<MethodInfo> methods = METHOD_CACHE.get(c);
@@ -318,7 +322,6 @@ public final class InfoFactory {
         class_queue.offer(c);
       }
     }
-    while (!class_queue.isEmpty());
   }
 
   /**
@@ -628,6 +631,21 @@ public final class InfoFactory {
     }
     
     /**
+     * Scans a tree node. We use this to find instanceof nodes (for class literals), 
+     * for which there is no specific visitor method. 
+     * 
+     * @param the_tree The tree node.
+     */
+    public void scan(final JCTree the_tree) {
+      if (the_tree instanceof JCInstanceOf) {
+        final JCInstanceOf instance_of = (JCInstanceOf) the_tree;
+        final JCIdent clazz = (JCIdent) instance_of.clazz;
+        getLiteralSet(Class.class).add(clazz.sym.getQualifiedName());
+      }
+      super.scan(the_tree);
+    }
+    
+    /**
      * Traverses, or not, a method node.
      * 
      * @param the_tree The method node.
@@ -765,21 +783,57 @@ public final class InfoFactory {
     public void visitLiteral(final JCLiteral the_tree) {
       Class<?> literal_class = getClassForLiteralKind(the_tree.getKind());
       if (literal_class != null) {
-        SortedSet<Object> literal_set = my_literals.get(literal_class);
-        if (literal_set == null) {
-          literal_set = new TreeSet<Object>();
-          my_literals.put(literal_class, literal_set);
-        }
-        literal_set.add(the_tree.getValue());
+        getLiteralSet(literal_class).add(the_tree.getValue());
       }
       super.visitLiteral(the_tree);
     }
 
     /**
+     * Extracts information about a field access (for class literals).
+     * 
+     * @param the_tree The field access declaration node.
+     */
+    public void visitSelect(final JCFieldAccess the_tree) {
+      String class_literal = null;
+      
+      // three possible cases; the symbol of this field access is itself a class literal,
+      // or the "selected" field of this field access is a class literal, or neither is
+      
+      if (the_tree.getIdentifier().toString().equals("class")) {
+        if (the_tree.selected instanceof JCFieldAccess && 
+            ((JCFieldAccess) the_tree.selected).sym instanceof ClassSymbol) {
+          class_literal = ((JCFieldAccess) the_tree.selected).sym.getQualifiedName().toString();
+        } else if (the_tree.selected instanceof JCIdent &&
+                   ((JCIdent) the_tree.selected).sym instanceof ClassSymbol) {
+          class_literal = ((JCIdent) the_tree.selected).sym.getQualifiedName().toString();
+        }
+      }
+      
+      if (class_literal != null) {
+        getLiteralSet(Class.class).add(class_literal);
+      }
+      
+      super.visitSelect(the_tree);
+    }
+    
+    /**
      * @return the map of literal classes to literals in the tree.
      */
     public Map<Class<?>, SortedSet<Object>> getLiteralMap() {
       return my_literals;
+    }
+    
+    /**
+     * @param the_class The literal class for which to get the literal set.
+     * @return the literal set.
+     */
+    private final SortedSet<Object> getLiteralSet(final Class<?> the_class) {
+      SortedSet<Object> result = my_literals.get(the_class);
+      if (result == null) {
+        result = new TreeSet<Object>();
+        my_literals.put(the_class, result);
+      }  
+      return result;
     }
     
     /**
