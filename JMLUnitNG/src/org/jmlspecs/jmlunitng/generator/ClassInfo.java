@@ -122,8 +122,13 @@ public class ClassInfo extends TypeInfo {
    * @param the_name The fully qualified name of the class.
    * @param the_protection_level The protection level of the class.
    * @param the_is_abstract Is this class abstract?
+   * @param the_is_interface Is this class an interface?
+   * @param the_is_enumeration Is this class an enumeration?
+   * @param the_is_static Is this class static?
+   * @param the_is_inner Is this an inner class? 
    * @param the_parent The ClassInfo object for this class' parent. May be null
    *          only if the class name is java.lang.Object.
+   * @param the_interfaces The interfaces implemented by this class.
    */
   //@ requires the_parent == null ==> the_name.equals("java.lang.Object");
   protected ClassInfo(final String the_name, 

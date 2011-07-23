@@ -100,6 +100,7 @@ public class TypeInfo implements Comparable<TypeInfo> {
   }
 
   /**
+   * @param the_name The name of a class.
    * @return the formatted name corresponding to the specified class name; 
    * this replaces all "." with "_" and changes array delimiters to "nDArray".
    */

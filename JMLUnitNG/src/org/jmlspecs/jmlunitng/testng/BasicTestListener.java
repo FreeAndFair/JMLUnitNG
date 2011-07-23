@@ -68,17 +68,17 @@ public class BasicTestListener implements ITestListener {
   }
   
   @Override
-  public void onTestStart(final ITestResult result) {
+  public void onTestStart(final ITestResult the_result) {
     // do nothing
   }
 
   @Override
-  public void onStart(final ITestContext context) {
+  public void onStart(final ITestContext the_context) {
     // do nothing
   }
 
   @Override
-  public void onFinish(final ITestContext context) {
+  public void onFinish(final ITestContext the_context) {
     // do nothing
   }
   
@@ -159,7 +159,7 @@ public class BasicTestListener implements ITestListener {
    * @return a String describing the test that was run to generate
    * the result.
    */
-  private final String testString(final ITestResult the_test_result) {
+  private String testString(final ITestResult the_test_result) {
     final StringBuilder sb = new StringBuilder();
     final String trunc_name = getOriginalMethodName(the_test_result);
     final Object[] params = the_test_result.getParameters();
@@ -174,15 +174,13 @@ public class BasicTestListener implements ITestListener {
       // this is a constructor test, so there is no object to print and
       // we have to print parameter 0, if any, as the first parameter
       sb.append("constructor " + trunc_name + "(");
-    } 
-    else if (params.length == 0) {
+    } else if (params.length == 0) {
       if (isStaticTest(the_test_result)) {
         // print that it's a static method
         sb.append("static ");
       }
       sb.append(trunc_name + "(");
-    }
-    else if (params.length > 0) {
+    } else if (params.length > 0) {
       if (isStaticTest(the_test_result)) {
         // print that it's a static method
         sb.append("static ");

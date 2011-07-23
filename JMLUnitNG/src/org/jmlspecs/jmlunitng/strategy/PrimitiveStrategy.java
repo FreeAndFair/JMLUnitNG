@@ -48,7 +48,7 @@ public abstract class PrimitiveStrategy extends AbstractStrategy {
     boolean add_null = false;
     final SortedSet<Comparable<?>> data_set = new TreeSet<Comparable<?>>();
     final RepeatedAccessIterator<?>[] values = 
-      { localValues(), classValues(), packageValues(), defaultValues() };
+    { localValues(), classValues(), packageValues(), defaultValues() };
     for (RepeatedAccessIterator<?> r : values) {
       while (r.hasElement()) {
         final Comparable<?> element = (Comparable<?>) r.element();

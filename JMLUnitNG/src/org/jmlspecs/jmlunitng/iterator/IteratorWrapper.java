@@ -55,7 +55,7 @@ public class IteratorWrapper<T> implements Iterator<T> {
   /**
    * Unsupported operation.
    * 
-   * @throws UnsupportedOperationExcepton always.
+   * @throws UnsupportedOperationException always.
    */
   //@ signals UnsupportedOperationException true;
   //@ signals_only UnsupportedOperationException;

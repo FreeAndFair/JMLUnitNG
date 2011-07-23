@@ -14,9 +14,7 @@ import org.testng.SkipException;
  * @version 1.0
  */
 
-public class PreconditionSkipException extends SkipException
-{
-
+public class PreconditionSkipException extends SkipException {
   /**
    * 
    */
@@ -27,8 +25,7 @@ public class PreconditionSkipException extends SkipException
    * 
    * @param the_skip_message String != null
    */
-  public PreconditionSkipException(final String the_skip_message)
-  {
+  public PreconditionSkipException(final String the_skip_message) {
     super(the_skip_message);
   }
 

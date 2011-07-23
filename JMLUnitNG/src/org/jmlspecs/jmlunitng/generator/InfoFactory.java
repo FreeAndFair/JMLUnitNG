@@ -98,17 +98,19 @@ public final class InfoFactory {
    * compilation units.
    * 
    * @param the_units The compilation units to create ClassInfos from.
+   * @param the_api The API to use for parsing the units.
    */
-  public static void generateInfos(final List<JmlCompilationUnit> the_units, final API api) {    
+  public static void generateInfos(final List<JmlCompilationUnit> the_units, 
+                                   final API the_api) {    
     final SortedMap<ClassInfo, SortedSet<MethodInfo>> signals_cache = 
       new TreeMap<ClassInfo, SortedSet<MethodInfo>>();
     
     // first, generate ClassInfos and MethodInfos for each tree
     for (JmlCompilationUnit u : the_units) {
-      final ClassInfoParser cp = new ClassInfoParser(api);
+      final ClassInfoParser cp = new ClassInfoParser(the_api);
       u.accept(cp);
       COMPILATION_UNIT_CACHE.put(u, cp.getEnclosingClassInfo());
-      final MethodInfoParser mp = new MethodInfoParser(api, signals_cache);
+      final MethodInfoParser mp = new MethodInfoParser(the_api, signals_cache);
       u.accept(mp);
     }
     
@@ -287,27 +289,22 @@ public final class InfoFactory {
       if (c.getParent().areMethodsInitialized()) {
         final SortedSet<MethodInfo> methods = METHOD_CACHE.get(c);
         // it's safe to add methods from the parent class
-        if (c.getParent() != null)
-        {
+        if (c.getParent() != null) {
           final Set<MethodInfo> parent_methods = 
             new HashSet<MethodInfo>(c.getParent().getMethods());
           // we do not inherit methods that were already overridden by the parent class
           parent_methods.removeAll(c.getParent().getOverriddenMethods());
-          for (MethodInfo pm : parent_methods)
-          {
+          for (MethodInfo pm : parent_methods) {
             if (!pm.isConstructor() && !pm.isStatic() &&
-                !pm.getProtectionLevel().equals(ProtectionLevel.PRIVATE))
-            {
+                !pm.getProtectionLevel().equals(ProtectionLevel.PRIVATE)) {
               // we do not inherit constructors or static/private methods
               boolean duplicate = false;
-              for (MethodInfo m : methods)
-              {
+              for (MethodInfo m : methods) {
                 duplicate = duplicate || 
                             (m.getName().equals(pm.getName()) &&
                              m.getParameters().equals(pm.getParameters()));
               }
-              if (!duplicate)
-              {
+              if (!duplicate) {
                 methods.add(new MethodInfo(pm.getName(), c, pm.getDeclaringClass(),
                                            pm.getProtectionLevel(), pm.getParameters(),
                                            pm.getReturnType(), pm.getSignals(), 
@@ -332,7 +329,7 @@ public final class InfoFactory {
    * @param the_class The Class to generate a ClassInfo object for.
    * @return A ClassInfo object representing the class.
    */
-  private synchronized static ClassInfo createClassInfo(final ClassSymbol the_class) {
+  private static synchronized ClassInfo createClassInfo(final ClassSymbol the_class) {
     if (CLASS_CACHE.containsKey(the_class.getQualifiedName().toString())) {
       return CLASS_CACHE.get(the_class.getQualifiedName().toString());
     }
@@ -415,7 +412,8 @@ public final class InfoFactory {
                                              final List<ClassInfo> the_signals,
                                              final Map<Class<?>, SortedSet<Object>> the_literal_map,
                                              final Map<Class<?>, SortedSet<Object>> the_spec_literal_map) {
-    final List<ParameterInfo> params = new ArrayList<ParameterInfo>(the_sym.getParameters().size());
+    final List<ParameterInfo> params = 
+      new ArrayList<ParameterInfo>(the_sym.getParameters().size());
     for (VarSymbol v : the_sym.params) {
       params.add(createParameterInfo(v));
     }
@@ -456,14 +454,7 @@ public final class InfoFactory {
     return new ParameterInfo(t.toString(), the_var_sym.name.toString());
   }
 
-  /**
-   * Returns the protection level present in the given set of Modifiers. Returns
-   * null if there are no protection level modifiers (PUBLIC, PROTECTED,
-   * PRIVATE) in the given set.
-   * 
-   * @param the_mods The Set<Modifier> from which to extract the protection
-   *          level
-   */
+
   /*@ ensures \result.equals(ProtectionLevel.PUBLIC) ==> the_mods.contains(Modifier.PUBLIC) &&
     @         \result.equals(ProtectionLevel.PROTECTED) ==> 
     @           (!the_mods.contains(Modifier.PUBLIC)  && the_mods.contains(Modifier.PROTECTED)) &&  
@@ -471,6 +462,14 @@ public final class InfoFactory {
     @            !the_mods.contains(Modifier.PROTECTED) && the_mods.contains(Modifier.PRIVATE)) && 
     @         \result.equals(ProtectionLevel.NO_LEVEL) ==> (!the_mods.contains(Modifier.PUBLIC) &&
     @            !the_mods.contains(Modifier.PROTECTED) && !the_mods.contains(Modifier.PRIVATE));
+   */
+  /**
+   * Returns the protection level present in the given set of Modifiers. Returns
+   * null if there are no protection level modifiers (PUBLIC, PROTECTED,
+   * PRIVATE) in the given set.
+   * 
+   * @param the_mods The Set<Modifier> from which to extract the protection level
+   * @return the protection level.
    */
   private static ProtectionLevel getLevel(final Set<Modifier> the_mods) {
 
@@ -506,6 +505,7 @@ public final class InfoFactory {
      * @param the_api The API.
      */
     public ClassInfoParser(final API the_api) {
+      super();
       my_api = the_api;
     }
     
@@ -557,6 +557,7 @@ public final class InfoFactory {
     /**
      * Constructs a MethodInfoParser with the specified cache.
      * 
+     * @param the_api The API to use for accessing method specs.
      * @param the_cache The method cache.
      */
     public MethodInfoParser(final API the_api, 
@@ -625,8 +626,7 @@ public final class InfoFactory {
      * @param the_methods true to visit (and find literals in) methods, false otherwise.
      * @param the_specs true to visit (and find literals in) specs, false otherwise.
      */
-    public LiteralsParser(final boolean the_methods, final boolean the_specs)
-    {
+    public LiteralsParser(final boolean the_methods, final boolean the_specs) {
       super();
       my_methods = the_methods;
       my_specs = the_specs;
@@ -783,7 +783,7 @@ public final class InfoFactory {
      * @param the_tree The literal declaration node.
      */
     public void visitLiteral(final JCLiteral the_tree) {
-      Class<?> literal_class = getClassForLiteralKind(the_tree.getKind());
+      final Class<?> literal_class = getClassForLiteralKind(the_tree.getKind());
       if (literal_class != null) {
         getLiteralSet(literal_class).add(the_tree.getValue());
       }
@@ -801,10 +801,11 @@ public final class InfoFactory {
       // three possible cases; the symbol of this field access is itself a class literal,
       // or the "selected" field of this field access is a class literal, or neither is
       
-      if (the_tree.getIdentifier().toString().equals("class")) {
+      if ("class".equals(the_tree.getIdentifier().toString())) {
         if (the_tree.selected instanceof JCFieldAccess && 
             ((JCFieldAccess) the_tree.selected).sym instanceof ClassSymbol) {
-          class_literal = ((JCFieldAccess) the_tree.selected).sym.getQualifiedName().toString();
+          class_literal = 
+            ((JCFieldAccess) the_tree.selected).sym.getQualifiedName().toString();
         } else if (the_tree.selected instanceof JCIdent &&
                    ((JCIdent) the_tree.selected).sym instanceof ClassSymbol) {
           class_literal = ((JCIdent) the_tree.selected).sym.getQualifiedName().toString();
@@ -843,8 +844,7 @@ public final class InfoFactory {
      * @return the Class representing the primitive type for the specified Kind,
      * or null if no such class exists.
      */
-    private final Class<?> getClassForLiteralKind(final Kind the_kind)
-    {
+    private final Class<?> getClassForLiteralKind(final Kind the_kind) {
       Class<?> result = null;
 
       // we ignore BOOLEAN_LITERAL and NULL_LITERAL since we already test those
@@ -929,8 +929,7 @@ public final class InfoFactory {
             break;
           }
         }
-        if (!added)
-        {
+        if (!added) {
           my_exception_types.add(the_class);
         }
       }

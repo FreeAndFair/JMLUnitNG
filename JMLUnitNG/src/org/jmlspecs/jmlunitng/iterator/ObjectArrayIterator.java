@@ -14,7 +14,7 @@ package org.jmlspecs.jmlunitng.iterator;
  */
 public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
   /**
-   * The list of iterator generation methods
+   * The list of iterator generation methods.
    */
   private final T[] my_array;
 
@@ -54,7 +54,7 @@ public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
    * {@inheritDoc}
    */
   public boolean hasElement() {
-  	return my_element < my_array.length;
+    return my_element < my_array.length;
   }
 
 }

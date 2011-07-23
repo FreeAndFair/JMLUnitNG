@@ -164,6 +164,8 @@ public class TestClassGenerator {
    *  deprecated methods.
    * @param the_use_reflection A flag indicating whether to generate test 
    *  data that uses reflection at runtime.
+   * @param the_use_children A flag indicating whether to generate test data
+   *  of child classes.
    * @param the_rac_version The RAC version to generate test classes for.
    */
   public TestClassGenerator(final boolean the_dry_run,
@@ -197,12 +199,11 @@ public class TestClassGenerator {
    */
   //@ requires the_class.getMethods().contains(the_method);
   //@ requires the_method.getParameters().contains(the_param);
-  public void generateLocalStrategyClass
-  (final /*@ non_null @*/ ClassInfo the_class,
-   final /*@ non_null @*/ MethodInfo the_method,
-   final /*@ non_null @*/ ParameterInfo the_param, 
-   final /*@ non_null @*/ Writer the_writer)
-  throws IOException {
+  public void generateLocalStrategyClass(final /*@ non_null @*/ ClassInfo the_class,
+                                         final /*@ non_null @*/ MethodInfo the_method,
+                                         final /*@ non_null @*/ ParameterInfo the_param, 
+                                         final /*@ non_null @*/ Writer the_writer)
+    throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_local");
     final StringTemplate t = group.getInstanceOf("main");
     SortedSet<ClassInfo> children = null;
@@ -246,11 +247,10 @@ public class TestClassGenerator {
    */
   //@ requires the_class.getMethods().contains(the_method);
   //@ requires the_method.getParameters().contains(the_param);
-  public void generateClassStrategyClass
-  (final /*@ non_null @*/ ClassInfo the_class,
-   final /*@ non_null @*/ TypeInfo the_type,
-   final /*@ non_null @*/ Writer the_writer)
-  throws IOException {
+  public void generateClassStrategyClass(final /*@ non_null @*/ ClassInfo the_class,
+                                         final /*@ non_null @*/ TypeInfo the_type,
+                                         final /*@ non_null @*/ Writer the_writer)
+    throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_class");
     final StringTemplate t = group.getInstanceOf("main");
     SortedSet<ClassInfo> children = null;
@@ -293,11 +293,10 @@ public class TestClassGenerator {
    */
   //@ requires the_class.getMethods().contains(the_method);
   //@ requires the_method.getParameters().contains(the_param);
-  public void generatePackageStrategyClass
-  (final /*@ non_null @*/ ClassInfo the_class,
-   final /*@ non_null @*/ TypeInfo the_type,
-   final /*@ non_null @*/ Writer the_writer)
-  throws IOException {
+  public void generatePackageStrategyClass(final /*@ non_null @*/ ClassInfo the_class,
+                                           final /*@ non_null @*/ TypeInfo the_type,
+                                           final /*@ non_null @*/ Writer the_writer)
+    throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_package");
     final StringTemplate t = group.getInstanceOf("main");
     SortedSet<ClassInfo> children = null;
@@ -343,10 +342,9 @@ public class TestClassGenerator {
    */
   //@ requires the_class.getMethods().contains(the_method);
   //@ requires the_method.getParameters().contains(the_param);
-  public void generateInstanceStrategyClass
-  (final /*@ non_null @*/ ClassInfo the_class,
-   final /*@ non_null @*/ Writer the_writer)
-  throws IOException {
+  public void generateInstanceStrategyClass(final /*@ non_null @*/ ClassInfo the_class,
+                                            final /*@ non_null @*/ Writer the_writer)
+    throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_instance");
     final StringTemplate t = group.getInstanceOf("main");
     
@@ -377,7 +375,7 @@ public class TestClassGenerator {
   public void generateTestClass(final /*@ non_null @*/ ClassInfo the_class,
                                 final /*@ non_null @*/ Set<MethodInfo> the_methods,
                                 final /*@ non_null @*/ Writer the_writer)
-  throws IOException {
+    throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("test_class_" + my_rac_version);
     final StringTemplate t = group.getInstanceOf("main");
     t.setAttribute("class", the_class);
@@ -419,7 +417,7 @@ public class TestClassGenerator {
   public void generateClasses(final /*@ non_null @*/ ClassInfo the_class, 
                               final /*@ non_null @*/ String the_test_dir,
                               final /*@ non_null @*/ String the_strategy_dir) 
-  throws IOException {
+    throws IOException {
     StringTemplateUtil.initialize();
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
     final StringTemplate tc_name = group.lookupTemplate("testClassName");
@@ -598,8 +596,7 @@ public class TestClassGenerator {
     for (MethodInfo m : the_class.getTestableMethods()) {
       if (m.getProtectionLevel().weakerThanOrEqualTo(my_level) &&
           (my_test_inherited_methods || !m.isInherited()) &&
-          (my_test_deprecated_methods || !m.isDeprecated()))
-      {
+          (my_test_deprecated_methods || !m.isDeprecated())) {
         methods.add(m);
       }
     }

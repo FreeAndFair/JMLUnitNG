@@ -115,7 +115,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   /**
    * @return an iterator of default values for non-enum types.
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   private RepeatedAccessIterator<?> nonEnumDefaultValues() {
     final List<RepeatedAccessIterator<?>> result = 
       new LinkedList<RepeatedAccessIterator<?>>();
@@ -127,10 +127,10 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
       for (Class<? extends Strategy> c : my_generators) {
         try {
           iterators.add(c.newInstance().iterator());
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
           // should never happen because we checked it earlier
           e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
           // should never happen because we checked it earlier
           e.printStackTrace();
         }
@@ -138,8 +138,8 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
       for (Class<?> c : my_non_generator_classes) {
         // add the default constructor for each non-generator class
         iterators.add
-          (new InstantiationIterator(c, new Class<?>[0], 
-                                     new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
+        (new InstantiationIterator(c, new Class<?>[0], 
+                                   new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
       }
       result.add(new NonNullMultiIterator(iterators));
     } else if (!isReflective()) {
@@ -149,14 +149,14 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
       for (Class<?> c : my_generator_classes) {
         // add the default constructor for each generator class
         iterators.add
-          (new InstantiationIterator(c, new Class<?>[0], 
-                                     new ObjectArrayIterator<Object[]>(new Object[][]{{}})));        
+        (new InstantiationIterator(c, new Class<?>[0], 
+                                   new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
       }
       for (Class<?> c : my_non_generator_classes) {
         // add the default constructor for each non-generator class
         iterators.add
-          (new InstantiationIterator(c, new Class<?>[0], 
-                                     new ObjectArrayIterator<Object[]>(new Object[][]{{}})));        
+        (new InstantiationIterator(c, new Class<?>[0], 
+                                   new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
       }
       result.add(new NonNullMultiIterator(iterators));
     }

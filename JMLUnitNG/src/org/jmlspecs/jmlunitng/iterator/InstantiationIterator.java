@@ -86,6 +86,6 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
    * {@inheritDoc}
    */
   public boolean hasElement() {
-  	return my_params.hasElement();
+    return my_params.hasElement();
   }
 }

@@ -37,8 +37,7 @@ public abstract class ArrayStrategy extends NonPrimitiveStrategy {
    * @exception IllegalArgumentException if the_class is not an array type.
    */
   public ArrayStrategy(final /*@ non_null @*/ Class<?> the_class)
-    throws IllegalArgumentException
-  {
+    throws IllegalArgumentException {
     super(the_class, the_class.getComponentType());
     if (!the_class.isArray()) {
       throw new IllegalArgumentException
@@ -56,7 +55,7 @@ public abstract class ArrayStrategy extends NonPrimitiveStrategy {
    * 
    * @return An Iterator over default values.
    */
-  @SuppressWarnings({"rawtypes", "unchecked"})
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public RepeatedAccessIterator<?> defaultValues() {
     int max = 0;
     

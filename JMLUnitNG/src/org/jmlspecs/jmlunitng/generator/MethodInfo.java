@@ -136,6 +136,9 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * @param the_protection_level The protection level of the method.
    * @param the_parameter_types The parameter types of the method in order.
    * @param the_return_type The name of the return type of the method.
+   * @param the_signals The exceptions listed in this method's signals clause.
+   * @param the_literals The literals found in this method.
+   * @param the_spec_literals The literals found in this method's specs.
    * @param the_is_constructor Is the method a constructor?
    * @param the_is_static Is the method static?
    * @param the_is_deprecated Is the method deprecated?
@@ -149,7 +152,8 @@ public class MethodInfo implements Comparable<MethodInfo> {
                     final /*@ non_null @*/ TypeInfo the_return_type,
                     final /*@ non_null @*/ List<ClassInfo> the_signals,
                     final /*@ non_null @*/ Map<Class<?>, SortedSet<Object>> the_literals,
-                    final /*@ non_null @*/ Map<Class<?>, SortedSet<Object>> the_spec_literals,                    
+                    final /*@ non_null @*/ Map<Class<?>, SortedSet<Object>> 
+                        the_spec_literals,                    
                     final boolean the_is_constructor, final boolean the_is_static,
                     final boolean the_is_deprecated) {
     my_name = the_name;

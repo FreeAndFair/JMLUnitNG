@@ -43,7 +43,7 @@ public final class StringTemplateUtil {
    * Initialize StringTemplate if it is not already initialized!
    */
   //@ ensures isInitialized();
-  public synchronized static void initialize() {
+  public static synchronized void initialize() {
     if (!my_initialized) {
       final StringTemplateGroupLoader loader =
         new CommonGroupLoader(TEMPLATE_PATH, null);
@@ -57,7 +57,7 @@ public final class StringTemplateUtil {
    * @return Has StringTemplate been initialized?
    */
   //@ constraint \old(isInitialized()) ==> isInitialized();
-  public synchronized static boolean isInitialized() {
+  public static synchronized boolean isInitialized() {
     return my_initialized;
   }
 }
