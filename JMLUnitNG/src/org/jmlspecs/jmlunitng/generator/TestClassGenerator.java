@@ -29,6 +29,7 @@ import java.util.TreeSet;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.jmlspecs.jmlunitng.JMLUnitNG;
+import org.jmlspecs.jmlunitng.JMLUnitNGConfiguration;
 import org.jmlspecs.jmlunitng.util.Logger;
 import org.jmlspecs.jmlunitng.util.ProtectionLevel;
 import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
@@ -87,51 +88,16 @@ public class TestClassGenerator {
    * The line max line width of generated code.
    */
   public static final int LINE_WIDTH = 120;
-  
-  /**
-   * Is this a no generation run? 
-   */
-  private final boolean my_no_gen;
 
   /**
-   * Do we generate output files?
+   * The configuration to use for generating classes.
    */
-  private final boolean my_gen_files; 
+  private final JMLUnitNGConfiguration my_config;
   
   /**
    * The logger to use for printing output.
    */
   private final Logger my_logger;
-  
-  /**
-   * The max protection level for which to generate tests.
-   */
-  private final ProtectionLevel my_level;
-  
-  /**
-   * Do I test inherited methods?
-   */
-  private final boolean my_test_inherited_methods;
-  
-  /**
-   * Do I test deprecated methods?
-   */
-  private final boolean my_test_deprecated_methods;
-  
-  /**
-   * Do I use reflection?
-   */
-  private final boolean my_use_reflection;
-
-  /**
-   * Do I use children to get method parameters?
-   */
-  private final boolean my_use_children;
-  
-  /**
-   * The RAC version to generate test classes for.
-   */
-  private final String my_rac_version;
   
   /**
    * The set of files we have created.
@@ -142,50 +108,20 @@ public class TestClassGenerator {
    * Create a new TestClassGenerator with the default options.
    */
   public TestClassGenerator() {
-    this(false, false, new Logger(false), DEF_PROTECTION_LEVEL, 
-         DEF_TEST_INHERITED_METHODS, DEF_TEST_DEPRECATED_METHODS, 
-         DEF_USE_REFLECTION, DEF_USE_CHILDREN, DEF_RAC_VERSION);
+    this(new JMLUnitNGConfiguration(), new Logger(false));
   }
 
   /**
-   * Create a new TestClassGenerator with the given options.
+   * Create a new TestClassGenerator with the given configuration
+   * and logger.
    * 
-   * @param the_dry_run A flag indicating whether this is a dry run 
-   *  (i.e., whether files will be generated or not).
-   * @param the_no_gen A flag indicating whether this is a no-generation
-   *  run (i.e., whether we're doing it only to figure out what files
-   *  would have been created).
+   * @param the_config The JMLUnitNGConfiguration to use.
    * @param the_logger The logger to use to generate output.
-   * @param the_protection_level The maximum protection level for which to
-   *  generate method tests.
-   * @param the_test_inherited_methods A flag indicating whether to test 
-   *  inherited methods.
-   * @param the_test_deprecated_methods A flag indicating whether to test
-   *  deprecated methods.
-   * @param the_use_reflection A flag indicating whether to generate test 
-   *  data that uses reflection at runtime.
-   * @param the_use_children A flag indicating whether to generate test data
-   *  of child classes.
-   * @param the_rac_version The RAC version to generate test classes for.
    */
-  public TestClassGenerator(final boolean the_dry_run,
-                            final boolean the_no_gen,
-                            final Logger the_logger,
-                            final ProtectionLevel the_protection_level,
-                            final boolean the_test_inherited_methods,
-                            final boolean the_test_deprecated_methods,
-                            final boolean the_use_reflection,
-                            final boolean the_use_children,
-                            final String the_rac_version) {
-    my_no_gen = the_no_gen;
-    my_gen_files = !the_dry_run && !the_no_gen;
+  public TestClassGenerator(final JMLUnitNGConfiguration the_config,
+                            final Logger the_logger) {
+    my_config = the_config;
     my_logger = the_logger;
-    my_level = the_protection_level;
-    my_test_inherited_methods = the_test_inherited_methods;
-    my_test_deprecated_methods = the_test_deprecated_methods;
-    my_use_reflection = the_use_reflection;
-    my_use_children = the_use_children;
-    my_rac_version = the_rac_version;
   }
 
   /**
@@ -210,7 +146,7 @@ public class TestClassGenerator {
     
     final ClassInfo type_class_info = 
       InfoFactory.getClassInfo(the_param.getType().getFullyQualifiedName());
-    if (my_use_children && type_class_info != null) {
+    if (my_config.isChildrenSet() && type_class_info != null) {
       children = InfoFactory.getConcreteChildren(type_class_info);
       // remove non-public children so we don't try to generate them
       final Iterator<ClassInfo> ci = children.iterator();
@@ -225,11 +161,23 @@ public class TestClassGenerator {
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("method", the_method);
     t.setAttribute("param", the_param);
+    final SortedSet<Object> literals = new TreeSet<Object>();
+    if (my_config.isLiteralsSet()) {
+      System.err.println("literals are set, adding for " + 
+                         the_param.getType().getFullyQualifiedName());
+      literals.addAll(the_method.getLiterals(the_param.getType().getFullyQualifiedName()));
+      System.err.println(literals.size());
+    }
+    if (my_config.isSpecLiteralsSet()) {
+      literals.addAll(the_method.getSpecLiterals(the_param.getType().getFullyQualifiedName()));
+    }
+    convertLiterals(literals);
+    t.setAttribute("literals", literals);
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    t.setAttribute("use_reflection", my_use_reflection);
+    t.setAttribute("use_reflection", my_config.isReflectionSet());
     t.setAttribute("children", children);
     
-    if (!my_no_gen) {
+    if (!my_config.isNoGenSet()) {
       my_logger.println("Generating local strategy for parameter " + the_param.getName() + 
                         " of " + the_method);
     }
@@ -257,7 +205,7 @@ public class TestClassGenerator {
     
     final ClassInfo type_class_info = 
       InfoFactory.getClassInfo(the_type.getFullyQualifiedName());
-    if (my_use_children && type_class_info != null) {
+    if (my_config.isChildrenSet() && type_class_info != null) {
       children = InfoFactory.getConcreteChildren(type_class_info);
       // remove non-public children so we don't try to generate them
       final Iterator<ClassInfo> ci = children.iterator();
@@ -272,10 +220,10 @@ public class TestClassGenerator {
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("type", the_type);
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    t.setAttribute("use_reflection", my_use_reflection);
+    t.setAttribute("use_reflection", my_config.isReflectionSet());
     t.setAttribute("children", children);
 
-    if (!my_no_gen) {
+    if (!my_config.isNoGenSet()) {
       my_logger.println("Generating class strategy for type " +
                         the_type.getFullyQualifiedName());
     }
@@ -303,7 +251,7 @@ public class TestClassGenerator {
     
     final ClassInfo type_class_info = 
       InfoFactory.getClassInfo(the_type.getFullyQualifiedName());
-    if (my_use_children && type_class_info != null) {
+    if (my_config.isChildrenSet() && type_class_info != null) {
       children = InfoFactory.getConcreteChildren(type_class_info);
       // remove non-public children so we don't try to generate them
       final Iterator<ClassInfo> ci = children.iterator();
@@ -322,10 +270,10 @@ public class TestClassGenerator {
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("type", the_type);
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    t.setAttribute("use_reflection", my_use_reflection);
+    t.setAttribute("use_reflection", my_config.isReflectionSet());
     t.setAttribute("children", children);
 
-    if (!my_no_gen) {
+    if (!my_config.isNoGenSet()) {
       my_logger.println("Generating package strategy for type " +
                         the_type.getFullyQualifiedName());
     }
@@ -351,9 +299,9 @@ public class TestClassGenerator {
     t.setAttribute("class", the_class);
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    t.setAttribute("use_reflection", my_use_reflection);
+    t.setAttribute("use_reflection", my_config.isReflectionSet());
     
-    if (!my_no_gen) {
+    if (!my_config.isNoGenSet()) {
       my_logger.println("Generating instance strategy for class " +
                         the_class.getFullyQualifiedName());
     }
@@ -376,24 +324,26 @@ public class TestClassGenerator {
                                 final /*@ non_null @*/ Set<MethodInfo> the_methods,
                                 final /*@ non_null @*/ Writer the_writer)
     throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("test_class_" + my_rac_version);
+    final StringTemplateGroup group = 
+      StringTemplateGroup.loadGroup("test_class_" + my_config.getRACVersion());
     final StringTemplate t = group.getInstanceOf("main");
     t.setAttribute("class", the_class);
     t.setAttribute("date",
                    DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
     t.setAttribute("methods", the_methods);
     
-    // if there are no methods with parameters to generate tests for, we don't need a data package
+    // if there are no methods with parameters to generate tests for, 
+    // we don't need a data package
     boolean params = false;
     for (MethodInfo m : the_methods) {
       params = params || !m.getParameters().isEmpty();
     }
     t.setAttribute("params", params);
     t.setAttribute("package_name", the_class.getPackageName());
-    t.setAttribute("packaged", !the_class.getPackageName().equals(""));
+    t.setAttribute("packaged", !"".equals(the_class.getPackageName()));
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
     
-    if (!my_no_gen) {
+    if (!my_config.isNoGenSet()) {
       my_logger.println("Generating test class for class " +
                         the_class.getFullyQualifiedName());
     }
@@ -454,13 +404,13 @@ public class TestClassGenerator {
 
     f = new File(the_test_dir + tc_name.toString() + 
                  JMLUnitNG.JAVA_SUFFIX);
-    if (my_gen_files) {
+    if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
+      generateTestClass(the_class, methods_to_test, bw);
+      baos.reset();
+    } else {
       final FileWriter fw = new FileWriter(f);
       generateTestClass(the_class, methods_to_test, fw);
       fw.close();
-    } else {
-      generateTestClass(the_class, methods_to_test, bw);
-      baos.reset();
     }
     my_created_files.add(f.getCanonicalPath());
 
@@ -475,16 +425,16 @@ public class TestClassGenerator {
         ls_name.setAttribute("paramInfo", p);
         f = new File(the_strategy_dir + ls_name.toString() + 
                      JMLUnitNG.JAVA_SUFFIX);
-        if (my_gen_files && !f.exists()) {
+        if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
+          generateLocalStrategyClass(the_class, m, p, bw);
+          baos.reset();
+        } else if (f.exists()) {
+          my_logger.println("Not overwriting existing strategy for parameter " + 
+                            p.getName() +  " of " + m); 
+        } else { 
           final FileWriter fw = new FileWriter(f);
           generateLocalStrategyClass(the_class, m, p, fw);
           fw.close(); 
-        } else if (my_gen_files) {
-          my_logger.println("Not overwriting existing strategy for parameter " + 
-                            p.getName() +  " of " + m); 
-        } else {
-          generateLocalStrategyClass(the_class, m, p, bw);
-          baos.reset();
         }
         my_created_files.add(f.getCanonicalPath());
       }
@@ -500,16 +450,16 @@ public class TestClassGenerator {
       gs_name.setAttribute("typeInfo", t);
       f = new File(the_strategy_dir + gs_name.toString() + 
                    JMLUnitNG.JAVA_SUFFIX);
-      if (my_gen_files && !f.exists()) {
+      if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
+        generateClassStrategyClass(the_class, t, bw);
+        baos.reset();
+      } else if (f.exists()) {
+        my_logger.println("Not overwriting existing global strategy " + 
+                          "for type " + t.getFullyQualifiedName());        
+      } else {
         final FileWriter fw = new FileWriter(f);
         generateClassStrategyClass(the_class, t, fw);
         fw.close();
-      } else if (my_gen_files) {
-        my_logger.println("Not overwriting existing global strategy " + 
-                          "for type " + t.getFullyQualifiedName());
-      } else {
-        generateClassStrategyClass(the_class, t, bw);
-        baos.reset();
       }
       my_created_files.add(f.getCanonicalPath());
     }
@@ -525,11 +475,10 @@ public class TestClassGenerator {
 
       f = new File(the_test_dir + ps_name.toString() + 
                    JMLUnitNG.JAVA_SUFFIX);
-      if (my_gen_files && !f.exists()) {
-        final FileWriter fw = new FileWriter(f);
-        generatePackageStrategyClass(the_class, t, fw);
-        fw.close();
-      } else if (my_gen_files) {
+      if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
+        generatePackageStrategyClass(the_class, t, bw);
+        baos.reset();
+      } else if (f.exists()) {
         String pn = "<default>";
         if (the_class.isPackaged()) {
           pn = the_class.getPackageName();
@@ -537,7 +486,11 @@ public class TestClassGenerator {
         my_logger.println("Not overwriting existing package strategy " +
                           "for type " + t.getFullyQualifiedName() + 
                           " in package " + pn);
-      }
+      } else {
+        final FileWriter fw = new FileWriter(f);
+        generatePackageStrategyClass(the_class, t, fw);
+        fw.close();
+      } 
       my_created_files.add(f.getCanonicalPath());
     }
 
@@ -546,17 +499,17 @@ public class TestClassGenerator {
     is_name.setAttribute("classInfo", the_class);
     f = new File(the_test_dir + is_name.toString() + 
                  JMLUnitNG.JAVA_SUFFIX);
-    if (my_gen_files && !f.exists()) {
-      final FileWriter fw = new FileWriter(f);
-      generateInstanceStrategyClass(the_class, fw);
-      fw.close();
-    } else if (my_gen_files) {
+    if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
+      generateInstanceStrategyClass(the_class, bw);
+      baos.reset();      
+    } else if (f.exists()) {
       my_logger.println("Not overwriting existing instance strategy " + 
                         "for class " + the_class.getFullyQualifiedName());
     } else {
-      generateInstanceStrategyClass(the_class, bw);
-      baos.reset();
-    }
+      final FileWriter fw = new FileWriter(f);
+      generateInstanceStrategyClass(the_class, fw);
+      fw.close();
+    } 
     my_created_files.add(f.getCanonicalPath());
     
   }
@@ -594,9 +547,9 @@ public class TestClassGenerator {
   (final /*@ non_null @*/ ClassInfo the_class) {
     final Set<MethodInfo> methods = new HashSet<MethodInfo>();
     for (MethodInfo m : the_class.getTestableMethods()) {
-      if (m.getProtectionLevel().weakerThanOrEqualTo(my_level) &&
-          (my_test_inherited_methods || !m.isInherited()) &&
-          (my_test_deprecated_methods || !m.isDeprecated())) {
+      if (m.getProtectionLevel().weakerThanOrEqualTo(my_config.getProtectionLevel()) &&
+          (my_config.isInheritedSet() || !m.isInherited()) &&
+          (my_config.isDeprecationSet() || !m.isDeprecated())) {
         methods.add(m);
       }
     }
@@ -614,7 +567,8 @@ public class TestClassGenerator {
   (final /*@ non_null @*/ ClassInfo the_class) {
     final Set<ClassInfo> classes = new HashSet<ClassInfo>();
     for (ClassInfo c : the_class.getNestedClasses()) {
-      if (!c.isInner() && c.getProtectionLevel().weakerThanOrEqualTo(my_level)) {
+      if (!c.isInner() && 
+          c.getProtectionLevel().weakerThanOrEqualTo(my_config.getProtectionLevel())) {
         classes.add(c);
       }
     }
@@ -642,5 +596,14 @@ public class TestClassGenerator {
       }
     }
     return classes;
+  }
+  
+  /**
+   * Converts literals in a set to a representation that will work in
+   * Java code; floats need to end in "f", longs in "L".
+   * 
+   * @param the_literals The set of literals.
+   */
+  public void convertLiterals(final Set<Object> the_literals) {
   }
 }

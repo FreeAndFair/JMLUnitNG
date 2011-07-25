@@ -145,6 +145,14 @@ public class JMLUnitNGConfiguration {
     return my_destination;
   }
   
+  /**
+   * @return true if an output directory for generated classes has been
+   * set, false otherwise.
+   */
+  public /*@ pure @*/ boolean isDestinationSet() {
+    return my_destination.length() > 0;
+  }
+  
   // files settings
   
   /**
@@ -223,6 +231,13 @@ public class JMLUnitNGConfiguration {
    */
   public /*@ pure @*/ String getRACVersion() {
     return my_rac_version;
+  }
+  
+  /**
+   * @return true if the RAC version has been set, false otherwise.
+   */
+  public /*@ pure @*/ boolean isRACVersionSet() {
+    return my_rac_version.length() > 0;
   }
   
   // deprecation setting

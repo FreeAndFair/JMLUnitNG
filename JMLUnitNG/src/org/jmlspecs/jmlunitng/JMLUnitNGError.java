@@ -32,4 +32,15 @@ public class JMLUnitNGError extends Error {
   public JMLUnitNGError(final Throwable the_cause) {
     super(the_cause);
   }
+  
+  /**
+   * Construct a new JMLUnitNGError with the specified detail message
+   * and Throwable cause.
+   * 
+   * @param the_message The detail message.
+   */
+  public JMLUnitNGError(final String the_message, 
+                        final Throwable the_cause) {
+    super(the_message, the_cause);
+  }
 }

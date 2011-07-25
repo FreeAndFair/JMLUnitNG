@@ -104,16 +104,16 @@ public class ClassInfo extends TypeInfo {
    * The MethodInfo objects representing the overridden methods of this class.
    */
   private final Set<MethodInfo> my_overridden_methods;
-  
+
   /**
    * The map from classes to literals declared in this class.
    */
-  private final Map<Class<?>, SortedSet<Object>> my_literals;
+  private final Map<String, SortedSet<Object>> my_literals;
   
   /**
    * The map from classes to literals declared in the specs for this class.
    */
-  private final Map<Class<?>, SortedSet<Object>> my_spec_literals;
+  private final Map<String, SortedSet<Object>> my_spec_literals;
   
   /**
    * Constructor for a ClassInfo object given the describing parameters. For use
@@ -154,8 +154,8 @@ public class ClassInfo extends TypeInfo {
     my_overridden_methods = new HashSet<MethodInfo>();
     my_parent = the_parent;
     my_interfaces = new TreeSet<ClassInfo>(the_interfaces);
-    my_literals = new HashMap<Class<?>, SortedSet<Object>>();
-    my_spec_literals = new HashMap<Class<?>, SortedSet<Object>>();
+    my_literals = new HashMap<String, SortedSet<Object>>();
+    my_spec_literals = new HashMap<String, SortedSet<Object>>();
   }
 
   /**
@@ -179,13 +179,13 @@ public class ClassInfo extends TypeInfo {
   //@ requires !areLiteralsInitialized();
   //@ ensures areLiteralsInitialized();
   public void 
-  initializeLiterals(final Map<Class<?>, SortedSet<Object>> the_literals,
-                     final Map<Class<?>, SortedSet<Object>> the_spec_literals) {
-    for (Map.Entry<Class<?>, SortedSet<Object>> e : the_literals.entrySet()) {
+  initializeLiterals(final Map<String, SortedSet<Object>> the_literals,
+                     final Map<String, SortedSet<Object>> the_spec_literals) {
+    for (Map.Entry<String, SortedSet<Object>> e : the_literals.entrySet()) {
       final SortedSet<Object> new_set = new TreeSet<Object>(e.getValue());
       my_literals.put(e.getKey(), Collections.unmodifiableSortedSet(new_set));
     }
-    for (Map.Entry<Class<?>, SortedSet<Object>> e : the_spec_literals.entrySet()) {
+    for (Map.Entry<String, SortedSet<Object>> e : the_spec_literals.entrySet()) {
       final SortedSet<Object> new_set = new TreeSet<Object>(e.getValue());
       my_spec_literals.put(e.getKey(), Collections.unmodifiableSortedSet(new_set));
     }
@@ -463,15 +463,15 @@ public class ClassInfo extends TypeInfo {
    * must be retrieved from the appropriate MethodInfo objects.
    *
    * @param the_class The class for which to get the literals.
-   * @return A set of literals for the specified class, or null if
-   * no literals exist for the class.
+   * @return A set of literals for the specified class, or 
+   * the empty set no literals exist for the class.
    */
   //@ requires areLiteralsInitialized();
   public /*@ pure @*/ SortedSet<Object> 
-  getLiterals(final Class<?> the_class) {
-    SortedSet<Object> result = null;  
+  getLiterals(final String the_class) {
+    final SortedSet<Object> result = new TreeSet<Object>();  
     if (my_literals.get(the_class) != null) {
-      result = new TreeSet<Object>(my_literals.get(the_class));
+      result.addAll(my_literals.get(the_class));
     }
     return result;
   }
@@ -484,15 +484,15 @@ public class ClassInfo extends TypeInfo {
    * MethodInfo objects.
    *
    * @param the_class The class for which to get the literals.
-   * @return A set of literals for the specified class, or null if
-   * no literals exist for the class.
+   * @return A set of literals for the specified class, or 
+   * the empty set if no literals exist for the class.
    */
   //@ requires areLiteralsInitialized();
   public /*@ pure @*/ SortedSet<Object> 
-  getSpecLiterals(final Class<?> the_class) {
-    SortedSet<Object> result = null;  
+  getSpecLiterals(final String the_class) {
+    final SortedSet<Object> result = new TreeSet<Object>();  
     if (my_spec_literals.get(the_class) != null) {
-      result = new TreeSet<Object>(my_spec_literals.get(the_class));
+      result.addAll(my_spec_literals.get(the_class));
     }
     return result;
   }
@@ -502,7 +502,7 @@ public class ClassInfo extends TypeInfo {
    * 
    * @return An unmodifiable view of the map of literals.
    */
-  public /*@ pure @*/ Map<Class<?>, SortedSet<Object>> getLiterals() {
+  public /*@ pure @*/ Map<String, SortedSet<Object>> getLiterals() {
     return Collections.unmodifiableMap(my_literals);
   }
 
@@ -512,7 +512,7 @@ public class ClassInfo extends TypeInfo {
    * 
    * @return An unmodifiable view of the map of literals.
    */
-  public /*@ pure @*/ Map<Class<?>, SortedSet<Object>> getSpecLiterals() {
+  public /*@ pure @*/ Map<String, SortedSet<Object>> getSpecLiterals() {
     return Collections.unmodifiableMap(my_spec_literals);
   }
   

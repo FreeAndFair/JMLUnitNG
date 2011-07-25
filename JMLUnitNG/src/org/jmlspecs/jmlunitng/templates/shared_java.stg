@@ -62,7 +62,7 @@ strategyPackageSuffix() ::= "_JML_Data"
 strategyPackageShortName(classInfo) ::= "<classInfo.shortName><strategyPackageSuffix()>"
 strategyPackageName(classInfo) ::= "<if(classInfo.packaged)><classInfo.packageName>.<endif><strategyPackageShortName(classInfo=classInfo)>"
 localStrategyName(classInfo, methodInfo, paramInfo) ::= "<if(!classInfo.packaged)><classInfo.fullyQualifiedName>_<endif><methodInfo.detailedName>__<paramInfo.name>"
-localStrategyFillIn(typeInfo) ::= "{ /* add local-scope <typeInfo.fullyQualifiedName> values here */ }"
+localStrategyFillIn(typeInfo) ::= " /* add local-scope <typeInfo.fullyQualifiedName> values here */ "
 instanceStrategyName(classInfo) ::= "<classInfo.shortName>_InstanceStrategy"
 instanceStrategyFillIn(classInfo) ::= "{ /* add <classInfo.fullyQualifiedName> values here */ }"
 classStrategyName(classInfo, typeInfo) ::= "<if(!classInfo.packaged)><classInfo.fullyQualifiedName>_<endif>ClassStrategy_<typeInfo.formattedName>"
@@ -76,3 +76,4 @@ addDataClassLine() ::= <<
 addDataClass(<it.fullyQualifiedName>.class);
 
 >>
+addLiteral() ::= "<it>,";

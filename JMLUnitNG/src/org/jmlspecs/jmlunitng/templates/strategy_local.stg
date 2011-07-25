@@ -1,6 +1,6 @@
 group strategy_local : shared_java;
 
-main(date, class, method, param, jmlunitng_version, use_reflection, children) ::= <<
+main(date, class, method, param, literals, jmlunitng_version, use_reflection, children) ::= <<
 /*
  * Test data strategy for <class.fullyQualifiedName>.
  *
@@ -31,8 +31,14 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
    */
   public RepeatedAccessIterator\<?\> localValues() {
   	return new ObjectArrayIterator\<<type(paramInfo=param)>\>
-  	(new <type(paramInfo=param)>[] 
-  	<localStrategyFillIn(typeInfo=param.type)>);
+  	(new <type(paramInfo=param)>[]
+  	<if(literals)>
+  	<if(!literals.empty)>
+  	 { <literals:addLiteral()>
+  	   /* above are local-scope <param.type.shortName> literals found by JMLUnitNG */
+  	<else>
+  	 {<endif><endif>
+  	  <localStrategyFillIn(typeInfo=param.type)>});
   }
   <if(!param.type.primitive)>
   

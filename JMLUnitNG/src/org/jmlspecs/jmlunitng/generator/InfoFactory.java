@@ -22,6 +22,7 @@ import java.util.TreeSet;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
+import org.jmlspecs.jmlunitng.JMLUnitNGError;
 import org.jmlspecs.jmlunitng.util.InheritanceComparator;
 import org.jmlspecs.jmlunitng.util.ProtectionLevel;
 import org.jmlspecs.openjml.API;
@@ -69,6 +70,16 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
  * @version January 2011
  */
 public final class InfoFactory {
+  /**
+   * The name of java.lang.Class.
+   */
+  public static final String JAVA_LANG_CLASS = "java.lang.Class";
+  
+  /**
+   * The name of java.lang.String.
+   */
+  public static final String JAVA_LANG_STRING = "java.lang.String";
+  
   /**
    * Cache of already created ClassInfo objects. 
    */
@@ -155,7 +166,8 @@ public final class InfoFactory {
     
     processInheritedMethods();
     
-    
+    /* // debugging info for literal finding
+
     for (ClassInfo c : getAllClassInfos()) {
       System.err.println("ClassInfo " + c);
       System.err.println("  Literals");
@@ -181,7 +193,7 @@ public final class InfoFactory {
       }
       System.err.println();
     }
-    // debugging info for literal finding
+    */
   }
   
   /**
@@ -382,8 +394,8 @@ public final class InfoFactory {
           e.sym.getKind().equals(ElementKind.CONSTRUCTOR))) {
         
         methods.add(createMethodInfo((MethodSymbol) e.sym, new ArrayList<ClassInfo>(),
-                                     new HashMap<Class<?>, SortedSet<Object>>(),
-                                     new HashMap<Class<?>, SortedSet<Object>>()));
+                                     new HashMap<String, SortedSet<Object>>(),
+                                     new HashMap<String, SortedSet<Object>>()));
       }
     }
     return result;
@@ -410,8 +422,8 @@ public final class InfoFactory {
    */
   private static MethodInfo createMethodInfo(final MethodSymbol the_sym, 
                                              final List<ClassInfo> the_signals,
-                                             final Map<Class<?>, SortedSet<Object>> the_literal_map,
-                                             final Map<Class<?>, SortedSet<Object>> the_spec_literal_map) {
+                                             final Map<String, SortedSet<Object>> the_literal_map,
+                                             final Map<String, SortedSet<Object>> the_spec_literal_map) {
     final List<ParameterInfo> params = 
       new ArrayList<ParameterInfo>(the_sym.getParameters().size());
     for (VarSymbol v : the_sym.params) {
@@ -607,8 +619,8 @@ public final class InfoFactory {
     /**
      * The map of literals.
      */
-    private final Map<Class<?>, SortedSet<Object>> my_literals = 
-      new HashMap<Class<?>, SortedSet<Object>>();
+    private final Map<String, SortedSet<Object>> my_literals = 
+      new HashMap<String, SortedSet<Object>>();
     
     /**
      * Do we visit methods?
@@ -642,7 +654,7 @@ public final class InfoFactory {
       if (the_tree instanceof JCInstanceOf) {
         final JCInstanceOf instance_of = (JCInstanceOf) the_tree;
         final JCIdent clazz = (JCIdent) instance_of.clazz;
-        getLiteralSet(Class.class).add(clazz.sym.getQualifiedName().toString());
+        getLiteralSet(JAVA_LANG_CLASS).add(clazz.sym.getQualifiedName().toString());
       }
       super.scan(the_tree);
     }
@@ -783,9 +795,10 @@ public final class InfoFactory {
      * @param the_tree The literal declaration node.
      */
     public void visitLiteral(final JCLiteral the_tree) {
-      final Class<?> literal_class = getClassForLiteralKind(the_tree.getKind());
+      final String literal_class = getClassForLiteralKind(the_tree.getKind());
       if (literal_class != null) {
-        getLiteralSet(literal_class).add(the_tree.getValue());
+        addLiteral(the_tree.getValue(), literal_class);
+        
       }
       super.visitLiteral(the_tree);
     }
@@ -813,7 +826,7 @@ public final class InfoFactory {
       }
       
       if (class_literal != null) {
-        getLiteralSet(Class.class).add(class_literal);
+        getLiteralSet(JAVA_LANG_CLASS).add(class_literal);
       }
       
       super.visitSelect(the_tree);
@@ -822,15 +835,84 @@ public final class InfoFactory {
     /**
      * @return the map of literal classes to literals in the tree.
      */
-    public Map<Class<?>, SortedSet<Object>> getLiteralMap() {
+    public Map<String, SortedSet<Object>> getLiteralMap() {
       return my_literals;
     }
     
     /**
-     * @param the_class The literal class for which to get the literal set.
+     * Adds the specified value to the literals map, adding it for all
+     * the integer types it "fits" in if it is an integral literal.
+     * 
+     * @param the_value The value to add.
+     * @param the_class The type of the literal in the parse tree.
+     */
+    private void addLiteral(final Object the_value, final String the_class) {
+      if (isIntegral(the_value)) {
+        // get the value as a Long
+        final Long integral_value = getIntegralValue(the_value);
+        
+        // if the value fits within a byte, add it as a byte
+        if (Byte.MIN_VALUE <= integral_value && integral_value <= Byte.MAX_VALUE) {
+          getLiteralSet("byte").add(integral_value.byteValue());
+        }
+        
+        // if the value fits within a short, add it as a short
+        if (Short.MIN_VALUE <= integral_value && integral_value <= Short.MAX_VALUE) {
+          getLiteralSet("short").add(integral_value.shortValue());
+        }
+        
+        // if the value fits within an int, add it as an int
+        if (Integer.MIN_VALUE <= integral_value && integral_value <= Integer.MAX_VALUE) {
+          getLiteralSet("integer").add(integral_value.intValue());
+        }
+
+        // always add the value as a long
+        getLiteralSet("long").add(integral_value);
+        
+        // if the value fits within a float, and can be exactly translated to a float,
+        // add it as a float
+        if (-Float.MAX_VALUE <= integral_value && integral_value <= Float.MAX_VALUE) {
+          final float f = integral_value.floatValue();
+          final long l = integral_value.longValue();
+          if ((long) f == l) {
+            getLiteralSet("float").add(integral_value.floatValue());
+          }
+        } 
+        
+        // if the value fits within a double, and can be exactly translated to a double,
+        // add it as a double
+        if (-Double.MAX_VALUE <= integral_value && integral_value <= Double.MAX_VALUE) {
+          final double d = integral_value.doubleValue();
+          final long l = integral_value.longValue();
+          if ((long) d == l) {
+            getLiteralSet("double").add(integral_value.doubleValue());
+          }
+        } 
+      } else if (the_value instanceof Float) {
+        // floats can also be doubles
+        final Float float_value = (Float) the_value;
+        getLiteralSet("float").add(float_value);
+        getLiteralSet("double").add(float_value.doubleValue());
+      } else if (the_value instanceof Double) { 
+        // doubles can not always be floats
+        final double double_value = ((Double) the_value).doubleValue();
+        final float float_value = (float) double_value;
+        if ((double) float_value == double_value) {
+          // no loss of precision, let's store it as both
+          getLiteralSet("float").add(float_value);
+        }
+        getLiteralSet("double").add(double_value);
+      }
+      
+      getLiteralSet(the_class).add(the_value);
+    }
+    
+    /**
+     * @param the_class The fully qualified name of the literal class
+     * for which to get the literal set.
      * @return the literal set.
      */
-    private final SortedSet<Object> getLiteralSet(final Class<?> the_class) {
+    private SortedSet<Object> getLiteralSet(final String the_class) {
       SortedSet<Object> result = my_literals.get(the_class);
       if (result == null) {
         result = new TreeSet<Object>();
@@ -844,24 +926,59 @@ public final class InfoFactory {
      * @return the Class representing the primitive type for the specified Kind,
      * or null if no such class exists.
      */
-    private final Class<?> getClassForLiteralKind(final Kind the_kind) {
-      Class<?> result = null;
+    private String getClassForLiteralKind(final Kind the_kind) {
+      String result = null;
 
       // we ignore BOOLEAN_LITERAL and NULL_LITERAL since we already test those
+
       if (the_kind == Kind.CHAR_LITERAL) {
-        result = char.class;
+        result = "char";
       } else if (the_kind == Kind.INT_LITERAL) {
-        result = int.class;
+        result = "int";
       } else if (the_kind == Kind.LONG_LITERAL) {
-        result = long.class;
+        result = "long";
       } else if (the_kind == Kind.FLOAT_LITERAL) {
-        result = float.class;
+        result = "float";
       } else if (the_kind == Kind.DOUBLE_LITERAL) {
-        result = double.class;
+        result = "double";
       } else if (the_kind == Kind.STRING_LITERAL) {
-        result = String.class;
+        result = JAVA_LANG_STRING;
+      }
+      return result;
+    }
+    
+    /**
+     * @param the_object An object.
+     * @return true if the object represents an integral value, false otherwise.
+     */
+    private boolean isIntegral(final Object the_object) {
+      boolean result = 
+        the_object instanceof Long || the_object instanceof Integer || 
+        the_object instanceof Short || the_object instanceof Byte;
+      
+      if (!result && the_object instanceof Double) {
+        final Double d = (Double) the_object;
+        result = Math.floor(d) == d;
+      } else if (!result && the_object instanceof Float) {
+        final Float f = (Float) the_object;
+        result = Math.floor(f) == f;
       }
       
+      return result;
+    }
+    
+    /**
+     * @param the_value The value to convert to a Long.
+     * @return The converted value.
+     */
+    private Long getIntegralValue(final Object the_value) {
+      Long result = null;
+      if (the_value instanceof Number) {
+        result = Long.valueOf(((Number) the_value).longValue());
+      } else {
+        throw new JMLUnitNGError("attempt to convert a " + the_value.getClass() + 
+                                 "to an integral value");
+      }
       return result;
     }
   }
