@@ -170,7 +170,7 @@ public static Iterator\<Object[]\> <dataProviderName()>() {
   (new ParameterArrayIterator
        (<if(!method.constructor)><if(!method.static)><instanceStrategyName(classInfo=class)>.class, 
 
-        <endif><endif><method.parameters:{<localStrategyName(classInfo=class, methodInfo=method, paramInfo=it)>.class}; separator=", 
+        <endif><endif><method.parameters:{n | <localStrategyName(classInfo=class, methodInfo=method, paramInfo=n)>.class}; separator=", 
 ">));
 }
 
@@ -191,8 +191,8 @@ public static Iterator\<Object[]\> <instanceDataProviderName()>() {
 }
 >>
 
-catchClause() ::= <<
-catch (final <it.fullyQualifiedName> $e) {
+catchClause(arg) ::= <<
+catch (final <arg.fullyQualifiedName> $e) {
   // passed test because of successful signals clause
   return;
 }

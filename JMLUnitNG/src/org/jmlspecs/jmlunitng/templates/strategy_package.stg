@@ -74,4 +74,4 @@ public class <packageStrategyName(typeInfo=type)>
 }
 
 >>
-
+packageStrategyFillIn(typeInfo) ::= "{ /* add package-scope <typeInfo.fullyQualifiedName> values here */ }"

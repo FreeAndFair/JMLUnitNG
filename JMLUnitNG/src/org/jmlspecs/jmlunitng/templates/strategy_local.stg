@@ -32,13 +32,12 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
   public RepeatedAccessIterator\<?\> localValues() {
   	return new ObjectArrayIterator\<<type(paramInfo=param)>\>
   	(new <type(paramInfo=param)>[]
-  	<if(literals)>
   	<if(!literals.empty)>
   	 { <literals:addLiteral()>
   	   /* above are local-scope <param.type.shortName> literals found by JMLUnitNG */
+  	   
   	<else>
-  	 {<endif><endif>
-  	  <localStrategyFillIn(typeInfo=param.type)>});
+  	 { <endif><localStrategyFillIn(typeInfo=param.type)> });
   }
   <if(!param.type.primitive)>
   
@@ -81,3 +80,4 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
 }
 
 >>
+localStrategyFillIn(typeInfo) ::= "/* add local-scope <typeInfo.fullyQualifiedName> values here */"

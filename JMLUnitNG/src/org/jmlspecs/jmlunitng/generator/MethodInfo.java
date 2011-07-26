@@ -73,12 +73,12 @@ public class MethodInfo implements Comparable<MethodInfo> {
   /**
    * The map from classes to literals declared in this class.
    */
-  private final /*@ non_null @*/ Map<String, SortedSet<Object>> my_literals;
+  private final /*@ non_null @*/ Map<String, SortedSet<String>> my_literals;
   
   /**
    * The map from classes to literals declared in the specs for this class.
    */
-  private final /*@ non_null @*/ Map<String, SortedSet<Object>> my_spec_literals;
+  private final /*@ non_null @*/ Map<String, SortedSet<String>> my_spec_literals;
   
   /**
    * The ClassInfo for the class this method belongs to.
@@ -151,8 +151,8 @@ public class MethodInfo implements Comparable<MethodInfo> {
                     final /*@ non_null @*/ List<ParameterInfo> the_parameter_types, 
                     final /*@ non_null @*/ TypeInfo the_return_type,
                     final /*@ non_null @*/ List<ClassInfo> the_signals,
-                    final /*@ non_null @*/ Map<String, SortedSet<Object>> the_literals,
-                    final /*@ non_null @*/ Map<String, SortedSet<Object>> 
+                    final /*@ non_null @*/ Map<String, SortedSet<String>> the_literals,
+                    final /*@ non_null @*/ Map<String, SortedSet<String>> 
                         the_spec_literals,                    
                     final boolean the_is_constructor, final boolean the_is_static,
                     final boolean the_is_deprecated) {
@@ -184,12 +184,12 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * @param the_map The literals map to copy.
    * @return The new map.
    */
-  private static final Map<String, SortedSet<Object>> 
-  copyLiteralsMap(final Map<String, SortedSet<Object>> the_map) {
-    Map<String, SortedSet<Object>> result = 
-      new HashMap<String, SortedSet<Object>>();
-    for (Map.Entry<String, SortedSet<Object>> e : the_map.entrySet()) {
-      final SortedSet<Object> new_set = new TreeSet<Object>(e.getValue());
+  private static final Map<String, SortedSet<String>> 
+  copyLiteralsMap(final Map<String, SortedSet<String>> the_map) {
+    Map<String, SortedSet<String>> result = 
+      new HashMap<String, SortedSet<String>>();
+    for (Map.Entry<String, SortedSet<String>> e : the_map.entrySet()) {
+      final SortedSet<String> new_set = new TreeSet<String>(e.getValue());
       result.put(e.getKey(), Collections.unmodifiableSortedSet(new_set));
     }  
     return result;
@@ -278,9 +278,9 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * the empty set if no literals exist for the class.
    */
   //@ requires areLiteralsInitialized();
-  public /*@ pure @*/ SortedSet<Object> 
+  public /*@ pure @*/ SortedSet<String> 
   getLiterals(final String the_class) {
-    final SortedSet<Object> result = new TreeSet<Object>();
+    final SortedSet<String> result = new TreeSet<String>();
     if (my_literals.get(the_class) != null) {
       result.addAll(my_literals.get(the_class));
     }
@@ -296,9 +296,9 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * the empty set if no literals exist for the class.
    */
   //@ requires areLiteralsInitialized();
-  public /*@ pure @*/ SortedSet<Object> 
+  public /*@ pure @*/ SortedSet<String> 
   getSpecLiterals(final String the_class) {
-    final SortedSet<Object> result = new TreeSet<Object>();
+    final SortedSet<String> result = new TreeSet<String>();
     if (my_spec_literals.get(the_class) != null) {
       result.addAll(my_spec_literals.get(the_class));
     }
@@ -310,7 +310,7 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * 
    * @return An unmodifiable view of the map of literals.
    */
-  public /*@ pure @*/ Map<String, SortedSet<Object>> getLiterals() {
+  public /*@ pure @*/ Map<String, SortedSet<String>> getLiterals() {
     return Collections.unmodifiableMap(my_literals);
   }
 
@@ -320,7 +320,7 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * 
    * @return An unmodifiable view of the map of literals.
    */
-  public /*@ pure @*/ Map<String, SortedSet<Object>> getSpecLiterals() {
+  public /*@ pure @*/ Map<String, SortedSet<String>> getSpecLiterals() {
     return Collections.unmodifiableMap(my_spec_literals);
   }
   

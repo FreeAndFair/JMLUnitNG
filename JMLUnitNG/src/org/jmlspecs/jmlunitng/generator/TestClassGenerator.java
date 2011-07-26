@@ -142,36 +142,45 @@ public class TestClassGenerator {
     throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_local");
     final StringTemplate t = group.getInstanceOf("main");
-    SortedSet<ClassInfo> children = null;
+    final SortedSet<String> children = new TreeSet<String>();
+    final SortedSet<String> literals = new TreeSet<String>();
+    final String fq_name = the_param.getType().getFullyQualifiedName();
+    final ClassInfo type_class_info = InfoFactory.getClassInfo(fq_name);
     
-    final ClassInfo type_class_info = 
-      InfoFactory.getClassInfo(the_param.getType().getFullyQualifiedName());
+    // if "--children" was set, we use all child classes we are currently analyzing
     if (my_config.isChildrenSet() && type_class_info != null) {
-      children = InfoFactory.getConcreteChildren(type_class_info);
-      // remove non-public children so we don't try to generate them
-      final Iterator<ClassInfo> ci = children.iterator();
-      while (ci.hasNext()) {
-        if (ci.next().getProtectionLevel() != ProtectionLevel.PUBLIC) {
-          ci.remove();
-        }
-      }
+      children.addAll(getChildrenFromClassInfo(type_class_info));
     }
 
+    // if "--literals" or "--spec-literals" was set, we use all child classes
+    // identified as literals for the method under test
+    
+    if (my_config.isLiteralsSet() && type_class_info != null) {
+      children.addAll(checkChildLiterals(type_class_info, 
+                      the_method.getLiterals(Class.class.getName())));
+    }
+    if (my_config.isSpecLiteralsSet() && type_class_info != null) {
+      children.addAll(checkChildLiterals(type_class_info, 
+                      the_method.getSpecLiterals(Class.class.getName())));
+    }
+    
+    // add literals for this type 
+    
+    if (my_config.isLiteralsSet()) {
+      System.err.println("literals are set, adding for " + fq_name);
+      literals.addAll(the_method.getLiterals(fq_name));
+      System.err.println(literals);
+    }
+    if (my_config.isSpecLiteralsSet()) {
+      System.err.println("spec literals are set, adding for " + fq_name);
+      literals.addAll(the_method.getSpecLiterals(fq_name));
+      System.err.println(literals);
+    }
+    
     t.setAttribute("class", the_class);
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("method", the_method);
     t.setAttribute("param", the_param);
-    final SortedSet<Object> literals = new TreeSet<Object>();
-    if (my_config.isLiteralsSet()) {
-      System.err.println("literals are set, adding for " + 
-                         the_param.getType().getFullyQualifiedName());
-      literals.addAll(the_method.getLiterals(the_param.getType().getFullyQualifiedName()));
-      System.err.println(literals.size());
-    }
-    if (my_config.isSpecLiteralsSet()) {
-      literals.addAll(the_method.getSpecLiterals(the_param.getType().getFullyQualifiedName()));
-    }
-    convertLiterals(literals);
     t.setAttribute("literals", literals);
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
     t.setAttribute("use_reflection", my_config.isReflectionSet());
@@ -201,24 +210,45 @@ public class TestClassGenerator {
     throws IOException {
     final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_class");
     final StringTemplate t = group.getInstanceOf("main");
-    SortedSet<ClassInfo> children = null;
-    
-    final ClassInfo type_class_info = 
-      InfoFactory.getClassInfo(the_type.getFullyQualifiedName());
+    final SortedSet<String> children = new TreeSet<String>();
+    final SortedSet<String> literals = new TreeSet<String>();
+    final String fq_name = the_type.getFullyQualifiedName();
+    final ClassInfo type_class_info = InfoFactory.getClassInfo(fq_name);
+
+    // if "--children" was set, we use all child classes we are currently analyzing
     if (my_config.isChildrenSet() && type_class_info != null) {
-      children = InfoFactory.getConcreteChildren(type_class_info);
-      // remove non-public children so we don't try to generate them
-      final Iterator<ClassInfo> ci = children.iterator();
-      while (ci.hasNext()) {
-        if (ci.next().getProtectionLevel() != ProtectionLevel.PUBLIC) {
-          ci.remove();
-        }
-      }
+      children.addAll(getChildrenFromClassInfo(type_class_info));
+    }
+
+    // if "--literals" or "--spec-literals" was set, we use all child classes
+    // identified as literals for the method under test
+    
+    if (my_config.isLiteralsSet() && type_class_info != null) {
+      children.addAll(checkChildLiterals(type_class_info, 
+                      the_class.getLiterals(Class.class.getName())));
+    }
+    if (my_config.isSpecLiteralsSet() && type_class_info != null) {
+      children.addAll(checkChildLiterals(type_class_info, 
+                      the_class.getSpecLiterals(Class.class.getName())));
+    }
+    
+    // add literals for this type
+    
+    if (my_config.isLiteralsSet()) {
+      System.err.println("literals are set, adding for " + fq_name);
+      literals.addAll(the_class.getLiterals(fq_name));
+      System.err.println(literals);
+    }
+    if (my_config.isSpecLiteralsSet()) {
+      System.err.println("spec literals are set, adding for " + fq_name);
+      literals.addAll(the_class.getSpecLiterals(fq_name));
+      System.err.println(literals);
     }
     
     t.setAttribute("class", the_class);
     t.setAttribute("date", getFormattedDate());
     t.setAttribute("type", the_type);
+    t.setAttribute("literals", literals);
     t.setAttribute("jmlunitng_version", JMLUnitNG.version());
     t.setAttribute("use_reflection", my_config.isReflectionSet());
     t.setAttribute("children", children);
@@ -599,11 +629,66 @@ public class TestClassGenerator {
   }
   
   /**
-   * Converts literals in a set to a representation that will work in
-   * Java code; floats need to end in "f", longs in "L".
+   * Generates a list of the publicly-visible child classes of the class
+   * represented by the specified ClassInfo.
    * 
-   * @param the_literals The set of literals.
+   * @param the_class The ClassInfo for which to find the children.
+   * @return The child classes, in the form "fully.qualified.Name.class".
    */
-  public void convertLiterals(final Set<Object> the_literals) {
+  private SortedSet<String> getChildrenFromClassInfo(final ClassInfo the_class) {
+    final SortedSet<String> result = new TreeSet<String>();
+    final SortedSet<ClassInfo> raw_children = 
+      InfoFactory.getConcreteChildren(the_class);
+    
+    // remove non-public children so we don't try to generate them
+    final Iterator<ClassInfo> ci = raw_children.iterator();
+    while (ci.hasNext()) {
+      if (ci.next().getProtectionLevel() != ProtectionLevel.PUBLIC) {
+        ci.remove();
+      }
+    }
+    
+    for (ClassInfo c : raw_children) {
+      result.add(c.getFullyQualifiedName() + ".class");
+    }
+    
+    return result;
+  }
+  
+  /**
+   * Checks the specified set of class literal names to see if they are 
+   * child classes of the specified class, and returns only the ones that are.
+   * 
+   * @param the_class The class.
+   * @param the_literals The literals.
+   * @return the subset of the_literals that are child classes of the_class.
+   */
+  private SortedSet<String> checkChildLiterals(final ClassInfo the_class, 
+                                               final SortedSet<String> the_literals) {
+    final SortedSet<String> result = new TreeSet<String>();
+    Class<?> parent = null;
+    try {
+      parent = Class.forName(the_class.getFullyQualifiedName());
+    } catch (final ClassNotFoundException e) {
+      // this should never happen if the class compiled... if it does,
+      // we simply cannot proceed so we just ignore the problem
+    }
+    if (parent != null) {
+      for (Object o : the_literals) {
+        try {
+          // class literals end in ".class" so we need to peel that off
+          final String child_fq_name = 
+            o.toString().substring(0, o.toString().lastIndexOf('.'));
+          final Class<?> child = Class.forName(child_fq_name);
+          if (parent.isAssignableFrom(child)) {
+            result.add(o.toString());
+          }
+        } catch (final ClassNotFoundException e) {
+          // this also should never happen if the class compiled... if
+          // it does, we just ignore it
+        }
+      }
+    }
+    return result;
   }
 }

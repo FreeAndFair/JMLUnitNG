@@ -55,7 +55,7 @@ public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
        new Class\<?\>[0], 
        new ObjectArrayIterator\<Object[]\>(new Object[][]{{}})));
     
-    <class.methods:{<instanceStrategyConstructorData(method=it)>}>
+    <class.methods:{n | <instanceStrategyConstructorData(method=n)>}>
 
     return new NonNullMultiIterator\<<class.shortName>\>(iters);
   }
@@ -90,5 +90,6 @@ iters.add(new InstantiationIterator\<<class.shortName>\>
 <endif>
 >>
 
-paramClasses() ::= "<method.parameters:{<rawtype(paramInfo=it)>.class}; separator=\", 
+paramClasses() ::= "<method.parameters:{n | <rawtype(paramInfo=n)>.class}; separator=\", 
     \">"
+instanceStrategyFillIn(classInfo) ::= "{ /* add <classInfo.fullyQualifiedName> values here */ }"

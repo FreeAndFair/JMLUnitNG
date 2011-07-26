@@ -1,6 +1,6 @@
 group strategy_class : shared_java;
 
-main(date, class, type, jmlunitng_version, use_reflection, children) ::= <<
+main(date, class, type, literals, jmlunitng_version, use_reflection, children) ::= <<
 /*
  * Test data strategy for <class.fullyQualifiedName>.
  *
@@ -33,7 +33,12 @@ public class <classStrategyName(classInfo=class, typeInfo=type)>
   public RepeatedAccessIterator\<?\> classValues() {
     return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
     (new <typeTransMap.(type.fullyQualifiedName)>[] 
-    <classStrategyFillIn(typeInfo=type)>);
+  	<if(!literals.empty)>
+  	 { <literals:addLiteral()>
+  	   /* above are class-scope <param.type.shortName> literals found by JMLUnitNG */
+  	   
+  	<else>
+  	 { <endif><classStrategyFillIn(typeInfo=type)> });
   }
   <if(!type.primitive)>
   
@@ -75,4 +80,4 @@ public class <classStrategyName(classInfo=class, typeInfo=type)>
 }
 
 >>
-
+classStrategyFillIn(typeInfo) ::= "/* add class-scope <typeInfo.fullyQualifiedName> values here */"

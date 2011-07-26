@@ -108,12 +108,12 @@ public class ClassInfo extends TypeInfo {
   /**
    * The map from classes to literals declared in this class.
    */
-  private final Map<String, SortedSet<Object>> my_literals;
+  private final Map<String, SortedSet<String>> my_literals;
   
   /**
    * The map from classes to literals declared in the specs for this class.
    */
-  private final Map<String, SortedSet<Object>> my_spec_literals;
+  private final Map<String, SortedSet<String>> my_spec_literals;
   
   /**
    * Constructor for a ClassInfo object given the describing parameters. For use
@@ -154,8 +154,8 @@ public class ClassInfo extends TypeInfo {
     my_overridden_methods = new HashSet<MethodInfo>();
     my_parent = the_parent;
     my_interfaces = new TreeSet<ClassInfo>(the_interfaces);
-    my_literals = new HashMap<String, SortedSet<Object>>();
-    my_spec_literals = new HashMap<String, SortedSet<Object>>();
+    my_literals = new HashMap<String, SortedSet<String>>();
+    my_spec_literals = new HashMap<String, SortedSet<String>>();
   }
 
   /**
@@ -179,14 +179,14 @@ public class ClassInfo extends TypeInfo {
   //@ requires !areLiteralsInitialized();
   //@ ensures areLiteralsInitialized();
   public void 
-  initializeLiterals(final Map<String, SortedSet<Object>> the_literals,
-                     final Map<String, SortedSet<Object>> the_spec_literals) {
-    for (Map.Entry<String, SortedSet<Object>> e : the_literals.entrySet()) {
-      final SortedSet<Object> new_set = new TreeSet<Object>(e.getValue());
+  initializeLiterals(final Map<String, SortedSet<String>> the_literals,
+                     final Map<String, SortedSet<String>> the_spec_literals) {
+    for (Map.Entry<String, SortedSet<String>> e : the_literals.entrySet()) {
+      final SortedSet<String> new_set = new TreeSet<String>(e.getValue());
       my_literals.put(e.getKey(), Collections.unmodifiableSortedSet(new_set));
     }
-    for (Map.Entry<String, SortedSet<Object>> e : the_spec_literals.entrySet()) {
-      final SortedSet<Object> new_set = new TreeSet<Object>(e.getValue());
+    for (Map.Entry<String, SortedSet<String>> e : the_spec_literals.entrySet()) {
+      final SortedSet<String> new_set = new TreeSet<String>(e.getValue());
       my_spec_literals.put(e.getKey(), Collections.unmodifiableSortedSet(new_set));
     }
     my_literals_initialized = true;
@@ -467,9 +467,9 @@ public class ClassInfo extends TypeInfo {
    * the empty set no literals exist for the class.
    */
   //@ requires areLiteralsInitialized();
-  public /*@ pure @*/ SortedSet<Object> 
+  public /*@ pure @*/ SortedSet<String> 
   getLiterals(final String the_class) {
-    final SortedSet<Object> result = new TreeSet<Object>();  
+    final SortedSet<String> result = new TreeSet<String>();  
     if (my_literals.get(the_class) != null) {
       result.addAll(my_literals.get(the_class));
     }
@@ -488,9 +488,9 @@ public class ClassInfo extends TypeInfo {
    * the empty set if no literals exist for the class.
    */
   //@ requires areLiteralsInitialized();
-  public /*@ pure @*/ SortedSet<Object> 
+  public /*@ pure @*/ SortedSet<String> 
   getSpecLiterals(final String the_class) {
-    final SortedSet<Object> result = new TreeSet<Object>();  
+    final SortedSet<String> result = new TreeSet<String>();  
     if (my_spec_literals.get(the_class) != null) {
       result.addAll(my_spec_literals.get(the_class));
     }
@@ -502,7 +502,7 @@ public class ClassInfo extends TypeInfo {
    * 
    * @return An unmodifiable view of the map of literals.
    */
-  public /*@ pure @*/ Map<String, SortedSet<Object>> getLiterals() {
+  public /*@ pure @*/ Map<String, SortedSet<String>> getLiterals() {
     return Collections.unmodifiableMap(my_literals);
   }
 
@@ -512,7 +512,7 @@ public class ClassInfo extends TypeInfo {
    * 
    * @return An unmodifiable view of the map of literals.
    */
-  public /*@ pure @*/ Map<String, SortedSet<Object>> getSpecLiterals() {
+  public /*@ pure @*/ Map<String, SortedSet<String>> getSpecLiterals() {
     return Collections.unmodifiableMap(my_spec_literals);
   }
   

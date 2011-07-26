@@ -71,14 +71,9 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
  */
 public final class InfoFactory {
   /**
-   * The name of java.lang.Class.
+   * The class suffix (for class literals).
    */
-  public static final String JAVA_LANG_CLASS = "java.lang.Class";
-  
-  /**
-   * The name of java.lang.String.
-   */
-  public static final String JAVA_LANG_STRING = "java.lang.String";
+  private static final String CLASS_SUFFIX = ".class";
   
   /**
    * Cache of already created ClassInfo objects. 
@@ -394,8 +389,8 @@ public final class InfoFactory {
           e.sym.getKind().equals(ElementKind.CONSTRUCTOR))) {
         
         methods.add(createMethodInfo((MethodSymbol) e.sym, new ArrayList<ClassInfo>(),
-                                     new HashMap<String, SortedSet<Object>>(),
-                                     new HashMap<String, SortedSet<Object>>()));
+                                     new HashMap<String, SortedSet<String>>(),
+                                     new HashMap<String, SortedSet<String>>()));
       }
     }
     return result;
@@ -422,8 +417,8 @@ public final class InfoFactory {
    */
   private static MethodInfo createMethodInfo(final MethodSymbol the_sym, 
                                              final List<ClassInfo> the_signals,
-                                             final Map<String, SortedSet<Object>> the_literal_map,
-                                             final Map<String, SortedSet<Object>> the_spec_literal_map) {
+                                             final Map<String, SortedSet<String>> the_literal_map,
+                                             final Map<String, SortedSet<String>> the_spec_literal_map) {
     final List<ParameterInfo> params = 
       new ArrayList<ParameterInfo>(the_sym.getParameters().size());
     for (VarSymbol v : the_sym.params) {
@@ -619,8 +614,8 @@ public final class InfoFactory {
     /**
      * The map of literals.
      */
-    private final Map<String, SortedSet<Object>> my_literals = 
-      new HashMap<String, SortedSet<Object>>();
+    private final Map<String, SortedSet<String>> my_literals = 
+      new HashMap<String, SortedSet<String>>();
     
     /**
      * Do we visit methods?
@@ -654,7 +649,8 @@ public final class InfoFactory {
       if (the_tree instanceof JCInstanceOf) {
         final JCInstanceOf instance_of = (JCInstanceOf) the_tree;
         final JCIdent clazz = (JCIdent) instance_of.clazz;
-        getLiteralSet(JAVA_LANG_CLASS).add(clazz.sym.getQualifiedName().toString());
+        getLiteralSet(Class.class.getName()).add(clazz.sym.getQualifiedName().toString() +
+                                                 CLASS_SUFFIX);
       }
       super.scan(the_tree);
     }
@@ -818,15 +814,18 @@ public final class InfoFactory {
         if (the_tree.selected instanceof JCFieldAccess && 
             ((JCFieldAccess) the_tree.selected).sym instanceof ClassSymbol) {
           class_literal = 
-            ((JCFieldAccess) the_tree.selected).sym.getQualifiedName().toString();
+            ((JCFieldAccess) the_tree.selected).sym.getQualifiedName().toString() + 
+            CLASS_SUFFIX;
         } else if (the_tree.selected instanceof JCIdent &&
                    ((JCIdent) the_tree.selected).sym instanceof ClassSymbol) {
-          class_literal = ((JCIdent) the_tree.selected).sym.getQualifiedName().toString();
+          class_literal = 
+            ((JCIdent) the_tree.selected).sym.getQualifiedName().toString() + 
+            CLASS_SUFFIX;
         }
       }
       
       if (class_literal != null) {
-        getLiteralSet(JAVA_LANG_CLASS).add(class_literal);
+        getLiteralSet(Class.class.getName()).add(class_literal);
       }
       
       super.visitSelect(the_tree);
@@ -835,7 +834,7 @@ public final class InfoFactory {
     /**
      * @return the map of literal classes to literals in the tree.
      */
-    public Map<String, SortedSet<Object>> getLiteralMap() {
+    public Map<String, SortedSet<String>> getLiteralMap() {
       return my_literals;
     }
     
@@ -850,24 +849,25 @@ public final class InfoFactory {
       if (isIntegral(the_value)) {
         // get the value as a Long
         final Long integral_value = getIntegralValue(the_value);
+        final String integral_string = String.valueOf(integral_value);
         
         // if the value fits within a byte, add it as a byte
         if (Byte.MIN_VALUE <= integral_value && integral_value <= Byte.MAX_VALUE) {
-          getLiteralSet("byte").add(integral_value.byteValue());
+          getLiteralSet(byte.class.getName()).add(integral_string);
         }
         
         // if the value fits within a short, add it as a short
         if (Short.MIN_VALUE <= integral_value && integral_value <= Short.MAX_VALUE) {
-          getLiteralSet("short").add(integral_value.shortValue());
+          getLiteralSet(short.class.getName()).add(integral_string);
         }
         
         // if the value fits within an int, add it as an int
         if (Integer.MIN_VALUE <= integral_value && integral_value <= Integer.MAX_VALUE) {
-          getLiteralSet("integer").add(integral_value.intValue());
+          getLiteralSet(int.class.getName()).add(integral_string);
         }
 
         // always add the value as a long
-        getLiteralSet("long").add(integral_value);
+        getLiteralSet(long.class.getName()).add(integral_string + 'L');
         
         // if the value fits within a float, and can be exactly translated to a float,
         // add it as a float
@@ -875,7 +875,7 @@ public final class InfoFactory {
           final float f = integral_value.floatValue();
           final long l = integral_value.longValue();
           if ((long) f == l) {
-            getLiteralSet("float").add(integral_value.floatValue());
+            getLiteralSet(float.class.getName()).add(integral_string + ".0f");
           }
         } 
         
@@ -885,26 +885,26 @@ public final class InfoFactory {
           final double d = integral_value.doubleValue();
           final long l = integral_value.longValue();
           if ((long) d == l) {
-            getLiteralSet("double").add(integral_value.doubleValue());
+            getLiteralSet(double.class.getName()).add(integral_string + ".0");
           }
         } 
       } else if (the_value instanceof Float) {
         // floats can also be doubles
         final Float float_value = (Float) the_value;
-        getLiteralSet("float").add(float_value);
-        getLiteralSet("double").add(float_value.doubleValue());
+        getLiteralSet(float.class.getName()).add(String.valueOf(float_value) + 'f');
+        getLiteralSet(double.class.getName()).add(String.valueOf(float_value));
       } else if (the_value instanceof Double) { 
         // doubles can not always be floats
         final double double_value = ((Double) the_value).doubleValue();
         final float float_value = (float) double_value;
         if ((double) float_value == double_value) {
           // no loss of precision, let's store it as both
-          getLiteralSet("float").add(float_value);
+          getLiteralSet(float.class.getName()).add(String.valueOf(float_value) + 'f');
         }
-        getLiteralSet("double").add(double_value);
+        getLiteralSet(double.class.getName()).add(String.valueOf(double_value));
+      } else {
+        getLiteralSet(the_class).add(the_value.toString());
       }
-      
-      getLiteralSet(the_class).add(the_value);
     }
     
     /**
@@ -912,10 +912,10 @@ public final class InfoFactory {
      * for which to get the literal set.
      * @return the literal set.
      */
-    private SortedSet<Object> getLiteralSet(final String the_class) {
-      SortedSet<Object> result = my_literals.get(the_class);
+    private SortedSet<String> getLiteralSet(final String the_class) {
+      SortedSet<String> result = my_literals.get(the_class);
       if (result == null) {
-        result = new TreeSet<Object>();
+        result = new TreeSet<String>();
         my_literals.put(the_class, result);
       }  
       return result;
@@ -932,17 +932,17 @@ public final class InfoFactory {
       // we ignore BOOLEAN_LITERAL and NULL_LITERAL since we already test those
 
       if (the_kind == Kind.CHAR_LITERAL) {
-        result = "char";
+        result = char.class.getName();
       } else if (the_kind == Kind.INT_LITERAL) {
-        result = "int";
+        result = int.class.getName();
       } else if (the_kind == Kind.LONG_LITERAL) {
-        result = "long";
+        result = long.class.getName();
       } else if (the_kind == Kind.FLOAT_LITERAL) {
-        result = "float";
+        result = float.class.getName();
       } else if (the_kind == Kind.DOUBLE_LITERAL) {
-        result = "double";
+        result = double.class.getName();
       } else if (the_kind == Kind.STRING_LITERAL) {
-        result = JAVA_LANG_STRING;
+        result = String.class.getName();
       }
       return result;
     }
