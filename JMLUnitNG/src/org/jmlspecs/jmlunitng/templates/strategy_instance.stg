@@ -84,12 +84,12 @@ iters.add(new InstantiationIterator\<<class.shortName>\>
    new Class\<?\>[]
    {<paramClasses()>},
    new IteratorAdapter\<Object[]\>
-   (<testClassName(class)>.<dataProviderName()>())));
+   (<testClassName(class)>.<dataProviderName(method)>())));
 
 <endif>
 <endif>
 >>
 
-paramClasses() ::= "<method.parameters:{n | <rawtype(paramInfo=n)>.class}; separator=\", 
+paramClasses(paramInfo) ::= "<method.parameters:{n | <rawtype(paramInfo=n)>.class}; separator=\", 
     \">"
 instanceStrategyFillIn(classInfo) ::= "{ /* add <classInfo.fullyQualifiedName> values here */ }"

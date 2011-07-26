@@ -103,7 +103,7 @@ methodTest(method) ::= <<
 <if(!method.constructor)>
 <if(!method.static)>
 @Test(dependsOnMethods = { "test_racEnabled" }, 
-      dataProvider = "<instanceDataProviderName()>")
+      dataProvider = "<instanceDataProviderName(method)>")
 
 <else>
 @Test(dependsOnMethods = { "test_racEnabled" })
@@ -114,7 +114,7 @@ methodTest(method) ::= <<
 
 <endif>
 <endif>
-public void <testName()>
+public void <testName(method)>
 (<if(!method.constructor)><if(!method.static)>final <method.enclosingClass.shortName> the_test_object<if(method.parameters)>, 
 <endif><endif><endif><varDecList(method.parameters)>) {
   <if(!method.constructor)><if(!method.static)>
@@ -164,8 +164,8 @@ methodProvider(method) ::= <<
  * @return An iterator over strategies to use for parameter generation.
  */
 @SuppressWarnings({"unchecked"})
-@DataProvider(name = "<dataProviderName()>")
-public static Iterator\<Object[]\> <dataProviderName()>() {
+@DataProvider(name = "<dataProviderName(method)>")
+public static Iterator\<Object[]\> <dataProviderName(method)>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator
        (<if(!method.constructor)><if(!method.static)><instanceStrategyName(classInfo=class)>.class, 
@@ -178,7 +178,7 @@ public static Iterator\<Object[]\> <dataProviderName()>() {
 
 >>
 
-instanceDataProvider() ::= <<
+instanceDataProvider(class) ::= <<
 /**
  * Data provider for methods with no parameters.
  * @return An iterator over the main class strategy.

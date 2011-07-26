@@ -1,11 +1,11 @@
 group shared_java;
 
 instanceDataProviderName() ::= "p_instance_only"
-dataProviderName() ::= "p_<method.detailedName>"
+dataProviderName(method) ::= "p_<method.detailedName>"
 
 testClassName(classInfo) ::= "<classInfo.shortName><testClassSuffix()>"
 
-testName() ::= <<
+testName(method) ::= <<
 test_<if(method.static)>static_<endif><method.detailedName>
 >>
 
