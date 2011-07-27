@@ -12,10 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -26,13 +24,13 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.antlr.stringtemplate.StringTemplate;
-import org.antlr.stringtemplate.StringTemplateGroup;
 import org.jmlspecs.jmlunitng.JMLUnitNG;
 import org.jmlspecs.jmlunitng.JMLUnitNGConfiguration;
 import org.jmlspecs.jmlunitng.util.Logger;
 import org.jmlspecs.jmlunitng.util.ProtectionLevel;
 import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
 
 /**
  * Generator for classes that contain unit tests.
@@ -140,8 +138,8 @@ public class TestClassGenerator {
                                          final /*@ non_null @*/ ParameterInfo the_param, 
                                          final /*@ non_null @*/ Writer the_writer)
     throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_local");
-    final StringTemplate t = group.getInstanceOf("main");
+    final STGroup group = StringTemplateUtil.load("strategy_local");
+    final ST t = group.getInstanceOf("main");
     final SortedSet<String> children = new TreeSet<String>();
     final SortedSet<String> literals = new TreeSet<String>();
     final String fq_name = the_param.getType().getFullyQualifiedName();
@@ -177,21 +175,21 @@ public class TestClassGenerator {
       System.err.println(literals);
     }
     
-    t.setAttribute("class", the_class);
-    t.setAttribute("date", getFormattedDate());
-    t.setAttribute("method", the_method);
-    t.setAttribute("param", the_param);
-    t.setAttribute("literals", literals);
-    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    t.setAttribute("use_reflection", my_config.isReflectionSet());
-    t.setAttribute("children", children);
+    t.add("class", the_class);
+    t.add("date", getFormattedDate());
+    t.add("method", the_method);
+    t.add("param", the_param);
+    t.add("literals", literals);
+    t.add("jmlunitng_version", JMLUnitNG.version());
+    t.add("use_reflection", my_config.isReflectionSet());
+    t.add("children", children);
     
     if (!my_config.isNoGenSet()) {
       my_logger.println("Generating local strategy for parameter " + the_param.getName() + 
                         " of " + the_method);
     }
     
-    the_writer.write(t.toString(LINE_WIDTH));
+    the_writer.write(t.render(LINE_WIDTH));
   }
   
   /**
@@ -208,8 +206,8 @@ public class TestClassGenerator {
                                          final /*@ non_null @*/ TypeInfo the_type,
                                          final /*@ non_null @*/ Writer the_writer)
     throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_class");
-    final StringTemplate t = group.getInstanceOf("main");
+    final STGroup group = StringTemplateUtil.load("strategy_class");
+    final ST t = group.getInstanceOf("main");
     final SortedSet<String> children = new TreeSet<String>();
     final SortedSet<String> literals = new TreeSet<String>();
     final String fq_name = the_type.getFullyQualifiedName();
@@ -245,20 +243,20 @@ public class TestClassGenerator {
       System.err.println(literals);
     }
     
-    t.setAttribute("class", the_class);
-    t.setAttribute("date", getFormattedDate());
-    t.setAttribute("type", the_type);
-    t.setAttribute("literals", literals);
-    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    t.setAttribute("use_reflection", my_config.isReflectionSet());
-    t.setAttribute("children", children);
+    t.add("class", the_class);
+    t.add("date", getFormattedDate());
+    t.add("type", the_type);
+    t.add("literals", literals);
+    t.add("jmlunitng_version", JMLUnitNG.version());
+    t.add("use_reflection", my_config.isReflectionSet());
+    t.add("children", children);
 
     if (!my_config.isNoGenSet()) {
       my_logger.println("Generating class strategy for type " +
                         the_type.getFullyQualifiedName());
     }
     
-    the_writer.write(t.toString(LINE_WIDTH));
+    the_writer.write(t.render(LINE_WIDTH));
   }
   
   /**
@@ -275,8 +273,8 @@ public class TestClassGenerator {
                                            final /*@ non_null @*/ TypeInfo the_type,
                                            final /*@ non_null @*/ Writer the_writer)
     throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_package");
-    final StringTemplate t = group.getInstanceOf("main");
+    final STGroup group = StringTemplateUtil.load("strategy_package");
+    final ST t = group.getInstanceOf("main");
     SortedSet<ClassInfo> children = null;
     
     final ClassInfo type_class_info = 
@@ -296,19 +294,19 @@ public class TestClassGenerator {
     if (the_class.isPackaged()) {
       pkg = the_class.getPackageName();
     }
-    t.setAttribute("package", pkg);
-    t.setAttribute("date", getFormattedDate());
-    t.setAttribute("type", the_type);
-    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    t.setAttribute("use_reflection", my_config.isReflectionSet());
-    t.setAttribute("children", children);
+    t.add("package", pkg);
+    t.add("date", getFormattedDate());
+    t.add("type", the_type);
+    t.add("jmlunitng_version", JMLUnitNG.version());
+    t.add("use_reflection", my_config.isReflectionSet());
+    t.add("children", children);
 
     if (!my_config.isNoGenSet()) {
       my_logger.println("Generating package strategy for type " +
                         the_type.getFullyQualifiedName());
     }
     
-    the_writer.write(t.toString(LINE_WIDTH));
+    the_writer.write(t.render(LINE_WIDTH));
   }
   
   /**
@@ -323,20 +321,20 @@ public class TestClassGenerator {
   public void generateInstanceStrategyClass(final /*@ non_null @*/ ClassInfo the_class,
                                             final /*@ non_null @*/ Writer the_writer)
     throws IOException {
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("strategy_instance");
-    final StringTemplate t = group.getInstanceOf("main");
+    final STGroup group = StringTemplateUtil.load("strategy_instance");
+    final ST t = group.getInstanceOf("main");
     
-    t.setAttribute("class", the_class);
-    t.setAttribute("date", getFormattedDate());
-    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
-    t.setAttribute("use_reflection", my_config.isReflectionSet());
+    t.add("class", the_class);
+    t.add("date", getFormattedDate());
+    t.add("jmlunitng_version", JMLUnitNG.version());
+    t.add("use_reflection", my_config.isReflectionSet());
     
     if (!my_config.isNoGenSet()) {
       my_logger.println("Generating instance strategy for class " +
                         the_class.getFullyQualifiedName());
     }
     
-    the_writer.write(t.toString(LINE_WIDTH));
+    the_writer.write(t.render(LINE_WIDTH));
   }
   
   /**
@@ -354,13 +352,12 @@ public class TestClassGenerator {
                                 final /*@ non_null @*/ Set<MethodInfo> the_methods,
                                 final /*@ non_null @*/ Writer the_writer)
     throws IOException {
-    final StringTemplateGroup group = 
-      StringTemplateGroup.loadGroup("test_class_" + my_config.getRACVersion());
-    final StringTemplate t = group.getInstanceOf("main");
-    t.setAttribute("class", the_class);
-    t.setAttribute("date",
-                   DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
-    t.setAttribute("methods", the_methods);
+    final STGroup group = 
+      StringTemplateUtil.load("test_class_" + my_config.getRACVersion());
+    final ST t = group.getInstanceOf("main");
+    t.add("class", the_class);
+    t.add("date", getFormattedDate());
+    t.add("methods", the_methods);
     
     // if there are no methods with parameters to generate tests for, 
     // we don't need a data package
@@ -368,17 +365,17 @@ public class TestClassGenerator {
     for (MethodInfo m : the_methods) {
       params = params || !m.getParameters().isEmpty();
     }
-    t.setAttribute("params", params);
-    t.setAttribute("package_name", the_class.getPackageName());
-    t.setAttribute("packaged", !"".equals(the_class.getPackageName()));
-    t.setAttribute("jmlunitng_version", JMLUnitNG.version());
+    t.add("params", params);
+    t.add("package_name", the_class.getPackageName());
+    t.add("packaged", !"".equals(the_class.getPackageName()));
+    t.add("jmlunitng_version", JMLUnitNG.version());
     
     if (!my_config.isNoGenSet()) {
       my_logger.println("Generating test class for class " +
                         the_class.getFullyQualifiedName());
     }
     
-    the_writer.write(t.toString(LINE_WIDTH));
+    the_writer.write(t.render(LINE_WIDTH));
   }
 
   /**
@@ -398,13 +395,7 @@ public class TestClassGenerator {
                               final /*@ non_null @*/ String the_test_dir,
                               final /*@ non_null @*/ String the_strategy_dir) 
     throws IOException {
-    StringTemplateUtil.initialize();
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
-    final StringTemplate tc_name = group.lookupTemplate("testClassName");
-    final StringTemplate ls_name = group.lookupTemplate("localStrategyName");
-    final StringTemplate is_name = group.lookupTemplate("instanceStrategyName");
-    final StringTemplate gs_name = group.lookupTemplate("classStrategyName");
-    final StringTemplate ps_name = group.lookupTemplate("packageStrategyName");
+    final STGroup shared = StringTemplateUtil.load("shared_java");
     
     final Set<MethodInfo> methods_to_test = getMethodsToTest(the_class);
     final Set<ClassInfo> classes_to_test = getClassesToTest(the_class);
@@ -421,7 +412,8 @@ public class TestClassGenerator {
     }
     
     // initialize name templates
-    tc_name.setAttribute("classInfo", the_class);
+    final ST tc_name = shared.getInstanceOf("testClassName");
+    tc_name.add("classInfo", the_class);
 
     // this stream is for writing to memory, in the case of a dry run
     
@@ -432,7 +424,7 @@ public class TestClassGenerator {
     
     // generate the (single) test class, if necessary
 
-    f = new File(the_test_dir + tc_name.toString() + 
+    f = new File(the_test_dir + tc_name.render() + 
                  JMLUnitNG.JAVA_SUFFIX);
     if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
       generateTestClass(the_class, methods_to_test, bw);
@@ -449,11 +441,11 @@ public class TestClassGenerator {
 
     for (MethodInfo m : methods_to_test) {
       for (ParameterInfo p : m.getParameters()) {
-        ls_name.reset();
-        ls_name.setAttribute("classInfo", the_class);
-        ls_name.setAttribute("methodInfo", m);
-        ls_name.setAttribute("paramInfo", p);
-        f = new File(the_strategy_dir + ls_name.toString() + 
+        final ST ls_name = shared.getInstanceOf("localStrategyName");
+        ls_name.add("classInfo", the_class);
+        ls_name.add("methodInfo", m);
+        ls_name.add("paramInfo", p);
+        f = new File(the_strategy_dir + ls_name.render() + 
                      JMLUnitNG.JAVA_SUFFIX);
         if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
           generateLocalStrategyClass(the_class, m, p, bw);
@@ -475,10 +467,10 @@ public class TestClassGenerator {
     final Set<TypeInfo> parameter_types = getUniqueParameterTypes(methods_to_test);
     
     for (TypeInfo t : parameter_types) {
-      gs_name.reset();
-      gs_name.setAttribute("classInfo", the_class);
-      gs_name.setAttribute("typeInfo", t);
-      f = new File(the_strategy_dir + gs_name.toString() + 
+      final ST gs_name = shared.getInstanceOf("classStrategyName");
+      gs_name.add("classInfo", the_class);
+      gs_name.add("typeInfo", t);
+      f = new File(the_strategy_dir + gs_name.render() + 
                    JMLUnitNG.JAVA_SUFFIX);
       if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
         generateClassStrategyClass(the_class, t, bw);
@@ -500,10 +492,10 @@ public class TestClassGenerator {
     // we won't overwrite them after the first one)
     
     for (TypeInfo t : parameter_types) {
-      ps_name.reset();
-      ps_name.setAttribute("typeInfo", t);
+      final ST ps_name = shared.getInstanceOf("packageStrategyName");
+      ps_name.add("typeInfo", t);
 
-      f = new File(the_test_dir + ps_name.toString() + 
+      f = new File(the_test_dir + ps_name.render() + 
                    JMLUnitNG.JAVA_SUFFIX);
       if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
         generatePackageStrategyClass(the_class, t, bw);
@@ -526,8 +518,9 @@ public class TestClassGenerator {
 
     // fourth: instance strategy class for this class
     
-    is_name.setAttribute("classInfo", the_class);
-    f = new File(the_test_dir + is_name.toString() + 
+    final ST is_name = shared.getInstanceOf("instanceStrategyName");
+    is_name.add("classInfo", the_class);
+    f = new File(the_test_dir + is_name.render() + 
                  JMLUnitNG.JAVA_SUFFIX);
     if (my_config.isDryRunSet() || my_config.isNoGenSet()) {
       generateInstanceStrategyClass(the_class, bw);

@@ -1,4 +1,4 @@
-group strategy_class : shared_java;
+import "shared_java.stg"
 
 main(date, class, type, literals, jmlunitng_version, use_reflection, children) ::= <<
 /*
@@ -35,10 +35,11 @@ public class <classStrategyName(classInfo=class, typeInfo=type)>
     (new <typeTransMap.(type.fullyQualifiedName)>[] 
   	<if(!literals.empty)>
   	 { <literals:addLiteral()>
-  	   /* above are class-scope <param.type.shortName> literals found by JMLUnitNG */
-  	   
+  	   /* above are class-scope <type.shortName> literals found by JMLUnitNG */
+  	   <classStrategyFillIn(typeInfo=type)> });
   	<else>
-  	 { <endif><classStrategyFillIn(typeInfo=type)> });
+  	 { <classStrategyFillIn(typeInfo=type)> });
+  	<endif>
   }
   <if(!type.primitive)>
   

@@ -1,5 +1,3 @@
-group shared_java;
-
 instanceDataProviderName() ::= "p_instance_only"
 dataProviderName(method) ::= "p_<method.detailedName>"
 
@@ -29,8 +27,8 @@ varNameList(list) ::= <<
 
 varName(arg) ::= "<arg.name>"
 
-type(paramInfo) ::= "<typeTransMap.(paramInfo.type.fullyQualifiedName)><endif>"
-rawtype(paramInfo) ::= "<paramInfo.type.fullyQualifiedName><endif>"
+type(paramInfo) ::= "<typeTransMap.(paramInfo.type.fullyQualifiedName)>"
+rawtype(paramInfo) ::= "<paramInfo.type.fullyQualifiedName>"
 
 baseStrategyMap ::= [
         "int":"IntStrategy",

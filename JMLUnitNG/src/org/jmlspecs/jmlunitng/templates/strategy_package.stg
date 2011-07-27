@@ -1,4 +1,4 @@
-group strategy_package : shared_java;
+import "shared_java.stg"
 
 main(date, package, type, jmlunitng_version, use_reflection, children) ::= <<
 /*
@@ -31,7 +31,7 @@ public class <packageStrategyName(typeInfo=type)>
   public RepeatedAccessIterator\<?\> packageValues() {
     return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
     (new <typeTransMap.(type.fullyQualifiedName)>[] 
-    <packageStrategyFillIn(typeInfo=type)>);
+     <packageStrategyFillIn(typeInfo=type)>);
   }
   <if(!type.primitive)>
   

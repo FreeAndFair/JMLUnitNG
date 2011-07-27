@@ -6,31 +6,32 @@
 package org.jmlspecs.jmlunitng.util;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.antlr.stringtemplate.CommonGroupLoader;
-import org.antlr.stringtemplate.StringTemplateGroup;
-import org.antlr.stringtemplate.StringTemplateGroupLoader;
+import org.jmlspecs.jmlunitng.JMLUnitNGError;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
+import org.stringtemplate.v4.compiler.STException;
 
 /**
- * Handles initialization of StringTemplate.
+ * Handles loading of StringTemplate groups.
  * 
- * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version September 2010
+ * @version July 2011
  */
 public final class StringTemplateUtil {
   /**
    * The path to all templates.
    */
   private static final String TEMPLATE_PATH = 
-    "org/jmlspecs/jmlunitng/templates:org" + File.separator + 
-    "jmlspecs" + File.separator + "jmlunitng" + File.separator + 
-    "templates";
+    "org" + File.separator + "jmlspecs" + File.separator + 
+    "jmlunitng" + File.separator + "templates" + File.separator;
   
   /**
-   * A flag indicating whether StringTemplate has been initialized.
+   * The cache of already-loaded templates.
    */
-  private static boolean my_initialized;
+  private static final Map<String, STGroup> LOADED = new HashMap<String, STGroup>();
   
   /**
    * Private constructor to prevent instantiation of this class.
@@ -38,26 +39,23 @@ public final class StringTemplateUtil {
   private StringTemplateUtil() {
     // do nothing
   }
-
-  /**
-   * Initialize StringTemplate if it is not already initialized!
-   */
-  //@ ensures isInitialized();
-  public static synchronized void initialize() {
-    if (!my_initialized) {
-      final StringTemplateGroupLoader loader =
-        new CommonGroupLoader(TEMPLATE_PATH, null);
-      StringTemplateGroup.registerGroupLoader(loader);
-
-      my_initialized = true;
-    }
-  }
   
   /**
-   * @return Has StringTemplate been initialized?
+   * Gets one of our StringTemplate groups.
+   * 
+   * @param the_name The name of the group (e.g., "shared_java").
+   * @return The group.
    */
-  //@ constraint \old(isInitialized()) ==> isInitialized();
-  public static synchronized boolean isInitialized() {
-    return my_initialized;
+  public static synchronized STGroup load(final String the_name) {
+    STGroup result = LOADED.get(the_name);
+    if (result == null) {
+      try {
+        result = new STGroupFile(TEMPLATE_PATH + the_name + ".stg");
+        LOADED.put(the_name, result);
+      } catch (final STException e) {
+        throw new JMLUnitNGError("Unable to load template " + the_name, e);
+      }
+    } 
+    return result;
   }
 }

@@ -11,8 +11,7 @@
             <fileset dir="./bin"/>
             <fileset dir="./res" includes="LICENSES/"/>
             <zipfileset excludes="LICENSE META-INF/*" src="./lib/clops-runtime.jar"/>
-            <zipfileset excludes="META-INF/*" src="./lib/stringtemplate-3.2.1.jar"/>
-            <zipfileset excludes="META-INF/*" src="./lib/antlr-2.7.7.jar"/>
+            <zipfileset excludes="META-INF/*" src="./lib/antlr-3.4-complete.jar"/>
             <zipfileset excludes="LICENSE NOTICE META-INF/*" src="./lib/testng-5.11-jdk15.jar"/>
             <zipfileset excludes="META-INF/*" src="./lib/openjml.jar"/>
         </jar>

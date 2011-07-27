@@ -1,4 +1,4 @@
-group strategy_local : shared_java;
+import "shared_java.stg"
 
 main(date, class, method, param, literals, jmlunitng_version, use_reflection, children) ::= <<
 /*
@@ -35,9 +35,10 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
   	<if(!literals.empty)>
   	 { <literals:addLiteral()>
   	   /* above are local-scope <param.type.shortName> literals found by JMLUnitNG */
-  	   
+  	   <localStrategyFillIn(typeInfo=param.type)> });
   	<else>
-  	 { <endif><localStrategyFillIn(typeInfo=param.type)> });
+  	 { <localStrategyFillIn(typeInfo=param.type)> });
+  	<endif>
   }
   <if(!param.type.primitive)>
   

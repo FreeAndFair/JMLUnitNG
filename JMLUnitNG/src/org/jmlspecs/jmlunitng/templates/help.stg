@@ -1,5 +1,3 @@
-group help;
-
 help_msg(version) ::= <<
 
 JMLUnitNG - Generate TestNG Classes for JML-Annotated Java

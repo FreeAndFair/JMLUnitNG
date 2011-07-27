@@ -1,4 +1,4 @@
-group test_class_jml4 : shared_java;
+import "shared_java.stg"
 
 main(date, class, methods, params, package_name, packaged, jmlunitng_version) ::= <<
 /*
@@ -81,7 +81,7 @@ public class <testClassName(class)> {
   <methods:methodTest(); separator="\n">
   <methods:methodProvider(); separator="\n">
   <if(!class.abstract)>
-  <instanceDataProvider()>
+  <instanceDataProvider(class)>
   <endif>
 }
 >>
@@ -116,7 +116,7 @@ methodTest(method) ::= <<
 <endif>
 public void <testName(method)>
 (<if(!method.constructor)><if(!method.static)>final <method.enclosingClass.shortName> the_test_object<if(method.parameters)>, 
-<endif><endif><endif><varDecList(method.parameters)>) {
+<endif><endif> <endif><varDecList(method.parameters)>) {
   <if(!method.constructor)><if(!method.static)>
   if (the_test_object == null) {
     throw new PreconditionSkipException

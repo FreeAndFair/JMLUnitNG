@@ -1,4 +1,4 @@
-group test_class_jml2 : shared_java;
+import "shared_java.stg"
 
 main(date, class, methods, params, package_name, packaged, jmlunitng_version) ::= <<
 /*

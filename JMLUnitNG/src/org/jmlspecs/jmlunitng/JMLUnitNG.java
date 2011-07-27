@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.antlr.stringtemplate.StringTemplate;
-import org.antlr.stringtemplate.StringTemplateGroup;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
 import org.jmlspecs.jmlunitng.clops.JMLUnitNGOptionStore;
 import org.jmlspecs.jmlunitng.clops.JMLUnitNGParser;
 import org.jmlspecs.jmlunitng.generator.ClassInfo;
@@ -121,12 +121,11 @@ public final class JMLUnitNG implements Runnable {
   // static initializer
   
   static {
-    StringTemplateUtil.initialize();
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
-    GEN_STRING = group.lookupTemplate("generatedString").toString();
-    DNM_STRING = group.lookupTemplate("doNotModifyString").toString();
-    SP_SUFFIX = group.lookupTemplate("strategyPackageSuffix").toString();
-    TC_SUFFIX = group.lookupTemplate("testClassSuffix").toString();
+    final STGroup group = StringTemplateUtil.load("shared_java");
+    GEN_STRING = group.getInstanceOf("generatedString").render();
+    DNM_STRING = group.getInstanceOf("doNotModifyString").render();
+    SP_SUFFIX = group.getInstanceOf("strategyPackageSuffix").render();
+    TC_SUFFIX = group.getInstanceOf("testClassSuffix").render();
   }
   
   /**
@@ -265,11 +264,10 @@ public final class JMLUnitNG implements Runnable {
    * Print usage to standard out.
    */
   private static void printHelp() {
-    StringTemplateUtil.initialize();
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("help");
-    final StringTemplate t = group.getInstanceOf("help_msg");
-    t.setAttribute("version", version());
-    System.out.println(t.toString());
+    final STGroup group = StringTemplateUtil.load("help");
+    final ST t = group.getInstanceOf("help_msg");
+    t.add("version", version());
+    System.out.println(t.render());
   }
   
   /**
@@ -601,15 +599,14 @@ public final class JMLUnitNG implements Runnable {
   private String[] getDirectories(final JmlCompilationUnit the_unit,
                                   final ClassInfo the_info) {
     String[] result;
-    StringTemplateUtil.initialize();
-    final StringTemplateGroup group = StringTemplateGroup.loadGroup("shared_java");
-    final StringTemplate sp_template = group.lookupTemplate("strategyPackageShortName");
-    sp_template.setAttribute("classInfo", the_info);
+    final STGroup group = StringTemplateUtil.load("shared_java");
+    final ST sp_template = group.getInstanceOf("strategyPackageShortName");
+    sp_template.add("classInfo", the_info);
 
     final String output_dir = generateDestinationDirectory(the_unit);
     if (the_info.isPackaged()) {
       final String strategy_dir =  
-        output_dir + sp_template.toString() + File.separator;
+        output_dir + sp_template.render() + File.separator;
       result = new String[] { output_dir, strategy_dir };
     } else {
       result = new String[] { output_dir };
