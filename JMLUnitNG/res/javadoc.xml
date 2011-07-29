@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="javadoc">
     <target name="javadoc">
-        <javadoc access="protected" author="true" classpath="../lib/testng-5.14.3beta.jar:../lib/antlr-2.7.7.jar:../lib/openjml.jar:../lib/stringtemplate-3.2.1.jar:../lib/clops-runtime.jar" destdir="../doc" doctitle="JMLUnitNG 1.0 Alpha 2" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.jmlspecs.jmlunitng.strategy,org.jmlspecs.jmlunitng.iterator,org.jmlspecs.jmlunitng.testng,org.jmlspecs.jmlunitng.generator,org.jmlspecs.jmlunitng.util,org.jmlspecs.jmlunitng" source="1.6" sourcepath="../src" splitindex="true" use="true" version="true">
+        <javadoc access="protected" author="true" 
+         classpath="../lib/testng-5.11-modified.jar:../lib/antlr-3.4-complete.jar:../lib/openjml.jar:../lib/clops-runtime.jar" 
+         destdir="../doc" doctitle="JMLUnitNG 1.1" 
+         nodeprecated="false" nodeprecatedlist="false" noindex="false" 
+         nonavbar="false" notree="false" 
+         packagenames="org.jmlspecs.jmlunitng.strategy,org.jmlspecs.jmlunitng.iterator,org.jmlspecs.jmlunitng.testng,org.jmlspecs.jmlunitng.generator,org.jmlspecs.jmlunitng.util,org.jmlspecs.jmlunitng" 
+         source="1.6" sourcepath="../src" splitindex="true" use="true" version="true">
             <link href="http://java.sun.com/javase/6/docs/api/"/>
         	<link href="http://testng.org/javadocs/"/>
         </javadoc>

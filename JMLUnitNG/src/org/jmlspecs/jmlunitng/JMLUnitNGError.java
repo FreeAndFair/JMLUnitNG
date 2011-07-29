@@ -38,6 +38,7 @@ public class JMLUnitNGError extends Error {
    * and Throwable cause.
    * 
    * @param the_message The detail message.
+   * @param the_cause The Throwable that caused this error.
    */
   public JMLUnitNGError(final String the_message, 
                         final Throwable the_cause) {

@@ -12,7 +12,7 @@ import org.jmlspecs.jmlunitng.strategy.Strategy;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version September 2010
+ * @version July 2011
  */
 public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> {
   /**
@@ -63,9 +63,9 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
         if (my_strategies[i].hasElement()) {
           my_element[i] = my_strategies[i].element();
         } // else the element stays at its default value of null
-      } catch (InstantiationException e) {
+      } catch (final InstantiationException e) {
         throw new IllegalArgumentException(e);
-      } catch (IllegalAccessException e) {
+      } catch (final IllegalAccessException e) {
         throw new IllegalArgumentException(e);
       }
     }

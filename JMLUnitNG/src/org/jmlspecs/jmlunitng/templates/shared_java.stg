@@ -1,10 +1,10 @@
 instanceDataProviderName() ::= "p_instance_only"
-dataProviderName(method) ::= "p_<method.detailedName>"
+dataProviderName(method) ::= "p_<method.abbreviatedFormattedName>"
 
 testClassName(classInfo) ::= "<classInfo.shortName><testClassSuffix()>"
 
 testName(method) ::= <<
-test_<if(method.static)>static_<endif><method.detailedName>
+test_<if(method.static)>static_<endif><method.abbreviatedFormattedName>
 >>
 
 varJavaDocLine(arg) ::= <<
@@ -59,7 +59,7 @@ testClassSuffix() ::= "_JML_Test"
 strategyPackageSuffix() ::= "_JML_Data"
 strategyPackageShortName(classInfo) ::= "<classInfo.shortName><strategyPackageSuffix()>"
 strategyPackageName(classInfo) ::= "<if(classInfo.packaged)><classInfo.packageName>.<endif><strategyPackageShortName(classInfo=classInfo)>"
-localStrategyName(classInfo, methodInfo, paramInfo) ::= "<if(!classInfo.packaged)><classInfo.fullyQualifiedName>_<endif><methodInfo.detailedName>__<paramInfo.name>"
+localStrategyName(classInfo, methodInfo, paramInfo) ::= "<if(!classInfo.packaged)><classInfo.fullyQualifiedName>_<endif><methodInfo.abbreviatedFormattedName>__<paramInfo.name>"
 instanceStrategyName(classInfo) ::= "<classInfo.shortName>_InstanceStrategy"
 classStrategyName(classInfo, typeInfo) ::= "<if(!classInfo.packaged)><classInfo.fullyQualifiedName>_<endif>ClassStrategy_<typeInfo.formattedName>"
 packageStrategyName(typeInfo) ::= "PackageStrategy_<typeInfo.formattedName>"

@@ -17,7 +17,7 @@ import org.jmlspecs.jmlunitng.strategy.Strategy;
  * supply data for the array components.
  * 
  * @author Daniel M. Zimmerman
- * @version January 2011
+ * @version July 2011
  */
 public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
   /**
@@ -157,17 +157,17 @@ public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
    * @return a new strategy for an array element, comprised of the concatenation
    *         of all the strategy classes specified at construction.
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   private RepeatedAccessIterator<?> newStrategy() {
     final List<RepeatedAccessIterator<?>> strategy_list =
         new LinkedList<RepeatedAccessIterator<?>>();
     for (Class<? extends Strategy> c : my_strategy_classes) {
       try {
         strategy_list.add(c.newInstance().iterator());
-      } catch (InstantiationException e) {
+      } catch (final InstantiationException e) {
         // this should never happen because we checked them earlier
         System.err.println(e);
-      } catch (IllegalAccessException e) {
+      } catch (final IllegalAccessException e) {
         // this should never happen because we checked them earlier
         System.err.println(e);
       }

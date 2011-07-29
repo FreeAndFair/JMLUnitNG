@@ -53,8 +53,9 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
-import com.sun.tools.javac.code.TypeTags;
+import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -67,7 +68,7 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version January 2011
+ * @version July 2011
  */
 public final class InfoFactory {
   /**
@@ -360,7 +361,7 @@ public final class InfoFactory {
       }
     }
     final boolean is_enumeration =
-      parent != null && parent.getFullyQualifiedName().equals("java.lang.Enum");
+      parent != null && "java.lang.Enum".equals(parent.getFullyQualifiedName());
     final ClassInfo result =
         new ClassInfo(name, getLevel(flags), is_abstract, is_interface, 
                       is_enumeration, is_static, is_inner, parent, interfaces);
@@ -446,19 +447,35 @@ public final class InfoFactory {
 
   /**
    * Returns a ParameterInfo object representing the given VarSymbol.
+   * 
    * @param the_var_sym The VarSymbol to translate into a ParameterInfo object.
-   */
-  /*@ ensures \result.getParameterName().equals(the_var_sym.name.toString()) &&
-    @         \result.isArray() <==> the_var_sym.type.tag == TypeTags.ARRAY;
+   * @return a ParameterInfo.
    */
   private static ParameterInfo createParameterInfo(final VarSymbol the_var_sym) {
     Type t = the_var_sym.type;
-
-    //remove any generic elements
-    while (t.tag == TypeTags.TYPEVAR) {
+    int array_dim = 0;
+    
+    // check for array dimensions
+    
+    while (t instanceof ArrayType) {
+      array_dim += 1;
+      t = ((ArrayType) t).elemtype;
+    }
+    
+    // check for generics
+    
+    while (t instanceof TypeVar) {
       t = t.getUpperBound().tsym.asType();
     }
-    return new ParameterInfo(t.toString(), the_var_sym.name.toString());
+    
+    // create our type name String
+    
+    final StringBuilder sb = new StringBuilder(t.toString());
+    for (int i = 0; i < array_dim; i++) {
+      sb.append("[]");
+    }
+
+    return new ParameterInfo(sb.toString(), the_var_sym.name.toString());
   }
 
 
@@ -499,7 +516,7 @@ public final class InfoFactory {
     /**
      * The OpenJML API being used.
      */
-    private API my_api;
+    private final API my_api;
     
     /**
      * The parsed enclosing ClassInfo object.

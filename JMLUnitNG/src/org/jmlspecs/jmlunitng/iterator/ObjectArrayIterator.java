@@ -10,7 +10,8 @@ package org.jmlspecs.jmlunitng.iterator;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version September 2010
+ * @version July 2011
+ * @param <T> The type of the returned elements.
  */
 public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
   /**

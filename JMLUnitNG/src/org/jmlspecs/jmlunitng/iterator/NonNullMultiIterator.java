@@ -14,7 +14,8 @@ import java.util.List;
  * value read may still be null).
  * 
  * @author Daniel M. Zimmerman
- * @version September 2010
+ * @version July 2011 
+ * @param <T> The type of the returned elements.
  */
 public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
   /**

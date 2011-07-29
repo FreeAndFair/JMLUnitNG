@@ -5,16 +5,14 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: Ninja Same Line Style
-    Description: 
-The "braces on same line" style for Secret Ninja Formal Methods.
+    Checkstyle-Configuration: Ninja SameLine
+    Description: none
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
     <module name="JavadocMethod">
       <property name="allowThrowsTagsForSubclasses" value="true"/>
-      <property name="logLoadErrors" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>
     <module name="JavadocStyle"/>
@@ -100,7 +98,7 @@ The "braces on same line" style for Secret Ninja Formal Methods.
     <module name="EmptyForIteratorPad"/>
     <module name="EmptyForInitializerPad"/>
     <module name="NoWhitespaceAfter">
-      <property name="tokens" value="ARRAY_INIT,BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
+      <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
     </module>
     <module name="NoWhitespaceBefore">
       <property name="tokens" value="SEMI,DOT,POST_DEC,POST_INC"/>
@@ -162,7 +160,6 @@ The "braces on same line" style for Secret Ninja Formal Methods.
     <module name="RedundantThrows">
       <property name="allowUnchecked" value="true"/>
       <property name="allowSubclasses" value="true"/>
-      <property name="logLoadErrors" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>
     <module name="ReturnCount">

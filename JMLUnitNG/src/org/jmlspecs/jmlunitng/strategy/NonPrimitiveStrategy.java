@@ -18,7 +18,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * The parent strategy for all non-primitive types.
  * 
  * @author Daniel M. Zimmerman
- * @version February 2011
+ * @version July 2011
  */
 public abstract class NonPrimitiveStrategy extends AbstractStrategy {
   /**
@@ -109,7 +109,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
    * 
    * @return What are all your values?
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public RepeatedAccessIterator<?> iterator() {
     final List<RepeatedAccessIterator<?>> iterators = 
       new ArrayList<RepeatedAccessIterator<?>>(3);
@@ -198,7 +198,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
    * @param the_class The class to find a strategy class for.
    * @return the strategy class, or null if no strategy class can be loaded.
    */
-  private final Class<?> findStrategyClass(final Class<?> the_class) {
+  private Class<?> findStrategyClass(final Class<?> the_class) {
     Class<?> result = null;
     final String class_name = the_class.getCanonicalName();
     result = loadClass(class_name + "_InstanceStrategy");
@@ -246,11 +246,11 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
     } else {
       try {
         result.newInstance();
-      } catch (InstantiationException e) {
+      } catch (final InstantiationException e) {
         result = null;
-      } catch (IllegalAccessException e) {
+      } catch (final IllegalAccessException e) {
         result = null;
-      } catch (NullPointerException e) {
+      } catch (final NullPointerException e) {
         result = null;
       }
     }
@@ -265,10 +265,10 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
    * @param the_name The name of the class.
    * @return the class, or null if it does not exist.
    */
-  private final Class<?> loadClass(final String the_name) {
+  private Class<?> loadClass(final String the_name) {
     try {
       return Class.forName(the_name);
-    } catch (ClassNotFoundException e) {
+    } catch (final ClassNotFoundException e) {
       return null;
     }
   }
@@ -279,7 +279,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
    * @param the_name The name to format.
    * @return The formatted name.
    */
-  private final String formatClassName(final String the_name) {
+  private String formatClassName(final String the_name) {
     final StringBuilder formatted = new StringBuilder(the_name.replace('.', '_'));
     if (the_name.contains("[]")) {
       final int array_dimension = 

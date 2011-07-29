@@ -25,7 +25,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version February 2011
+ * @version July 2011
  */
 public abstract class ObjectStrategy extends NonPrimitiveStrategy {  
   /**
@@ -137,9 +137,8 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
       }
       for (Class<?> c : my_non_generator_classes) {
         // add the default constructor for each non-generator class
-        iterators.add
-        (new InstantiationIterator(c, new Class<?>[0], 
-                                   new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
+        iterators.add(new InstantiationIterator(c, new Class<?>[0], 
+                      new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
       }
       result.add(new NonNullMultiIterator(iterators));
     } else if (!isReflective()) {
@@ -148,15 +147,13 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
         new LinkedList<RepeatedAccessIterator<?>>();
       for (Class<?> c : my_generator_classes) {
         // add the default constructor for each generator class
-        iterators.add
-        (new InstantiationIterator(c, new Class<?>[0], 
-                                   new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
+        iterators.add(new InstantiationIterator(c, new Class<?>[0], 
+                      new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
       }
       for (Class<?> c : my_non_generator_classes) {
         // add the default constructor for each non-generator class
-        iterators.add
-        (new InstantiationIterator(c, new Class<?>[0], 
-                                   new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
+        iterators.add(new InstantiationIterator(c, new Class<?>[0], 
+                      new ObjectArrayIterator<Object[]>(new Object[][]{{}})));
       }
       result.add(new NonNullMultiIterator(iterators));
     }

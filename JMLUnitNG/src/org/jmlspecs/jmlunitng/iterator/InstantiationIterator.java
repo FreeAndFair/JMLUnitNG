@@ -13,7 +13,7 @@ import java.lang.reflect.Constructor;
  * specific class using an iterator of parameter lists and signatures.
  * 
  * @author Daniel M. Zimmerman
- * @version September 2010
+ * @version July 2011
  */
 public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
   /**

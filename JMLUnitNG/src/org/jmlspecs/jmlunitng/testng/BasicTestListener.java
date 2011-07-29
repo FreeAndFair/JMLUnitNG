@@ -18,7 +18,7 @@ import org.testng.ITestResult;
  * A listener used by TestNG to gather basic data about test runs.
  * 
  * @author Daniel M. Zimmerman
- * @version November 2010
+ * @version July 2011
  */
 public class BasicTestListener implements ITestListener {
   /**
@@ -111,8 +111,8 @@ public class BasicTestListener implements ITestListener {
       my_writer.write(NEWLINE);
       my_writer.flush();
     } catch (final IOException e) {
-      System.err.println("onTestFailure: Could not write to supplied Writer " +
-        "in BasicTestListener.");
+      System.err.println("onTestFailure: Could not write to " +
+                         "supplied Writer in BasicTestListener.");
       e.printStackTrace();
     }
   }
@@ -173,13 +173,13 @@ public class BasicTestListener implements ITestListener {
     if (class_name.startsWith(trunc_name + "_JML_Test")) {
       // this is a constructor test, so there is no object to print and
       // we have to print parameter 0, if any, as the first parameter
-      sb.append("constructor " + trunc_name + "(");
+      sb.append("constructor " + trunc_name + '(');
     } else if (params.length == 0) {
       if (isStaticTest(the_test_result)) {
         // print that it's a static method
         sb.append("static ");
       }
-      sb.append(trunc_name + "(");
+      sb.append(trunc_name + '(');
     } else if (params.length > 0) {
       if (isStaticTest(the_test_result)) {
         // print that it's a static method
@@ -189,7 +189,7 @@ public class BasicTestListener implements ITestListener {
         sb.append("<<" + params[0] + ">>.");        
         start_index = 1;
       }
-      sb.append(trunc_name + "(");
+      sb.append(trunc_name + '(');
     }
     for (int i = start_index; i < params.length - 1; i++) {
       sb.append(formatParameter(params[i]) + ", ");
@@ -206,7 +206,7 @@ public class BasicTestListener implements ITestListener {
    * @param the_test_result A test result.
    * @return the original name of the method being tested, as a String.
    */
-  private final String getOriginalMethodName(final ITestResult the_test_result) {
+  private String getOriginalMethodName(final ITestResult the_test_result) {
     // if the method name contains the String TEST_PARAM_SEPARATOR, and the test had
     // more than one parameter, we extended the method name; otherwise
     // it was a no-parameter method name that we left alone
@@ -230,7 +230,7 @@ public class BasicTestListener implements ITestListener {
    * @return true if the_test_result is a result for a static method, false
    * otherwise.
    */
-  private final boolean isStaticTest(final ITestResult the_test_result) {
+  private boolean isStaticTest(final ITestResult the_test_result) {
     return the_test_result.getName().startsWith(TEST_PREFIX + STATIC_PREFIX);
   }
   
@@ -239,7 +239,7 @@ public class BasicTestListener implements ITestListener {
    * @return a formatted version of the parameter, including displaying
    * the contents of arrays.
    */
-  private final String formatParameter(final Object the_parameter) {
+  private String formatParameter(final Object the_parameter) {
     String result = "null";
     if (the_parameter != null) {
       result = the_parameter.toString();

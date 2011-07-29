@@ -19,7 +19,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * the array component type.
  * 
  * @author Daniel M. Zimmerman
- * @version January 2011
+ * @version July 2011
  */
 public abstract class ArrayStrategy extends NonPrimitiveStrategy {  
   /**

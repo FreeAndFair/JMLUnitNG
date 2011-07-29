@@ -23,7 +23,7 @@ import org.jmlspecs.jmlunitng.util.ProtectionLevel;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version August 2010
+ * @version July 2011
  */
 public class MethodInfo implements Comparable<MethodInfo> { 
   /**
@@ -46,9 +46,15 @@ public class MethodInfo implements Comparable<MethodInfo> {
   private final /*@ non_null @*/ String my_name;
   
   /**
-   * The "unique" name of the method (includes signature details).
+   * The formatted name of the method (includes signature details).
    */
-  private final /*@ non_null @*/ String my_detailed_name;
+  private final /*@ non_null @*/ String my_formatted_name;
+  
+  /**
+   * The abbreviated formatted name of the method (includes signature details,
+   * but without fully qualified names).
+   */
+  private final /*@ non_null @*/ String my_abbreviated_formatted_name;
   
   /**
    * The protection level of the method.
@@ -175,7 +181,8 @@ public class MethodInfo implements Comparable<MethodInfo> {
         !(my_is_constructor && my_declaring_class.isAbstract()) &&
         !my_protection_level.equals(ProtectionLevel.PRIVATE) &&
         !UNTESTABLE_METHOD_NAMES.contains(my_name);
-    my_detailed_name = generateDetailedName();
+    my_formatted_name = generateFormattedName();
+    my_abbreviated_formatted_name = generateAbbreviatedFormattedName();
   }
 
   /**
@@ -184,9 +191,9 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * @param the_map The literals map to copy.
    * @return The new map.
    */
-  private static final Map<String, SortedSet<String>> 
+  private static Map<String, SortedSet<String>> 
   copyLiteralsMap(final Map<String, SortedSet<String>> the_map) {
-    Map<String, SortedSet<String>> result = 
+    final Map<String, SortedSet<String>> result = 
       new HashMap<String, SortedSet<String>>();
     for (Map.Entry<String, SortedSet<String>> e : the_map.entrySet()) {
       final SortedSet<String> new_set = new TreeSet<String>(e.getValue());
@@ -196,11 +203,13 @@ public class MethodInfo implements Comparable<MethodInfo> {
   }
   
   /**
-   * Generates the detailed name of the method.
+   * Generates the formatted name of the method, for use in filenames.
+   * This is the full-length formatted name, including fully qualified
+   * parameter type names. 
    * 
-   * @return The detailed name.
+   * @return The formatted name.
    */
-  private /*@ pure non_null @*/ String generateDetailedName() {
+  private /*@ pure non_null @*/ String generateFormattedName() {
     final StringBuffer sb = new StringBuffer(my_name);
     for (ParameterInfo p : my_parameters) {
       sb.append("__");
@@ -212,6 +221,36 @@ public class MethodInfo implements Comparable<MethodInfo> {
   }
   
   /**
+   * Generates the abbreviated formatted name of the method, for use
+   * in filenames. This formatted name includes short parameter type
+   * names, and a number (the difference in length between this name
+   * and the full formatted name) for disambiguation.
+   * 
+   * @return The abbreviated formatted name.
+   */
+  private /*@ pure non_null @*/ String generateAbbreviatedFormattedName() {
+    final StringBuffer sb = new StringBuffer(my_name);
+    for (ParameterInfo p : my_parameters) {
+      sb.append("__");
+      sb.append(p.getType().getFormattedShortName());
+      sb.append('_');
+      sb.append(p.getName());
+    }
+    final int diff = generateFormattedName().length() - sb.length();
+    sb.append("__");
+    sb.append(diff);
+    return sb.toString();
+  }
+  
+  /**
+   * Generates the abbreviated formatted name of the method, for use
+   * in filenames when length is a consideration. This includes short
+   * parameter type names. 
+   * 
+   * @return The formatted name.
+   */
+  
+  /**
    * @return The name of the method
    */
   public /*@ pure non_null @*/ String getName() {
@@ -219,11 +258,20 @@ public class MethodInfo implements Comparable<MethodInfo> {
   }
 
   /**
-   * @return The "unique" name of the method, for use in generated
-   * code; this name includes details about the method signature.
+   * @return The "formatted" name of the method, for use in generated
+   * code; this name includes full details about the method signature.
    */
-  public /*@ pure non_null @*/ String getDetailedName() {
-    return my_detailed_name;
+  public /*@ pure non_null @*/ String getFormattedName() {
+    return my_formatted_name;
+  }
+
+  /**
+   * @return The abbreviated "formatted" name of the method, for use in 
+   * generated code; this name does not include fully qualified names
+   * for the parameters of the method.
+   */
+  public /*@ pure non_null @*/ String getAbbreviatedFormattedName() {
+    return my_abbreviated_formatted_name;
   }
   
   /**
@@ -441,7 +489,6 @@ public class MethodInfo implements Comparable<MethodInfo> {
    */
   public /*@ pure @*/ boolean equalsExceptSignals(final MethodInfo the_other) {
     boolean result = my_name.equals(the_other.my_name);
-    result &= my_detailed_name.equals(the_other.my_detailed_name);
     result &= my_protection_level.equals(the_other.my_protection_level);
     result &= my_return_type.equals(the_other.my_return_type);
     result &= my_parameters.equals(the_other.my_parameters);
@@ -472,12 +519,12 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * than the_other respectively.
    */
   public int compareTo(final MethodInfo the_other) {
-    final String my_string = 
+    final String s = 
       getDeclaringClass().toString() + getEnclosingClass().toString() + toString();
-    final String other_string = 
+    final String other_s = 
       the_other.getDeclaringClass().toString() + 
       the_other.getEnclosingClass().toString() + 
       the_other.toString();
-    return my_string.compareTo(other_string);
+    return s.compareTo(other_s);
   }
 }

@@ -37,7 +37,7 @@ import org.stringtemplate.v4.STGroup;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version January 2011
+ * @version July 2011
  */
 public class TestClassGenerator {
   /**
@@ -165,14 +165,10 @@ public class TestClassGenerator {
     // add literals for this type 
     
     if (my_config.isLiteralsSet()) {
-      System.err.println("literals are set, adding for " + fq_name);
       literals.addAll(the_method.getLiterals(fq_name));
-      System.err.println(literals);
     }
     if (my_config.isSpecLiteralsSet()) {
-      System.err.println("spec literals are set, adding for " + fq_name);
       literals.addAll(the_method.getSpecLiterals(fq_name));
-      System.err.println(literals);
     }
     
     t.add("class", the_class);
@@ -233,14 +229,10 @@ public class TestClassGenerator {
     // add literals for this type
     
     if (my_config.isLiteralsSet()) {
-      System.err.println("literals are set, adding for " + fq_name);
       literals.addAll(the_class.getLiterals(fq_name));
-      System.err.println(literals);
     }
     if (my_config.isSpecLiteralsSet()) {
-      System.err.println("spec literals are set, adding for " + fq_name);
       literals.addAll(the_class.getSpecLiterals(fq_name));
-      System.err.println(literals);
     }
     
     t.add("class", the_class);
@@ -275,20 +267,16 @@ public class TestClassGenerator {
     throws IOException {
     final STGroup group = StringTemplateUtil.load("strategy_package");
     final ST t = group.getInstanceOf("main");
-    SortedSet<ClassInfo> children = null;
+    final SortedSet<String> children = new TreeSet<String>();
     
     final ClassInfo type_class_info = 
       InfoFactory.getClassInfo(the_type.getFullyQualifiedName());
+
+    // if "--children" was set, we use all child classes we are currently analyzing
     if (my_config.isChildrenSet() && type_class_info != null) {
-      children = InfoFactory.getConcreteChildren(type_class_info);
-      // remove non-public children so we don't try to generate them
-      final Iterator<ClassInfo> ci = children.iterator();
-      while (ci.hasNext()) {
-        if (ci.next().getProtectionLevel() != ProtectionLevel.PUBLIC) {
-          ci.remove();
-        }
-      }
+      children.addAll(getChildrenFromClassInfo(type_class_info));
     }
+
     
     String pkg = null;
     if (the_class.isPackaged()) {

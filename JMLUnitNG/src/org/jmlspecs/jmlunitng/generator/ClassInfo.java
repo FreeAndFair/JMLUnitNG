@@ -20,20 +20,20 @@ import org.jmlspecs.jmlunitng.util.ProtectionLevel;
  * 
  * @author Daniel M. Zimmerman
  * @author Jonathan Hogins
- * @version August 2010
+ * @version July 2011
  */
 public class ClassInfo extends TypeInfo {
   /**  
    * True if the methods of this class have been initialized,
    * false otherwise.
    */
-  private boolean my_methods_initialized = false;
+  private boolean my_methods_initialized;
   
   /**
    * True if the literals of this class have been initialized,
    * false otherwise.
    */
-  private boolean my_literals_initialized = false;
+  private boolean my_literals_initialized;
   
   /**
    * The parent ClassInfo object.
@@ -328,7 +328,7 @@ public class ClassInfo extends TypeInfo {
    * Returns a Set of MethodInfo objects that represent the factory methods of
    * the class.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isFactory()); */
   public /*@ pure @*/  Set<MethodInfo> getFactoryMethods() {
     final Set<MethodInfo> result = new HashSet<MethodInfo>();
@@ -344,7 +344,7 @@ public class ClassInfo extends TypeInfo {
    * @return a Set of MethodInfo objects that represent the non-factory static
    * methods of the class.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m);
     @           m.isStatic() && !m.isFactory()); */
   public /*@ pure @*/ Set<MethodInfo> getNonFactoryStaticMethods() {
@@ -361,7 +361,7 @@ public class ClassInfo extends TypeInfo {
    * @return a Set of MethodInfo objects that represent the inherited methods
    * of the class.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
   public /*@ pure @*/ Set<MethodInfo> getInheritedMethods() {
     return Collections.unmodifiableSet(my_inherited_methods);
@@ -373,7 +373,7 @@ public class ClassInfo extends TypeInfo {
    * 
    * @return A Set of MethodInfo objects.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
   public /*@ pure @*/ Set<MethodInfo> getNonInheritedMethods() {
     final Set<MethodInfo> result = new HashSet<MethodInfo>(my_methods);
@@ -385,7 +385,7 @@ public class ClassInfo extends TypeInfo {
    * @return a Set of MethodInfo objects that represent the methods of
    * the class that override inherited methods.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
   public /*@ pure @*/ Set<MethodInfo> getOverridingMethods() {
     return Collections.unmodifiableSet(my_overriding_methods);
@@ -395,7 +395,7 @@ public class ClassInfo extends TypeInfo {
    * @return a Set of MethodInfo objects that represent the inherited 
    * methods of the class that are overridden.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
   public /*@ pure @*/ Set<MethodInfo> getOverriddenMethods() {
     return Collections.unmodifiableSet(my_overridden_methods);
@@ -408,7 +408,7 @@ public class ClassInfo extends TypeInfo {
    * 
    * @return A Set of MethodInfo objects.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isTestable()); */
   public /*@ pure @*/ Set<MethodInfo> getTestableMethods() {
     final Set<MethodInfo> result = new HashSet<MethodInfo>();
@@ -427,16 +427,39 @@ public class ClassInfo extends TypeInfo {
    * @return a Set of MethodInfo objects that represent the 
    * methods of the class.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   public /*@ pure @*/ Set<MethodInfo> getMethods() {
     return Collections.unmodifiableSet(my_methods);
+  }
+  
+  /**
+   * Checks for uniqueness of abbreviated formatted method names.
+   * 
+   * @param the_method The method to check.
+   * @return true if the abbreviated name of the specified method is 
+   * unique within this class, false otherwise. If the specified method
+   * is not within this class, the result is true.
+   */
+  //@ requires areMethodsInitialized();
+  public /*@ pure @*/ boolean isAbbreviatedNameUnique
+  (final MethodInfo the_method) {
+    boolean result = true;
+    if (my_methods.contains(the_method)) {
+      final String abbrev_name = the_method.getAbbreviatedFormattedName();
+      for (MethodInfo m : my_methods) {
+        if (!m.equals(the_method)) {
+          result &= !m.getAbbreviatedFormattedName().equals(abbrev_name);
+        }
+      }
+    }
+    return result;
   }
   
   /**
    * @return a Set of MethodInfo objects that represent the
    * constructors of this class.
    */
-  //@ requires isInitialized();
+  //@ requires areMethodsInitialized();
   //@ ensures (\forall MethodInfo m; \result.contains(m); m.isConstructor());
   public /*@ pure @*/ Set<MethodInfo> getConstructors() {
     final Set<MethodInfo> constructors = new HashSet<MethodInfo>();

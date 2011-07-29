@@ -21,7 +21,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version January 2011
+ * @version July 2011
  */
 public abstract class PrimitiveStrategy extends AbstractStrategy {
   /**

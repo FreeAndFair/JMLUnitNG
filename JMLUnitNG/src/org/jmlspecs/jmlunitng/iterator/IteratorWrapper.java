@@ -13,8 +13,8 @@ import java.util.NoSuchElementException;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version September 2010
- * @param <T> The type of object returned
+ * @version July 2011
+ * @param <T> The type of the returned elements.
  */
 public class IteratorWrapper<T> implements Iterator<T> {
   /**

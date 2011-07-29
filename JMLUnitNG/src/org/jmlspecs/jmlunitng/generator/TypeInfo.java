@@ -52,6 +52,11 @@ public class TypeInfo implements Comparable<TypeInfo> {
   protected final String my_formatted_name;
   
   /**
+   * The formatted short name of this class.
+   */
+  protected final String my_formatted_short_name;
+  
+  /**
    * The generic component of the class.
    */
   protected final String my_generic_comp;
@@ -97,6 +102,7 @@ public class TypeInfo implements Comparable<TypeInfo> {
       my_array_comp = null;
     }
     my_formatted_name = formatName(my_name);
+    my_formatted_short_name = formatName(my_short_name);
   }
 
   /**
@@ -116,21 +122,21 @@ public class TypeInfo implements Comparable<TypeInfo> {
   /**
    * @return The unqualified name of the class.
    */
-  public String getShortName() {
+  public final String getShortName() {
     return my_short_name;
   }
 
   /**
    * @return The fully qualified name of the class, without generic information.
    */
-  public String getFullyQualifiedName() {
+  public final String getFullyQualifiedName() {
     return my_name;
   }
   
   /**
    * @return The generic component of the type.
    */
-  public String getGenericComponent() {
+  public final String getGenericComponent() {
     return my_generic_comp;
   }
 
@@ -143,6 +149,14 @@ public class TypeInfo implements Comparable<TypeInfo> {
     return my_formatted_name;
   }
 
+  /**
+   * @return A formatted short name of the type, with array brackets replaced with
+   * a notation of the array dimension.
+   */
+  public final String getFormattedShortName() {
+    return my_formatted_short_name;
+  }
+  
   /**
    * @return true if this class is in a package, false otherwise.
    */

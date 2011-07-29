@@ -271,7 +271,7 @@ public final class JMLUnitNG implements Runnable {
   }
   
   /**
-   * Print invalid RAC error to standard error.
+   * @return a String describing an invalid RAC setting error.
    */
   private static String invalidRACError() {
     final StringBuilder sb = new StringBuilder();
@@ -528,42 +528,60 @@ public final class JMLUnitNG implements Runnable {
         my_logger.println("class " + the_info.getFullyQualifiedName());
       }
     }
+    
+    boolean generate = true;
     if (the_info.isAbstract() && the_info.getNestedClasses().isEmpty() &&
         the_info.getTestableMethods().isEmpty()) {
       my_logger.println("Not generating tests for abstract class with " + 
                         "no concrete static methods");
-      return;
+      generate = false;
     }
     if (the_info.isEnumeration()) {
       my_logger.println("Not generating tests for enumeration");
-      return;
+      generate = false;
     }
     if (the_info.getProtectionLevel().strongerThan(my_config.getProtectionLevel())) {
       my_logger.println("Not generating tests for " + the_info.getProtectionLevel() +
                         " " + the_info + ", configured for " + 
                         my_config.getProtectionLevel());
-      return;
+      generate = false;
     }
-    boolean usable_constructor = false;
-    for (MethodInfo m : the_info.getConstructors()) {
-      usable_constructor |= 
-        m.isConstructor() && 
-        m.getProtectionLevel().weakerThanOrEqualTo(my_config.getProtectionLevel());
+    if (generate) {
+      boolean usable_constructor = false;
+      for (MethodInfo m : the_info.getConstructors()) {
+        usable_constructor |= 
+            m.isConstructor() && 
+            m.getProtectionLevel().weakerThanOrEqualTo(my_config.getProtectionLevel());
+      }
+      if (!usable_constructor) {
+        my_logger.println("Not generating tests for " + the_info + " with no " +
+                          my_config.getProtectionLevel() + 
+                          " (or weaker) constructors");
+        generate = false;
+      }
     }
-    if (!usable_constructor) {
-      my_logger.println("Not generating tests for " + the_info + " with no " +
-                        my_config.getProtectionLevel() + 
-                        " (or weaker) constructors");
-      return;
+    if (generate) {
+      generateTests(the_unit, the_info);
     }
+  }
+  
+  /**
+   * Generates tests for the specified compilation unit.
+   * 
+   * @param the_unit The compilation unit.
+   * @param the_info The class information for the compilation unit.
+   * @exception IOException if there is a problem generating tests.
+   */
+  private void generateTests(final JmlCompilationUnit the_unit, 
+                             final ClassInfo the_info) 
+    throws IOException {
     final TestClassGenerator generator = 
-      new TestClassGenerator(my_config, my_logger);
+        new TestClassGenerator(my_config, my_logger);
     final String[] dirs = getDirectories(the_unit, the_info);
     String strategy_dir = dirs[0];
     for (String s : dirs) {
       final File f = new File(s);
-      if (!my_config.isNoGenSet() &&
-          !the_info.getTestableMethods().isEmpty()) { 
+      if (!my_config.isNoGenSet() && !the_info.getTestableMethods().isEmpty()) { 
         // don't create dirs for classes with no testable methods
         my_logger.println("Creating directory " + f);
         if (!my_config.isDryRunSet() && !f.mkdirs() && !f.isDirectory()) {
@@ -574,10 +592,10 @@ public final class JMLUnitNG implements Runnable {
       my_created_files.add(f.getCanonicalPath());
       strategy_dir = s;
     }
-    
+      
     generator.generateClasses(the_info, dirs[0], strategy_dir);
     my_created_files.addAll(generator.getCreatedFiles());
-    
+      
     // if either of our directories ended up empty, delete it
     for (String s : dirs) {
       final File f = new File(s);
@@ -593,7 +611,7 @@ public final class JMLUnitNG implements Runnable {
   
   /**
    * @param the_unit The unit being processed.
-   * @param the_info The ClassInfo object for the unit being processed.
+   * @param the_info The class information for the unit being processed.
    * @return An array of directory names to create/use for the specified unit.
    */
   private String[] getDirectories(final JmlCompilationUnit the_unit,
