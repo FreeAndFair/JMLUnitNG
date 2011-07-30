@@ -81,7 +81,7 @@ public class <testClassName(class)> {
   <methods:methodTest(); separator="\n">
   <methods:methodProvider(); separator="\n">
   <if(!class.abstract)>
-  <instanceDataProvider()>
+  <instanceDataProvider(class)>
   <endif>
 }
 >>
@@ -97,13 +97,13 @@ methodTest(method) ::= <<
  */
 <if(method.parameters)>
 @Test(dependsOnMethods = { "test_racEnabled" }, 
-      dataProvider = "<dataProviderName()>")
+      dataProvider = "<dataProviderName(method)>")
 
 <else>
 <if(!method.constructor)>
 <if(!method.static)>
 @Test(dependsOnMethods = { "test_racEnabled" }, 
-      dataProvider = "<instanceDataProviderName(method)>")
+      dataProvider = "<instanceDataProviderName()>")
 
 <else>
 @Test(dependsOnMethods = { "test_racEnabled" })
@@ -116,7 +116,7 @@ methodTest(method) ::= <<
 <endif>
 public void <testName(method)>
 (<if(!method.constructor)><if(!method.static)>final <method.enclosingClass.shortName> the_test_object<if(method.parameters)>, 
-<endif><endif><endif><varDecList(method.parameters)>) {
+<endif><endif> <endif><varDecList(method.parameters)>) {
   <if(!method.constructor)><if(!method.static)>
   if (the_test_object == null) {
     throw new PreconditionSkipException
