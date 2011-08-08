@@ -57,11 +57,13 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 
 /**
  * Factory class that generates ClassInfo and MethodInfo objects.
@@ -665,9 +667,32 @@ public final class InfoFactory {
     public void scan(final JCTree the_tree) {
       if (the_tree instanceof JCInstanceOf) {
         final JCInstanceOf instance_of = (JCInstanceOf) the_tree;
-        final JCIdent clazz = (JCIdent) instance_of.clazz;
-        getLiteralSet(Class.class.getName()).add(clazz.sym.getQualifiedName().toString() +
-                                                 CLASS_SUFFIX);
+        JCTree checked_type = instance_of.getType();
+        
+        // the type part of an instanceof can be one of three possibilities: 
+        // a class/interface, a class/interface with generic parameters, 
+        // or an array type (of one of the previous two possibilities)
+        
+        // first we strip off any generics
+        
+        if (checked_type instanceof JCTypeApply) {
+          checked_type = ((JCTypeApply) checked_type).getType();
+        }
+        
+        // then we attempt to determine a class name
+        
+        String class_name = null;
+                
+        if (checked_type instanceof JCIdent) {
+          class_name = ((JCIdent) checked_type).sym.getQualifiedName().toString();  
+        } 
+        
+        // currently we don't use array types as class literals, otherwise we'd have
+        // another branch above
+        
+        if (class_name != null) {
+          getLiteralSet(Class.class.getName()).add(class_name + CLASS_SUFFIX);
+        }
       }
       super.scan(the_tree);
     }
