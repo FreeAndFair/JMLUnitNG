@@ -532,18 +532,24 @@ public final class JMLUnitNG implements Runnable {
     boolean generate = true;
     if (the_info.isAbstract() && the_info.getNestedClasses().isEmpty() &&
         the_info.getTestableMethods().isEmpty()) {
-      my_logger.println("Not generating tests for abstract class with " + 
-                        "no concrete static methods");
+      if (!my_config.isNoGenSet()) {
+        my_logger.println("Not generating tests for abstract class with " + 
+                          "no concrete static methods");
+      }
       generate = false;
     }
     if (the_info.isEnumeration()) {
-      my_logger.println("Not generating tests for enumeration");
+      if (!my_config.isNoGenSet()) {
+        my_logger.println("Not generating tests for enumeration");
+      }
       generate = false;
     }
     if (the_info.getProtectionLevel().strongerThan(my_config.getProtectionLevel())) {
-      my_logger.println("Not generating tests for " + the_info.getProtectionLevel() +
-                        " " + the_info + ", configured for " + 
-                        my_config.getProtectionLevel());
+      if (!my_config.isNoGenSet()) {
+        my_logger.println("Not generating tests for " + the_info.getProtectionLevel() +
+                          " " + the_info + ", configured for " + 
+                          my_config.getProtectionLevel());
+      }
       generate = false;
     }
     if (generate) {
@@ -553,12 +559,12 @@ public final class JMLUnitNG implements Runnable {
             m.isConstructor() && 
             m.getProtectionLevel().weakerThanOrEqualTo(my_config.getProtectionLevel());
       }
-      if (!usable_constructor) {
+      if (!usable_constructor && !my_config.isNoGenSet()) {
         my_logger.println("Not generating tests for " + the_info + " with no " +
                           my_config.getProtectionLevel() + 
                           " (or weaker) constructors");
-        generate = false;
       }
+      generate &= usable_constructor;
     }
     if (generate) {
       generateTests(the_unit, the_info);
