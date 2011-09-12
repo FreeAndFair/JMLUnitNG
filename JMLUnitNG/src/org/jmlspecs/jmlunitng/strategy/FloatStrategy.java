@@ -27,9 +27,9 @@ public abstract class FloatStrategy extends PrimitiveStrategy {
   private static final List<Float> DEFAULT_VALUES;
   static {
     final List<Float> defs = new ArrayList<Float>(3);
-    defs.add(-1.f);
+    defs.add(Float.NEGATIVE_INFINITY);
     defs.add(0.f);
-    defs.add(1.f);
+    defs.add(Float.POSITIVE_INFINITY);
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
   

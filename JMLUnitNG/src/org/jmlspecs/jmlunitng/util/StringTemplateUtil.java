@@ -24,9 +24,8 @@ public final class StringTemplateUtil {
   /**
    * The path to all templates.
    */
-  private static final String TEMPLATE_PATH = 
-    "org" + File.separator + "jmlspecs" + File.separator + 
-    "jmlunitng" + File.separator + "templates" + File.separator;
+  // no need for cross-platform file separators because ST handles them properly
+  private static final String TEMPLATE_PATH = "org/jmlspecs/jmlunitng/templates/";
   
   /**
    * The cache of already-loaded templates.

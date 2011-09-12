@@ -27,9 +27,9 @@ public abstract class IntStrategy extends PrimitiveStrategy {
   private static final List<Integer> DEFAULT_VALUES;
   static {
     final List<Integer> defs = new ArrayList<Integer>(3);
-    defs.add(-1);
+    defs.add(Integer.MIN_VALUE);
     defs.add(0);
-    defs.add(1);
+    defs.add(Integer.MAX_VALUE);
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
   

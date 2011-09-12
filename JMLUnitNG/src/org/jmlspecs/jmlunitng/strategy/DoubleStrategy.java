@@ -27,9 +27,9 @@ public abstract class DoubleStrategy extends PrimitiveStrategy {
   private static final List<Double> DEFAULT_VALUES;
   static {
     final List<Double> defs = new ArrayList<Double>(3);
-    defs.add(-1.0);
+    defs.add(Double.NEGATIVE_INFINITY);
     defs.add(0.0);
-    defs.add(1.0);
+    defs.add(Double.POSITIVE_INFINITY);
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
   

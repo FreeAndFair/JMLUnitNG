@@ -28,9 +28,9 @@ public abstract class ShortStrategy extends PrimitiveStrategy {
   private static final List<Short> DEFAULT_VALUES;
   static {
     final List<Short> defs = new ArrayList<Short>(3);
-    defs.add((short) -1);
+    defs.add(Short.MIN_VALUE);
     defs.add((short) 0);
-    defs.add((short) 1);
+    defs.add(Short.MAX_VALUE);
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
   

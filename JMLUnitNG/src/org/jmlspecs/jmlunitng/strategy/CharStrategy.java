@@ -27,8 +27,8 @@ public abstract class CharStrategy extends PrimitiveStrategy {
   private static final List<Character> DEFAULT_VALUES;
   static {
     final List<Character> defs = new ArrayList<Character>(2);
-    defs.add((char) 0);
-    defs.add((char) 1);
+    defs.add(Character.MIN_VALUE);
+    defs.add(Character.MAX_VALUE);
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
   

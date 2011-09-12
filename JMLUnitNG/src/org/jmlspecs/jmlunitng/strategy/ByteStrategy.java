@@ -27,9 +27,9 @@ public abstract class ByteStrategy extends PrimitiveStrategy {
   private static final List<Byte> DEFAULT_VALUES;
   static {
     final List<Byte> defs = new ArrayList<Byte>(3);
-    defs.add((byte) -1);
+    defs.add(Byte.MIN_VALUE);
     defs.add((byte) 0);
-    defs.add((byte) 1);
+    defs.add(Byte.MAX_VALUE);
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
   

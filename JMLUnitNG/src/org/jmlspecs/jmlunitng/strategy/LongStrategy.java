@@ -27,9 +27,9 @@ public abstract class LongStrategy extends PrimitiveStrategy {
   private static final List<Long> DEFAULT_VALUES;
   static {
     final List<Long> defs = new ArrayList<Long>(3);
-    defs.add(-1L);
+    defs.add(Long.MIN_VALUE);
     defs.add(0L);
-    defs.add(1L);
+    defs.add(Long.MAX_VALUE);
     DEFAULT_VALUES = Collections.unmodifiableList(defs);
   }
   
