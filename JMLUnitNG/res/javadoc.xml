@@ -3,7 +3,7 @@
     <target name="javadoc">
         <javadoc access="protected" author="true" 
          classpath="../lib/testng-5.11-modified.jar:../lib/antlr-3.4-complete.jar:../lib/openjml.jar:../lib/clops-runtime.jar" 
-         destdir="/tmp/doc" doctitle="JMLUnitNG 1.1" 
+         destdir="/tmp/doc" doctitle="JMLUnitNG 1.2" 
          nodeprecated="false" nodeprecatedlist="false" noindex="false" 
          nonavbar="false" notree="false" 
          packagenames="org.jmlspecs.jmlunitng.strategy,org.jmlspecs.jmlunitng.iterator,org.jmlspecs.jmlunitng.testng,org.jmlspecs.jmlunitng.generator,org.jmlspecs.jmlunitng.util,org.jmlspecs.jmlunitng" 
