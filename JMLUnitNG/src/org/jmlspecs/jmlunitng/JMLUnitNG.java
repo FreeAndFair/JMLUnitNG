@@ -57,7 +57,7 @@ public final class JMLUnitNG implements Runnable {
   /**
    * The string to be prepended to the reported version.
    */
-  private static final String VERSION_STRING = "1.2";
+  private static final String VERSION_STRING = "1.3test";
   
   /**
    * The raw SVN revision string.
