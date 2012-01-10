@@ -6,10 +6,10 @@
 package org.jmlspecs.jmlunitng.strategy;
 
 import java.lang.reflect.Array;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.jmlspecs.jmlunitng.iterator.InstantiationIterator;
 import org.jmlspecs.jmlunitng.iterator.MultiIterator;
@@ -31,8 +31,8 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   /**
    * The ThreadLocal used for cycle detection.
    */
-  private static final ThreadLocal<Set<Class<?>>> TRAVERSED_CLASSES = 
-    new ThreadLocal<Set<Class<?>>>();
+  private static final ThreadLocal<Map<Class<?>, Integer>> TRAVERSED_CLASSES = 
+    new ThreadLocal<Map<Class<?>, Integer>>();
   
   /**
    * The enum constants for the given class, if it is an enum type.
@@ -90,13 +90,14 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   public RepeatedAccessIterator<?> defaultValues() {
     RepeatedAccessIterator<?> result;
     final boolean orig_reflective = isReflective();
-    final boolean already_traversed = wasTraversed();
+    boolean traversed = false;
     
-    if (already_traversed) {
+    if (traversalLevel() > 0) {
       // we don't do reflection if we've already been traversed
       setReflective(false);
     } else {
       traverse();
+      traversed = true;
     }
     
     if (my_enum_constants == null) {
@@ -106,7 +107,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
     }
     
     setReflective(orig_reflective);
-    if (!already_traversed) {
+    if (traversed) {
       untraverse();
     }
     return result;
@@ -171,7 +172,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
     boolean result = false;
     
     if (TRAVERSED_CLASSES.get() != null) {
-      result = TRAVERSED_CLASSES.get().contains(my_class);
+      result = TRAVERSED_CLASSES.get().containsKey(my_class);
     }
     
     return result;
@@ -182,9 +183,25 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
    */
   private void traverse() {
     if (TRAVERSED_CLASSES.get() == null) {
-      TRAVERSED_CLASSES.set(new HashSet<Class<?>>());
+      TRAVERSED_CLASSES.set(new HashMap<Class<?>, Integer>());
     }
-    TRAVERSED_CLASSES.get().add(my_class);
+    final Map<Class<?>, Integer> map = TRAVERSED_CLASSES.get();
+    if (map.get(my_class) != null) {
+      map.put(my_class, map.get(my_class) + 1);
+    } else {
+      map.put(my_class, 1);
+    }
+  }
+  
+  private int traversalLevel() {
+    int result = 0;
+    if (TRAVERSED_CLASSES.get() != null) {
+      Integer level = TRAVERSED_CLASSES.get().get(my_class);
+      if (level != null) {
+        result = level;
+      }
+    }
+    return result;
   }
   
   /**
@@ -192,7 +209,12 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
    */
   private void untraverse() {
     if (TRAVERSED_CLASSES.get() != null) {
-      TRAVERSED_CLASSES.get().remove(my_class);
+      final Map<Class<?>, Integer> map = TRAVERSED_CLASSES.get();
+      if (map.get(my_class) > 1) {
+        map.put(my_class, map.get(my_class) - 1);
+      } else {
+        map.remove(my_class);
+      }
     }
   }
 }

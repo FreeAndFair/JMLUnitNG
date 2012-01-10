@@ -6,6 +6,8 @@
 package org.jmlspecs.jmlunitng.iterator;
 
 import java.lang.reflect.Constructor;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -60,6 +62,8 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
     } while (hasElement() && element() == null);
   }
 
+  private Set<Object> seen = new HashSet<Object>();
+  
   /**
    * {@inheritDoc}
    */

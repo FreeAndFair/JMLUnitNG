@@ -27,12 +27,6 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
   private RepeatedAccessIterator<?>[] my_strategies;
 
   /**
-   * The current element (i.e., parameter array).
-   */
-  // @ private invariant my_element.length == my_strategies.length;
-  private Object[] my_element;
-
-  /**
    * A flag indicating whether there are elements remaining.
    */
   private boolean my_is_finished;
@@ -56,13 +50,9 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
     my_strategy_classes = the_strategy_classes;
     my_strategies = new RepeatedAccessIterator<?>[the_strategy_classes.length];
     my_is_finished = the_strategy_classes.length == 0;
-    my_element = new Object[my_strategies.length];
     for (int i = 0; i < my_strategies.length; i++) {
       try {
         my_strategies[i] = the_strategy_classes[i].newInstance().iterator();
-        if (my_strategies[i].hasElement()) {
-          my_element[i] = my_strategies[i].element();
-        } // else the element stays at its default value of null
       } catch (final InstantiationException e) {
         throw new IllegalArgumentException(e);
       } catch (final IllegalAccessException e) {
@@ -70,12 +60,20 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
       }
     }
   }
-
+  
   /**
    * {@inheritDoc}
    */
   public Object[] element() {
-    return my_element;
+    final Object[] result = new Object[my_strategies.length];
+    for (int i = 0; i < my_strategies.length; i++) {
+      if (my_strategies[i].hasElement()) {
+        result[i] = my_strategies[i].element();
+      } else {
+        result[i] = null;
+      }
+    }
+    return result;
   }
 
   /**
@@ -102,14 +100,6 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
           my_strategies[p] =
               (RepeatedAccessIterator<?>) my_strategy_classes[p].newInstance().iterator();
           p++;
-        }
-      }
-      my_element = new Object[my_strategies.length];
-      for (int i = 0; i < my_strategies.length; i++) {
-        if (my_strategies[i].hasElement()) {
-          my_element[i] = my_strategies[i].element();
-        } else {
-          my_element[i] = null;
         }
       }
       // if we've reset the last iterator, we're done

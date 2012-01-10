@@ -62,6 +62,6 @@ public class IteratorWrapper<T> implements Iterator<T> {
   @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException
-    ("RepeatedAccessIterator does not support the remove operation.");
+    (my_iterator.getClass().getName() + " does not support the remove operation.");
   }
 }
