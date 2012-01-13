@@ -16,6 +16,7 @@ import java.util.Set;
  * 
  * @author Daniel M. Zimmerman
  * @version July 2011
+ * @param <T> The type of the returned elements.
  */
 public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
   /**
