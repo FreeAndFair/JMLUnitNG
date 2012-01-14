@@ -83,8 +83,7 @@ iters.add(new InstantiationIterator\<<class.shortName>\>
   (<class.shortName>.class, 
    new Class\<?\>[]
    {<paramClasses(method)>},
-   new IteratorAdapter\<Object[]\>
-   (<testClassName(class)>.<dataProviderName(method)>())));
+   <testClassName(class)>.<dataProviderName(method)>().wrapped()));
 
 <endif>
 <endif>

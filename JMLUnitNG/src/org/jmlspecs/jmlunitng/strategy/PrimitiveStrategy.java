@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.IteratorSampler;
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
@@ -66,7 +66,9 @@ public abstract class PrimitiveStrategy extends AbstractStrategy {
     }
     data_list.addAll(data_set);
     RepeatedAccessIterator<Comparable<?>> result = 
-      new IteratorAdapter<Comparable<?>>(data_list.iterator());
+      new ObjectArrayIterator<Comparable<?>>
+      (data_list.toArray(new Comparable[data_list.size()]));
+    // TODO Make this more efficient!
     if (fraction() < 1.0) {
       result = new IteratorSampler<Comparable<?>>(result, fraction(), seed());
     }

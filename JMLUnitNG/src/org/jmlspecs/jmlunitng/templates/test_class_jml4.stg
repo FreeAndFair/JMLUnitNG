@@ -165,7 +165,7 @@ methodProvider(method) ::= <<
  */
 @SuppressWarnings({"unchecked"})
 @DataProvider(name = "<dataProviderName(method)>")
-public static Iterator\<Object[]\> <dataProviderName(method)>() {
+public static IteratorWrapper\<Object[]\> <dataProviderName(method)>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator
        (<if(!method.constructor)><if(!method.static)><instanceStrategyName(classInfo=class)>.class, 
@@ -185,7 +185,7 @@ instanceDataProvider(class) ::= <<
  */
 @SuppressWarnings({"unchecked"})
 @DataProvider(name = "<instanceDataProviderName()>")
-public static Iterator\<Object[]\> <instanceDataProviderName()>() {
+public static IteratorWrapper\<Object[]\> <instanceDataProviderName()>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator(<instanceStrategyName(classInfo=class)>.class));
 }

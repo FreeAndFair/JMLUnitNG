@@ -5,11 +5,6 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
@@ -24,14 +19,8 @@ public abstract class IntStrategy extends PrimitiveStrategy {
   /**
    * The default values for this strategy.
    */
-  private static final List<Integer> DEFAULT_VALUES;
-  static {
-    final List<Integer> defs = new ArrayList<Integer>(3);
-    defs.add(Integer.MIN_VALUE);
-    defs.add(0);
-    defs.add(Integer.MAX_VALUE);
-    DEFAULT_VALUES = Collections.unmodifiableList(defs);
-  }
+  private static final Integer[] DEFAULT_VALUES = 
+  { Integer.MIN_VALUE, 0, Integer.MAX_VALUE };
   
   /**
    * A default empty iterator, to be overridden by child classes.
@@ -64,6 +53,6 @@ public abstract class IntStrategy extends PrimitiveStrategy {
    * @return an iterator over the default int values.
    */
   public RepeatedAccessIterator<?> defaultValues() {
-    return new IteratorAdapter<Integer>(DEFAULT_VALUES.iterator());
+    return new ObjectArrayIterator<Integer>(DEFAULT_VALUES);
   }
 }

@@ -5,11 +5,6 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
@@ -24,14 +19,8 @@ public abstract class FloatStrategy extends PrimitiveStrategy {
   /**
    * The default values for this strategy.
    */
-  private static final List<Float> DEFAULT_VALUES;
-  static {
-    final List<Float> defs = new ArrayList<Float>(3);
-    defs.add(Float.NEGATIVE_INFINITY);
-    defs.add(0.f);
-    defs.add(Float.POSITIVE_INFINITY);
-    DEFAULT_VALUES = Collections.unmodifiableList(defs);
-  }
+  private static final Float[] DEFAULT_VALUES =
+  { Float.NEGATIVE_INFINITY, 0.0f, Float.POSITIVE_INFINITY };
   
   /**
    * A default empty iterator, to be overridden by child classes.
@@ -64,6 +53,6 @@ public abstract class FloatStrategy extends PrimitiveStrategy {
    * @return an iterator over the default float values.
    */
   public RepeatedAccessIterator<?> defaultValues() {
-    return new IteratorAdapter<Float>(DEFAULT_VALUES.iterator());
+    return new ObjectArrayIterator<Float>(DEFAULT_VALUES);
   }
 }

@@ -64,4 +64,12 @@ public class IteratorWrapper<T> implements Iterator<T> {
     throw new UnsupportedOperationException
     (my_iterator.getClass().getName() + " does not support the remove operation.");
   }
+  
+  /**
+   * @return the wrapped iterator. This returns the actual wrapped iterator
+   * instance in whatever state it is in, and should therefore be used with care.
+   */
+  public RepeatedAccessIterator<T> wrapped() {
+    return my_iterator;
+  }
 }

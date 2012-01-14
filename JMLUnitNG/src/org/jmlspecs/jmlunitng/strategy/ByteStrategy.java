@@ -5,11 +5,6 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
@@ -24,14 +19,7 @@ public abstract class ByteStrategy extends PrimitiveStrategy {
   /**
    * The default values for this strategy.
    */
-  private static final List<Byte> DEFAULT_VALUES;
-  static {
-    final List<Byte> defs = new ArrayList<Byte>(3);
-    defs.add(Byte.MIN_VALUE);
-    defs.add((byte) 0);
-    defs.add(Byte.MAX_VALUE);
-    DEFAULT_VALUES = Collections.unmodifiableList(defs);
-  }
+  private static final Byte[] DEFAULT_VALUES = { Byte.MIN_VALUE, 0, Byte.MAX_VALUE };
   
   /**
    * A default empty iterator, to be overridden by child classes.
@@ -64,6 +52,6 @@ public abstract class ByteStrategy extends PrimitiveStrategy {
    * @return an iterator over the default byte values.
    */
   public RepeatedAccessIterator<?> defaultValues() {
-    return new IteratorAdapter<Byte>(DEFAULT_VALUES.iterator());
+    return new ObjectArrayIterator<Byte>(DEFAULT_VALUES);  
   }
 }

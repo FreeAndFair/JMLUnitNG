@@ -167,12 +167,10 @@ public class Instantiator<T> implements ObjectGenerator<T> {
     }
     
     if (result == null) {
-      System.out.println("no constructor found!");
       throw new IllegalArgumentException("could not find an appropriate " + my_class + 
                                          "constructor for supplied parameters");
     }
     
-    System.out.println("constructor found: " + result);
     return result;
   }
   

@@ -62,8 +62,6 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
       my_params.advance();
     } while (hasElement() && element() == null);
   }
-
-  private Set<Object> seen = new HashSet<Object>();
   
   /**
    * {@inheritDoc}

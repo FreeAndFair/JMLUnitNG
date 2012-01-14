@@ -5,11 +5,6 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
@@ -24,13 +19,7 @@ public abstract class BooleanStrategy extends PrimitiveStrategy {
   /**
    * The default values for this strategy.
    */
-  private static final List<Boolean> DEFAULT_VALUES;
-  static {
-    final List<Boolean> defs = new ArrayList<Boolean>(2);
-    defs.add(true);
-    defs.add(false);
-    DEFAULT_VALUES = Collections.unmodifiableList(defs);
-  }
+  private static final Boolean[] DEFAULT_VALUES = { Boolean.TRUE, Boolean.FALSE };
   
   /**
    * A default empty iterator, to be overridden by child classes.
@@ -63,6 +52,6 @@ public abstract class BooleanStrategy extends PrimitiveStrategy {
    * @return an iterator over the default boolean values.
    */
   public RepeatedAccessIterator<?> defaultValues() {
-    return new IteratorAdapter<Boolean>(DEFAULT_VALUES.iterator());
+    return new ObjectArrayIterator<Boolean>(DEFAULT_VALUES);
   }
 }

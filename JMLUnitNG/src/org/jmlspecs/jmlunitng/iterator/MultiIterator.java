@@ -12,13 +12,14 @@ import java.util.List;
  * A repeated access iterator that combines one or more other iterators.
  * 
  * @author Daniel M. Zimmerman
- * @version September 2010
+ * @version January 2012
+ * @param <T> The type of the returned elements.
  */
 public class MultiIterator<T> implements RepeatedAccessIterator<T> {
   /**
    * The Iterator over concatenated iterators.
    */
-  private final IteratorAdapter<RepeatedAccessIterator<T>> my_iterators;
+  private final RepeatedAccessIterator<RepeatedAccessIterator<T>> my_iterators;
 
   /**
    * Creates a new MultiIterator that iterates over all given iterators in
@@ -26,6 +27,7 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    * 
    * @param the_iterators The list of iterators to iterate over.
    */
+  @SuppressWarnings("unchecked")
   public MultiIterator(final List<RepeatedAccessIterator<T>> the_iterators) {
     // only keep non-empty iterators
     final List<RepeatedAccessIterator<T>> non_empties = 
@@ -35,8 +37,10 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
         non_empties.add(i);
       }
     }
+    final RepeatedAccessIterator<T>[] non_empty_array = 
+        non_empties.toArray(new RepeatedAccessIterator[non_empties.size()]);
     my_iterators = 
-      new IteratorAdapter<RepeatedAccessIterator<T>>(non_empties.iterator());
+      new ObjectArrayIterator<RepeatedAccessIterator<T>>(non_empty_array);
     // at this point, the iterator either has an element or is completely empty
   }
 

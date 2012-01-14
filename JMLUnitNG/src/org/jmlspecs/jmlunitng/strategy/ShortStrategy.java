@@ -5,11 +5,6 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
@@ -25,14 +20,8 @@ public abstract class ShortStrategy extends PrimitiveStrategy {
   /**
    * The default values for this strategy.
    */
-  private static final List<Short> DEFAULT_VALUES;
-  static {
-    final List<Short> defs = new ArrayList<Short>(3);
-    defs.add(Short.MIN_VALUE);
-    defs.add((short) 0);
-    defs.add(Short.MAX_VALUE);
-    DEFAULT_VALUES = Collections.unmodifiableList(defs);
-  }
+  private static final Short[] DEFAULT_VALUES = 
+  { Short.MIN_VALUE, 0, Short.MAX_VALUE };
   
   /**
    * A default empty iterator, to be overridden by child classes.
@@ -65,6 +54,6 @@ public abstract class ShortStrategy extends PrimitiveStrategy {
    * @return an iterator over the default short values.
    */
   public RepeatedAccessIterator<?> defaultValues() {
-    return new IteratorAdapter<Short>(DEFAULT_VALUES.iterator());
+    return new ObjectArrayIterator<Short>(DEFAULT_VALUES);
   }
 }

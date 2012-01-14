@@ -5,11 +5,6 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
@@ -24,13 +19,8 @@ public abstract class CharStrategy extends PrimitiveStrategy {
   /**
    * The default values for this strategy.
    */
-  private static final List<Character> DEFAULT_VALUES;
-  static {
-    final List<Character> defs = new ArrayList<Character>(2);
-    defs.add(Character.MIN_VALUE);
-    defs.add(Character.MAX_VALUE);
-    DEFAULT_VALUES = Collections.unmodifiableList(defs);
-  }
+  private static final Character[] DEFAULT_VALUES = 
+  { Character.MIN_VALUE, Character.MAX_VALUE };
   
   /**
    * A default empty iterator, to be overridden by child classes.
@@ -63,6 +53,6 @@ public abstract class CharStrategy extends PrimitiveStrategy {
    * @return an iterator over the default char values.
    */
   public RepeatedAccessIterator<?> defaultValues() {
-    return new IteratorAdapter<Character>(DEFAULT_VALUES.iterator());
+    return new ObjectArrayIterator<Character>(DEFAULT_VALUES);  
   }
 }

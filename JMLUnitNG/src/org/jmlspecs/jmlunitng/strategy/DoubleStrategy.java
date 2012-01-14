@@ -5,11 +5,6 @@
 
 package org.jmlspecs.jmlunitng.strategy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
 import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
 import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 /**
@@ -24,14 +19,8 @@ public abstract class DoubleStrategy extends PrimitiveStrategy {
   /**
    * The default values for this strategy.
    */
-  private static final List<Double> DEFAULT_VALUES;
-  static {
-    final List<Double> defs = new ArrayList<Double>(3);
-    defs.add(Double.NEGATIVE_INFINITY);
-    defs.add(0.0);
-    defs.add(Double.POSITIVE_INFINITY);
-    DEFAULT_VALUES = Collections.unmodifiableList(defs);
-  }
+  private static final Double[] DEFAULT_VALUES = 
+  { Double.NEGATIVE_INFINITY, 0.0, Double.POSITIVE_INFINITY };
   
   /**
    * A default empty iterator, to be overridden by child classes.
@@ -64,6 +53,6 @@ public abstract class DoubleStrategy extends PrimitiveStrategy {
    * @return an iterator over the default double values.
    */
   public RepeatedAccessIterator<?> defaultValues() {
-    return new IteratorAdapter<Double>(DEFAULT_VALUES.iterator());
+    return new ObjectArrayIterator<Double>(DEFAULT_VALUES);
   }
 }
