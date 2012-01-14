@@ -6,7 +6,6 @@
 package org.jmlspecs.jmlunitng.objgen;
 
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class Instantiator<T> implements ObjectGenerator<T> {
   /**
    * The class of the objects being instantiated.
    */
-  private final /*@ non_null @*/ Class<T> my_class;
+  private final /*@ non_null @*/ Class<?> my_class;
   
   /**
    * The constructor to use for instantiating the objects.
@@ -71,7 +70,7 @@ public class Instantiator<T> implements ObjectGenerator<T> {
    * multiple such constructors are found, or the constructor found 
    * cannot successfully be used with the specified parameters.
    */
-  public Instantiator(final /*@ non_null @*/ Class<T> the_class, 
+  public Instantiator(final /*@ non_null @*/ Class<?> the_class, 
                       final Object... the_params) 
     throws IllegalArgumentException {
     my_class = the_class;
@@ -96,7 +95,7 @@ public class Instantiator<T> implements ObjectGenerator<T> {
    * @exception IllegalArgumentException if the specified constructor 
    * cannot successfully be used with the supplied parameters.
    */
-  public Instantiator(final /*@ non_null @*/ Class<T> the_class, 
+  public Instantiator(final /*@ non_null @*/ Class<?> the_class, 
                       final /*@ non_null @*/ Constructor<T> the_constructor,
                       final Object... the_params) 
     throws ClassCastException, IllegalArgumentException {
@@ -231,7 +230,7 @@ public class Instantiator<T> implements ObjectGenerator<T> {
   }
 
   @Override
-  public Class<T> generatedClass() {
+  public Class<?> generatedClass() {
     return my_class;
   }
 
