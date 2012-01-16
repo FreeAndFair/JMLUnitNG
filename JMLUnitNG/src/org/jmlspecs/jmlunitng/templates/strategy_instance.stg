@@ -32,32 +32,36 @@ import org.jmlspecs.jmlunitng.strategy.ObjectStrategy;
  */
 public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
   /**
-   * @return local-scope instances of <class.fullyQualifiedName>.
+   * @return local-scope instances of <class.shortName>.
    */
-  public RepeatedAccessIterator\<<class.shortName>\> localValues() {
-    return new ObjectArrayIterator\<<class.shortName>\>
-    (new <class.shortName>[]
+  public RepeatedAccessIterator\<<class.fullyQualifiedName>\> localValues() {
+    return new ObjectArrayIterator\<<class.fullyQualifiedName>\>
+    (new <class.fullyQualifiedName>[]
      <instanceStrategyFillIn(classInfo=class)>);
   }
   
   /**
-   * @return default instances of <class.fullyQualifiedName>, generated
+   * @return default instances of <class.shortName>, generated
    *  using constructor test parameters.
    */ 
-  public RepeatedAccessIterator\<<class.shortName>\> defaultValues() {
-    final List\<RepeatedAccessIterator\<<class.shortName>\>\> iters = 
-      new LinkedList\<RepeatedAccessIterator\<<class.shortName>\>\>();
+  public RepeatedAccessIterator\<<class.fullyQualifiedName>\> defaultValues() {
+<if(!class.abstract)>
+    final List\<RepeatedAccessIterator\<<class.fullyQualifiedName>\>\> iters = 
+      new LinkedList\<RepeatedAccessIterator\<<class.fullyQualifiedName>\>\>();
 
     // an instantiation iterator for the default constructor
     // (if there isn't one, it will fail silently)
-    iters.add(new InstantiationIterator\<<class.shortName>\>
-      (<class.shortName>.class, 
+    iters.add(new InstantiationIterator\<<class.fullyQualifiedName>\>
+      (<class.fullyQualifiedName>.class, 
        new Class\<?\>[0], 
        new ObjectArrayIterator\<Object[]\>(new Object[][]{{}})));
     
-    <class.methods:{n | <instanceStrategyConstructorData(method=n)>}>
-
-    return new NonNullMultiIterator\<<class.shortName>\>(iters);
+<class.methods:{n | <instanceStrategyConstructorData(method=n)>}>
+    return new NonNullMultiIterator\<<class.fullyQualifiedName>\>(iters);
+<else>
+    // abstract classes cannot be constructed
+    return new ObjectArrayIterator\<<class.fullyQualifiedName>\>(new <class.fullyQualifiedName>[0]);
+<endif>
   }
   
   /**
@@ -68,7 +72,7 @@ public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
    * @see setReflective(boolean)
    */
   public <instanceStrategyName(classInfo=class)>() {
-    super(<class.shortName>.class);
+    super(<class.fullyQualifiedName>.class);
     setReflective(<if(use_reflection)>true<else>false<endif>);
   }
 }
@@ -79,14 +83,13 @@ instanceStrategyConstructorData(method) ::= <<
 <if(method.constructor)>
 <if(method.parameters)>
 // parameters for method <method>
-iters.add(new InstantiationIterator\<<class.shortName>\>
-  (<class.shortName>.class, 
+iters.add(new InstantiationIterator\<<class.fullyQualifiedName>\>
+  (<class.fullyQualifiedName>.class, 
    new Class\<?\>[]
    {<paramClasses(method)>},
    <testClassName(class)>.<dataProviderName(method)>().wrapped()));
 
-<endif>
-<endif>
+<endif><endif>
 >>
 
 paramClasses(method) ::= "<method.parameters:{n | <rawtype(paramInfo=n)>.class}; separator=\", \n    \">"

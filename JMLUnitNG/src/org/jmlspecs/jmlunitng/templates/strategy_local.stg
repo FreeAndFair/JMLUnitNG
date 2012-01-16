@@ -17,8 +17,8 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
 
 /**
  * Test data strategy for <class.fullyQualifiedName>. Provides
- * test values for parameter "<param.type.shortName> <param.name>" of method
- * "<method>". 
+ * test values for parameter "<param.type.shortName> <param.name>" 
+ * of method "<method>". 
  * 
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
