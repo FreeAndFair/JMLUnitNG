@@ -45,7 +45,7 @@ public class IteratorWrapper<T> implements Iterator<T> {
   @Override
   public T next() {
     if (!hasNext()) {
-      throw new NoSuchElementException();
+      throw new NoSuchElementException("iterator has no next element");
     }
     final T result = my_iterator.element();
     my_iterator.advance();

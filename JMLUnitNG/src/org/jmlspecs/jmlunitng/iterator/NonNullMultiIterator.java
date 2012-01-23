@@ -7,6 +7,7 @@ package org.jmlspecs.jmlunitng.iterator;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * A repeated access iterator that combines one or more other iterators, 
@@ -68,7 +69,7 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
    * {@inheritDoc}
    */
   @Override
-  public /*@ pure */ T element() {
+  public /*@ pure */ T element() throws NoSuchElementException {
     return my_iterators.element().element();
   }
 
@@ -77,9 +78,21 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
    */
   @Override
   public final /*@ pure */ boolean hasElement() {
+    boolean result = false;
+    if (my_iterators.hasElement()) {
+      try {
+        result = my_iterators.element().element() != null;
+      } catch (final NoSuchElementException e) {
+        // optimization to help prevent unnecessary instantiation
+        result = false;
+      }
+    }
+    return result;
+    /*  // original code
     return my_iterators.hasElement() && 
            my_iterators.element().hasElement() &&
            my_iterators.element().element() != null;
+    */
   }
 
   /**
@@ -87,6 +100,20 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
    * a non-null value or the end.
    */
   private void advanceCurrentIterator() {
+    try {
+      final RepeatedAccessIterator<T> iter = my_iterators.element();
+      if (iter != null) {
+        T element;
+        do {
+          iter.advance();
+          element = iter.element();
+        } while (element == null);
+      }
+    } catch (final NoSuchElementException e) {
+      // we hit the end
+      // (optimization to help prevent unnecessary instantiations)
+    }
+    /*  // original code
     if (my_iterators.hasElement() && my_iterators.element() != null &&
         my_iterators.element().hasElement()) {
       do {
@@ -95,5 +122,6 @@ public class NonNullMultiIterator<T> implements RepeatedAccessIterator<T> {
       while (my_iterators.element().hasElement() &&
              my_iterators.element().element() == null);
     }
+    */
   }
 }

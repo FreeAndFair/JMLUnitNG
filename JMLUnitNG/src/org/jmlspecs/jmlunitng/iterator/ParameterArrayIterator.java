@@ -4,6 +4,8 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
+import java.util.NoSuchElementException;
+
 import org.jmlspecs.jmlunitng.strategy.Strategy;
 
 /**
@@ -15,6 +17,8 @@ import org.jmlspecs.jmlunitng.strategy.Strategy;
  * @version July 2011
  */
 public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> {
+//  private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
+  
   /**
    * The list of iterator generation methods.
    */
@@ -64,15 +68,56 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
   /**
    * {@inheritDoc}
    */
-  public Object[] element() {
+  public Object[] element() throws NoSuchElementException {
+    if (my_is_finished) {
+      throw new NoSuchElementException("iterator has no current element");
+    }
+    
     final Object[] result = new Object[my_strategies.length];
     for (int i = 0; i < my_strategies.length; i++) {
-      if (my_strategies[i].hasElement()) {
+      try {
         result[i] = my_strategies[i].element();
-      } else {
+      } catch (final Exception e) {
+        // better to get the exception here, since calling hasElement()
+        // would result in potential duplicate work
         result[i] = null;
       }
     }
+    
+    /*
+    final List<Callable<Object>> tasks = 
+        new ArrayList<Callable<Object>>(my_strategies.length);
+    
+    for (int i = 0; i < my_strategies.length; i++) {
+      final int index = i;
+      tasks.add(new Callable<Object>() {
+        public Object call() {
+          Object arg = null;
+          try {
+            arg = my_strategies[index].element();
+          } catch (final Exception e) {
+            arg = null;
+          }
+          return arg;
+        }
+      });
+    }
+    
+    try {
+      final List<Future<Object>> futures = THREAD_POOL.invokeAll(tasks);
+      for (int i = 0; i < my_strategies.length; i++) {
+        try {
+          result[i] = futures.get(i).get();
+        } catch (final Exception e) {
+          // should never happen, regardless of exception type
+          e.printStackTrace();
+        } 
+      } 
+    } catch (final InterruptedException e) {
+      // should never happen
+      e.printStackTrace();
+    }
+    */
     return result;
   }
 
@@ -86,7 +131,6 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
   /**
    * {@inheritDoc}
    */
-  // @ requires hasElement();
   public void advance() {
     try {
       int p = 0;
@@ -98,7 +142,7 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
           break;
         } else {
           my_strategies[p] =
-              (RepeatedAccessIterator<?>) my_strategy_classes[p].newInstance().iterator();
+            (RepeatedAccessIterator<?>) my_strategy_classes[p].newInstance().iterator();
           p++;
         }
       }
@@ -107,9 +151,11 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
     } catch (final InstantiationException e) {
       // this should never happen because we checked them earlier
       System.err.println(e);
+      my_is_finished = true;
     } catch (final IllegalAccessException e) {
       // neither should this
       System.err.println(e);
+      my_is_finished = true;
     }
   }
 }

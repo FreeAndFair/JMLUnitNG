@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.jmlspecs.jmlunitng.strategy.Strategy;
 
@@ -88,7 +89,10 @@ public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
   /**
    * {@inheritDoc}
    */
-  public Object element() {
+  public Object element() throws NoSuchElementException {
+    if (my_is_finished) {
+      throw new NoSuchElementException("iterator has no current element");
+    }
     return my_element;
   }
 
@@ -102,7 +106,6 @@ public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
   /**
    * {@inheritDoc}
    */
-  // @ requires hasElement();
   public void advance() {
     int p = 0;
     while (p < my_strategies.length) {

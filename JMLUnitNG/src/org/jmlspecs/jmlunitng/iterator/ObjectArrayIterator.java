@@ -5,6 +5,8 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
+import java.util.NoSuchElementException;
+
 import org.jmlspecs.jmlunitng.objgen.ObjectGenerator;
 
 /**
@@ -95,7 +97,10 @@ public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
    * {@inheritDoc}
    */
   @SuppressWarnings("unchecked")
-  public T element() {
+  public T element() throws NoSuchElementException {
+    if (!hasElement()) {
+      throw new NoSuchElementException("iterator has no current element");
+    }
     Object result = my_array[my_element];
     if (result instanceof ObjectGenerator) {
       try {

@@ -6,8 +6,7 @@
 package org.jmlspecs.jmlunitng.iterator;
 
 import java.lang.reflect.Constructor;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -58,15 +57,22 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
     // since not all parameter lists will in fact give valid
     // values, we advance to the next valid value by checking
     // element(), at least until we hit the end
+    boolean not_finished;
     do {
       my_params.advance();
-    } while (hasElement() && element() == null);
+      // an optimization to prevent unnecessary instantiation
+      try {
+        not_finished = element() == null;
+      } catch (final NoSuchElementException e) {
+        not_finished = false;
+      }
+    } while (not_finished);
   }
   
   /**
    * {@inheritDoc}
    */
-  public T element() {
+  public T element() throws NoSuchElementException {
     // for whatever the current parameter list is, we attempt
     // to find a constructor
     T result = null;
@@ -75,10 +81,12 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
       final Object[] param_list = my_params.element();
       final Constructor<T> c = my_class.getConstructor(my_param_types);
       result = c.newInstance(param_list);
+    } catch (final NoSuchElementException e) {
+      throw e;
     } catch (final Exception e) {
       // normally we wouldn't catch "Exception", but in this case,
-      // no matter what went wrong, we need to do the same thing,
-      // namely return null
+      // no matter what went wrong with the instantiation, we need 
+      // to do the same thing: return null
       result = null;
     }
 

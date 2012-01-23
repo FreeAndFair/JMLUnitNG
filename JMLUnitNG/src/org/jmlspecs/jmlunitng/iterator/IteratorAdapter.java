@@ -6,6 +6,7 @@
 package org.jmlspecs.jmlunitng.iterator;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * An adapter that turns a standard Java iterator into a repeated access
@@ -59,7 +60,10 @@ public class IteratorAdapter<T> implements RepeatedAccessIterator<T> {
   /**
    * {@inheritDoc}
    */
-  public T element() {
+  public T element() throws NoSuchElementException {
+    if (!hasElement()) {
+      throw new NoSuchElementException("iterator has no current element");
+    }
     return my_current;
   }
 

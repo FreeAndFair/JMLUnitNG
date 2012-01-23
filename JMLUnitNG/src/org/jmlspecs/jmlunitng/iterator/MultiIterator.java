@@ -7,6 +7,7 @@ package org.jmlspecs.jmlunitng.iterator;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * A repeated access iterator that combines one or more other iterators.
@@ -64,7 +65,7 @@ public class MultiIterator<T> implements RepeatedAccessIterator<T> {
    * {@inheritDoc}
    */
   @Override
-  public /*@ pure */ T element() {
+  public /*@ pure */ T element() throws NoSuchElementException {
     return my_iterators.element().element();
   }
 

@@ -5,6 +5,7 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 /**
@@ -55,7 +56,7 @@ public class IteratorSampler<T> implements RepeatedAccessIterator<T> {
    * {@inheritDoc}
    */
   @Override
-  public /*@ pure */ T element() {
+  public /*@ pure */ T element() throws NoSuchElementException {
     return my_iterator.element();
   }
    

@@ -5,6 +5,8 @@
 
 package org.jmlspecs.jmlunitng.iterator;
 
+import java.util.NoSuchElementException;
+
 /**
  * An iterator that supports accessing the current value multiple times.
  * 
@@ -21,13 +23,12 @@ public interface RepeatedAccessIterator<T> {
   
   /**
    * @return What is the iterator's current element?
+   * @throws NoSuchElementException if there is no current element.
    */
-  //@ requires hasElement();
-  T element();
+  T element() throws NoSuchElementException;
   
   /**
    * Advance the iterator to the next element!
    */
-  //@ requires hasElement();
   void advance();
 }
