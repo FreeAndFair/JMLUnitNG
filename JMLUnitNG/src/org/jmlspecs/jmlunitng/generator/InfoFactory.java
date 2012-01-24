@@ -238,16 +238,16 @@ public final class InfoFactory {
   public static SortedSet<ClassInfo> getAllChildren(final ClassInfo the_class) {
     final SortedSet<ClassInfo> result = new TreeSet<ClassInfo>();
     for (ClassInfo c : CLASS_CACHE.values()) {
-      ClassInfo p = c.getParent();
+      ClassInfo p = c;
       while (p != null) {
         if (p.equals(the_class)) {
           result.add(c);
           break;
         } else {
           for (ClassInfo i : p.getInterfaces()) {
-            if (i == the_class) {
+            if (i.equals(the_class)) {
               result.add(c);
-            }
+            } 
           }
           p = p.getParent();
         }
