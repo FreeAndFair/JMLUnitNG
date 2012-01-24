@@ -233,5 +233,4 @@ public class Instantiator<T> implements ObjectGenerator<T> {
   public Class<?> generatedClass() {
     return my_class;
   }
-
 }

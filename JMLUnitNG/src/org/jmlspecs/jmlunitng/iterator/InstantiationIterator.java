@@ -14,19 +14,14 @@ import java.util.NoSuchElementException;
  * specific class using an iterator of parameter lists and signatures.
  * 
  * @author Daniel M. Zimmerman
- * @version July 2011
+ * @version January 2012
  * @param <T> The type of the returned elements.
  */
 public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
   /**
-   * The class object for the class we are instantiating.
-   */
-  private final Class<T> my_class;
-  
-  /**
    * The parameter types of the constructor to use.
    */
-  private final Class<?>[] my_param_types;
+  private final Constructor<T> my_constructor;
   
   /**
    * The iterator of parameter lists.
@@ -45,8 +40,13 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
   public InstantiationIterator(final Class<T> the_class, 
                                final Class<?>[] the_param_types,
                                final RepeatedAccessIterator<Object[]> the_params) {
-    my_class = the_class;
-    my_param_types = the_param_types;
+    Constructor<T> c;
+    try {
+      c = the_class.getConstructor(the_param_types);
+    } catch (final NoSuchMethodException e) {
+      c = null;
+    }
+    my_constructor = c;
     my_params = the_params;
   }
 
@@ -73,14 +73,16 @@ public class InstantiationIterator<T> implements RepeatedAccessIterator<T> {
    * {@inheritDoc}
    */
   public T element() throws NoSuchElementException {
+    if (my_constructor == null) {
+      throw new NoSuchElementException("no valid constructor exists");
+    }
     // for whatever the current parameter list is, we attempt
     // to find a constructor
     T result = null;
     
     try {
       final Object[] param_list = my_params.element();
-      final Constructor<T> c = my_class.getConstructor(my_param_types);
-      result = c.newInstance(param_list);
+      result = my_constructor.newInstance(param_list);
     } catch (final NoSuchElementException e) {
       throw e;
     } catch (final Exception e) {
