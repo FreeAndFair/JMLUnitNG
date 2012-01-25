@@ -34,9 +34,9 @@ public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
   /**
    * @return local-scope instances of <class.shortName>.
    */
-  public RepeatedAccessIterator\<<class.fullyQualifiedName>\> localValues() {
-    return new ObjectArrayIterator\<<class.fullyQualifiedName>\>
-    (new <class.fullyQualifiedName>[]
+  public RepeatedAccessIterator\<?\> localValues() {
+    return new ObjectArrayIterator\<Object\>
+    (new Object[]
      <instanceStrategyFillIn(classInfo=class)>);
   }
   
@@ -93,4 +93,4 @@ iters.add(new InstantiationIterator\<<class.fullyQualifiedName>\>
 >>
 
 paramClasses(method) ::= "<method.parameters:{n | <rawtype(paramInfo=n)>.class}; separator=\", \n    \">"
-instanceStrategyFillIn(classInfo) ::= "{ /* add <classInfo.fullyQualifiedName> values here */ }"
+instanceStrategyFillIn(classInfo) ::= "{ /* add <classInfo.fullyQualifiedName> values or generators here */ }"

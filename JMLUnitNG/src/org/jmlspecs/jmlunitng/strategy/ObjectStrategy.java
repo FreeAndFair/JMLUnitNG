@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010-11
+ * Copyright (C) 2010-12
  */
 
 package org.jmlspecs.jmlunitng.strategy;
@@ -25,7 +25,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version July 2011
+ * @version January 2012
  */
 public abstract class ObjectStrategy extends NonPrimitiveStrategy {  
   /**
@@ -39,6 +39,12 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
    */
   private final Object[] my_enum_constants; 
 
+  /**
+   * The maximum traversal level for this strategy to recursively use
+   * reflection for object creation.
+   */
+  private int my_max_traversal_level;
+  
   /**
    * Creates a new ObjectStrategy for the given class. If the class is an
    * enum, all enum constants will be used. By default, reflection will not
@@ -92,12 +98,14 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
     final boolean orig_reflective = isReflective();
     boolean traversed = false;
     
-    if (traversalLevel() > 0) {
+    if (traversalLevel() > my_max_traversal_level) {
       // we don't do reflection if we've already been traversed
+      // the maximum number of times
       setReflective(false);
     } else {
       traverse();
       traversed = true;
+      System.err.println("traversing level " + traversalLevel());
     }
     
     if (my_enum_constants == null) {
@@ -108,6 +116,7 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
     
     setReflective(orig_reflective);
     if (traversed) {
+      System.err.println("untraversing level " + traversalLevel());
       untraverse();
     }
     return result;
@@ -161,23 +170,25 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
     
     return new MultiIterator(result);
   }
-  
-  /**
-   * Detects cycles in reflective object instantiation.
-   * 
-   * @return true if this strategy's data class has already been traversed
-   * the currently-ongoing reflective object generation, false otherwise.
-   */
-  private boolean wasTraversed() {
-    boolean result = false;
     
-    if (TRAVERSED_CLASSES.get() != null) {
-      result = TRAVERSED_CLASSES.get().containsKey(my_class);
+  /**
+   * Sets the maximum traversal level for this strategy. The default is 0, which
+   * means that recursive reflective instantiation is not allowed (any instantiation
+   * that would be recursive is done with base cases); however, it can be increased
+   * to enable recursive instantiation. 
+   * 
+   * @param the_new_level The new maximum traversal level.
+   * @exception IllegalArgumentException if the new level is negative.
+   */
+  public void setMaxTraversalLevel(final int the_new_level) 
+    throws IllegalArgumentException {
+    if (the_new_level < 0) {
+      throw new IllegalArgumentException("negative max traversal levels not allowed");
     }
     
-    return result;
+    my_max_traversal_level = the_new_level;
   }
-    
+  
   /**
    * Adds this strategy's data class to the set of traversed classes.
    */
@@ -186,17 +197,20 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
       TRAVERSED_CLASSES.set(new HashMap<Class<?>, Integer>());
     }
     final Map<Class<?>, Integer> map = TRAVERSED_CLASSES.get();
-    if (map.get(my_class) != null) {
-      map.put(my_class, map.get(my_class) + 1);
-    } else {
+    if (map.get(my_class) == null) {
       map.put(my_class, 1);
+    } else {
+      map.put(my_class, map.get(my_class) + 1);
     }
   }
   
+  /**
+   * @return the current traversal level for this strategy.
+   */
   private int traversalLevel() {
     int result = 0;
     if (TRAVERSED_CLASSES.get() != null) {
-      Integer level = TRAVERSED_CLASSES.get().get(my_class);
+      final Integer level = TRAVERSED_CLASSES.get().get(my_class);
       if (level != null) {
         result = level;
       }

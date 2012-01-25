@@ -29,8 +29,8 @@ public class <packageStrategyName(typeInfo=type)>
    * @return package-scope values for type <type.fullyQualifiedName>.
    */
   public RepeatedAccessIterator\<?\> packageValues() {
-    return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
-    (new <typeTransMap.(type.fullyQualifiedName)>[] 
+    return new ObjectArrayIterator\<Object\>
+    (new Object[] 
      <packageStrategyFillIn(typeInfo=type)>);
   }
   <if(!type.primitive)>
@@ -74,4 +74,4 @@ public class <packageStrategyName(typeInfo=type)>
 }
 
 >>
-packageStrategyFillIn(typeInfo) ::= "{ /* add package-scope <typeInfo.fullyQualifiedName> values here */ }"
+packageStrategyFillIn(typeInfo) ::= "{ /* add package-scope <typeInfo.fullyQualifiedName> values or generators here */ }"

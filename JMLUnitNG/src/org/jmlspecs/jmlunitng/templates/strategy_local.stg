@@ -30,8 +30,8 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
    *  "<param.type.shortName> <param.name>".
    */
   public RepeatedAccessIterator\<?\> localValues() {
-  	return new ObjectArrayIterator\<<type(paramInfo=param)>\>
-  	(new <type(paramInfo=param)>[]
+  	return new ObjectArrayIterator\<Object\>
+  	(new Object[]
   	<if(!literals.empty)>
   	 { <literals:addLiteral()>
   	   /* above are local-scope <param.type.shortName> literals found by JMLUnitNG */
@@ -81,4 +81,4 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
 }
 
 >>
-localStrategyFillIn(typeInfo) ::= "/* add local-scope <typeInfo.fullyQualifiedName> values here */"
+localStrategyFillIn(typeInfo) ::= "/* add local-scope <typeInfo.fullyQualifiedName> values or generators here */"

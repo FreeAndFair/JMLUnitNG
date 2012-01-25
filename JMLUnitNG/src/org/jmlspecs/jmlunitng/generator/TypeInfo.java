@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010-11
+ * Copyright (C) 2010-12
  */
 
 package org.jmlspecs.jmlunitng.generator;
@@ -25,13 +25,21 @@ public class TypeInfo implements Comparable<TypeInfo> {
   static {
     final Set<String> prims = new HashSet<String>();
     prims.add("boolean");
+    prims.add("java.lang.Boolean");
     prims.add("int");
+    prims.add("java.lang.Integer");
     prims.add("long");
+    prims.add("java.lang.Long");
     prims.add("float");
+    prims.add("java.lang.Float");
     prims.add("double");
+    prims.add("java.lang.Double");
     prims.add("byte");
+    prims.add("java.lang.Byte");
     prims.add("short");
+    prims.add("java.lang.Short");
     prims.add("char");
+    prims.add("java.lang.Character");
     prims.add("java.lang.String");
     PRIMITIVE_TYPES = Collections.unmodifiableSet(prims);
   }
@@ -178,7 +186,7 @@ public class TypeInfo implements Comparable<TypeInfo> {
   }
 
   /**
-   * @return true if the type is a primitive, false otherwise.
+   * @return true if the type is treated as a primitive, false otherwise.
    */
   // @ensures \result == PRIMITIVE_TYPES.contains(my_name);
   public final boolean isPrimitive() {

@@ -1,5 +1,6 @@
 /*
- * JMLUnitNG Copyright (C) 2010-11
+ * JMLUnitNG 
+ * Copyright (C) 2010-12
  */
 
 package org.jmlspecs.jmlunitng.iterator;

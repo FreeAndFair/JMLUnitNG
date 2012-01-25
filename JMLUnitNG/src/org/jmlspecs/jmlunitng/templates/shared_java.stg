@@ -32,13 +32,21 @@ rawtype(paramInfo) ::= "<paramInfo.type.fullyQualifiedName>"
 
 baseStrategyMap ::= [
         "int":"IntStrategy",
+        "java.lang.Integer":"IntStrategy",
         "long":"LongStrategy",
+        "java.lang.Long":"LongStrategy",
         "float":"FloatStrategy",
+        "java.lang.Float":"FloatStrategy",
         "double":"DoubleStrategy",
+        "java.lang.Double":"DoubleStrategy",
         "boolean":"BooleanStrategy",
+        "java.lang.Boolean":"BooleanStrategy",
         "byte":"ByteStrategy",
+        "java.lang.Byte":"ByteStrategy",
         "short":"ShortStrategy",
+        "java.lang.Short":"ShortStrategy",
         "char":"CharStrategy",
+        "java.lang.Character":"CharStrategy",
         "java.lang.String":"StringStrategy",
         default:"ObjectStrategy" // anything other than an atomic type
 ]

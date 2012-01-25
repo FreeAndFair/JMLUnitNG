@@ -31,8 +31,8 @@ public class <classStrategyName(classInfo=class, typeInfo=type)>
    * @return class-scope values for type <type.fullyQualifiedName>.
    */
   public RepeatedAccessIterator\<?\> classValues() {
-    return new ObjectArrayIterator\<<typeTransMap.(type.fullyQualifiedName)>\>
-    (new <typeTransMap.(type.fullyQualifiedName)>[] 
+    return new ObjectArrayIterator\<Object\>
+    (new Object[] 
   	<if(!literals.empty)>
   	 { <literals:addLiteral()>
   	   /* above are class-scope <type.shortName> literals found by JMLUnitNG */
@@ -81,4 +81,4 @@ public class <classStrategyName(classInfo=class, typeInfo=type)>
 }
 
 >>
-classStrategyFillIn(typeInfo) ::= "/* add class-scope <typeInfo.fullyQualifiedName> values here */"
+classStrategyFillIn(typeInfo) ::= "/* add class-scope <typeInfo.fullyQualifiedName> values or generators here */"

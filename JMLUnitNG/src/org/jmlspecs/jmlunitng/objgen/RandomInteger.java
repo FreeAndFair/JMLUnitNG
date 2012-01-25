@@ -41,7 +41,7 @@ public class RandomInteger implements ObjectGenerator<Integer> {
    */
   public RandomInteger(final int the_minimum, final int the_maximum) 
     throws IllegalArgumentException {
-    this(the_minimum, the_maximum, System.currentTimeMillis());
+    this(the_minimum, the_maximum, Double.doubleToLongBits(Math.random()));
   }
   
   /**
