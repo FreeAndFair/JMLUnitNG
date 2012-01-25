@@ -41,7 +41,7 @@ import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version July 2011
+ * @version January 2012
  */
 public final class JMLUnitNG implements Runnable {
   /**

@@ -51,7 +51,8 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
    <else>
    * The use of reflection can be controlled here for  
    * "<param.type.shortName> <param.name>" of method "<method>" 
-   * by changing the parameter to \<code\>setReflective\</code\>. 
+   * by changing the parameters to \<code\>setReflective\</code\>
+   * and \<code\>setMaxRecursionDepth\<code\>.
    <endif>
    * In addition, the data generators used can be changed by adding 
    * additional data class lines, or by removing some of the automatically 
@@ -65,6 +66,7 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
    * @see ArrayStrategy#setMaxLength(int)
    <else>
    * @see ObjectStrategy#setReflective(boolean)
+   * @see ObjectStrategy#setMaxRecursionDepth(int)
    <endif>
    */
   public <localStrategyName(classInfo=class, methodInfo=method, paramInfo=param)>() {
@@ -74,6 +76,7 @@ public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=pa
     // setMaxLength(1); 
     <endif>
     setReflective(<if(use_reflection)>true<else>false<endif>);
+    setMaxRecursionDepth(0);
     <if(children)>
     
     <children:addDataClassLine()><endif>  }

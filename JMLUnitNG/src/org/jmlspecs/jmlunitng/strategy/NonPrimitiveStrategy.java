@@ -35,11 +35,6 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
   protected final Class<?> my_default_data_class;
   
   /**
-   * Should we use reflective data generation?
-   */
-  private boolean my_reflective;
-  
-  /**
    * The test data generators found for this strategy to use.
    */
   protected final List<Class<? extends Strategy>> my_generators;
@@ -54,6 +49,11 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
    * since no test data generators were found.
    */
   protected final List<Class<?>> my_non_generator_classes;
+  
+  /**
+   * Should we use reflective data generation?
+   */
+  private boolean my_reflective;
   
   /**
    * Constructs a NonPrimitiveStrategy for the specified class
@@ -112,7 +112,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public RepeatedAccessIterator<?> iterator() {
     final List<RepeatedAccessIterator<?>> iterators = 
-      new ArrayList<RepeatedAccessIterator<?>>(3);
+      new ArrayList<RepeatedAccessIterator<?>>(4);
     iterators.add(localValues());
     iterators.add(classValues());
     iterators.add(packageValues());
@@ -146,7 +146,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
    */
   public final ObjectArrayIterator<Object> emptyIterator() {
     return new ObjectArrayIterator<Object>
-      ((Object[]) Array.newInstance(my_class, 0));
+    ((Object[]) Array.newInstance(my_class, 0));
   }
   
   /**
@@ -157,7 +157,8 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
    *  be cast to the default data class of this strategy.
    */
   @SuppressWarnings("unchecked")
-  protected final void addDataClass(final Class<?> the_class) {
+  protected final void addDataClass(final Class<?> the_class) 
+    throws ClassCastException {
     if (my_default_data_class == null) {
       throw new ClassCastException
       ("Cannot add a data class to strategy for " + my_class);
@@ -239,11 +240,9 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
     }
     
     // try to instantiate the strategy we found to make sure it works, unless
-    // it's this class, in which case we just throw it away
+    // it's this class, in which case we already know it works
     
-    if (result == getClass()) {
-      result = null;
-    } else {
+    if (result != getClass()) {
       try {
         result.newInstance();
       } catch (final InstantiationException e) {

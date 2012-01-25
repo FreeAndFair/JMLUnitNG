@@ -67,13 +67,17 @@ public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
   /**
    * Constructor. The boolean parameter to \<code\>setReflective\</code\>
    * determines whether or not reflection will be used to generate
-   * test objects.
+   * test objects, and the int parameter to \<code\>setMaxRecursionDepth\</code\>
+   * determines how many levels reflective generation of self-referential classes
+   * will recurse.
    *
-   * @see setReflective(boolean)
+   * @see ObjectStrategy#setReflective(boolean)
+   * @see ObjectStrategy#setMaxRecursionDepth(int)
    */
   public <instanceStrategyName(classInfo=class)>() {
     super(<class.fullyQualifiedName>.class);
     setReflective(<if(use_reflection)>true<else>false<endif>);
+    setMaxRecursionDepth(0);
   }
 }
 
@@ -82,15 +86,14 @@ public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
 instanceStrategyConstructorData(method) ::= <<
 <if(method.constructor)>
 <if(method.parameters)>
-// parameters for method <method>
-iters.add(new InstantiationIterator\<<class.fullyQualifiedName>\>
-  (<class.fullyQualifiedName>.class, 
-   new Class\<?\>[]
-   {<paramClasses(method)>},
-   <testClassName(class)>.<dataProviderName(method)>().wrapped()));
-
+    // parameters for method <method>
+    iters.add(new InstantiationIterator\<<class.fullyQualifiedName>\>
+      (<class.fullyQualifiedName>.class, 
+       new Class\<?\>[]
+       {<paramClasses(method)>},
+       <testClassName(class)>.<dataProviderName(method)>().wrapped()));
 <endif><endif>
 >>
 
-paramClasses(method) ::= "<method.parameters:{n | <rawtype(paramInfo=n)>.class}; separator=\", \n    \">"
+paramClasses(method) ::= "<method.parameters:{n | <rawtype(paramInfo=n)>.class}; separator=\", \n        \">"
 instanceStrategyFillIn(classInfo) ::= "{ /* add <classInfo.fullyQualifiedName> values or generators here */ }"

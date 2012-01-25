@@ -6,6 +6,7 @@
 package org.jmlspecs.jmlunitng.strategy;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,9 +30,9 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  */
 public abstract class ObjectStrategy extends NonPrimitiveStrategy {  
   /**
-   * The ThreadLocal used for cycle detection.
+   * The ThreadLocal used for recursion depth tracking and cycle detection.
    */
-  private static final ThreadLocal<Map<Class<?>, Integer>> TRAVERSED_CLASSES = 
+  private static final ThreadLocal<Map<Class<?>, Integer>> RECURSED_CLASSES = 
     new ThreadLocal<Map<Class<?>, Integer>>();
   
   /**
@@ -40,10 +41,9 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   private final Object[] my_enum_constants; 
 
   /**
-   * The maximum traversal level for this strategy to recursively use
-   * reflection for object creation.
+   * The maximum recursion depth for this strategy's reflective instantiation.
    */
-  private int my_max_traversal_level;
+  private int my_max_recursion_depth;
   
   /**
    * Creates a new ObjectStrategy for the given class. If the class is an
@@ -96,16 +96,14 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   public RepeatedAccessIterator<?> defaultValues() {
     RepeatedAccessIterator<?> result;
     final boolean orig_reflective = isReflective();
-    boolean traversed = false;
+    boolean descended = false;
     
-    if (traversalLevel() > my_max_traversal_level) {
-      // we don't do reflection if we've already been traversed
-      // the maximum number of times
+    if (recursionDepth() > my_max_recursion_depth) {
+      // we don't do reflection if we've already hit bottom in recursion
       setReflective(false);
     } else {
-      traverse();
-      traversed = true;
-      System.err.println("traversing level " + traversalLevel());
+      descend();
+      descended = true;
     }
     
     if (my_enum_constants == null) {
@@ -115,9 +113,8 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
     }
     
     setReflective(orig_reflective);
-    if (traversed) {
-      System.err.println("untraversing level " + traversalLevel());
-      untraverse();
+    if (descended) {
+      ascend();
     }
     return result;
   }
@@ -172,31 +169,31 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   }
     
   /**
-   * Sets the maximum traversal level for this strategy. The default is 0, which
+   * Sets the maximum recursion depth for this strategy. The default is 0, which
    * means that recursive reflective instantiation is not allowed (any instantiation
    * that would be recursive is done with base cases); however, it can be increased
    * to enable recursive instantiation. 
    * 
-   * @param the_new_level The new maximum traversal level.
-   * @exception IllegalArgumentException if the new level is negative.
+   * @param the_new_depth The new maximum recursion depth.
+   * @exception IllegalArgumentException if the new depth is negative.
    */
-  public void setMaxTraversalLevel(final int the_new_level) 
+  public void setMaxRecursionDepth(final int the_new_depth) 
     throws IllegalArgumentException {
-    if (the_new_level < 0) {
-      throw new IllegalArgumentException("negative max traversal levels not allowed");
+    if (the_new_depth < 0) {
+      throw new IllegalArgumentException("negative max recursion depths not allowed");
     }
     
-    my_max_traversal_level = the_new_level;
+    my_max_recursion_depth = the_new_depth;
   }
   
   /**
-   * Adds this strategy's data class to the set of traversed classes.
+   * Descends one level into recursive instantiation.
    */
-  private void traverse() {
-    if (TRAVERSED_CLASSES.get() == null) {
-      TRAVERSED_CLASSES.set(new HashMap<Class<?>, Integer>());
+  private void descend() {
+    if (RECURSED_CLASSES.get() == null) {
+      RECURSED_CLASSES.set(new HashMap<Class<?>, Integer>());
     }
-    final Map<Class<?>, Integer> map = TRAVERSED_CLASSES.get();
+    final Map<Class<?>, Integer> map = RECURSED_CLASSES.get();
     if (map.get(my_class) == null) {
       map.put(my_class, 1);
     } else {
@@ -205,30 +202,30 @@ public abstract class ObjectStrategy extends NonPrimitiveStrategy {
   }
   
   /**
-   * @return the current traversal level for this strategy.
+   * Ascends one level out of recursive instantiation.
    */
-  private int traversalLevel() {
-    int result = 0;
-    if (TRAVERSED_CLASSES.get() != null) {
-      final Integer level = TRAVERSED_CLASSES.get().get(my_class);
-      if (level != null) {
-        result = level;
-      }
-    }
-    return result;
-  }
-  
-  /**
-   * Removes this strategy's data class from the set of traversed classes.
-   */
-  private void untraverse() {
-    if (TRAVERSED_CLASSES.get() != null) {
-      final Map<Class<?>, Integer> map = TRAVERSED_CLASSES.get();
+  private void ascend() {
+    if (RECURSED_CLASSES.get() != null) {
+      final Map<Class<?>, Integer> map = RECURSED_CLASSES.get();
       if (map.get(my_class) > 1) {
         map.put(my_class, map.get(my_class) - 1);
       } else {
         map.remove(my_class);
       }
     }
+  }
+  
+  /**
+   * @return the current recursion depth for this strategy.
+   */
+  private int recursionDepth() {
+    int result = 0;
+    if (RECURSED_CLASSES.get() != null) {
+      final Integer depth = RECURSED_CLASSES.get().get(my_class);
+      if (depth != null) {
+        result = depth;
+      }
+    }
+    return result;
   }
 }

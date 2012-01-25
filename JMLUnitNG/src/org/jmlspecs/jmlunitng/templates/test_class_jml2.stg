@@ -87,32 +87,27 @@ public class <testClassName(class)> {
 
 methodTest(method) ::= <<
 /**
- * A test for <if(method.constructor)>a constructor<else>method <method.name><endif>.<if(!method.constructor)>
- 
+ * A test for <if(method.constructor)>a constructor<else>method <method.name><endif>.
+ *
+ <if(!method.constructor)>
  * @param the_test_object The <method.enclosingClass.shortName> to call the test method on.
 <endif>
-
 <method.parameters:varJavaDocLine(); separator="\n">
  */
 <if(method.parameters)>
 @Test(dependsOnMethods = { "test_racEnabled" }, 
       dataProvider = "<dataProviderName(method)>")
-
 <else>
 <if(!method.constructor)>
 <if(!method.static)>
 @Test(dependsOnMethods = { "test_racEnabled" }, 
       dataProvider = "<instanceDataProviderName()>")
-
 <else>
 @Test(dependsOnMethods = { "test_racEnabled" })
-
 <endif>
 <else>
 @Test(dependsOnMethods = { "test_racEnabled" })
-
-<endif>
-<endif>
+<endif><endif>
 public void <testName(method)>
 (<if(!method.constructor)><if(!method.static)>final <method.enclosingClass.fullyQualifiedName> the_test_object<if(method.parameters)>, 
 <endif><endif> <endif><varDecList(method.parameters)>) {
@@ -167,10 +162,14 @@ methodProvider(method) ::= <<
 public static IteratorWrapper\<Object[]\> <dataProviderName(method)>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator
-       (<if(!method.constructor)><if(!method.static)><instanceStrategyName(classInfo=class)>.class, 
-
-        <endif><endif><method.parameters:{n | <localStrategyName(classInfo=class, methodInfo=method, paramInfo=n)>.class}; separator=", 
-">));
+<if(!method.constructor)><if(!method.static)>
+       (<instanceStrategyName(classInfo=class)>.class,
+        <method.parameters:{n | <localStrategyName(classInfo=class, methodInfo=method, paramInfo=n)>.class}; separator=",\n        ">));
+<else>
+       (<method.parameters:{n | <localStrategyName(classInfo=class, methodInfo=method, paramInfo=n)>.class}; separator=",\n        ">));
+<endif><else>
+       (<method.parameters:{n | <localStrategyName(classInfo=class, methodInfo=method, paramInfo=n)>.class}; separator=",\n        ">));
+<endif>
 }
 
 <endif>

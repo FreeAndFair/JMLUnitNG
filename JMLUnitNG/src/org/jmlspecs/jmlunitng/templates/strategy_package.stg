@@ -44,7 +44,8 @@ public class <packageStrategyName(typeInfo=type)>
    <else>
    * The use of reflection can be controlled here for method 
    * parameters of type <type.fullyQualifiedName>
-   * in this package by changing the parameter to \<code\>setReflective\</code\>. 
+   * in this package by changing the parameters to \<code\>setReflective\</code\>
+   * and \<code\>setMaxRecursionDepth\<code\>.
    <endif>
    * In addition, the data generators used can be changed by adding 
    * additional data class lines, or by removing some of the automatically 
@@ -58,6 +59,7 @@ public class <packageStrategyName(typeInfo=type)>
    * @see ArrayStrategy#setMaxLength(int)
    <else>
    * @see ObjectStrategy#setReflective(boolean)
+   * @see ObjectStrategy#setMaxRecursionDepth(int)
    <endif>
    */
   public <packageStrategyName(typeInfo=type)>() {
@@ -67,6 +69,7 @@ public class <packageStrategyName(typeInfo=type)>
     // setMaxLength(1);
     <endif>
     setReflective(<if(use_reflection)>true<else>false<endif>);
+    setMaxRecursionDepth(0);
     <if(children)>
     
     <children:addDataClassLine()><endif>  }
