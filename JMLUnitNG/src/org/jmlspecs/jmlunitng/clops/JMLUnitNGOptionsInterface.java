@@ -196,6 +196,23 @@ public interface JMLUnitNGOptionsInterface {
   boolean getInherited();
   
 
+// Option Parallel. 
+// Aliases: [--parallel]
+
+  /**
+   * @return true if the option Parallel has been used
+   * in the command line.
+   */
+  boolean isParallelSet();
+
+  /**
+   * Get the value of {@code Option} Parallel.
+   * @return the value of the option Parallel if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getParallel();
+  
+
 // Option Literals. 
 // Aliases: [--literals]
 

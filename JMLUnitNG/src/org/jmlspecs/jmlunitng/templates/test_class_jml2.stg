@@ -1,6 +1,6 @@
 import "shared_java.stg"
 
-main(date, class, methods, params, package_name, packaged, jmlunitng_version) ::= <<
+main(date, class, methods, params, package_name, packaged, parallel, jmlunitng_version) ::= <<
 /*
  * Test Oracle Class for <class.fullyQualifiedName>
  * For Use With JML2 RAC
@@ -158,7 +158,8 @@ methodProvider(method) ::= <<
  * @return An iterator over strategies to use for parameter generation.
  */
 @SuppressWarnings({"unchecked"})
-@DataProvider(name = "<dataProviderName(method)>")
+@DataProvider(name = "<dataProviderName(method)>", 
+              parallel = <if(parallel)>true<else>false<endif>)
 public static IteratorWrapper\<Object[]\> <dataProviderName(method)>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator
@@ -182,7 +183,8 @@ instanceDataProvider(class) ::= <<
  * @return An iterator over the main class strategy.
  */
 @SuppressWarnings({"unchecked"})
-@DataProvider(name = "<instanceDataProviderName()>")
+@DataProvider(name = "<instanceDataProviderName()>", 
+              parallel = <if(parallel)>true<else>false<endif>)
 public static IteratorWrapper\<Object[]\> <instanceDataProviderName()>() {
   return new IteratorWrapper\<Object[]\>
   (new ParameterArrayIterator(<instanceStrategyName(classInfo=class)>.class));

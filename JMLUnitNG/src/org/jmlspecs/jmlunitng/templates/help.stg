@@ -25,7 +25,11 @@ or recursively contained in directories listed in, path-list.
 --protected : Generate tests for protected and public methods.
 --package : Generate tests for package (no protection modifier), 
   protected and public methods.
---reflection : Generate test data reflectively.
+--parallel : Generate data providers that default to running in parallel.
+  This allows multiple tests of the same method to run concurrently, and
+  can be changed in the test classes after generation. 
+--reflection : Generate test data reflectively. This can be changed
+  in the strategy classes after generation.
 --children : For all parameters, generate test data using not only the 
   parameter class but also any children of that class that are explored 
   when generating the tests. This allows many methods that take 

@@ -356,6 +356,7 @@ public class TestClassGenerator {
     t.add("params", params);
     t.add("package_name", the_class.getPackageName());
     t.add("packaged", !"".equals(the_class.getPackageName()));
+    t.add("parallel", my_config.isParallelSet());
     t.add("jmlunitng_version", JMLUnitNG.version());
     
     if (!my_config.isNoGenSet()) {

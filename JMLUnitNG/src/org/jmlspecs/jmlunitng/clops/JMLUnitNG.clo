@@ -17,6 +17,7 @@ ARGS::
   Deprecation:{"--deprecation"}
   Verbose: {"-v", "--verbose"}
   Inherited: {"--inherited"}
+  Parallel: {"--parallel"}
   Literals: {"--literals"}
   SpecLiterals: {"--spec-literals"}
   Public: {"--public"}
@@ -37,7 +38,7 @@ FORMAT::
 WHERE::
   Option:  
     Destination|RACVersion|Reflection|Children|Enum|Help|
-    Deprecation|Verbose|Inherited|Literals|SpecLiterals|
+    Deprecation|Verbose|Inherited|Parallel|Literals|SpecLiterals|
     Public|Package|Protected|
     Clean|Prune|Classpath|Specspath|DryRun|NoGen;
 

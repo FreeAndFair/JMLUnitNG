@@ -216,6 +216,7 @@ public final class JMLUnitNG implements Runnable {
     
     result.setDeprecation(the_options.isDeprecationSet());
     result.setInherited(the_options.isInheritedSet());
+    result.setParallel(the_options.isParallelSet());
     
     // protection level requires special processing
     

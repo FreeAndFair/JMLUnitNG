@@ -62,6 +62,12 @@ public class JMLUnitNGConfiguration {
   private boolean my_inherited;
   
   /**
+   * A flag indicating whether the "--parallel" option is on; 
+   * the default value is off.
+   */
+  private boolean my_parallel;
+  
+  /**
    * The protection level to scan (derived from the "--public", 
    * "--protected", "--package" options). The default level is PUBLIC.
    */
@@ -274,6 +280,24 @@ public class JMLUnitNGConfiguration {
    */
   public /*@ pure @*/ boolean isInheritedSet() {
     return my_inherited;
+  }
+  
+  // parallel setting
+  
+  /**
+   * Sets the "--parallel" option.
+   * 
+   * @param the_parallel The new setting.
+   */
+  public void setParallel(final boolean the_parallel) {
+    my_parallel = the_parallel;
+  }
+  
+  /**
+   * @return the "--parallel" setting.
+   */
+  public /*@ pure @*/ boolean isParallelSet() {
+    return my_parallel;
   }
   
   // protection level setting

@@ -22,6 +22,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   private final BooleanOption ogDeprecation;
   private final BooleanOption ogVerbose;
   private final BooleanOption ogInherited;
+  private final BooleanOption ogParallel;
   private final BooleanOption ogLiterals;
   private final BooleanOption ogSpecLiterals;
   private final BooleanOption ogPublic;
@@ -79,6 +80,9 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogInherited = new BooleanOption("Inherited", "(?:--inherited)");
     addOption(ogInherited);
     ogInherited.setProperty("aliases", "--inherited");
+    ogParallel = new BooleanOption("Parallel", "(?:--parallel)");
+    addOption(ogParallel);
+    ogParallel.setProperty("aliases", "--parallel");
     ogLiterals = new BooleanOption("Literals", "(?:--literals)");
     addOption(ogLiterals);
     ogLiterals.setProperty("aliases", "--literals");
@@ -137,14 +141,15 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogOption.addOptionOrGroup(ogNoGen);
     ogOption.addOptionOrGroup(ogClean);
     ogOption.addOptionOrGroup(ogProtected);
+    ogOption.addOptionOrGroup(ogParallel);
     ogOption.addOptionOrGroup(ogChildren);
     ogOption.addOptionOrGroup(ogHelp);
     ogOption.addOptionOrGroup(ogSpecspath);
     ogOption.addOptionOrGroup(ogReflection);
     ogOption.addOptionOrGroup(ogPackage);
     ogOption.addOptionOrGroup(ogDryRun);
-    ogOption.addOptionOrGroup(ogDestination);
     ogOption.addOptionOrGroup(ogLiterals);
+    ogOption.addOptionOrGroup(ogDestination);
     ogOption.addOptionOrGroup(ogPublic);
     ogOption.addOptionOrGroup(ogInherited);
     ogOption.addOptionOrGroup(ogRACVersion);
@@ -160,6 +165,7 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
     ogAllOptions.addOptionOrGroup(ogDeprecation);
     ogAllOptions.addOptionOrGroup(ogVerbose);
     ogAllOptions.addOptionOrGroup(ogInherited);
+    ogAllOptions.addOptionOrGroup(ogParallel);
     ogAllOptions.addOptionOrGroup(ogLiterals);
     ogAllOptions.addOptionOrGroup(ogSpecLiterals);
     ogAllOptions.addOptionOrGroup(ogPublic);
@@ -435,6 +441,30 @@ public class JMLUnitNGOptionStore extends OptionStore implements JMLUnitNGOption
   
   public BooleanOption getInheritedOption() {
     return ogInherited;
+  }
+  
+// Option Parallel.
+// Aliases: [--parallel]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isParallelSet() {
+    return ogParallel.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getParallel() {
+    return ogParallel.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawParallel() {
+    return ogParallel.getRawValue();
+  }
+  
+  public BooleanOption getParallelOption() {
+    return ogParallel;
   }
   
 // Option Literals.
