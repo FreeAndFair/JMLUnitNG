@@ -6,7 +6,7 @@
          destdir="/tmp/doc" doctitle="JMLUnitNG 1.3" 
          nodeprecated="false" nodeprecatedlist="false" noindex="false" 
          nonavbar="false" notree="false" 
-         packagenames="org.jmlspecs.jmlunitng.strategy,org.jmlspecs.jmlunitng.iterator,org.jmlspecs.jmlunitng.testng,org.jmlspecs.jmlunitng.generator,org.jmlspecs.jmlunitng.util,org.jmlspecs.jmlunitng" 
+         packagenames="org.jmlspecs.jmlunitng.strategy,org.jmlspecs.jmlunitng.iterator,org.jmlspecs.jmlunitng.objgen,org.jmlspecs.jmlunitng.testng,org.jmlspecs.jmlunitng.generator,org.jmlspecs.jmlunitng.util,org.jmlspecs.jmlunitng" 
          source="1.6" sourcepath="../src" splitindex="true" use="true" version="true">
             <link href="http://java.sun.com/javase/6/docs/api/"/>
         	<link href="http://testng.org/javadocs/"/>

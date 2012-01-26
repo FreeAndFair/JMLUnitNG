@@ -62,7 +62,7 @@ public final class JMLUnitNG implements Runnable {
   /**
    * The raw SVN revision string.
    */
-  private static final String RAW_SVN_REV = "$Rev$";
+  private static final String RAW_SVN_REV = "$Rev$"; 
   
   /**
    * The default output directory.

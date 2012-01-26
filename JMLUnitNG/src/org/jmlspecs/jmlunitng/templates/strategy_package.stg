@@ -69,7 +69,9 @@ public class <packageStrategyName(typeInfo=type)>
     // setMaxLength(1);
     <endif>
     setReflective(<if(use_reflection)>true<else>false<endif>);
-    setMaxRecursionDepth(0);
+    // uncomment to control the maximum reflective instantiation
+    // recursion depth, 0 by default
+    // setMaxRecursionDepth(0);
     <if(children)>
     
     <children:addDataClassLine()><endif>  }
