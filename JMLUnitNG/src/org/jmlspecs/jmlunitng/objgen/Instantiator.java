@@ -108,7 +108,7 @@ public class Instantiator<T> implements ObjectGenerator<T> {
     }
     try {
       my_constructor.newInstance(actualParams());
-    } catch (Exception e) {
+    } catch (final Exception e) {
       // normally we wouldn't catch "Exception", but the end result here is
       // the same for any exception
       throw new IllegalArgumentException(e);
@@ -157,7 +157,7 @@ public class Instantiator<T> implements ObjectGenerator<T> {
     if (result != null) {
       try {
         result.newInstance(actualParams());
-      } catch (Exception e) {
+      } catch (final Exception e) {
         // normally we wouldn't catch "Exception", but the end result here is
         // the same for any exception
         e.printStackTrace();
@@ -221,7 +221,7 @@ public class Instantiator<T> implements ObjectGenerator<T> {
     T result = null; 
     try {
       result = my_constructor.newInstance(actualParams());
-    } catch (Exception e) {
+    } catch (final Exception e) {
       // normally we wouldn't catch "Exception", but the end result here is
       // the same for any exception
       result = null;

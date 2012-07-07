@@ -6,7 +6,6 @@
 package org.jmlspecs.jmlunitng.strategy;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

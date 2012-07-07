@@ -71,6 +71,7 @@ public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
    * castable to the_class or an object generator that generates objects  
    * castable to the_class.
    */
+  @SuppressWarnings("rawtypes")
   private void checkClasses(final Class<T> the_class, 
                             final /*@ non_null @*/ Object[] the_array) {
     for (final Object o : the_array) {
@@ -96,7 +97,7 @@ public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public T element() throws NoSuchElementException {
     if (!hasElement()) {
       throw new NoSuchElementException("iterator has no current element");
@@ -105,7 +106,7 @@ public class ObjectArrayIterator<T> implements RepeatedAccessIterator<T> {
     if (result instanceof ObjectGenerator) {
       try {
         result = ((ObjectGenerator) result).generate();
-      } catch (Exception e) { // TODO make this more specific
+      } catch (final Exception e) { // TODO make this more specific
         result = null;
       }
     } // else result instanceof T, because of checkClasses() at construction
