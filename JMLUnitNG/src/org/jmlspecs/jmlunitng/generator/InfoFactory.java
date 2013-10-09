@@ -25,7 +25,7 @@ import javax.lang.model.element.Modifier;
 import org.jmlspecs.jmlunitng.JMLUnitNGError;
 import org.jmlspecs.jmlunitng.util.InheritanceComparator;
 import org.jmlspecs.jmlunitng.util.ProtectionLevel;
-import org.jmlspecs.openjml.API;
+import org.jmlspecs.openjml.IAPI;
 import org.jmlspecs.openjml.JmlSpecs.MethodSpecs;
 import org.jmlspecs.openjml.JmlSpecs.TypeSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
@@ -57,7 +57,6 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -110,7 +109,7 @@ public final class InfoFactory {
    * @param the_api The API to use for parsing the units.
    */
   public static void generateInfos(final List<JmlCompilationUnit> the_units, 
-                                   final API the_api) {    
+                                   final IAPI the_api) {    
     final SortedMap<ClassInfo, SortedSet<MethodInfo>> signals_cache = 
       new TreeMap<ClassInfo, SortedSet<MethodInfo>>();
     
@@ -518,7 +517,7 @@ public final class InfoFactory {
     /**
      * The OpenJML API being used.
      */
-    private final API my_api;
+    private final IAPI my_api;
     
     /**
      * The parsed enclosing ClassInfo object.
@@ -530,7 +529,7 @@ public final class InfoFactory {
      * 
      * @param the_api The API.
      */
-    public ClassInfoParser(final API the_api) {
+    public ClassInfoParser(final IAPI the_api) {
       super();
       my_api = the_api;
     }
@@ -573,7 +572,7 @@ public final class InfoFactory {
     /**
      * The OpenJML API being used.
      */
-    private final API my_api; 
+    private final IAPI my_api; 
     
     /**
      * A cache of methods associated with classes.
@@ -586,7 +585,7 @@ public final class InfoFactory {
      * @param the_api The API to use for accessing method specs.
      * @param the_cache The method cache.
      */
-    public MethodInfoParser(final API the_api, 
+    public MethodInfoParser(final IAPI the_api, 
                             final SortedMap<ClassInfo, SortedSet<MethodInfo>> the_cache) {
       super();
       my_api = the_api;

@@ -4,15 +4,6 @@
 -- ===================================================================
 -- Static Diagrams
 -- ===================================================================
-static_diagram BUILT_IN_BON_TYPES
-  component
-    effective class BOOLEAN reused
-    effective class VALUE reused
-    effective class INTEGER reused
-    effective class REAL reused
-    effective class SEQUENCE reused
-    effective class SET reused
-end
 
 static_diagram STRATEGY_RELATIONS
   component

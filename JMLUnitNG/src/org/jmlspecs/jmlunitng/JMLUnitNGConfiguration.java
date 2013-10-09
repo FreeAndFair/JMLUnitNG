@@ -45,9 +45,9 @@ public class JMLUnitNGConfiguration {
   private List<File> my_specspath = new ArrayList<File>();
   
   /**
-   * The RAC version to use. The default value is "jml4".
+   * The RAC version to use. The default value is "openjml".
    */
-  private String my_rac_version = "jml4";
+  private String my_rac_version = "openjml";
   
   /**
    * A flag indicating whether the "--deprecation" option is on;

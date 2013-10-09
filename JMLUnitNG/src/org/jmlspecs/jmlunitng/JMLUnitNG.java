@@ -21,8 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
 import org.jmlspecs.jmlunitng.clops.JMLUnitNGOptionStore;
 import org.jmlspecs.jmlunitng.clops.JMLUnitNGParser;
 import org.jmlspecs.jmlunitng.generator.ClassInfo;
@@ -33,8 +31,11 @@ import org.jmlspecs.jmlunitng.util.JavaSuffixFilter;
 import org.jmlspecs.jmlunitng.util.Logger;
 import org.jmlspecs.jmlunitng.util.ProtectionLevel;
 import org.jmlspecs.jmlunitng.util.StringTemplateUtil;
-import org.jmlspecs.openjml.API;
+import org.jmlspecs.openjml.Factory;
+import org.jmlspecs.openjml.IAPI;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
 
 /**
  * The main executable.
@@ -57,7 +58,7 @@ public final class JMLUnitNG implements Runnable {
   /**
    * The string to be prepended to the reported version.
    */
-  private static final String VERSION_STRING = "1.3";
+  private static final String VERSION_STRING = "1.4b1";
   
   /**
    * The raw SVN revision string.
@@ -483,24 +484,30 @@ public final class JMLUnitNG implements Runnable {
           new String[] {"-noPurityCheck", "-noInternalSpecs",
                         "-cp", classpath, "-specspath", specspath};
       final StringWriter openjml_results = new StringWriter();
-      final API api = new API(new PrintWriter(openjml_results), null, openjml_args);
-      final List<JmlCompilationUnit> units = 
-        api.parseFiles(file_list.toArray(new File[file_list.size()]));
-      final int numOfErrors = api.enterAndCheck(units);
-      if (numOfErrors > 0) {
-        throw new JMLUnitNGError("Encountered " + numOfErrors + " compilation errors: \n" + 
-                                 openjml_results.toString());
-      }
-      
-      // get class info for all classes before generating tests for any,
-      // to enable reflective generation of child classes
-      
-      InfoFactory.generateInfos(units, api);
-      for (JmlCompilationUnit u : units) {
-        processCompilationUnit(u, InfoFactory.getClassInfo(u));
-        if (!my_config.isNoGenSet()) {  
-          my_logger.println();
+      try {
+        final IAPI api = 
+          Factory.makeAPI(new PrintWriter(openjml_results), null, null, openjml_args);
+        final List<JmlCompilationUnit> units = 
+          api.parseFiles(file_list.toArray(new File[file_list.size()]));
+        final int numOfErrors = api.typecheck(units);
+        if (numOfErrors > 0) {
+          throw new JMLUnitNGError
+          ("Encountered " + numOfErrors + " compilation errors: \n" + 
+            openjml_results.toString());
         }
+      
+        // get class info for all classes before generating tests for any,
+        // to enable reflective generation of child classes
+      
+        InfoFactory.generateInfos(units, api);
+        for (JmlCompilationUnit u : units) {
+          processCompilationUnit(u, InfoFactory.getClassInfo(u));
+          if (!my_config.isNoGenSet()) {  
+            my_logger.println();
+          }
+        }
+      } catch (final Exception e) {
+        throw new JMLUnitNGError("Could not construct OpenJML API", e);
       }
     }
   }

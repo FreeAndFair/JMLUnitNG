@@ -49,6 +49,7 @@ public class TestClassGenerator {
     final List<String> temp = new ArrayList<String>();
     temp.add("jml4");
     temp.add("jml2");
+    temp.add("openjml");
     VALID_RAC_VERSIONS = Collections.unmodifiableList(temp);
   }
     
@@ -80,7 +81,7 @@ public class TestClassGenerator {
   /**
    * The default RAC version to generate tests for.
    */
-  public static final String DEF_RAC_VERSION = "jml4";
+  public static final String DEF_RAC_VERSION = "openjml";
   
   /**
    * The line max line width of generated code.
