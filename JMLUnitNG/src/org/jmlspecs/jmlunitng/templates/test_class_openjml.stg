@@ -72,9 +72,12 @@ public class <testClassName(class)> {
   @Test
   public void test_racEnabled() {
     Utils.useExceptions = true;
-    /*Assert.assertTrue
-    (JMLChecker.isRACCompiled(<class.fullyQualifiedName>.class),
-     "JMLUnitNG tests can only run on RAC-compiled code.");*/
+    Assert.assertTrue
+    (Utils.isRACCompiled(<testClassName(class)>.class),
+     "JMLUnitNG tests must be RAC-compiled when using OpenJML RAC.");
+    Assert.assertTrue
+    (Utils.isRACCompiled(<class.fullyQualifiedName>.class),
+     "JMLUnitNG tests can only run on RAC-compiled code.");
   } 
   
   <methods:methodTest(); separator="\n">
@@ -128,15 +131,12 @@ public void <testName(method)>
   }
   <if(method.signals)>
   <method.signals:catchClause()><endif>  catch (final JmlAssertionError $e) {
-    for (final StackTraceElement ste : $e.getStackTrace()) {
-      System.err.println("element: " + ste.getMethodName());
-    }
-
-    if (true) {
-      // meaningless test
+    if ($e.getStackTrace().length >= 1 &&
+        "<testName(method)>".equals($e.getStackTrace()[1].getMethodName())) {
+      // meaningless test because precondition failed
       throw new PreconditionSkipException($e.getMessage());
     } else {
-      // test failure
+      // test failure because something else failed
       throw new TestException($e.getMessage());
     }
   } catch (final Throwable $e) {
