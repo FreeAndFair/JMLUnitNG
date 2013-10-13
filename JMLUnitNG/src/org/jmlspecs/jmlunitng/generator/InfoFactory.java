@@ -274,6 +274,9 @@ public final class InfoFactory {
     return all_children;
   }
   
+  /**
+   * Processes the inherited methods for all classes.
+   */
   private static void processInheritedMethods() {
     final SortedSet<ClassInfo> class_set = getAllClassInfos();
     final Queue<ClassInfo> class_queue = new LinkedList<ClassInfo>();
@@ -398,14 +401,6 @@ public final class InfoFactory {
     return result;
   }
 
-  /**
-   * Creates a MethodInfo object for the given MethodSymbol enclosed in the
-   * given ClassInfo.
-   * 
-   * @param the_sym The MethodSymbol to create a MethodInfo object for.
-   * @param the_signals The ClassInfos for exception types that can be signaled 
-   * by this method.
-   */
   /*@ ensures (\forall String s; \result.getParameterTypes().contains(s);
     @             (\exists VarSymbol v; the_sym.params.contains(v); 
     @                 s.equals(v.getSimpleName().toString()))) &&
@@ -416,6 +411,17 @@ public final class InfoFactory {
     @         \result.getProtectionLevel() == getLevel(the_sym.getModifiers()) &&
     @         \result.isConstructor() == the_sym.isConstructor() &&
     @         \result.isStatic() == the_sym.isStatic();
+   */
+  /**
+   * Creates a MethodInfo object for the given MethodSymbol enclosed in the
+   * given ClassInfo.
+   * 
+   * @param the_sym The MethodSymbol to create a MethodInfo object for.
+   * @param the_signals The ClassInfos for exception types that can be signaled 
+   * by this method.
+   * @param the_literal_map The map of types to literals in the code.
+   * @param the_spec_literal_map The map of types to literals in the specs. 
+   * @return The MethodInfo object.
    */
   private static MethodInfo createMethodInfo(final MethodSymbol the_sym, 
                                              final List<ClassInfo> the_signals,

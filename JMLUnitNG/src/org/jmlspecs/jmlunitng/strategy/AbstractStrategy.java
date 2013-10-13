@@ -22,7 +22,7 @@ public abstract class AbstractStrategy implements Strategy {
   /**
    * The random seed to use for sampling data values, 0 by default.
    */
-  private long my_seed = 0L;
+  private long my_seed;
     
   /**
    * Sets the fraction of strategy values to include in the iterator.

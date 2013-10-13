@@ -58,7 +58,7 @@ public final class JMLUnitNG implements Runnable {
   /**
    * The string to be prepended to the reported version.
    */
-  private static final String VERSION_STRING = "1.4b1";
+  private static final String VERSION_STRING = "1.4rc1";
   
   /**
    * The raw SVN revision string.
@@ -93,6 +93,16 @@ public final class JMLUnitNG implements Runnable {
    * JMLUnitNG-generated files.
    */
   private static final String TC_SUFFIX;  
+  
+  /**
+   * The number of milliseconds in a second.
+   */
+  private static final int MILLIS_IN_SECOND = 1000;
+  
+  /**
+   * The number of seconds in a minute.
+   */
+  private static final int SECONDS_IN_MINUTE = 60;
   
   /**
    * The command line options store to be used.
@@ -357,6 +367,26 @@ public final class JMLUnitNG implements Runnable {
   }
   
   /**
+   * Generates a human-readable string representing an elapsed time.
+   * 
+   * @param the_time The elapsed time, in milliseconds.
+   * @return The human-readable string.
+   */
+  private static String getHumanReadableDurationFromMillis(final long the_time) {
+    final StringBuilder sb = new StringBuilder();
+    final long seconds = the_time / MILLIS_IN_SECOND;
+    
+    if (the_time / SECONDS_IN_MINUTE > 0) {
+      sb.append(seconds / SECONDS_IN_MINUTE);
+      sb.append(" min ");
+    }
+    sb.append(seconds % SECONDS_IN_MINUTE);
+    sb.append(" sec");
+    
+    return sb.toString();
+  }
+  
+  /**
    * The run method. Handles the entire execution of JMLUnitNG, once
    * command line arguments have been parsed; JMLUnitNG can be run
    * programmatically by creating a suitable JMLUnitNGConfiguration and
@@ -384,11 +414,8 @@ public final class JMLUnitNG implements Runnable {
     }
    
     my_logger.print("Elapsed time ");
-    final long end_time = (System.currentTimeMillis() - my_start_time) / 1000;
-    if (end_time / 60 > 0) {
-      my_logger.print((end_time / 60) + " min ");
-    }
-    my_logger.println((end_time % 60) + " sec");
+    final long elapsed_time = System.currentTimeMillis() - my_start_time;
+    my_logger.println(getHumanReadableDurationFromMillis(elapsed_time));
     my_logger.println();
   }
   
@@ -718,7 +745,7 @@ public final class JMLUnitNG implements Runnable {
           my_logger.println("Unable to delete " + the_file + ", check permissions.");
         }
         // if there's a corresponding .class file, delete that too
-        if (the_file.getAbsolutePath().contains(".java")) {
+        if (the_file.getAbsolutePath().contains(JAVA_SUFFIX)) {
           final File class_file = 
             new File(the_file.getAbsolutePath().replace(JAVA_SUFFIX, CLASS_SUFFIX));
           if (class_file.exists()) {

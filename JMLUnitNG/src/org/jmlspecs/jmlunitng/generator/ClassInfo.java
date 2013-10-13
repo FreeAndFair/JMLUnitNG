@@ -192,17 +192,17 @@ public class ClassInfo extends TypeInfo {
     my_literals_initialized = true;
   }
   
+  //@ requires !areMethodsInitialized();
+  /*@ requires (\exists MethodInfo m; the_methods.contains(m); 
+    @           m.isConstructor());
+    @*/
+  //@ ensures areMethodsInitialized();
   /**
    * Initializes the methods of this ClassInfo. This method may only
    * be called once.
    * 
    * @param the_methods The methods to initialize this ClassInfo with.
    */
-  //@ requires !areMethodsInitialized();
-  /*@ requires (\exists MethodInfo m; the_methods.contains(m); 
-    @           m.isConstructor());
-    @*/
-  //@ ensures areMethodsInitialized();
   public void initializeMethods(final Set<MethodInfo> the_methods) {
     my_methods.clear();
     my_methods.addAll(the_methods);
@@ -324,12 +324,12 @@ public class ClassInfo extends TypeInfo {
     return my_methods_initialized;
   }
 
-  /**
-   * Returns a Set of MethodInfo objects that represent the factory methods of
-   * the class.
-   */
   //@ requires areMethodsInitialized();
   /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isFactory()); */
+  /**
+   * @return a Set of MethodInfo objects that represent the factory methods of
+   * the class.
+   */
   public /*@ pure @*/  Set<MethodInfo> getFactoryMethods() {
     final Set<MethodInfo> result = new HashSet<MethodInfo>();
     for (MethodInfo m : my_methods) {
@@ -340,13 +340,13 @@ public class ClassInfo extends TypeInfo {
     return result;
   }
 
+  //@ requires areMethodsInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m);
+    @           m.isStatic() && !m.isFactory()); */
   /**
    * @return a Set of MethodInfo objects that represent the non-factory static
    * methods of the class.
    */
-  //@ requires areMethodsInitialized();
-  /*@ ensures (\forall MethodInfo m; \result.contains(m);
-    @           m.isStatic() && !m.isFactory()); */
   public /*@ pure @*/ Set<MethodInfo> getNonFactoryStaticMethods() {
     final Set<MethodInfo> result = new HashSet<MethodInfo>();
     for (MethodInfo m : my_methods) {
@@ -357,59 +357,57 @@ public class ClassInfo extends TypeInfo {
     return result;
   }
 
+  //@ requires areMethodsInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
   /**
    * @return a Set of MethodInfo objects that represent the inherited methods
    * of the class.
    */
-  //@ requires areMethodsInitialized();
-  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
   public /*@ pure @*/ Set<MethodInfo> getInheritedMethods() {
     return Collections.unmodifiableSet(my_inherited_methods);
   }
 
+  //@ requires areMethodsInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
   /**
    * @return a Set of MethodInfo objects that represent the non-inherited
    * methods of the class.
-   * 
-   * @return A Set of MethodInfo objects.
    */
-  //@ requires areMethodsInitialized();
-  /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
   public /*@ pure @*/ Set<MethodInfo> getNonInheritedMethods() {
     final Set<MethodInfo> result = new HashSet<MethodInfo>(my_methods);
     result.removeAll(my_inherited_methods);
     return Collections.unmodifiableSet(result);
   }
 
+  //@ requires areMethodsInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
   /**
    * @return a Set of MethodInfo objects that represent the methods of
    * the class that override inherited methods.
    */
-  //@ requires areMethodsInitialized();
-  /*@ ensures (\forall MethodInfo m; \result.contains(m); !m.isInherited()); */
   public /*@ pure @*/ Set<MethodInfo> getOverridingMethods() {
     return Collections.unmodifiableSet(my_overriding_methods);
   }
 
+  //@ requires areMethodsInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
   /**
    * @return a Set of MethodInfo objects that represent the inherited 
    * methods of the class that are overridden.
    */
-  //@ requires areMethodsInitialized();
-  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isInherited()); */
   public /*@ pure @*/ Set<MethodInfo> getOverriddenMethods() {
     return Collections.unmodifiableSet(my_overridden_methods);
   }
 
   // "What are the testable methods?"
+  //@ requires areMethodsInitialized();
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isTestable()); */
   /**
    * Returns a Set of MethodInfo objects that represent the testable methods of
    * the class. For a definition of testable, see MethodInfo.isTestable().
    * 
    * @return A Set of MethodInfo objects.
    */
-  //@ requires areMethodsInitialized();
-  /*@ ensures (\forall MethodInfo m; \result.contains(m); m.isTestable()); */
   public /*@ pure @*/ Set<MethodInfo> getTestableMethods() {
     final Set<MethodInfo> result = new HashSet<MethodInfo>();
     for (MethodInfo m : my_methods) {

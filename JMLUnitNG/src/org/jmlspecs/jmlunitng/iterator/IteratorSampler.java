@@ -17,6 +17,7 @@ import java.util.Random;
  * of the underlying iterator is always returned regardless of the fraction.
  * 
  * @author Daniel M. Zimmerman
+ * @param <T> The type to be sampled.
  * @version February 2011
  */
 public class IteratorSampler<T> implements RepeatedAccessIterator<T> {

@@ -326,6 +326,9 @@ public class TestClassGenerator {
     the_writer.write(t.render(LINE_WIDTH));
   }
   
+  /*@ requires (\forall MethodInfo m; the_methods.contains(m); 
+    @           the_class.getMethods().contains(m));
+    @*/
   /**
    * Generates a test class for the_class and writes it to the_writer. 
    * 
@@ -334,9 +337,6 @@ public class TestClassGenerator {
    * @param the_writer The writer to write the test class to.
    * @throws IOException if an IOException occurs while writing the class.
    */
-  /*@ requires (\forall MethodInfo m; the_methods.contains(m); 
-    @           the_class.getMethods().contains(m));
-    @*/
   public void generateTestClass(final /*@ non_null @*/ ClassInfo the_class,
                                 final /*@ non_null @*/ Set<MethodInfo> the_methods,
                                 final /*@ non_null @*/ Writer the_writer)
@@ -544,17 +544,17 @@ public class TestClassGenerator {
     return df.format(new Date());
   }
   
+  /*@ ensures (\forall MethodInfo m; \result.contains(m); 
+    @   m.isTestable() && 
+    @   ((m.isInherited() && my_test_inherited_methods) || !m.isInherited()) &&
+    @   ((m.isDeprecated() && my_test_deprecated_methods) || !m.isDeprecated()));
+   */
   /**
    * Returns the methods from the given class to test based on generator
    * settings.
    * 
    * @param the_class The class for which to find testable methods.
    * @return A list of methods in the_class to test.
-   */
-  /*@ ensures (\forall MethodInfo m; \result.contains(m); 
-    @   m.isTestable() && 
-    @   ((m.isInherited() && my_test_inherited_methods) || !m.isInherited()) &&
-    @   ((m.isDeprecated() && my_test_deprecated_methods) || !m.isDeprecated()));
    */
   private /*@ pure non_null @*/ Set<MethodInfo> getMethodsToTest
   (final /*@ non_null @*/ ClassInfo the_class) {

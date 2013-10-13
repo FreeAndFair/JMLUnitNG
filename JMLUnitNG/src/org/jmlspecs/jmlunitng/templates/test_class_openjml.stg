@@ -67,7 +67,7 @@ public class <testClassName(class)> {
   
   /** 
    * A test to ensure that RAC is enabled before running other tests;
-   * this also turns on RAC assertions if they were not already turned on.
+   * this also turns on RAC exceptions if they were not already turned on.
    */
   @Test
   public void test_racEnabled() {

@@ -164,8 +164,7 @@ public abstract class NonPrimitiveStrategy extends AbstractStrategy {
       ("Cannot add a data class to strategy for " + my_class);
     } else if (!my_default_data_class.isAssignableFrom(the_class)) {
       throw new ClassCastException
-      ("Cannot add " + the_class + " as a data class to " +
-       "strategy for " + my_class);
+      ("Cannot add " + the_class + " as a data class to strategy for " + my_class);
     } else if (!my_generator_classes.contains(the_class) &&
                !my_non_generator_classes.contains(the_class)) { 
       // it's not already added, so we can add it

@@ -36,6 +36,10 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
    */
   private boolean my_is_finished;
 
+  /*
+   * @ requires (\forall int i; i >= 0 && i < the_strategy_classes.length;
+   *   the_strategy_classes[i].newInstance().iterator().hasElement());
+   */
   /**
    * Creates a new ObjectArrayIterator that iterates over all combinations of
    * objects in the given Strategy classes.
@@ -43,13 +47,6 @@ public class ParameterArrayIterator implements RepeatedAccessIterator<Object[]> 
    * @param the_strategy_classes The strategies to iterate over.
    * @throws IllegalArgumentException if there is a problem calling the
    *           constructors of the strategy classes.
-   */
-  /*
-   * @ requires (\forall int i; i >= 0 && i < the_strategy_classes.length;
-   * 
-   * @ the_strategy_classes[i].newInstance().iterator().hasElement());
-   * 
-   * @
    */
   public ParameterArrayIterator(final Class<? extends Strategy>... the_strategy_classes) {
     my_strategy_classes = the_strategy_classes;

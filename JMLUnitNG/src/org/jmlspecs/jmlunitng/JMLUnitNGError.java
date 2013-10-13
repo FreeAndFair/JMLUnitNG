@@ -16,6 +16,11 @@ package org.jmlspecs.jmlunitng;
  */
 public class JMLUnitNGError extends Error {
   /**
+   * The serialVersionUID field for JMLUnitNGError.
+   */
+  private static final long serialVersionUID = 0;
+  
+  /**
    * Construct a new JMLUnitNGError with the specified detail message.
    * 
    * @param the_message The detail message.

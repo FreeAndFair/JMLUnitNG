@@ -33,13 +33,13 @@ public class <classStrategyName(classInfo=class, typeInfo=type)>
   public RepeatedAccessIterator\<?\> classValues() {
     return new ObjectArrayIterator\<Object\>
     (new Object[] 
-  	<if(!literals.empty)>
-  	 { <literals:addLiteral()>
-  	   /* above are class-scope <type.shortName> literals found by JMLUnitNG */
-  	   <classStrategyFillIn(typeInfo=type)> });
-  	<else>
-  	 { <classStrategyFillIn(typeInfo=type)> });
-  	<endif>
+    <if(!literals.empty)>
+     { <literals:addLiteral()>
+       /* above are class-scope <type.shortName> literals found by JMLUnitNG */
+       <classStrategyFillIn(typeInfo=type)> });
+    <else>
+     { <classStrategyFillIn(typeInfo=type)> });
+    <endif>
   }
   <if(!type.primitive)>
   
