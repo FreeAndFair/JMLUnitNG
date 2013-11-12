@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010-12
+ * Copyright (C) 2010-13
  */
 
 package org.jmlspecs.jmlunitng.objgen;

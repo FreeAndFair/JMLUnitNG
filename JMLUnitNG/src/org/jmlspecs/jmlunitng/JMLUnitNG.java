@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010-12
+ * Copyright (C) 2010-13
  */
 
 package org.jmlspecs.jmlunitng;
@@ -42,7 +42,7 @@ import org.stringtemplate.v4.STGroup;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version January 2012
+ * @version November 2013
  */
 public final class JMLUnitNG implements Runnable {
   /**
@@ -153,9 +153,15 @@ public final class JMLUnitNG implements Runnable {
    * @return the version string, generated from SVN properties.
    */
   public static String version() {
-    final String svnRev = RAW_SVN_REV.substring(6, RAW_SVN_REV.length() - 2);
-    
-    return VERSION_STRING + " (" + svnRev + ")";
+    final String svn_rev = RAW_SVN_REV.substring(6, RAW_SVN_REV.length() - 2);
+    String jml_version = "OpenJML Version Unknown";
+    try {
+      jml_version = Factory.makeAPI(null).version();
+    } catch (final Exception e) {
+      // don't do anything
+    }
+    return VERSION_STRING + " (" + svn_rev + "/" + 
+           jml_version + ")";
   }
   
   /**
