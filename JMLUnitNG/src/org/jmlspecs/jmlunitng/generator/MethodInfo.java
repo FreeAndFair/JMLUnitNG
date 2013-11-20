@@ -122,10 +122,11 @@ public class MethodInfo implements Comparable<MethodInfo> {
    */
   private final boolean my_is_factory;
 
-  /*@ invariant my_is_testable == 
-    @        !(my_is_constructor && my_parent_class.isAbstract()) &&
-    @        !my_protection_level.equals(ProtectionLevel.PRIVATE) && 
-    @            !UNTESTABLE_METHOD_NAMES.contains(my_name); */
+  /**
+   * Is the method a model method?
+   */
+  private final boolean my_is_model;
+  
   /**
    * Is the method testable?
    */
@@ -148,6 +149,7 @@ public class MethodInfo implements Comparable<MethodInfo> {
    * @param the_is_constructor Is the method a constructor?
    * @param the_is_static Is the method static?
    * @param the_is_deprecated Is the method deprecated?
+   * @param the_is_model Is the method a JML model method?
    */
   //@ requires !the_is_constructor || !the_is_static;
   public MethodInfo(final /*@ non_null @*/ String the_name, 
@@ -161,7 +163,7 @@ public class MethodInfo implements Comparable<MethodInfo> {
                     final /*@ non_null @*/ Map<String, SortedSet<String>> 
                         the_spec_literals,                    
                     final boolean the_is_constructor, final boolean the_is_static,
-                    final boolean the_is_deprecated) {
+                    final boolean the_is_deprecated, final boolean the_is_model) {
     my_name = the_name;
     my_enclosing_class = the_enclosing_class;
     my_declaring_class = the_declaring_class;
@@ -174,13 +176,14 @@ public class MethodInfo implements Comparable<MethodInfo> {
     my_is_static = the_is_static;
     my_is_constructor = the_is_constructor;
     my_is_deprecated = the_is_deprecated;
+    my_is_model = the_is_model;
     
     my_is_inherited = !the_enclosing_class.equals(the_declaring_class);
     my_is_factory = determineIsFactory();
     my_is_testable =
         !(my_is_constructor && my_declaring_class.isAbstract()) &&
         !my_protection_level.equals(ProtectionLevel.PRIVATE) &&
-        !UNTESTABLE_METHOD_NAMES.contains(my_name);
+        !my_is_model && !UNTESTABLE_METHOD_NAMES.contains(my_name);
     my_formatted_name = generateFormattedName();
     my_abbreviated_formatted_name = generateAbbreviatedFormattedName();
   }
@@ -405,6 +408,13 @@ public class MethodInfo implements Comparable<MethodInfo> {
    */
   public /*@ pure @*/ boolean isDeprecated() {
     return my_is_deprecated;
+  }
+
+  /**
+   * @return Is this method a JML model method?
+   */
+  public /*@ pure @*/ boolean isModel() {
+    return my_is_model;
   }
   
   /**

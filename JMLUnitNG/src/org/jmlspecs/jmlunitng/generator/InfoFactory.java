@@ -322,7 +322,7 @@ public final class InfoFactory {
                                            pm.getReturnType(), pm.getSignals(), 
                                            pm.getLiterals(), pm.getSpecLiterals(),
                                            pm.isConstructor(), pm.isStatic(),
-                                           pm.isDeprecated()));
+                                           pm.isDeprecated(), pm.isModel()));
               }
             }
           }
@@ -440,16 +440,18 @@ public final class InfoFactory {
     if ("<init>".equals(name)) {
       name = enclosing_class.getShortName();
     }
-    // is the method deprecated? this is crude but functional
+    // is the method deprecated? is it a model method? this is crude but functional
     boolean deprecated = false;
+    boolean model = false;
     final List<Attribute.Compound> annotations = the_sym.getAnnotationMirrors();
     for (Attribute.Compound a : annotations) {
       deprecated |= "@java.lang.Deprecated".equals(a.toString()); 
+      model |= "@org.jmlspecs.annotation.Model".equals(a.toString());
     }
     return new MethodInfo(name, enclosing_class, enclosing_class, level, params, 
                           new TypeInfo(the_sym.getReturnType().toString()), the_signals, 
                           the_literal_map, the_spec_literal_map,
-                          the_sym.isConstructor(), the_sym.isStatic(), deprecated);
+                          the_sym.isConstructor(), the_sym.isStatic(), deprecated, model);
   }
 
   /**
