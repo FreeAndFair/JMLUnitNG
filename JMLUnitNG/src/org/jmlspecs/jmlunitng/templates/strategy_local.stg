@@ -23,7 +23,7 @@ import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
  */
-public class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=param)>
+public /*@ nullable_by_default */ class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=param)>
   extends <classStrategyName(classInfo=class, typeInfo=param.type)> {
   /**
    * @return local-scope values for parameter 

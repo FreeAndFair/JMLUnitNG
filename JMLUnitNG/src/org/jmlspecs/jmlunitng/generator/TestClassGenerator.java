@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010-13
+ * Copyright (C) 2010-14
  */
 
 package org.jmlspecs.jmlunitng.generator;

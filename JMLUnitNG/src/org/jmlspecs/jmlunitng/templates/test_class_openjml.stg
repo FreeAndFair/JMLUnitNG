@@ -9,8 +9,7 @@ main(date, class, methods, params, package_name, packaged, parallel, jmlunitng_v
  * <doNotModifyString()>
  */
  
-<if (packaged)>
-package <package_name>;
+<if (packaged)>package <package_name>;
 
 <endif>
 
@@ -46,7 +45,7 @@ import <strategyPackageName(classInfo=class)>.*;
  * @version <date>
  */
  
-public class <testClassName(class)> {
+public /*@ nullable_by_default */ class <testClassName(class)> {
   /**
    * The main method. Allows the tests to be run without a testng.xml or
    * the use of the TestNG executable/plugin.
@@ -72,9 +71,9 @@ public class <testClassName(class)> {
   @Test
   public void test_racEnabled() {
     Utils.useExceptions = true;
-    Assert.assertTrue
+    Assert.assertFalse
     (Utils.isRACCompiled(<testClassName(class)>.class),
-     "JMLUnitNG tests must be RAC-compiled when using OpenJML RAC.");
+     "JMLUnitNG tests must not be RAC-compiled when using OpenJML RAC.");
     Assert.assertTrue
     (Utils.isRACCompiled(<class.fullyQualifiedName>.class),
      "JMLUnitNG tests can only run on RAC-compiled code.");
@@ -131,8 +130,9 @@ public void <testName(method)>
   }
   <if(method.signals)>
   <method.signals:catchClause()><endif>  catch (final JmlAssertionError $e) {
-    if ($e.getStackTrace().length >= 1 &&
-        "<testName(method)>".equals($e.getStackTrace()[1].getMethodName())) {
+    if ($e.jmlAssertionType.equals("Precondition") &&
+        $e.getStackTrace().length >= 4 &&
+        "<testName(method)>".equals($e.getStackTrace()[3].getMethodName())) {
       // meaningless test because precondition failed
       throw new PreconditionSkipException($e.getMessage());
     } else {

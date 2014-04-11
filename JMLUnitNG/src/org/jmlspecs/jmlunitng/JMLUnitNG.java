@@ -1,6 +1,6 @@
 /*
  * JMLUnitNG 
- * Copyright (C) 2010-13
+ * Copyright (C) 2010-14
  */
 
 package org.jmlspecs.jmlunitng;
@@ -42,7 +42,7 @@ import org.stringtemplate.v4.STGroup;
  * 
  * @author Jonathan Hogins
  * @author Daniel M. Zimmerman
- * @version November 2013
+ * @version April 2014
  */
 public final class JMLUnitNG implements Runnable {
   /**

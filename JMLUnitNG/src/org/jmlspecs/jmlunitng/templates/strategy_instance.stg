@@ -30,7 +30,7 @@ import org.jmlspecs.jmlunitng.strategy.ObjectStrategy;
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
  */
-public class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
+public /*@ nullable_by_default */ class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
   /**
    * @return local-scope instances of <class.shortName>.
    */

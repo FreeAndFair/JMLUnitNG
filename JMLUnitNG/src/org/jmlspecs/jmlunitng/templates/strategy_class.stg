@@ -25,7 +25,7 @@ import <class.packageName>.<packageStrategyName(typeInfo=type)>;<endif>
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
  */
-public class <classStrategyName(classInfo=class, typeInfo=type)> 
+public /*@ nullable_by_default */ class <classStrategyName(classInfo=class, typeInfo=type)> 
   extends <packageStrategyName(typeInfo=type)> {
   /**
    * @return class-scope values for type <type.fullyQualifiedName>.

@@ -9,8 +9,7 @@ main(date, class, methods, params, package_name, packaged, parallel, jmlunitng_v
  * <doNotModifyString()>
  */
  
-<if (packaged)>
-package <package_name>;
+<if (packaged)>package <package_name>;
 
 <endif>
 

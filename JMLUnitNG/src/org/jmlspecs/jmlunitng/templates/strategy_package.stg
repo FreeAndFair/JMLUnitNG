@@ -23,7 +23,7 @@ import org.jmlspecs.jmlunitng.strategy.<if(!type.array)><baseStrategyMap.(type.f
  * @author JMLUnitNG <jmlunitng_version>
  * @version <date>
  */
-public class <packageStrategyName(typeInfo=type)> 
+public /*@ nullable_by_default */ class <packageStrategyName(typeInfo=type)> 
   extends <if(!type.array)><baseStrategyMap.(type.fullyQualifiedName)><else>ArrayStrategy<endif> {
   /**
    * @return package-scope values for type <type.fullyQualifiedName>.
