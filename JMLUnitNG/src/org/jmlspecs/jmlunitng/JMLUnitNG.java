@@ -1,7 +1,7 @@
 /*
  * JMLUnitNG 
  * Copyright (C) 2010-14
- */
+ */ 
 
 package org.jmlspecs.jmlunitng;
 
