@@ -129,18 +129,20 @@ public class DynamicArrayIterator implements RepeatedAccessIterator<Object> {
       for (int i = 0; i < my_strategies.length; i++) {
         my_strategies[i] = newStrategy();
       }
-    } else if (!my_is_finished) {
+    }
+    
+    if (!my_is_finished) {
       // refill all the strategies that need it
       for (int i = 0; i < my_strategies.length; i++) {
         if (!my_strategies[i].hasElement()) {
           my_strategies[i] = newStrategy();
         }
       }
-    }
 
-    my_element = Array.newInstance(my_component_type, my_strategies.length);
-    for (int i = 0; i < my_strategies.length; i++) {
-      Array.set(my_element, i, my_strategies[i].element());
+      my_element = Array.newInstance(my_component_type, my_strategies.length);
+      for (int i = 0; i < my_strategies.length; i++) {
+        Array.set(my_element, i, my_strategies[i].element());
+      } 
     } // else the element stays at its default value
   }
 
