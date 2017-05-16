@@ -1,0 +1,82 @@
+import "shared_java.stg"
+
+main(date, package, type, jmlunitng_version, use_reflection, children) ::= <<
+/*
+ * Test data strategy for package <package>.
+ *
+ * <generatedLine(versionString=jmlunitng_version, dateString=date)>
+ * <doNotModifyString()>
+ */
+<if(package)>
+ 
+ package <package>;
+
+<endif>
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
+import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
+import org.jmlspecs.jmlunitng.strategy.<if(!type.array)><baseStrategyMap.(type.fullyQualifiedName)><else>ArrayStrategy<endif>;
+ 
+/**
+ * Test data strategy for package <if(package)><package><else>\<default\><endif>. Provides
+ * package-scope test values for type <type.fullyQualifiedName>.
+ * 
+ * @author JMLUnitNG <jmlunitng_version>
+ * @version <date>
+ */
+public /*@ nullable_by_default */ class <packageStrategyName(typeInfo=type)> 
+  extends <if(!type.array)><baseStrategyMap.(type.fullyQualifiedName)><else>ArrayStrategy<endif> {
+  /**
+   * @return package-scope values for type <type.fullyQualifiedName>.
+   */
+  public RepeatedAccessIterator\<?\> packageValues() {
+    return new ObjectArrayIterator\<Object\>
+    (new Object[] 
+     <packageStrategyFillIn(typeInfo=type)>);
+  }
+  <if(!type.primitive)>
+  
+  /**
+   * Constructor. 
+   <if(type.array)>
+   * The maximum length of generated arrays can be controlled here for
+   * parameters of type <type.fullyQualifiedName>
+   * in this package by changing the parameter to \<code\>setMaxLength\</code\>.
+   <else>
+   * The use of reflection can be controlled here for method 
+   * parameters of type <type.fullyQualifiedName>
+   * in this package by changing the parameters to \<code\>setReflective\</code\>
+   * and \<code\>setMaxRecursionDepth\<code\>.
+   <endif>
+   * In addition, the data generators used can be changed by adding 
+   * additional data class lines, or by removing some of the automatically 
+   * generated ones. Note that lower-level strategies can override any 
+   * behavior specified here by calling the same control methods in 
+   * their own constructors.
+   *
+   * @see NonPrimitiveStrategy#addDataClass(Class\<?\>)
+   * @see NonPrimitiveStrategy#clearDataClasses()
+   <if(type.array)>
+   * @see ArrayStrategy#setMaxLength(int)
+   <else>
+   * @see ObjectStrategy#setReflective(boolean)
+   * @see ObjectStrategy#setMaxRecursionDepth(int)
+   <endif>
+   */
+  public <packageStrategyName(typeInfo=type)>() {
+    super(<type.fullyQualifiedName>.class);
+    <if(type.array)>
+    // uncomment to control the maximum array length, 1 by default
+    // setMaxLength(1);
+    <endif>
+    setReflective(<if(use_reflection)>true<else>false<endif>);
+    // uncomment to control the maximum reflective instantiation
+    // recursion depth, 0 by default
+    // setMaxRecursionDepth(0);
+    <if(children)>
+    
+    <children:addDataClassLine()><endif>  }
+  <endif>
+}
+
+>>
+packageStrategyFillIn(typeInfo) ::= "{ /* add package-scope <typeInfo.fullyQualifiedName> values or generators here */ }"

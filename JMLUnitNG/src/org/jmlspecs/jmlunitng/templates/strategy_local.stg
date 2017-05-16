@@ -1,0 +1,88 @@
+import "shared_java.stg"
+
+main(date, class, method, param, literals, jmlunitng_version, use_reflection, children) ::= <<
+/*
+ * Test data strategy for <class.fullyQualifiedName>.
+ *
+ * <generatedLine(versionString=jmlunitng_version, dateString=date)>
+ * <doNotModifyString()>
+ */
+
+<if(class.packaged)> 
+package <strategyPackageName(classInfo=class)>;
+
+<endif>
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
+import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
+
+/**
+ * Test data strategy for <class.fullyQualifiedName>. Provides
+ * test values for parameter "<param.type.shortName> <param.name>" 
+ * of method "<method>". 
+ * 
+ * @author JMLUnitNG <jmlunitng_version>
+ * @version <date>
+ */
+public /*@ nullable_by_default */ class <localStrategyName(classInfo=class, methodInfo=method, paramInfo=param)>
+  extends <classStrategyName(classInfo=class, typeInfo=param.type)> {
+  /**
+   * @return local-scope values for parameter 
+   *  "<param.type.shortName> <param.name>".
+   */
+  public RepeatedAccessIterator\<?\> localValues() {
+    return new ObjectArrayIterator\<Object\>
+    (new Object[]
+    <if(!literals.empty)>
+     { <literals:addLiteral()>
+       /* above are local-scope <param.type.shortName> literals found by JMLUnitNG */
+       <localStrategyFillIn(typeInfo=param.type)> });
+    <else>
+     { <localStrategyFillIn(typeInfo=param.type)> });
+    <endif>
+  }
+  <if(!param.type.primitive)>
+  
+  /**
+   * Constructor.
+   <if(param.type.array)>
+   * The maximum length of generated arrays can be controlled here for
+   * parameter "<param.type.shortName> <param.name>" of method "<method>"
+   * by changing the parameter to \<code\>setMaxLength\</code\>.
+   <else>
+   * The use of reflection can be controlled here for  
+   * "<param.type.shortName> <param.name>" of method "<method>" 
+   * by changing the parameters to \<code\>setReflective\</code\>
+   * and \<code\>setMaxRecursionDepth\<code\>.
+   <endif>
+   * In addition, the data generators used can be changed by adding 
+   * additional data class lines, or by removing some of the automatically 
+   * generated ones. Since this is the lowest level of strategy, the 
+   * behavior will be exactly as you specify here if you clear the existing 
+   * list of classes first.
+   *
+   * @see NonPrimitiveStrategy#addDataClass(Class\<?\>)
+   * @see NonPrimitiveStrategy#clearDataClasses()
+   <if(param.type.array)>
+   * @see ArrayStrategy#setMaxLength(int)
+   <else>
+   * @see ObjectStrategy#setReflective(boolean)
+   * @see ObjectStrategy#setMaxRecursionDepth(int)
+   <endif>
+   */
+  public <localStrategyName(classInfo=class, methodInfo=method, paramInfo=param)>() {
+    super();
+    <if(param.type.array)>
+    // uncomment to control the maximum array length, 1 by default
+    // setMaxLength(1); 
+    <endif>
+    // uncomment to control the maximum reflective instantiation
+    // recursion depth, 0 by default
+    // setMaxRecursionDepth(0);
+    <if(children)>
+    
+    <children:addDataClassLine()><endif>  }
+  <endif>
+}
+
+>>
+localStrategyFillIn(typeInfo) ::= "/* add local-scope <typeInfo.fullyQualifiedName> values or generators here */"

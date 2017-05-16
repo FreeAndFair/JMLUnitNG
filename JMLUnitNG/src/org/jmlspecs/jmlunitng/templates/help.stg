@@ -1,0 +1,61 @@
+help_msg(version) ::= <<
+
+JMLUnitNG - Generate TestNG Classes for JML-Annotated Java
+
+java -jar jmlunitng.jar [OPTION] ... path-list
+
+Generates unit tests for all Java source files listed in,  
+or recursively contained in directories listed in, path-list. 
+
+-d, --dest [DIRECTORY] : Use DIRECTORY as the output directory for 
+  generated classes.
+-cp \<directory-list\>, --classpath \<directory-list\> : Use the given 
+  list of directories and Jar files (formatted as for javac) as the  
+  classpath during parsing (CLASSPATH environment variable, by default).
+-sp \<directory-list\>, --specspath \<directory-list\> : Use the given 
+  list of directories and Jar files (formatted as for javac) as the 
+  specspath during parsing. (SPECSPATH environment variable, by default).
+--rac-version \<version-string\> : Generate RAC handling code 
+  for the specified JML RAC version; the default value is 'openjml'
+  for OpenJML RAC. The other supported values are 'jml2' and 'jml4'
+  for JML2 and JML4 RAC (respectively).
+--deprecation : Generate tests for deprecated methods.
+--inherited : Generate tests for inherited methods.
+--public : Generate tests only for public methods (default).
+--protected : Generate tests for protected and public methods.
+--package : Generate tests for package (no protection modifier), 
+  protected and public methods.
+--parallel : Generate data providers that default to running in parallel.
+  This allows multiple tests of the same method to run concurrently, and
+  can be changed in the test classes after generation. 
+--reflection : Generate test data reflectively. This can be changed
+  in the strategy classes after generation.
+--children : For all parameters, generate test data using not only the 
+  parameter class but also any children of that class that are explored 
+  when generating the tests. This allows many methods that take 
+  interface/abstract class parameters to be tested automatically.
+--literals : Use literals found in classes and methods as default data
+  values for testing those classes and methods (literals found outside
+  methods, e.g. in static fields, are used for all methods).
+--spec-literals : Use literals found in class and method specifications
+  as default data values for testing those classes and methods (literals
+  found in class specifications are used for all methods).
+--clean : Remove from the destination path all old JMLUnitNG-
+  generated files, including any manual modifications. If no 
+  destination path is set, all files and directories in path-list
+  are cleaned.
+--prune : Remove from the destination path any old JMLUnitNG-
+  generated files for path-list that do not conform to the current 
+  API of the classes under test and the current JMLUnitNG options.
+  If no destination path is set, all files and directories in 
+  path-list are pruned.
+--no-gen : Do not generate tests, use in conjunction with --clean
+  or --prune to remove unwanted JMLUnitNG-generated files.
+--dry-run : Display status/progress information about the operations 
+  that would be performed but do not modify the filesystem.
+-v, --verbose : Display status/progress information.
+-h, --help : Display this message.
+
+Version: <version>
+
+>>

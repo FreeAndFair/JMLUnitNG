@@ -1,0 +1,89 @@
+import "shared_java.stg"
+
+main(date, class, type, literals, jmlunitng_version, use_reflection, children) ::= <<
+/*
+ * Test data strategy for <class.fullyQualifiedName>.
+ *
+ * <generatedLine(versionString=jmlunitng_version, dateString=date)>
+ * <doNotModifyString()>
+ */
+<if(class.packaged)>
+
+package <strategyPackageName(classInfo=class)>;
+
+<endif>
+
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
+import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
+<if(class.packaged)>
+import <class.packageName>.<packageStrategyName(typeInfo=type)>;<endif>
+ 
+/**
+ * Test data strategy for <class.fullyQualifiedName>. Provides
+ * class-scope test values for type <type.fullyQualifiedName>.
+ * 
+ * @author JMLUnitNG <jmlunitng_version>
+ * @version <date>
+ */
+public /*@ nullable_by_default */ class <classStrategyName(classInfo=class, typeInfo=type)> 
+  extends <packageStrategyName(typeInfo=type)> {
+  /**
+   * @return class-scope values for type <type.fullyQualifiedName>.
+   */
+  public RepeatedAccessIterator\<?\> classValues() {
+    return new ObjectArrayIterator\<Object\>
+    (new Object[] 
+    <if(!literals.empty)>
+     { <literals:addLiteral()>
+       /* above are class-scope <type.shortName> literals found by JMLUnitNG */
+       <classStrategyFillIn(typeInfo=type)> });
+    <else>
+     { <classStrategyFillIn(typeInfo=type)> });
+    <endif>
+  }
+  <if(!type.primitive)>
+  
+  /**
+   <if(type.array)>
+   * The maximum length of generated arrays can be controlled here for
+   * parameters of type <type.fullyQualifiedName>
+   * in this class by changing the parameter to \<code\>setMaxLength\</code\>.
+   <else>
+   * The use of reflection can be controlled here for  
+   * parameters of type <type.fullyQualifiedName>
+   * in this class by changing the parameters to \<code\>setReflective\</code\>
+   * and \<code\>setMaxRecursionDepth\<code\>. 
+   <endif>
+   * In addition, the data generators used can be changed by adding 
+   * additional data class lines, or by removing some of the automatically 
+   * generated ones. Note that lower-level strategies can override any 
+   * behavior specified here by calling the same control methods in 
+   * their own constructors.
+   *
+   * @see NonPrimitiveStrategy#addDataClass(Class\<?\>)
+   * @see NonPrimitiveStrategy#clearDataClasses()
+   <if(type.array)>
+   * @see ArrayStrategy#setMaxLength(int)
+   <else>
+   * @see ObjectStrategy#setReflective(boolean)
+   * @see ObjectStrategy#setMaxRecursionDepth(int)
+   <endif>
+   */
+  public <classStrategyName(classInfo=class, typeInfo=type)>() {
+    super();
+    <if(type.array)>
+    // uncomment to control the maximum array length, 1 by default
+    // setMaxLength(1); 
+    <endif>
+    setReflective(<if(use_reflection)>true<else>false<endif>);
+    // uncomment to control the maximum reflective instantiation
+    // recursion depth, 0 by default
+    // setMaxRecursionDepth(0);
+    <if(children)>
+    
+    <children:addDataClassLine()><endif>  }
+  <endif>
+}
+
+>>
+classStrategyFillIn(typeInfo) ::= "/* add class-scope <typeInfo.fullyQualifiedName> values or generators here */"

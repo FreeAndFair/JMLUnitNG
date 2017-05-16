@@ -1,0 +1,101 @@
+import "shared_java.stg"
+
+main(date, class, jmlunitng_version, use_reflection) ::= <<
+/*
+ * Test data strategy for <class.fullyQualifiedName>.
+ *
+ * <generatedLine(versionString=jmlunitng_version, dateString=date)>
+ * <doNotModifyString()>
+ */
+ 
+<if(class.packaged)>
+package <class.packageName>;
+
+<endif>
+import java.util.LinkedList;
+import java.util.List;
+
+import org.jmlspecs.jmlunitng.iterator.InstantiationIterator;
+import org.jmlspecs.jmlunitng.iterator.IteratorAdapter;
+import org.jmlspecs.jmlunitng.iterator.NonNullMultiIterator;
+import org.jmlspecs.jmlunitng.iterator.ObjectArrayIterator;
+import org.jmlspecs.jmlunitng.iterator.RepeatedAccessIterator;
+import org.jmlspecs.jmlunitng.strategy.ObjectStrategy;
+
+/**
+ * Test data strategy for <class.fullyQualifiedName>. Provides
+ * instances of <class.fullyQualifiedName> for testing, using
+ * parameters from constructor tests.
+ * 
+ * @author JMLUnitNG <jmlunitng_version>
+ * @version <date>
+ */
+public /*@ nullable_by_default */ class <instanceStrategyName(classInfo=class)> extends ObjectStrategy {
+  /**
+   * @return local-scope instances of <class.shortName>.
+   */
+  public RepeatedAccessIterator\<?\> localValues() {
+    return new ObjectArrayIterator\<Object\>
+    (new Object[]
+     <instanceStrategyFillIn(classInfo=class)>);
+  }
+  
+  /**
+   * @return default instances of <class.shortName>, generated
+   *  using constructor test parameters.
+   */ 
+  public RepeatedAccessIterator\<<class.fullyQualifiedName>\> defaultValues() {
+<if(!class.abstract)>
+    final List\<RepeatedAccessIterator\<<class.fullyQualifiedName>\>\> iters = 
+      new LinkedList\<RepeatedAccessIterator\<<class.fullyQualifiedName>\>\>();
+
+    // an instantiation iterator for the default constructor
+    // (if there isn't one, it will fail silently)
+    iters.add(new InstantiationIterator\<<class.fullyQualifiedName>\>
+      (<class.fullyQualifiedName>.class, 
+       new Class\<?\>[0], 
+       new ObjectArrayIterator\<Object[]\>(new Object[][]{{}})));
+    
+<class.methods:{n | <instanceStrategyConstructorData(method=n)>}>
+    return new NonNullMultiIterator\<<class.fullyQualifiedName>\>(iters);
+<else>
+    // abstract classes cannot be constructed
+    return new ObjectArrayIterator\<<class.fullyQualifiedName>\>(new <class.fullyQualifiedName>[0]);
+<endif>
+  }
+  
+  /**
+   * Constructor. The boolean parameter to \<code\>setReflective\</code\>
+   * determines whether or not reflection will be used to generate
+   * test objects, and the int parameter to \<code\>setMaxRecursionDepth\</code\>
+   * determines how many levels reflective generation of self-referential classes
+   * will recurse.
+   *
+   * @see ObjectStrategy#setReflective(boolean)
+   * @see ObjectStrategy#setMaxRecursionDepth(int)
+   */
+  public <instanceStrategyName(classInfo=class)>() {
+    super(<class.fullyQualifiedName>.class);
+    setReflective(<if(use_reflection)>true<else>false<endif>);
+    // uncomment to control the maximum reflective instantiation
+    // recursion depth, 0 by default
+    // setMaxRecursionDepth(0);
+  }
+}
+
+>>
+
+instanceStrategyConstructorData(method) ::= <<
+<if(method.constructor)>
+<if(method.parameters)>
+    // parameters for method <method>
+    iters.add(new InstantiationIterator\<<class.fullyQualifiedName>\>
+      (<class.fullyQualifiedName>.class, 
+       new Class\<?\>[]
+       {<paramClasses(method)>},
+       <testClassName(class)>.<dataProviderName(method)>().wrapped()));
+<endif><endif>
+>>
+
+paramClasses(method) ::= "<method.parameters:{n | <rawtype(paramInfo=n)>.class}; separator=\", \n        \">"
+instanceStrategyFillIn(classInfo) ::= "{ /* add <classInfo.fullyQualifiedName> values or generators here */ }"

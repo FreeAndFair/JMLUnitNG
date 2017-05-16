@@ -1,0 +1,53 @@
+NAME::
+  JMLUnitNG
+
+ARGS::
+  Destination:{"-d", "--dest"}:{string}
+  RACVersion: {"--rac-version"}:{string}
+  Files:{}:{file-list}:
+    [allowmultiple="false", between="", mustexist="true", 
+     canbedir="true", allowdash="false"]
+  DashDash:{"--"}
+  DashFiles:{}:{file-list}:
+    [allowmultiple="false", between="", mustexist="true",
+     canbedir="true", allowdash="true"]
+  Reflection:{"--reflection"}
+  Children:{"--children"}
+  Help:{"-h", "--help"} 
+  Deprecation:{"--deprecation"}
+  Verbose: {"-v", "--verbose"}
+  Inherited: {"--inherited"}
+  Parallel: {"--parallel"}
+  Literals: {"--literals"}
+  SpecLiterals: {"--spec-literals"}
+  Public: {"--public"}
+  Protected: {"--protected"}
+  Package: {"--package"}
+  Clean: {"--clean"}
+  Prune: {"--prune"}
+  Classpath: {"-cp", "--classpath"}:{file-list}:
+    [allowmultiple="true", splitter=":", mustexist="true"]
+  Specspath: {"-sp", "--specspath"}:{file-list}:
+    [allowmultiple="true", splitter=":", mustexist="true"]
+  DryRun: {"--dry-run"}
+  NoGen: {"--no-gen"}
+
+FORMAT::
+  (Option | Files)* (DashDash DashFiles*)?;  
+
+WHERE::
+  Option:  
+    Destination|RACVersion|Reflection|Children|Enum|Help|
+    Deprecation|Verbose|Inherited|Parallel|Literals|SpecLiterals|
+    Public|Package|Protected|
+    Clean|Prune|Classpath|Specspath|DryRun|NoGen;
+
+FLY::
+
+OVERRIDES::
+  // default is to generate tests for only public methods
+  {$(Public?)} -> Public := {true};
+  {$(Protected?)} -> Protected := {false};
+  {$(Package?)} -> Package := {false};
+  
+VALIDITY::
