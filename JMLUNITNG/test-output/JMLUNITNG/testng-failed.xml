@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="5" skipfailedinvocationCounts="false" verbose="1" name="Failed suite [JMLUNITNG]" junit="false" parallel="false" annotations="JDK">
+  <test name="Test.Multiply_JMLUNITNG_Test(failed)" junit="false" parallel="false" annotations="JDK">
+    <classes>
+      <class name="Test.Multiply_JMLUNITNG_Test">
+        <methods>
+          <include name="test_get_sqaure_Addition_int"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

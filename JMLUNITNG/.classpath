@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="jmlmodels.jar"/>
+	<classpathentry exported="true" kind="lib" path="jmlruntime.jar"/>
+	<classpathentry exported="true" kind="lib" path="testng-5.9-jdk15.jar"/>
+	<classpathentry kind="lib" path="clops-runtime.jar"/>
+	<classpathentry kind="lib" path="jml-release.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

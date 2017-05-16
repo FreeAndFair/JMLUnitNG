@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test.Square_JMLUNITNG_Test" failures="0" tests="10" time="0.14" errors="0">
+  <properties/>
+  <testcase name="test_get_sqaure_int" time="0.062" classname="Test.Square_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int" time="0.0" classname="Test.Square_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int" time="0.0" classname="Test.Square_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int" time="0.016" classname="Test.Square_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int" time="0.0" classname="Test.Square_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int" time="0.0" classname="Test.Square_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int" time="0.0" classname="Test.Square_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int" time="0.015" classname="Test.Square_JMLUNITNG_Test">
+    <skipped/>
+  </testcase>
+  <testcase name="test_get_sqaure_int" time="0.0" classname="Test.Square_JMLUNITNG_Test"/>
+  <testcase name="test_get_sqaure_int" time="0.0" classname="Test.Square_JMLUNITNG_Test"/>
+</testsuite>

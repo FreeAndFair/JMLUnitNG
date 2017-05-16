@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This configuration file was written by the eclipse-cs plugin configuration editor
+-->
+<!--
+    Checkstyle-Configuration: TCSS 305 Next Line Style
+    Description: The next line style for Winter 2008 TCSS 305. 
+-->
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<module name="Checker">
+    <property name="severity" value="warning"/>
+    <module name="TreeWalker">
+        <property name="tabWidth" value="2"/>
+        <module name="JavadocType">
+            <property name="authorFormat" value=".*"/>
+            <property name="versionFormat" value=".*"/>
+        </module>
+        <module name="JavadocVariable"/>
+        <module name="JavadocMethod"/>
+        <module name="JavadocStyle"/>
+        <module name="ConstantName"/>
+        <module name="LocalFinalVariableName">
+            <property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
+        </module>
+        <module name="LocalVariableName">
+            <property name="format" value="^[a-z][_a-z0-9]*$"/>
+        </module>
+        <module name="MemberName">
+            <property name="format" value="^my_[a-z][_a-zA-Z0-9]*$"/>
+        </module>
+        <module name="MethodName">
+            <property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
+        </module>
+        <module name="ParameterName">
+            <property name="format" value="(^a_[a-z][_a-z0-9]*$)|(^an_[a-z][_a-z0-9]*$)|(^the_[a-z][_a-z0-9]*$)|(^some_[a-z][_a-z0-9]*$)|(^[a-z][_a-z0-9]*_[0-9]$)"/>
+        </module>
+        <module name="TypeName"/>
+        <module name="AvoidStarImport"/>
+        <module name="IllegalImport"/>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+        <module name="ExecutableStatementCount">
+            <property name="max" value="10"/>
+            <property name="tokens" value="CTOR_DEF"/>
+        </module>
+        <module name="ExecutableStatementCount">
+            <property name="max" value="50"/>
+            <property name="tokens" value="METHOD_DEF"/>
+        </module>
+        <module name="ExecutableStatementCount">
+            <property name="max" value="5"/>
+            <property name="tokens" value="INSTANCE_INIT"/>
+        </module>
+        <module name="FileLength">
+            <property name="max" value="1000"/>
+        </module>
+        <module name="LineLength">
+            <property name="ignorePattern" value="(^ *//\*@ .+$)|(^ *@.+$)"/>
+            <property name="max" value="95"/>
+            <property name="tabWidth" value="2"/>
+        </module>
+        <module name="MethodLength">
+            <property name="max" value="20"/>
+            <property name="tokens" value="CTOR_DEF"/>
+        </module>
+        <module name="MethodLength">
+            <property name="max" value="80"/>
+            <property name="tokens" value="METHOD_DEF"/>
+        </module>
+        <module name="AnonInnerLength"/>
+        <module name="ParameterNumber">
+            <property name="max" value="8"/>
+        </module>
+        <module name="EmptyForIteratorPad"/>
+        <module name="NoWhitespaceAfter">
+            <property name="tokens" value="ARRAY_INIT,BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
+        </module>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OperatorWrap">
+            <property name="option" value="eol"/>
+            <property name="tokens" value="ASSIGN,BAND,BAND_ASSIGN,BOR,BOR_ASSIGN,BSR,BSR_ASSIGN,BXOR,BXOR_ASSIGN,COLON,DIV,DIV_ASSIGN,EQUAL,GE,GT,LAND,LE,LITERAL_INSTANCEOF,LOR,LT,MINUS,MINUS_ASSIGN,MOD,MOD_ASSIGN,NOT_EQUAL,PLUS,PLUS_ASSIGN,QUESTION,SL,SL_ASSIGN,SR,SR_ASSIGN,STAR,STAR_ASSIGN"/>
+        </module>
+        <module name="ParenPad"/>
+        <module name="TabCharacter"/>
+        <module name="WhitespaceAfter"/>
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+        <module name="RightCurly">
+            <property name="option" value="alone"/>
+        </module>
+        <module name="CovariantEquals"/>
+        <module name="DoubleCheckedLocking"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="FinalLocalVariable">
+            <property name="tokens" value="PARAMETER_DEF,VARIABLE_DEF"/>
+        </module>
+        <module name="HiddenField"/>
+        <module name="InnerAssignment"/>
+        <module name="MagicNumber"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="RedundantThrows">
+            <property name="allowUnchecked" value="true"/>
+        </module>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="NestedIfDepth">
+            <property name="max" value="2"/>
+        </module>
+        <module name="NestedTryDepth">
+            <property name="max" value="2"/>
+        </module>
+        <module name="SuperClone"/>
+        <module name="SuperFinalize"/>
+        <module name="IllegalCatch"/>
+        <module name="ReturnCount">
+            <property name="max" value="3"/>
+        </module>
+        <module name="IllegalType">
+            <property name="tokens" value="METHOD_DEF,PARAMETER_DEF,VARIABLE_DEF"/>
+            <property name="legalAbstractClassNames" value="AbstractButton"/>
+        </module>
+        <module name="DeclarationOrder"/>
+        <module name="ExplicitInitialization"/>
+        <module name="VisibilityModifier">
+            <property name="packageAllowed" value="true"/>
+            <property name="protectedAllowed" value="true"/>
+        </module>
+        <module name="FinalClass"/>
+        <module name="InterfaceIsType"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="MutableException"/>
+        <module name="CyclomaticComplexity"/>
+        <module name="UpperEll"/>
+        <module name="ArrayTypeStyle"/>
+        <module name="Indentation">
+            <property name="basicOffset" value="2"/>
+            <property name="caseIndent" value="2"/>
+        </module>
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+(\.[a-z_][a-z0-9_]*)*$"/>
+        </module>
+        <module name="MethodParamPad">
+            <property name="allowLineBreaks" value="true"/>
+        </module>
+        <module name="TypecastParenPad">
+            <property name="tokens" value="RPAREN,TYPECAST"/>
+        </module>
+        <module name="NeedBraces"/>
+        <module name="LeftCurly">
+            <property name="option" value="nl"/>
+        </module>
+        <module name="AvoidInlineConditionals"/>
+        <module name="DefaultComesLast"/>
+        <module name="IllegalThrows"/>
+        <module name="ModifiedControlVariable"/>
+        <module name="MultipleStringLiterals"/>
+        <module name="ReturnCount">
+            <property name="format" value="^equals$"/>
+        </module>
+        <module name="WhitespaceAround">
+            <property name="tokens" value="ASSIGN,BAND,BAND_ASSIGN,BOR,BOR_ASSIGN,BSR,BSR_ASSIGN,BXOR,BXOR_ASSIGN,COLON,DIV,DIV_ASSIGN,EQUAL,GE,GT,LAND,LCURLY,LE,LITERAL_ASSERT,LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_RETURN,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE,LOR,LT,MINUS,MINUS_ASSIGN,MOD,MOD_ASSIGN,NOT_EQUAL,PLUS,PLUS_ASSIGN,QUESTION,RCURLY,SL,SLIST,SL_ASSIGN,SR,SR_ASSIGN,STAR,STAR_ASSIGN,LITERAL_ASSERT,TYPE_EXTENSION_AND,WILDCARD_TYPE"/>
+        </module>
+    </module>
+    <module name="NewlineAtEndOfFile">
+        <property name="lineSeparator" value="lf"/>
+        <property name="fileExtensions" value="java"/>
+    </module>
+    <module name="NewlineAtEndOfFile">
+        <property name="lineSeparator" value="lf"/>
+        <property name="fileExtensions" value="properties"/>
+    </module>
+    <module name="NewlineAtEndOfFile">
+        <property name="lineSeparator" value="lf"/>
+        <property name="fileExtensions" value="txt"/>
+    </module>
+</module>

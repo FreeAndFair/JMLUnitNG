@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test.Addition_JML_Test" failures="0" tests="38" time="0.141" errors="0">
+  <properties/>
+  <testcase name="test_main_StringArray" time="0.016" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_main_StringArray" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.016" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.016" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_add_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.016" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.016" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+  <testcase name="test_Addition_int_int" time="0.0" classname="Test.Addition_JML_Test"/>
+</testsuite>
