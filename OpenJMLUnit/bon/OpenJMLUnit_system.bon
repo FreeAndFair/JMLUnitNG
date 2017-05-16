@@ -1,0 +1,17 @@
+-- OpenJMLUnit
+-- Copyright (C) 2010 Daniel M. Zimmerman
+
+-- ===================================================================
+-- System Chart
+-- ===================================================================
+system_chart OPENJMLUNIT
+  indexing
+    author: "Daniel M. Zimmerman <dmz@acm.org>";
+    module: "OpenJMLUnit, part of the OpenJML Tool Suite";
+    creation_date: "January 2010";
+    last_updated_date: "January 2010";
+    keywords: "JML", "unit testing";
+  explanation "An implementation of specification-based unit testing with OpenJML."
+  cluster TOOL
+    description "All the entities and behaviors that comprise the OpenJML tool."
+end
